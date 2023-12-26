@@ -48,7 +48,7 @@ class Classes extends Component{
 													<ul className="schedule">
 														<li className="bg-blue class-size"><span>Class Size</span> <span>30 - 40</span> </li>
 														<li className="bg-green years-old"><span>Years Old</span> <span>5 - 6</span> </li>
-														<li className="bg-orange tution"><span>Tution Fee</span> <span>$1500</span> </li>
+														<li className="bg-orange tution"><span>Teacher</span> <span>Andrew</span> </li>
 													</ul>
 												</div>
 											</div>

@@ -123,18 +123,12 @@ class ClassesDetail extends Component{
 													<div className="info">9:30am-5:30pm</div>
 												</li>
 												<li>
-													<div className="name"><i className="la la-star-o"></i>Rating</div>
-													<div className="info rating">
-													<i className="fa fa-star" aria-hidden="true"></i>
-													<i className="fa fa-star" aria-hidden="true"></i>
-													<i className="fa fa-star" aria-hidden="true"></i>
-													<i className="fa fa-star" aria-hidden="true"></i>
-													<i className="fa fa-star" aria-hidden="true"></i>
-													</div>
+													<div className="name"><i class="fa-solid fa-video"></i>Google meet</div>
+													<div className="info rating">Link gg meet</div>
 												</li>
 												<li>
-													<div className="name"><i className="la la-user"></i>Tution Free</div>
-													<div className="info">$ 250.00</div>
+													<div className="name"><i className="la la-user"></i>Teacher</div>
+													<div className="info">Dinh Van Thanh An</div>
 												</li>
 											</ul>
 										</div>
