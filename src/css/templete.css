@@ -21,9 +21,9 @@
 
 .form-holder {
   display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically if needed */
-  min-height: 100vh; /* Optional: To take full height of the viewport */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .form-content {
@@ -160,6 +160,943 @@
   background-color: green;
   color: white;
 }
+
+.sequence-block {
+  height: 50px;
+  width: 50px;
+  border: 1px solid gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; /* optional, for a pointer cursor on hover */
+  user-select: none; /* optional, to prevent text selection */
+  font-size: 20px; /* adjust as needed */
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(6, 50px);
+  grid-gap: 10px;
+}
+
+/* Header starts */
+.nav.navbar-nav li .nav-link:hover {
+  color: #ed5ab0 !important;
+}
+/* Header ends */
+
+/* Courses plan starts */
+.plan img {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+
+.teacher {
+  margin-left: 20px;
+}
+
+.table-bordered {
+  margin-top: 30px;
+}
+
+.table-bordered .content {
+  font-size: 14px;
+}
+
+.table-bordered .title {
+  margin: auto;
+  justify-content: center;
+}
+
+.plan-content {
+  border: 3px solid #ffc887;
+  border-radius: 10px;
+  padding: 20px 40px;
+}
+
+.plan-content li {
+  list-style: none;
+}
+
+.plan-content {
+  color: #777777;
+}
+
+.plan-content a {
+  width: 100%;
+  text-align: left !important;
+  background-color: white !important;
+  border: 2px solid #777777 !important;
+  color: #777777 !important;
+}
+
+.plan-content .collapse {
+  border: 2px solid #777777;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px 30px;
+}
+
+.plan-content .link-open {
+  cursor: pointer;
+  border: 2px solid #777777 !important;
+  color: black !important;
+  border-bottom: none !important;
+  border-radius: 10px 10px 0 0;
+}
+
+.plan-content .link-closed {
+  cursor: pointer;
+  border: 2px solid #777777 !important;
+  border-radius: 10px;
+  color: black !important;
+}
+
+.plan-content .document {
+  height: 50px;
+  padding-left: 20px;
+  margin-top: 20px;
+}
+
+.plan-content .document i {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.plan-content .document-content {
+  height: 50px;
+  margin-left: 20px;
+}
+
+.plan-content .document-content p {
+  font-size: 16px;
+  margin-bottom: 0px;
+}
+
+.plan-content .document-content span {
+  font-size: 14px;
+}
+
+.plan-content button {
+  background-color: #ff8a00;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  height: 40px;
+  width: 150px;
+}
+
+/* Courses plan ends */
+
+/* Course study starts */
+.study {
+  display: flex;
+}
+
+.sidebar {
+  width: 0;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar.open {
+  width: 30%;
+}
+
+.sidebar .closebtn {
+  top: 0;
+  color: black;
+  margin-left: 90%;
+  font-size: 36px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: transparent;
+  color: rgba(47, 156, 255, 1);
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #ff8a00;
+}
+
+.main {
+  transition: margin-left 0.5s;
+  padding: 16px;
+  width: 100%;
+}
+
+.shifted {
+  width: 70%;
+}
+
+.study .document {
+  padding: 8px 8px 8px 8px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.study .document:hover {
+  color: black;
+  background-color: #ffecb7;
+  border-radius: 10px 0 0 10px;
+  cursor: pointer;
+}
+
+.study .document i {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.study .document-content {
+  margin-left: 20px;
+}
+
+.study .document-content p {
+  font-size: 15px;
+  margin-bottom: 0px;
+}
+
+.study .document-content span {
+  font-size: 13px;
+}
+
+.study .button {
+  background-color: #ff8a00;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  height: 50px;
+  width: 200px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
+}
+
+/* Course study ends */
+
+/* Course quiz starts */
+.quiz-header {
+  height: 100px;
+}
+.quiz-header a {
+  color: rgba(47, 156, 255, 1);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.quiz-question {
+  border: none;
+  border-radius: 10px;
+  padding: 20px 60px;
+  background-color: white;
+  margin-top: 30px;
+}
+
+.quiz-question .answer {
+  border: 1px solid rgba(255, 138, 0, 1);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.quiz-question .answer:hover {
+  background-color: rgba(255, 138, 0, 1);
+}
+/* Course quiz ends */
+
+/* Order starts */
+.order-menu-item {
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+.order-menu-item p {
+  font-size: 20px;
+}
+
+.order-menu-item hr {
+  height: 4px;
+}
+
+.order-menu .active-item {
+  color: rgba(255, 138, 0, 1);
+}
+
+.order-menu-sub {
+  padding: 0 !important;
+}
+
+.order-menu-sub hr {
+  margin-bottom: 0;
+  margin-top: 48px;
+  height: 4px;
+}
+
+.order-content .container {
+  padding: 0 !important;
+}
+
+.order-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px auto;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  padding: 20px 40px;
+  background-color: white;
+}
+
+.order-item .header {
+  background-color: #f0f0f0;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.order-item .header p {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+}
+
+.order-item .header span {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9em;
+}
+
+.order-item .content {
+  padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: white;
+  gap: 15px;
+}
+
+.order-item .content img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.order-item .content p {
+  margin: 0;
+  flex: 1;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .order-item {
+    max-width: 100%;
+  }
+
+  .order-item .content {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+.order-id {
+  background-color: white;
+  border-radius: 8px;
+  margin: 2px;
+  padding: 20px 50px 10px 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-info {
+  margin: 20px 5px;
+}
+
+.order-info-content {
+  padding: 20px 40px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+.order-info-content button {
+  border: none;
+  border-radius: 10px;
+  background-color: #ff8a00;
+  color: white;
+  height: 50px;
+  width: 100%;
+}
+
+.order-select {
+  padding: 0 !important;
+}
+
+.order-select-content {
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 20px 40px;
+  margin-right: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Order ends */
+
+/* Order-cancel starts */
+.order-cancel {
+  background-color: white;
+  padding: 20px 35px;
+  display: flex;
+  flex-direction: column;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-start {
+  justify-content: flex-start;
+}
+
+.order-cancel .header i {
+  font-size: 20px;
+  color: #ff8a00;
+}
+
+.order-cancel .price {
+  color: #ff8a00;
+  margin-bottom: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .d-flex {
+    flex-direction: column;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .payment-method {
+    align-items: center;
+  }
+
+  .header p,
+  .payment-method p {
+    margin-left: 0; /* Adjust according to layout */
+  }
+
+  .info p,
+  .price,
+  .payment-method p {
+    text-align: center; /* Centering text for smaller screens */
+  }
+
+  .content-image,
+  .payment-logo {
+    width: 100%; /* Full width for smaller screens */
+    height: auto; /* Maintain aspect ratio */
+  }
+}
+
+/* Adjust font sizes for smaller screens */
+@media (max-width: 480px) {
+  .header p,
+  .info p,
+  .price,
+  .payment-method p {
+    font-size: 14px;
+  }
+}
+
+.order-cancel-info {
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 35px;
+}
+
+.mb {
+  margin-bottom: 0;
+}
+
+.order-policy-content {
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 35px;
+}
+
+.order-policy-stripe {
+  border: 2px dashed #ff8a00;
+  padding: 10px 15px;
+}
+
+.order-policy-stripe p {
+  margin-bottom: 5px;
+}
+
+.order-policy-content .checked {
+  margin-top: 15px;
+}
+
+.order-policy-content .button-enabled {
+  background-color: red;
+  border-radius: 5px;
+  height: 42px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.order-policy-content .button-disabled {
+  background-color: #ccc;
+  border-radius: 5px;
+  height: 42px;
+  border: none;
+  color: #666;
+  cursor: not-allowed; /* To indicate it's not clickable */
+}
+
+/* Order-cancel ends */
+
+/* Payment starts */
+.container {
+  padding: 20px;
+}
+
+.payment {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment .children {
+  width: 30%;
+  align-items: center;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.payment img {
+  margin-right: 15px;
+}
+
+@media (max-width: 992px) {
+  .container {
+    padding: 10px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-lg-6 {
+    width: 100%;
+  }
+
+  .d-flex {
+    justify-content: center;
+  }
+
+  .d-flex > div,
+  .d-flex > label {
+    margin: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment {
+    padding: 10px;
+  }
+
+  .d-flex {
+    flex-direction: column;
+  }
+
+  .payment img {
+    margin: 0 auto 15px auto;
+    display: block;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 5px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.radio-wrapper {
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+}
+
+.datePicker {
+  width: 100%;
+}
+
+.datePicker .react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.datePicker .react-datepicker__input-container input {
+  width: 100% !important;
+  height: 50px;
+}
+
+/* Payment ends */
+
+/* Payment success starts */
+.thanks {
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 35px;
+}
+
+.thanks-info {
+  margin-top: 30px;
+  background-color: white;
+  padding: 20px 35px;
+}
+
+.thanks-info span {
+  font-weight: 800;
+}
+
+.thanks-info-content {
+  border: 2px solid #d6d2d2;
+  padding: 10px 80px 10px 20px;
+}
+
+.thanks-info-contact {
+  padding: 10px 20px;
+  border: 2px solid #d6d2d2;
+  margin-top: 20px;
+}
+
+.thanks-info-contact i {
+  color: #1a9cb7;
+  font-size: 30px;
+}
+
+.thanks-info-contact p {
+  margin-bottom: 6px;
+  font-size: 18px;
+  margin-left: 10px;
+}
+/* Payment success ends */
+
+/* Account starts */
+.account .avatar img {
+  height: 170px;
+  width: 170px;
+  border-radius: 50%;
+}
+
+.account-menu {
+  padding: 10px 15px;
+  margin-top: 20px;
+}
+
+.account-menu button {
+  width: 100%;
+  height: 52px;
+  border: none;
+}
+
+.account-details,
+.account-payment,
+.account-child {
+  padding: 30px 50px;
+  background-color: white;
+  min-height: 500px;
+}
+
+.account-details span {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.account-details p {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.account-details a {
+  color: #1a9cb7;
+}
+
+.account-details-button {
+  margin-top: 80px;
+}
+
+.account-details button,
+.account-payment button,
+.account-child button {
+  height: 48px;
+  margin-top: 20px;
+  width: 40%;
+  background-color: #1a9cb7;
+  border-radius: 5px;
+  border: none;
+  color: white;
+}
+
+.account-payment .item {
+  padding: 10px 20px;
+  border: 1px solid #1a9cb7;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.account-payment .item img {
+  height: 50px;
+  width: 50px;
+}
+
+.account-payment .item p {
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.account-payment .item i {
+  color: #1a9cb7;
+}
+
+.account-child .item {
+  padding: 10px 30px 10px 10px;
+  border: 1px solid #1a9cb7;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.account-child .item img {
+  height: 66px;
+  width: 66px;
+  border-radius: 50%;
+}
+
+.account-child .item p {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.account-child .item i {
+  font-size: 33px;
+  color: #1a9cb7;
+}
+/* Account ends */
+
+/* Verification starts */
+.verification {
+  padding: 20px;
+  background-color: white;
+  min-height: 500px;
+}
+
+.verification img {
+  height: 126px;
+  width: 126px;
+}
+
+.verification p {
+  font-size: 18px;
+  color: #7f7c7c;
+  font-weight: 500;
+}
+
+.verification button {
+  width: 30%;
+  background-color: #ff8a00;
+  color: white;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.verification-email {
+  min-height: 500px;
+}
+
+.verification-email .dis .d-flex,
+.verification-email .dis2 .d-flex {
+  background-color: #988e8e66;
+  width: 35%;
+  padding-left: 20px;
+  height: 48px;
+  border: 1px solid #21212133;
+  border-radius: 5px;
+}
+
+.verification-email .dis .d-flex p,
+.verification-email .dis2 .d-flex p {
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.verification-email .dis p,
+.verification-email .dis i {
+  color: #988e8e66;
+  font-weight: 500;
+}
+
+.verification-email .dis2 i {
+  color: #988e8e66;
+  font-size: 18px;
+}
+
+.verification-email .dis2 p {
+  color: #bdb7b7;
+}
+
+.verification-email .code .d-flex {
+  width: 35%;
+  margin-top: 20px;
+}
+
+.verification-email button {
+  width: 35%;
+}
+
+.verification-email .another {
+  border: 1px solid #21212133;
+  color: #7f7c7c;
+  background-color: white;
+}
+
+.verification-email .code input {
+  width: 73%;
+  height: 48px;
+  padding-left: 20px;
+  border-radius: 5px;
+  border: 1px solid #21212133;
+  color: #988e8e66;
+  font-size: 18px;
+}
+
+.verification-email .code button {
+  width: 25%;
+  margin-top: 0px;
+  border-radius: 5px;
+  background-color: #1a9cb7;
+  color: white;
+}
+/* Verification ends */
+
+/* Teacher Account starts */
+.teacher-account .menu {
+  background-color: white;
+}
+.teacher-account .menu img {
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+}
+
+.teacher-account .menu button {
+  color: #1a9cb7;
+  border: none;
+  background-color: white;
+}
+
+.teacher-account .menu .info .d-flex {
+  width: 60%;
+  padding: 5px 10px;
+  margin-top: 15px;
+  border: 1px dashed #e53e5c;
+  border-radius: 10px;
+}
+
+.teacher-account .menu .info .d-flex p {
+  font-size: 18px;
+  color: #e53e5c;
+}
+
+.teacher-account .menu .info .d-flex span {
+  font-size: 14px;
+  color: #7f7c7c;
+}
+
+.teacher-account .menu-content {
+  margin-top: 20px;
+  padding: 0px 20px;
+}
+
+.teacher-account .menu .item {
+  padding: 5px 20px;
+  height: 42px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.teacher-account .menu .item:hover {
+  background-color: #f69e4a;
+  cursor: pointer;
+  color: white;
+}
+
+.teacher-account .menu .item i {
+  font-size: 18px;
+}
+
+.teacher-account .menu .item p {
+  margin-left: 25px;
+}
+
+
+/* Teacher Account ends */
 
 /* BigShow Owl Slider */
 .slider-title {

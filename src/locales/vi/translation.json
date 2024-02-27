@@ -1,4 +1,18 @@
 {
   "welcome_message": "Chào mừng đến với KidsPro",
-  "welcome_content": "Hãy để con bạn tận hưởng niềm vui học tập!"
+  "welcome_content": "Hãy để con bạn tận hưởng niềm vui học tập!",
+  "welcome_content_1": "Suy nghĩ sáng tạo và nhạy bén hơn",
+  "welcome_content_2": "Được thoải mái với đam mê của mình",
+  "welcome_content_3": "Suy nghĩ đọc lập và linh hoạt",
+  "welcome_content_4": "Nâng cao trí tuệ cho trẻ",
+
+  "join_message": "Tham gia lớp học ngay",
+  "join_call": "Gọi ngay để đăng kí khóa học cho con bạn",
+  "join_read": "TIM HIỂU THÊM",
+
+  "gallery_class": "Hình ảnh các lớp học",
+  "gallery_content": "Chúng tôi cung cấp ba lớp với chín đến hai mươi trẻ em, mỗi lớp từ mười hai tháng đến sáu tuổi.",
+
+  "teacher_message": "Các giáo viên của chúng tôi",
+  "teacher_content": "Chúng tôi có một dội ngũ giáo viên giàu kinh nghiệm, sẵn sàng đáp ứng mọi độ tuổi, trình độ cho trẻ"
 }

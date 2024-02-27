@@ -22,6 +22,7 @@ import gallery3 from './../../images/gallery/pic3.jpg';
 import gallery4 from './../../images/gallery/pic4.jpg';
 import gallery5 from './../../images/gallery/pic5.jpg';
 import gallery6 from './../../images/gallery/pic6.jpg';
+import classes from './../../images/classes/codingClass.png';
 
 const image = [
 	gallery1,
@@ -106,7 +107,7 @@ class AboutUs1 extends Component {
 			<Fragment>
 				<Header />
 				<div className="page-content">
-					<PageTitle motherMenu="About Us 1" activeMenu="About Us 1" />
+					<PageTitle motherMenu="About Us" activeMenu="About Us" />
 					<div className="content-block">
 						<div className="section-full bg-white content-inner-2 about-area" style={{ backgroundImage: "url(" + bnr1 + ")", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
 							<div className="container">
@@ -153,7 +154,7 @@ class AboutUs1 extends Component {
 														<div className="dlab-box frame-box m-b30">
 															<div className="dlab-thum">
 																<div>
-																	<img src={data.image} alt="" />
+																	<img src={classes} alt="" />
 																	<h3>Java class for kids under 12 years old</h3>
 																</div>
 															</div>

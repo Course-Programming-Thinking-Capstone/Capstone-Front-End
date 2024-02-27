@@ -1,4 +1,18 @@
 {
   "welcome_message": "Welcome to KidsPro",
-  "welcome_content": "Fill your child's childhood with the joy of learning!"
+  "welcome_content": "Fill your child's childhood with the joy of learning!",
+  "welcome_content_1": "To Think Creatively and Create",
+  "welcome_content_2": "Be comfortable with their passion",
+  "welcome_content_3": "Think independently and flexibly",
+  "welcome_content_4": "Improve children's intelligence",
+
+  "join_message": "Join our new session",
+  "join_call": "Call to enroll your child",
+  "join_read": "READ MORE",
+
+  "gallery_class": "Gallery of our classes",
+  "gallery_content": "We provide three classes with nine to twenty children each aged twelve months to six years of age.",
+
+  "teacher_message": "About the Teachers",
+  "teacher_content": "We have an excellent teacher to child ratio at our Kindergarten to ensure that each child receives the attention he or she needs"
 }

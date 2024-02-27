@@ -29,7 +29,7 @@ const Footer = () =>{
 							<div className="col-xl-3 col-lg-6 col-md-6 col-sm-6 footer-col-4">
 								<div className="widget widget_ftabout">
 									<div className="footer-logo">
-										<Link to={"/"}><img src={logo} alt="" /></Link>
+										<h1>KidsPro</h1>
 									</div>
 									<p>Lorem ipsum dolor sit amet, consectetur at adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna the are aliqua.</p>
 								</div>

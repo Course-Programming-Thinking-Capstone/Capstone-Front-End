@@ -23,6 +23,42 @@ export default function Dashboard() {
         setActiveButton(button);
     };
 
+    const Block = () => {
+        const [iconClass, setIconClass] = useState('');
+    
+        const iconClasses = ['', 'fa-regular fa-user', 'fa-solid fa-road', 'fa-solid fa-bullseye'];
+        const handleClick = () => {
+            setIconClass(prev => {
+                const nextIndex = (iconClasses.indexOf(prev) + 1) % iconClasses.length;
+                return iconClasses[nextIndex];
+            });
+        };
+    
+        return (
+            <div className='sequence-block' onClick={handleClick}>
+                {iconClass && <i className={iconClass}></i>}
+            </div>
+        );
+    };
+
+    const Grid = () => {
+        const rows = 6;
+        const cols = 8;
+        const grid = [];
+    
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                grid.push(<Block key={`${i}-${j}`} />);
+            }
+        }
+    
+        return (
+            <div className="grid-container">
+                {grid}
+            </div>
+        );
+    };
+
     useEffect(() => {
         if (calendarRef.current && externalElementRef.current && !eventsAddedToCalendar) {
             const calendar = calendarRef.current.getApi();
@@ -116,8 +152,8 @@ export default function Dashboard() {
                     <button onClick={() => handleButtonClick('calendar')} className={`btn ${activeButton === 'calendar' ? 'btn-primary' : 'btn-secondary'} w-100 mt-2`}>
                         <i className="fa-regular fa-calendar-days"></i> <span className='ms-1'>Calendar</span>
                     </button>
-                    <button onClick={() => handleButtonClick('email')} className={`btn ${activeButton === 'email' ? 'btn-primary' : 'btn-secondary'} w-100 mt-2`}>
-                        <i className="fa-solid fa-envelope"></i> <span className='ms-1'>Email</span>
+                    <button onClick={() => handleButtonClick('Sequence mode')} className={`btn ${activeButton === 'Sequence mode' ? 'btn-primary' : 'btn-secondary'} w-100 mt-2`}>
+                        <i className="fa-solid fa-envelope"></i> <span className='ms-1'>Sequence mode</span>
                     </button>
                 </div>
 
@@ -202,10 +238,10 @@ export default function Dashboard() {
                             {showModal && <div className="modal-backdrop show"></div>}
                         </div>
                     )}
-                    {activeButton === 'email' && (
+                    {activeButton === 'Sequence mode' && (
                         <div>
-                            <h1>Email</h1>
-                            <p>This is the email content.</p>
+                            <h1>Add/edit level sequence</h1>
+                            <Grid/>
                         </div>
                     )}
                 </div>

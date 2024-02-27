@@ -2493,7 +2493,7 @@ blockquote:before {
 
 .site-header {
   position: relative;
-  z-index: 99999;
+  z-index: 9;
 }
 .site-header ul,
 .site-header ol {
@@ -14319,3 +14319,4 @@ pre {
     max-width: 1200px;
   }
 }
+

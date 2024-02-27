@@ -28,34 +28,26 @@ import team1 from './../../images/team/pic1.png';
 import team2 from './../../images/team/pic2.png';
 import team3 from './../../images/team/pic3.png';
 import team4 from './../../images/team/pic4.png';
+import teacher from './../../images/team/teacher.png';
 
 
-const iconBlog = [
-	{ image: icon1, title1: 'To Think Creatively', title2: 'and Create' },
-	{ image: icon2, title1: 'To Feel Fne and to', title2: 'Understand Emotions' },
-	{ image: icon3, title1: 'To be Independent', title2: 'and Active' },
-	{ image: icon4, title1: 'To Apply', title2: 'Knowledge in Life' },
-];
+// const iconBlog = [
+// 	{ image: icon1, title1: 'To Think Creatively', title2: 'and Create' },
+// 	{ image: icon2, title1: 'To Feel Fne and to', title2: 'Understand Emotions' },
+// 	{ image: icon3, title1: 'To be Independent', title2: 'and Active' },
+// 	{ image: icon4, title1: 'To Apply', title2: 'Knowledge in Life' },
+// ];
 const iconBlog2 = [
 	{ icon: <i className="flaticon-rattle text-blue" />, title: 'Infants', },
 	{ icon: <i className="flaticon-bricks text-green" />, title: 'I myself', },
 	{ icon: <i className="flaticon-puzzle text-orange" />, title: 'Goodie', },
 ];
 const teacherBlog = [
-	{ name: 'Kate Doe', image1: backwhite, image2: team1 },
-	{ name: 'Jone Doe', image1: backpink, image2: team2 },
-	{ name: 'Manie Doe', image1: backgreen, image2: team3 },
-	{ name: 'Jennie Doe', image1: backred, image2: team4 },
+	{ name: 'Kate Doe', image1: backwhite, image2: teacher },
+	{ name: 'Jone Doe', image1: backpink, image2: teacher },
+	{ name: 'Manie Doe', image1: backgreen, image2: teacher },
+	{ name: 'Jennie Doe', image1: backred, image2: teacher },
 ];
-
-const MyComponent = () => {
-	const { t } = useTranslation();
-
-	return <div>
-		<h2>{t('welcome_message')}</h2>
-		<p>{t('welcome_content')}</p>
-	</div>;
-}
 
 const Index1 = () => {
 	const { t } = useTranslation();
@@ -65,7 +57,6 @@ const Index1 = () => {
 	return (
 		<Fragment>
 			<Header />
-			<LanguageSwitcher />
 			<div className="page-content bg-white">
 				<BannerSlider />
 				<div className="content-block">
@@ -77,23 +68,51 @@ const Index1 = () => {
 								<p>{t('welcome_content')}</p>
 							</div>
 							<div className="row">
-								{iconBlog.map((data, index) => (
-									<div className="col-lg-3 col-md-6 col-sm-6 col-12" key={index}>
-										<div className="icon-bx-wraper sr-iconbox m-b20">
-											<div className="icon-lg m-b20">
-												<Link to={"#"} className="icon-cell"><img src={data.image} alt="" /></Link>
-											</div>
-											<div className="icon-content">
-												<h6 className="dlab-tilte">{data.title1}<br />{data.title2}</h6>
-											</div>
+								<div className="col-lg-3 col-md-6 col-sm-6 col-12">
+									<div className="icon-bx-wraper sr-iconbox m-b20">
+										<div className="icon-lg m-b20">
+											<Link to={"#"} className="icon-cell"><img src={icon1} alt="" /></Link>
+										</div>
+										<div className="icon-content">
+											<h6 className="dlab-tilte">{t('welcome_content_1')}</h6>
 										</div>
 									</div>
-								))}
+								</div>
+								<div className="col-lg-3 col-md-6 col-sm-6 col-12">
+									<div className="icon-bx-wraper sr-iconbox m-b20">
+										<div className="icon-lg m-b20">
+											<Link to={"#"} className="icon-cell"><img src={icon2} alt="" /></Link>
+										</div>
+										<div className="icon-content">
+											<h6 className="dlab-tilte">{t('welcome_content_2')}</h6>
+										</div>
+									</div>
+								</div>
+								<div className="col-lg-3 col-md-6 col-sm-6 col-12">
+									<div className="icon-bx-wraper sr-iconbox m-b20">
+										<div className="icon-lg m-b20">
+											<Link to={"#"} className="icon-cell"><img src={icon3} alt="" /></Link>
+										</div>
+										<div className="icon-content">
+											<h6 className="dlab-tilte">{t('welcome_content_3')}</h6>
+										</div>
+									</div>
+								</div>
+								<div className="col-lg-3 col-md-6 col-sm-6 col-12">
+									<div className="icon-bx-wraper sr-iconbox m-b20">
+										<div className="icon-lg m-b20">
+											<Link to={"#"} className="icon-cell"><img src={icon4} alt="" /></Link>
+										</div>
+										<div className="icon-content">
+											<h6 className="dlab-tilte">{t('welcome_content_4')}</h6>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 					{/*  About Us End*/}
-					<div className="section-full bg-white content-inner-2 about-box" style={{ backgroundImage: "url(" + bgimg1 + ")", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
+					{/* <div className="section-full bg-white content-inner-2 about-box" style={{ backgroundImage: "url(" + bgimg1 + ")", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-7 col-md-12 col-sm-12 col-12">
@@ -118,13 +137,13 @@ const Index1 = () => {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> */}
 					<EducationBanner />
 					<div className="section-full bg-white content-inner-1">
 						<div className="container">
 							<div className="section-head text-center">
-								<h2 className="head-title text-secondry">Gallery of our classes</h2>
-								<p>We provide three classes with nine to twenty children each aged twelve months to six years of age.</p>
+								<h2 className="head-title text-secondry">{t("gallery_class")}</h2>
+								<p>{t("gallery_content")}</p>
 							</div>
 							<GallerySlider />
 						</div>
@@ -143,8 +162,8 @@ const Index1 = () => {
 						<img src={chopper} className="background-img2 slideskew6" alt="" />
 						<div className="container">
 							<div className="section-head text-center style-1">
-								<h2 className="head-title text-secondry">About the Teachers</h2>
-								<p>We have an excellent teacher to child ratio at our Kindergarten to ensure that each child receives the attention he or she needs</p>
+								<h2 className="head-title text-secondry">{t("teacher_message")}</h2>
+								<p>{t("teacher_content")}</p>
 							</div>
 							<div className="section-content text-center ">
 								<div className="row">
@@ -180,7 +199,7 @@ const Index1 = () => {
 							</div>
 						</div>
 					</div>
-					<div className="section-full bg-white content-inner-1">
+					{/* <div className="section-full bg-white content-inner-1">
 						<div className="container">
 							<div className="section-head text-center">
 								<h2 className="head-title text-secondry">Testimonials about center</h2>
@@ -188,7 +207,7 @@ const Index1 = () => {
 							</div>
 							<TestiMonialSlider />
 						</div>
-					</div>
+					</div> */}
 					<div className="section-full bg-white content-inner">
 						<div className="container">
 							<div className="section-head text-center">
@@ -206,16 +225,17 @@ const Index1 = () => {
 
 }
 function EducationBanner() {
+	const { t } = useTranslation();
 	return (
 		<>
 			<div className="section-full bg-white content-inner-2 about-content bg-img-fix" style={{ backgroundImage: "url(" + bg7 + ")" }}>
 				<div className="about-overlay-box"></div>
 				<div className="container">
 					<div className="section-head text-center">
-						<p className="text-white text-center">Join our new session</p>
-						<h2 className="head-title text-yellow text-center">Call to enroll your child</h2>
+						<p className="text-white text-center">{t('join_message')}</p>
+						<h2 className="head-title text-yellow text-center">{t('join_call')}</h2>
 						<h3 className='text-warning text-center display-4'>0903 123 456</h3>
-						<Link to={"/contact-us"} className="btn btn-md radius-xl text-center">Read More</Link>
+						<Link to={"/contact-us"} className="btn btn-md radius-xl text-center">{t('join_read')}</Link>
 					</div>
 				</div>
 			</div>

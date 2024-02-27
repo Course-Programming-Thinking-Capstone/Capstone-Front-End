@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import grid1 from './../../images/blog/grid/pic1.jpg';
 import grid2 from './../../images/blog/grid/pic2.jpg';
 import grid3 from './../../images/blog/grid/pic3.jpg';
+import classes from './../../images/classes/codingClass.png';
 
 
 function SampleNextArrow(props) {
@@ -66,7 +67,7 @@ class FromSlider extends Component{
 					<div className="item p-3 wow bounceInUp" data-wow-duration="2s" data-wow-delay="0.2s" key={index}>
 						<div className="blog-post blog-grid ">
 							<div className="dlab-post-media frame-box">
-								<Link to={"/blog-details"}><img src={item.image} alt="" /></Link>
+								<Link to={"/blog-details"}><img src={classes} alt="" /></Link>
 							</div>
 							<div className="dlab-info">
 								<div className="dlab-post-title">

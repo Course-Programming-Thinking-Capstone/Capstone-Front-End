@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import  bnr1 from './../../images/main-slider/slide1.jpg';
 import  bnr2 from './../../images/main-slider/slide2.jpg';
 import  bnr3 from './../../images/main-slider/slide3.jpg';
+import bg9 from './../../images/background/bg9.png'
 
 function SampleNextArrow(props) {
     const { onClick } = props;
@@ -54,8 +55,8 @@ const BannerSlider = () =>{
 				{carouselBlog.map((item, index) => (
 					<div className="item" key={index}>
 						<div className="slide-item">
-							<div className="slide-item-img"><img src={item.image}  alt="" width="100%" /></div>
-							<div className="slide-content">
+							<div className="slide-item-img"><img src={bg9}  alt="" width="100%" height='50%'/></div>
+							{/* <div className="slide-content">
 								<div className="slide-content-box container">
 									<div className="slide-content-area">
 										<h2 className="slider-title">Children Academy <span>First ReseaArchers</span></h2>
@@ -63,7 +64,7 @@ const BannerSlider = () =>{
 										<Link to={"/contect-us"} className="btn btn-md kids-btn radius-xl">Join us</Link>
 									</div>
 								</div>
-							</div>	
+							</div>	 */}
 						</div>	
 					</div>              
 				))}	

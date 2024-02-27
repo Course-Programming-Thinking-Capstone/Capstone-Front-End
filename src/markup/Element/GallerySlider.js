@@ -10,6 +10,7 @@ import galery3 from './../../images/gallery/pic3.jpg';
 import galery4 from './../../images/gallery/pic4.jpg';
 import galery5 from './../../images/gallery/pic5.jpg';
 import galery6 from './../../images/gallery/pic6.jpg';
+import classes from './../../images/classes/codingClass.png';
 
 
 const image = [
@@ -81,7 +82,7 @@ class GallerySlider extends Component{
 							<div className="item p-3" key={index}>
 								<div className="dlab-box frame-box">
 								<div className="dlab-thum dlab-img-overlay1"> 
-									<img src={image} alt={`index ${index}`} />
+									<img src={classes} alt={`index ${index}`} />
 									<div className="overlay-bx">
 										<div className="overlay-icon"> 													
 											<Link to={"#"} 
