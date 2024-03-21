@@ -14,6 +14,44 @@ export default function Account() {
         setActiveContent(contentKey);
     };
 
+    const EditInfo = () => {
+        return (
+            <div className='account-details'>
+                <div className="d-flex">
+                    <div>
+                        <span>First and last name</span>
+                        <input type="text" placeholder='Kim Jennie' />
+                    </div>
+                    <div>
+                        <span>Birthday</span>
+                        <input type="text" placeholder='03-01-1996' />
+                    </div>
+                    <div>
+                        <span>Gender</span>
+                        <select name="" id="">
+                            <option value="">Male</option>
+                            <option value="">Female</option>
+                            <option value="">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="d-flex">
+                    <div>
+                        <span>Email Address | <a href="">Edit</a></span>
+                        <input type="text" placeholder='anvip321@gmail.com' />
+                    </div>
+                    <div>
+                        <span>Phone number</span>
+                        <input type="number" placeholder='09123123123' />
+                    </div>
+                </div>
+                <div className="d-flex justify-content-center">
+                    <button>SAVE CHANGE</button><br />
+                </div>
+            </div>
+        );
+    }
+
     const renderContent = () => {
         switch (activeContent) {
             case 'accountDetails':
@@ -38,7 +76,7 @@ export default function Account() {
                             <p>anvip321@gmail.com</p>
                         </div>
                         <div>
-                            <span>Phone number | <a href="">Edit</a></span>
+                            <span>Phone number</span>
                             <p>09123123123</p>
                         </div>
                     </div>

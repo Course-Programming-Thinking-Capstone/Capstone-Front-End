@@ -4,7 +4,6 @@ import ThemeButton from './Element/ThemeButton/ThemeButton';
 //ScrollToTop
 import ScrollToTop from './Element/ScrollToTop';
 import AuthCheck from './Element/AuthCheck';
-import AdvancedSearch from './Element/AdvancedSearch';
 
 import Index1 from './Pages/Index1';
 import Index3 from './Pages/Index3';
@@ -41,6 +40,8 @@ import PaymentSuccess from './Pages/PaymentSuccess';
 import Account from './Pages/Account';
 import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/TeacherAccount';
+import Staff from './Pages/Staff';
+import Admin from './Pages/Admin';
 
 
 export default function Markup() {
@@ -78,13 +79,15 @@ export default function Markup() {
 					<Route path='/courses-study' exact element={<CourseStudy />} />
 					<Route path='/courses-quiz' exact element={<CourseQuiz />} />
 					<Route path='/order' exact element={<Order />} />
-					<Route path='/order-detail' exact element={<OrderDetail />} />
-					<Route path='/order-cancel' exact element={<OrderCancel />} />
+					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
+					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
 					<Route path='/payment' exact element={<CoursePayment />} />
 					<Route path='/payment-success' exact element={<PaymentSuccess />} />
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/teacher-account' exact element={<TeacherAccount />} />
+					<Route path='/staff' exact element={<Staff />} />
+					<Route path='/admin' exact element={<Admin />} />
 
 				</Routes>
 			</div>

@@ -1,7 +1,6 @@
 import React,{Fragment, useRef} from 'react';
 import emailjs from '@emailjs/browser';
 import {Link} from 'react-router-dom';
-import {LightGalleryBlog} from '../Pages/ClassesDetail';
 
 import recent1 from './../../images/blog/recent-blog/pic1.jpg';
 import recent2 from './../../images/blog/recent-blog/pic2.jpg';
@@ -76,7 +75,6 @@ const SideBar = () =>{
 				<div className="widget widget_gallery gallery-grid-4">
 					<h5 className="widget-title">Our services</h5>
 					<ul id="lightgallery">
-						<LightGalleryBlog />
 					</ul>
 				</div>
 				<div className="widget widget_tag_cloud">

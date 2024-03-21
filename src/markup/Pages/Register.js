@@ -11,18 +11,18 @@ export default function Register() {
     const [loginPassword, setLoginPassword] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const [reEnteredPassword, setReEnteredPassword] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [loginPhone, setLoginPhone] = useState('');
+    const [registerMail, setRegisterMail] = useState('');
+    const [loginMail, setLoginMail] = useState('');
 
     const [registerUsernameError, setRegisterUsernameError] = useState('');
     const [registerPasswordError, setRegisterPasswordError] = useState('');
-    const [registerPhoneError, setRegisterPhoneError] = useState('');
+    const [registerMailError, setRegisterPhoneError] = useState('');
     const [registerRePasswordError, setRegisterRePasswordError] = useState('');
 
-    const [loginPhoneError, setLoginPhoneError] = useState('');
+    const [loginMailError, setLoginMailError] = useState('');
     const [loginPasswordError, setLoginPasswordError] = useState('');
 
-    const notifyRegisterSuccess = () => toast.success('Registration successfully', {
+    const notifyRegisterSuccess = () => toast.success('Registration sucessfully', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -33,7 +33,7 @@ export default function Register() {
         theme: "colored",
     });
 
-    const notifyRegisterFail = () => toast.error('Registration failed', {
+    const notifyRegisterFail = (message) => toast.error(message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -44,7 +44,7 @@ export default function Register() {
         theme: "colored",
     });
 
-    const notifyLoginSuccess = () => toast.success('Login successfully', {
+    const notifyLoginFail = (message) => toast.error(message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -54,63 +54,53 @@ export default function Register() {
         progress: undefined,
         theme: "colored",
     });
-
-    const notifyLoginFail = () => toast.error('Login failed', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
-
-    const validatePassword = (pwd) => {
-        const hasNumbers = /\d/.test(pwd);
-        const hasLetters = /[a-zA-Z]/.test(pwd);
-        return hasNumbers && hasLetters;
-    };
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
-        setLoginPhoneError('');
+        setLoginMailError('');
         setLoginPasswordError('');
 
-        if (validatePassword(loginPassword)) {
-            console.log("Login success");
-            try {
-                const response = await loginUser(loginPhone, loginPassword);
-                console.log("Registration success", response);
-                const role = response.role;
-                localStorage.setItem('userRole', role);
-                localStorage.setItem('accessToken', response.accessToken);
-                switch (role) {
-                    case "Admin":
-                        window.location.href = "/dashboard";
-                        break;
-                    case "Teacher":
-                        window.location.href = "/";
-                        break;
-                    case "Staff":
-                        window.location.href = "/";
-                        break;
-                    case "Children":
-                        window.location.href = "/";
-                        break;
-                    default:
-                        break;
-                }
-                
-                notifyLoginSuccess();
-            } catch (error) {
-                // Handle registration errors here, e.g., showing an error message to the user
-                notifyLoginFail();
-                console.error('Registration failed:', error);
-            }
-        } else {
-            setLoginPasswordError('Username or password is incorrect');
+        if (!/\S+@\S+\.\S+/.test(loginMail)) {
+            setLoginMailError('Please enter a valid email address');
+            return; // Stop the function here
         }
+
+        try {
+            // Corrected to use loginMail
+            const response = await loginUser(loginMail, loginPassword);
+            console.log("Login success", response); // Confirm login success
+            const role = response.role;
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('accessToken', response.accessToken);
+            // Redirect based on role
+            switch (role) {
+                case "Admin":
+                    window.location.href = "/admin";
+                    break;
+                case "Teacher":
+                    window.location.href = "/teacher-account";
+                    break;
+                case "Staff":
+                    window.location.href = "/staff";
+                    break;
+                case "Parent":
+                    window.location.href = "/classes";
+                    break;
+                case "Student":
+                    window.location.href = "/course-plan";
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            if (error instanceof Error) {
+                notifyLoginFail(error.message);
+            } else {
+                notifyLoginFail("An unknown error occurred.");
+            }
+        }
+
     };
 
     const isPhoneNumberValid = (phone) => {
@@ -139,41 +129,28 @@ export default function Register() {
             isValid = false;
         }
 
-        if (!validatePassword(registerPassword)) {
-            setRegisterPasswordError('Password must contain both letters and numbers.');
-            isValid = false;
-        }
-
-        if (!isPhoneNumberValid(phoneNumber)) {
-            setRegisterPhoneError('Phone number must be between 9 and 13 digits.');
-            isValid = false;
-        }
-
         if (!isPasswordMatch(registerPassword, reEnteredPassword)) {
             setRegisterRePasswordError('Passwords do not match.');
             isValid = false;
         }
 
-
-
-        // Proceed to register user if all validations are passed
         if (isValid) {
             try {
-                const response = await registerUser(username, registerPassword, phoneNumber);
-                console.log("Registration success", response);
+                const response = await registerUser(username, registerPassword, registerMail);
                 setActiveTab('login');
-                notifyRegisterSuccess();
             } catch (error) {
-                // Handle registration errors here, e.g., showing an error message to the user
-                notifyRegisterFail();
-                console.error('Registration failed:', error);
+                if (error instanceof Error) {
+                    notifyLoginFail(error.message);
+                } else {
+                    notifyLoginFail("An unknown error occurred.");
+                }
             }
         }
     };
 
-    const registerUser = async (fullName, password, phoneNumber) => {
-        const url = 'https://kidpro-production.somee.com/api/v1/authenticate/register';
-
+    const registerUser = async (username, registerPassword, registerMail) => {
+        const url = 'https://www.kidpro-production.somee.com/api/v1/authentication/register/email';
+    
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -181,27 +158,34 @@ export default function Register() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    fullName,
-                    password,
-                    phoneNumber
+                    "email": registerMail,
+                    "fullName": username,
+                    "password": registerPassword,
                 }),
             });
-
+    
             if (!response.ok) {
-                const errorDetails = await response.json();
+                // Attempt to parse error details only if there is a response body
+                const text = await response.text();
+                const errorDetails = text ? JSON.parse(text) : {};
                 console.error('API Error:', errorDetails);
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}. ${errorDetails.message || ''}`);
             }
+    
             console.log("success");
-
-            return await response.json();
+            // Parse and return the JSON only if there is a response body
+            const text = await response.text();
+            notifyRegisterSuccess();
+            return text ? JSON.parse(text) : {};
         } catch (error) {
+            notifyRegisterFail(error.message)
             throw error; // Re-throw the error to be handled in the calling function
         }
     };
+    
 
-    const loginUser = async (phoneNumber, password) => {
-        const url = `https://kidpro-production.somee.com/api/v1/authenticate/login?phonenumber=${phoneNumber}&password=${password}`;
+    const loginUser = async (loginMail, password) => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/authentication/login/email`;
 
         try {
             const response = await fetch(url, {
@@ -210,15 +194,16 @@ export default function Register() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phoneNumber,
-                    password
+                    "email": loginMail,
+                    "password": password
                 }),
             });
 
             if (!response.ok) {
                 const errorDetails = await response.json();
-                console.error('API Error:', errorDetails);
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                // Now log or throw the specific message you're interested in
+                console.log('API Error Details:', errorDetails);
+                throw new Error(`Login error: ${errorDetails.message || "Unknown error"}`);
             }
             console.log("success");
 
@@ -280,22 +265,20 @@ export default function Register() {
                             </button>
                         </div>
                         <div className="form-items" style={{ minHeight: '350px' }}>
-                            {/* Conditional Rendering of Forms */}
                             {activeTab === 'register' && (
                                 <form onSubmit={handleRegisterSubmit}>
-                                    <input className="form-control" type="text" name="name" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                                    <input className="form-control" type="text" name="name" placeholder="Your name" value={username} onChange={(e) => setUsername(e.target.value)} required />
                                     {registerUsernameError && <div className="error-message">{registerUsernameError}</div>}
-                                    {/* ... other inputs ... */}
                                     <input
                                         className="form-control"
-                                        type="number"
+                                        type="email"
                                         name="phone"
-                                        placeholder="Phone number"
+                                        placeholder="Your email"
                                         required
-                                        value={phoneNumber}
-                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        value={registerMail}
+                                        onChange={(e) => setRegisterMail(e.target.value)}
                                     />
-                                    {registerPhoneError && <div className="error-message" style={{ color: 'red' }}>{registerPhoneError}</div>}
+                                    {registerMailError && <div className="error-message" style={{ color: 'red' }}>{registerMailError}</div>}
                                     <input
                                         className="form-control"
                                         type="password"
@@ -324,8 +307,8 @@ export default function Register() {
 
                             {activeTab === 'login' && (
                                 <form onSubmit={handleLoginSubmit}>
-                                    <input className="form-control" type="number" placeholder="Phone number" required value={loginPhone} onChange={(e) => setLoginPhone(e.target.value)} />
-                                    {loginPhoneError && <div className="error-message">{loginPhoneError}</div>}
+                                    <input className="form-control" type="text" placeholder="Your email" required value={loginMail} onChange={(e) => setLoginMail(e.target.value)} />
+                                    {loginMailError && <div className="error-message">{loginMailError}</div>}
                                     <input
                                         className="form-control"
                                         type="password"

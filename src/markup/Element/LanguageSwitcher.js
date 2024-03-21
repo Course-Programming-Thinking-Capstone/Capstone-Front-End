@@ -17,9 +17,9 @@ const LanguageSwitcher = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <button
-      
+
         onClick={() => changeLanguage('vi')}
-        style={{ backgroundColor: isVietnamese ? '#ed5ab0' : 'white', height: '40px', width: '40px', border: 'none' }}
+        style={{ backgroundColor: isVietnamese ? 'white' : '#ffa133', height: '40px', width: '40px', border: 'none' }}
         aria-label="Switch to Vietnamese"
         title="Tiếng Việt"
       >
@@ -27,7 +27,7 @@ const LanguageSwitcher = () => {
       </button>
       <button
         onClick={() => changeLanguage('en')}
-        style={{ backgroundColor: isEnglish ? '#ed5ab0' : 'white', height: '40px', width: '40px', border: 'none' }}
+        style={{ backgroundColor: isEnglish ? 'white' : '#ffa133', height: '40px', width: '40px', border: 'none' }}
         aria-label="Switch to English"
         title="English"
       >

@@ -5,7 +5,6 @@ import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import PageTitle from '../Layout/PageTitle';
 import SideBar from '../Element/SideBar';
-import ClassDetailContent from '../Element/ClassDetailContent';
 
 //images
 import test1 from './../../images/testimonials/pic1.jpg';

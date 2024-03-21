@@ -276,7 +276,6 @@ h4 {
 }
 h5 {
   font-size: 18px;
-  line-height: 24px;
   margin-bottom: 10px;
   font-weight: 600;
 }
@@ -2562,7 +2561,7 @@ blockquote:before {
 15. PAGE TOP BAR (left & right content)
 ---------------------------------------------------------------*/
 .top-bar {
-  background-color: var(--primary);
+  background-color: #FF8A00CC;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   color: #fff;
   padding: 11px 0;
@@ -4015,7 +4014,7 @@ blockquote:before {
   z-index: 1;
 }
 .dlab-bnr-inr:after {
-  height: 100px;
+  height: 90px;
   content: "";
   width: 100%;
   position: absolute;
@@ -4031,7 +4030,7 @@ blockquote:before {
   background-repeat: repeat-x;
 }
 .dlab-bnr-inr:before {
-  height: 100px;
+  height: 90px;
   content: "";
   width: 100%;
   position: absolute;

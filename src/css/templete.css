@@ -1,7 +1,11 @@
 /*==========================
 	Custom css
+  
 	==========================*/
 /* Login, register */
+* {
+  box-sizing: border-box;
+}
 .form-body {
   justify-content: center;
   align-items: center;
@@ -462,6 +466,7 @@
 }
 
 .order-item {
+  cursor: pointer;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -552,7 +557,7 @@
 .order-info-content button {
   border: none;
   border-radius: 10px;
-  background-color: #ff8a00;
+  background-color: #f11616;
   color: white;
   height: 50px;
   width: 100%;
@@ -569,6 +574,13 @@
   margin-right: 20px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-select-content .item {
+  width: 40%;
+  border: 1px solid #1a9cb7;
+  border-radius: 5px;
+  padding: 5px 0;
 }
 
 /* Order ends */
@@ -605,10 +617,6 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .d-flex {
-    flex-direction: column;
-  }
-
   .content {
     flex-direction: column;
   }
@@ -663,6 +671,14 @@
   padding: 20px 35px;
 }
 
+.order-policy-content .modal-content {
+  margin-top: 200px !important;
+  padding: 0 15px !important;
+  background-color: #fcefc9 !important;
+  border-radius: 20px !important;
+  border: 1px solid #ff8a00b2 !important;
+}
+
 .order-policy-stripe {
   border: 2px dashed #ff8a00;
   padding: 10px 15px;
@@ -697,13 +713,9 @@
 /* Order-cancel ends */
 
 /* Payment starts */
-.container {
-  padding: 20px;
-}
-
 .payment {
   background: #fff;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   margin-bottom: 20px;
   border-radius: 0 0 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -712,13 +724,6 @@
 .payment .children {
   width: 30%;
   align-items: center;
-}
-
-.d-flex {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 .payment img {
@@ -730,31 +735,14 @@
     padding: 10px;
   }
 
-  .row {
-    flex-direction: column;
-  }
-
   .col-lg-6 {
     width: 100%;
-  }
-
-  .d-flex {
-    justify-content: center;
-  }
-
-  .d-flex > div,
-  .d-flex > label {
-    margin: 5px;
   }
 }
 
 @media (max-width: 768px) {
   .payment {
     padding: 10px;
-  }
-
-  .d-flex {
-    flex-direction: column;
   }
 
   .payment img {
@@ -781,16 +769,25 @@
 }
 
 .datePicker {
-  width: 100%;
+  width: 85%;
 }
 
 .datePicker .react-datepicker-wrapper {
+  width: 100% !important;
+  border-right: none !important;
+}
+
+.datePicker .react-datepicker__input-container {
   width: 100% !important;
 }
 
 .datePicker .react-datepicker__input-container input {
   width: 100% !important;
   height: 50px;
+  border: 1px solid #21212180;
+  outline: none;
+  padding-left: 15px;
+  border-right: none !important;
 }
 
 /* Payment ends */
@@ -806,7 +803,7 @@
 .thanks-info {
   margin-top: 30px;
   background-color: white;
-  padding: 20px 35px;
+  padding: 20px 150px;
 }
 
 .thanks-info span {
@@ -815,11 +812,11 @@
 
 .thanks-info-content {
   border: 2px solid #d6d2d2;
-  padding: 10px 80px 10px 20px;
+  padding: 10px 60px;
 }
 
 .thanks-info-contact {
-  padding: 10px 20px;
+  padding: 10px 60px;
   border: 2px solid #d6d2d2;
   margin-top: 20px;
 }
@@ -1038,11 +1035,24 @@
 /* Teacher Account starts */
 .teacher-account .menu {
   background-color: white;
+  height: 100vh;
 }
+
+.teacher-account {
+  display: flex;
+  flex-direction: column;
+  min-height: 1500px;
+  overflow: hidden;
+}
+
 .teacher-account .menu img {
   border-radius: 50%;
   height: 120px;
   width: 120px;
+}
+
+.teacher-account .menu i {
+  padding-top: 5px;
 }
 
 .teacher-account .menu button {
@@ -1095,8 +1105,545 @@
   margin-left: 25px;
 }
 
+.teacher-account .col-lg-9 {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.teacher-notification,
+.teacher-course,
+.teacher-classes,
+.teacher-setting,
+.syllabus,
+.create-syllabus {
+  margin-top: 30px;
+  background-color: #fbede1;
+  padding: 20px 40px;
+  min-height: 600px;
+}
+
+.teacher-notification .header h5,
+.teacher-course .header h5,
+.teacher-classes .header h5,
+.teacher-setting .header h5,
+.create-course .header h5,
+.syllabus .header h5,
+.create-syllabus .header h5 {
+  font-size: 22px;
+}
+
+.teacher-notification .header hr,
+.teacher-course .header hr,
+.teacher-classes .header hr,
+.teacher-setting .header hr,
+.create-course .header hr,
+.syllabus .header hr,
+.create-syllabus .header hr {
+  width: 50%;
+  color: #ff8a00;
+  margin: 0;
+  height: 3px;
+}
+
+.teacher-notification .header i,
+.teacher-course .header i,
+.teacher-classes .header i,
+.teacher-setting .header i,
+.create-course .header i,
+.syllabus .header i,
+.create-syllabus .header i {
+  color: #ff8a00;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.teacher-notification .item {
+  padding: 10px 30px;
+  margin-top: 20px;
+  background-color: white;
+  border-left: 2px solid #e53e5c;
+}
+
+.teacher-notification .item .left img {
+  height: 57px;
+  width: 57px;
+  border-radius: 50%;
+}
+
+.teacher-notification .item .left span {
+  margin-left: 10px;
+}
+
+.teacher-notification .item .left p,
+.teacher-notification .item .right p {
+  margin-bottom: 0;
+}
+
+.teacher-notification .item .right p {
+  font-size: 12px;
+}
+
+.teacher-course .sub-menu {
+  background-color: white;
+  margin-top: 20px;
+  padding: 15px 20px 0 20px;
+}
+
+.teacher-course .sub-menu hr {
+  margin: 0;
+}
+
+.teacher-course .sub-menu div.active {
+  color: #1a9cb7;
+}
+
+.teacher-course .search {
+  background-color: white;
+  padding: 15px 20px 0 20px;
+}
+
+.teacher-course .search .content {
+  border: 1px solid gray;
+  width: 40%;
+  border-radius: 5px;
+  padding: 10px !important;
+}
+
+.teacher-course .search input {
+  border: none;
+  margin-left: 15px;
+}
+
+.teacher-course .search input:focus {
+  outline: none;
+}
+
+.teacher-course .content {
+  background-color: white;
+  padding: 35px 20px 0 20px;
+}
+
+.teacher-course .content .item {
+  padding: 10px 10px 40px 10px;
+  border-radius: 10px;
+}
+
+.teacher-course .content .item img {
+  border-radius: 10px;
+}
+
+.teacher-course .content .item span {
+  float: right;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.teacher-course .content .finish {
+  border: 1px solid #1a9cb7;
+}
+
+.teacher-course .content .finish span {
+  background-color: #1a9cb7;
+  color: white;
+}
+
+.teacher-course .content .censor {
+  border: 1px solid #ff8a00;
+}
+
+.teacher-course .content .censor span {
+  background-color: #ff8a00;
+  color: white;
+}
+
+.teacher-schedule .fc-day-sun {
+  display: none;
+}
+
+.teacher-classes-content {
+  margin-top: 20px;
+  background-color: white;
+  padding: 20px;
+  height: 600px;
+}
+
+.teacher-classes-content select {
+  background-color: #1a9cb7;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  width: 100px;
+}
+
+.teacher-classes-content .right {
+  background-color: #fbede1;
+  padding: 10px 15px;
+}
+
+.teacher-classes-content .table-borderless {
+  border-radius: 20px;
+  margin-top: 30px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.teacher-classes-content .table-borderless thead th {
+  background-color: #1a9cb7;
+  color: white;
+  text-align: center;
+}
+
+.teacher-classes-content .table-borderless tbody td {
+  text-align: center;
+}
+
+.teacher-classes-content .table-borderless td:first-child {
+  color: #ff8a00;
+}
+
+.teacher-setting .active-menu-item {
+  color: #1a9cb7; /* Or any color you prefer */
+}
+
+.teacher-setting-content {
+  margin-top: 20px;
+  padding: 20px 35px;
+  background-color: white;
+}
+
+.teacher-setting-content .setting-menu hr {
+  margin-top: 10px !important;
+  height: 2px;
+}
+
+.teacher-setting-content .edit-profile img {
+  height: 84px;
+  width: 84px;
+  border-radius: 50%;
+}
+
+.teacher-setting-content .datePicker {
+  width: 85%;
+}
+
+.teacher-password p {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.teacher-password input {
+  padding-left: 15px;
+  border: 1px solid #988e8e66;
+  height: 40px;
+  outline: none;
+  width: 100%;
+}
+
+.create-course {
+  height: 100vh;
+  overflow: auto;
+  background-color: #fbede1;
+  padding: 20px 40px;
+}
+
+.create-course-content {
+  max-height: 800px;
+  overflow-y: scroll;
+  background-color: white;
+}
+
+.create-course-content .super-render {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.create-course-content .blue {
+  color: #1a9cb7;
+}
+
+.create-course-content .orange {
+  color: #ff8a00;
+}
+
+.create-course-content .red {
+  color: #ef7e54;
+}
+
+.create-course-content .title {
+  margin-bottom: 10px;
+}
+
+.create-course-content .sub-title {
+  margin-bottom: 10px;
+}
+
+.create-course-content .section {
+  padding: 5px 10px 5px 25px;
+  border: 1px solid #d4d4d4;
+  cursor: pointer;
+}
+
+.create-course-content .collapse,
+.create-course-content .video-collapse,
+.create-course-content .doc-collapse,
+.create-course-content .quiz-collapse {
+  border: 1px solid #d4d4d4;
+  border-top: none;
+  padding: 0 25px 15px 25px;
+}
+
+.create-course-content .button {
+  background-color: #f69e4a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  height: 30px;
+  width: 150px;
+}
+
+.create-course-content .question .question-content {
+  padding: 0 25px 15px 25px;
+  background-color: #fbede1;
+}
+
+.syllabus-content {
+  background-color: white;
+  padding-top: 10px;
+}
+
+.syllabus-content .blue {
+  color: #1a9cb7;
+}
+
+.syllabus-content .search {
+  margin-top: 20px;
+}
+
+.syllabus-content .search input {
+  border: 1px solid #988e8e66;
+  border-radius: 10px 0 0 10px;
+  border-right: none;
+  outline: none;
+  height: 30px;
+  padding-left: 10px;
+  width: 70%;
+}
+
+.syllabus-content .syllabus-item {
+  margin-top: 20px;
+  border: 1px solid #d9d9d9;
+  padding: 10px 20px;
+}
+
+.syllabus-content .syllabus-item img {
+  height: 70px;
+  width: 70px;
+}
 
 /* Teacher Account ends */
+
+/* Course starts */
+/* .all-course {
+  background-image: url("./../images/background/allCourseBackground.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+} */
+
+.course .search {
+  width: 50%;
+}
+
+.course .search input {
+  width: 90%;
+  height: 65px;
+  outline: none;
+  border-radius: 10px 0 0 10px;
+  border: 2px solid #ff8a00cc;
+  padding-left: 15px;
+}
+
+.course .search .search-button {
+  width: 10%;
+  text-align: center;
+  color: white;
+  background-color: #ff8a00cc;
+  height: 65px;
+  padding-top: 10px;
+  font-size: 25px;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+}
+
+.all-course-header h5 {
+  font-size: 28px;
+  color: #ff8a00;
+}
+
+.all-course-header h4 {
+  font-size: 32px;
+  margin-top: 20px !important;
+}
+
+.all-course-header p {
+  font-size: 20px;
+  margin-top: 20px !important;
+}
+/* Course ends */
+
+/* Staff starts */
+.staff {
+  position: relative;
+}
+.staff .menu {
+  height: 100vh;
+  padding: 15px 40px;
+  background-color: #ef7e54;
+}
+
+.staff .menu .logo h5 {
+  font-size: 40px;
+  font-weight: 900;
+  color: white;
+}
+
+.staff .menu .item {
+  color: white;
+  cursor: pointer;
+  margin-top: 30px;
+  padding: 10px 10px 10px 20px;
+  border-radius: 10px;
+}
+
+.staff .menu .item.active {
+  background-color: white;
+  color: #4d4d4d;
+}
+
+.staff .menu .item i {
+  font-size: 23px;
+}
+
+.staff .menu .item span {
+  margin-left: 15px;
+}
+
+.staff-notification,
+.staff-moderating,
+.moderating-detail,
+.moderating-lesson {
+  margin-top: 30px;
+  padding: 20px 80px;
+  min-height: 600px;
+}
+
+.staff-notification .header h5,
+.staff-moderating .header h5,
+.moderating-detail .header h5,
+.moderating-lesson .header h5 {
+  font-size: 22px;
+}
+
+.staff-notification .header hr,
+.staff-moderating .header hr,
+.moderating-detail .header hr,
+.moderating-lesson .header hr {
+  width: 50%;
+  color: #ff8a00;
+  margin: 0;
+  height: 3px;
+}
+
+.staff-notification .header i,
+.staff-moderating .header i {
+  color: #ff8a00;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.staff-notification .item {
+  padding: 10px 30px;
+  margin-top: 20px;
+  background-color: white;
+  border-left: 2px solid #e53e5c;
+}
+
+.staff-notification .item .left img,
+.staff-moderating .item .left img {
+  height: 57px;
+  width: 57px;
+  border-radius: 50%;
+}
+
+.staff-notification .item .left span,
+.staff-moderating .item .left span {
+  margin-left: 10px;
+}
+
+.staff-notification .item .left p,
+.staff-notification .item .right p,
+.staff-moderating .item .left p,
+.staff-moderating .item .right p {
+  margin-bottom: 0;
+}
+
+.staff-notification .item .right p,
+.staff-moderating .item .right p {
+  font-size: 12px;
+}
+
+.staff-moderating .item {
+  padding: 10px 30px;
+  margin-top: 20px;
+  background-color: white;
+  border: 1px solid #ff8a00;
+}
+
+.moderating-detail-content {
+  padding: 10px 25px;
+}
+
+.moderating-detail-content img {
+  height: 300px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.moderating-detail-content .blue {
+  color: #1a9cb7;
+}
+
+.moderating-detail-content .accordion-body i {
+  font-size: 22px;
+}
+
+.moderating-detail-content .accordion-body span {
+  font-size: 14px;
+}
+
+.moderating-detail .selectedDiv {
+  border: 2px solid #1a9cb7;
+  padding: 10px;
+}
+
+.moderating-detail .unselectedDiv {
+  border: 2px solid transparent;
+  padding: 10px;
+}
+
+/* Staff ends */
+
+/* Admin starts */
+.admin-syllabus {
+  padding: 20px 80px;
+  min-height: 500px;
+}
+
+.create-syllabus {
+  height: 550px;
+  overflow-y: scroll;
+}
+/* Admin ends */
 
 /* BigShow Owl Slider */
 .slider-title {
@@ -1572,6 +2119,15 @@
 }
 
 /* Teacher Info */
+.teacher-create {
+  min-height: 100vh; /* Ensure it covers at least the whole viewport initially */
+  overflow-y: auto;
+}
+
+.scrollable-section {
+  max-height: 400px;
+  overflow-y: auto;
+}
 
 .teacher-content .teacher-coures {
   color: #191918;

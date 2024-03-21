@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import Header from '../Layout/Header'; 
 import Footer from '../Layout/Footer'; 
 import PageTitle from '../Layout/PageTitle';
-import {LightGalleryBlog} from './ClassesDetail';
 //images
 import bnr1 from './../../images/line2.png';
 import large1 from './../../images/blog/large/pic-large.jpg';
@@ -116,7 +115,7 @@ class EventDetail extends Component{
 										<div className="widget widget_gallery gallery-grid-4">
 											<h5 className="widget-title">Event Gallery</h5>
 											<ul id="lightgallery">
-												<LightGalleryBlog />
+												
 											</ul>
 										</div>
 									</div>
