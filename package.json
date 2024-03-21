@@ -13,6 +13,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.6.8",
     "i18next": "^23.7.11",
     "i18next-browser-languagedetector": "^7.2.0",
     "install": "^0.13.0",
