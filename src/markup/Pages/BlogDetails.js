@@ -50,7 +50,7 @@ const BlogDetails = () =>{
 						<div className="row">
 							<div className="col-lg-8 col-md-12 col-sm-12">
 								{/* Classes Detail  */}
-									<ClassDetailContent />
+									{/* <ClassDetailContent /> */}
 								
 								
 								<div className="clear" id="comment-list">
