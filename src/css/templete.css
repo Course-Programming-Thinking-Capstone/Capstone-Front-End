@@ -1643,6 +1643,14 @@
   height: 550px;
   overflow-y: scroll;
 }
+
+.create-syllabus .blue {
+  color: #1a9cb7;
+}
+
+.create-syllabus .orange {
+  color: #ff8a00;
+}
 /* Admin ends */
 
 /* BigShow Owl Slider */

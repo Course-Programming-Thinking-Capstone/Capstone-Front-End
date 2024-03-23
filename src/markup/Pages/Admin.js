@@ -116,8 +116,8 @@ const Syllabus = () => {
         const handleAddSection = () => {
             if (newSectionName.trim() !== '') {
                 setSections([...sections, newSectionName.trim()]);
-                setNewSectionName(''); // Clear the input field for the next section name
-                setModalShow(false); // Optionally close the modal after adding
+                setNewSectionName('');
+                setModalShow(false);
             }
         };
 
@@ -211,10 +211,12 @@ const Syllabus = () => {
                     <div>
                         <div>
                             <div className="d-flex justify-content-start">
-                                <p className='mb-0 blue'>Course title</p>
-                                <span className='orange'>*</span>
+                                <div className="d-flex justify-content-start">
+                                    <p className='mb-0 blue'>Course title</p>
+                                    <span className='orange'>*</span>
+                                </div>
+                                <input className='ms-3' style={{ width: '400px' }} type="text" placeholder='Course title' value={courseName} onChange={e => setCourseName(e.target.value)} />
                             </div>
-                            <input type="text" placeholder='Course title' value={courseName} onChange={e => setCourseName(e.target.value)} />
 
                             <div className="d-flex justify-content-start">
                                 <p className='mb-0 blue'>Course target</p>
@@ -235,34 +237,38 @@ const Syllabus = () => {
                         >
                             <Modal.Body>
                                 <div className="text-center">
-                                    <h5>Add new section</h5>
+                                    <h5 style={{ color: '#ff8a00' }}>Add new section</h5>
                                 </div>
-                                <div>
-                                    <p>Section's name</p>
+                                <div className='mt-4'>
+                                    <p className='mb-0'>Section's name</p>
                                     <input value={newSectionName}
                                         onChange={(e) => setNewSectionName(e.target.value)}
                                         type="text"
-                                        placeholder="Write section's name" />
+                                        placeholder="Write section's name"
+                                        style={{ width: '100%', borderRadius: '7px', outline: 'none' }} />
                                 </div>
-                                <div className="d-flex justify-content-end">
-                                    <button onClick={() => setModalShow(false)}>Cancel</button>
-                                    <button onClick={handleAddSection}>Add</button>
+                                <div className="d-flex justify-content-end mt-4">
+                                    <button style={{ backgroundColor: '#1a9cb7', color: 'white', border: 'none', borderRadius: '5px', height: '35px', width: '100px' }} className='mx-4' onClick={() => setModalShow(false)}>Cancel</button>
+                                    <button style={{ backgroundColor: '#ff8a00', color: 'white', border: 'none', borderRadius: '5px', height: '35px', width: '100px' }} onClick={handleAddSection}>Add</button>
                                 </div>
                             </Modal.Body>
                         </Modal>
                         <div className="render-section">
                             {sections.map((section, index) => (
-                                <div key={index}>
+                                <div className='ps-4 pt-2 pb-2' key={index} style={{ border: '1px solid #D4D4D4' }}>
                                     <p className='mb-0'>{section}</p>
                                 </div>
                             ))}
                         </div>
-                        <div className="d-flex justify-content-center">
-                            <button onClick={() => setModalShow(true)}><i class="fa-solid fa-circle-plus"></i>New section</button>
+                        <div className="d-flex justify-content-center mt-4">
+                            <button style={{ backgroundColor: '#E53E5C', color: 'white', border: 'none', borderRadius: '10px', height: '35px' }} onClick={() => setModalShow(true)}><i class="fa-solid fa-circle-plus"></i>New section</button>
                         </div>
 
                         <div>
-                            <p>Teacher</p>
+                            <div className="d-flex justify-content-start">
+                                <p className='mb-0 blue'>Teacher</p>
+                                <span className='orange'>*</span>
+                            </div>
                             <SearchableDropdown
                                 options={teachers}
                                 selectedValue={selectedTeacherId}
@@ -270,8 +276,8 @@ const Syllabus = () => {
                             />
                         </div>
 
-                        <div className="d-flex justify-content-end">
-                            <button onClick={handleSaveChanges}>SAVE CHANGES</button>
+                        <div className="d-flex justify-content-end mt-4">
+                            <button style={{ backgroundColor: '#FD8569', color: 'white', border: 'none', borderRadius: '7px', height: '35px', width: '150px' }} onClick={handleSaveChanges}>SAVE CHANGES</button>
                         </div>
 
                     </div>
@@ -442,10 +448,10 @@ export default function Admin() {
                             <i class="fa-solid fa-book"></i>
                             <span>Syllabus</span>
                         </div>
-                    </div>
-                    <div className="d-flex">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Log out
+                        <div className='item'>
+                            <i class="fa-solid fa-book"></i>
+                            <span>Log out</span>
+                        </div>
                     </div>
                 </div>
 

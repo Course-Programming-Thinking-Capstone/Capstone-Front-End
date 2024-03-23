@@ -31,7 +31,7 @@ export default function CoursePayment() {
         setLoading(true);
         const accessToken = localStorage.getItem('accessToken'); // Assuming the access token is stored in localStorage
         try {
-            const response = await fetch('https://www.kidpro-production.somee.com/api/v1/parents/students', {
+            const response = await fetch('https://www.kidpro-production.somee.com/api/v1/students', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,7 +87,6 @@ export default function CoursePayment() {
                 setCourseDetails(data);
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
-                setError(error.toString());
             } finally {
                 setLoading(false);
             }
@@ -173,11 +172,12 @@ export default function CoursePayment() {
             studentId: selectedChildren,
             courseId: courseDetails ? courseDetails.courseId : null,
             voucherId: 0,
-            paymentType: 2, 
+            paymentType: 2,
             quantity: selectedChildren.length
         };
 
         try {
+            // Initiating the order
             let response = await fetch('https://www.kidpro-production.somee.com/api/v1/orders', {
                 method: 'POST',
                 headers: {
@@ -195,18 +195,18 @@ export default function CoursePayment() {
 
             console.log('Order placed successfully', responseData);
 
-            const paymentDetails = {
-                orderId: responseData.orderId,
-                parentId: responseData.parentId
-            };
+            // Since orderId is now part of the URL, you don't necessarily need to send it again in the body
+            // unless it's specifically required by your API endpoint.
+            const paymentInitiationUrl = `https://www.kidpro-production.somee.com/api/v1/payment/momo/${responseData.orderId}`;
 
-            response = await fetch('https://www.kidpro-production.somee.com/api/v1/payment/momo', {
+            response = await fetch(paymentInitiationUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
                 },
-                body: JSON.stringify(paymentDetails),
+                // This assumes your API does not require the orderId in the body since it's already in the URL
+                body: JSON.stringify({}),
             });
 
             responseData = await response.json();
@@ -217,11 +217,13 @@ export default function CoursePayment() {
 
             console.log('Payment initiated successfully', responseData);
 
+            // Redirect to MoMo payment URL
+            window.location.href = responseData.payUrl;
+
         } catch (error) {
             console.error('There was a problem with the process:', error.message);
         }
     };
-
 
     return (
         <div>

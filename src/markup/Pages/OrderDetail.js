@@ -56,16 +56,13 @@ export default function OrderDetail() {
                                 <p> {orderDetails.numberChildren}</p>
                             </div>
 
-                            <div className="d-flex justify-content-center">
-                                <div className='item text-center'>
-                                    <p className='mb'>Ronaldo</p>
+                            {orderDetails.students && orderDetails.students.map((student, index) => (
+                                <div className="d-flex justify-content-center">
+                                    <div key={index} className='item text-center' style={index > 0 ? { marginTop: '10px' } : {}}>
+                                        <p className='mb'>{student.studentName}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="d-flex justify-content-center" style={{ marginTop: '10px' }}>
-                                <div className='item text-center'>
-                                    <p className='mb'>Messi</p>
-                                </div>
-                            </div>
+                            ))}
 
                             <p>Child's account will send to:</p>
                             <div className='d-flex justify-content-center'>
