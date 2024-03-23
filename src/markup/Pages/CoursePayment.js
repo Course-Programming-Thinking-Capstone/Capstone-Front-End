@@ -19,6 +19,7 @@ export default function CoursePayment() {
     const [newChildName, setNewChildName] = useState('');
     const [newChildDOB, setNewChildDOB] = useState('');
     const [newChildGender, setNewChildGender] = useState('');
+    const [error, setError] =useState('');
 
     const accessToken = localStorage.getItem('accessToken');
 
