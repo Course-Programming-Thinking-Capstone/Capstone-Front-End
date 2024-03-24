@@ -471,7 +471,7 @@ const SyllabusComponent = () => {
       try {
         setIsLoading(true);
 
-        dispatch(
+        await dispatch(
           filterSyllabusesAsync({
             page: 1,
             size: 10,

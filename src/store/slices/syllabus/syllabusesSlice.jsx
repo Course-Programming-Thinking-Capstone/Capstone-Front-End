@@ -5,14 +5,7 @@ import { getCourseByIdAsync } from "../../thunkApis/course/courseThunk";
 const initData = {
   totalPages: 0,
   totalRecords: 0,
-  results: [
-    {
-      id: 0,
-      name: "",
-      createdDate: "",
-      status: "Draft",
-    },
-  ],
+  results: [],
 };
 
 export const syllabusesSlice = createSlice({
