@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCourseById } from "../../thunkApis/course/courseThunk";
+import { getCourseByIdAsync } from "../../thunkApis/course/courseThunk";
 
 const entity = {
   id: 0,
@@ -46,15 +46,16 @@ export const createCourseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getCourseById.loading, (state) => {
+      .addCase(getCourseByIdAsync.pending, (state) => {
         state.loading = "loading";
         state.error = null;
       })
-      .addCase(getCourseById.fulfilled, (state, action) => {
+      .addCase(getCourseByIdAsync.fulfilled, (state, action) => {
         state.loading = "success";
-        (state.error = null), (state.entity = action.payload);
+        state.error = null;
+        state.entity = action.payload;
       })
-      .addCase(getCourseById.rejected, (state, action) => {
+      .addCase(getCourseByIdAsync.rejected, (state, action) => {
         state.loading = "fail";
         state.error = action.payload;
       });

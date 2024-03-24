@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getCourseById } from "../../../helper/apis/course/course";
 
 //get course by id
-export const getCourseById = createAsyncThunk(
+export const getCourseByIdAsync = createAsyncThunk(
   "course/getById",
   async (courseId, action, thunkAPI) => {
     try {
