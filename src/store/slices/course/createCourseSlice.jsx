@@ -27,21 +27,21 @@ const entity = {
 export const createCourseSlice = createSlice({
   name: "createCourse",
   initialState: {
-    entity: entity,
+    data: entity,
     loading: "idle",
     error: {},
   },
   reducers: {
     resetData: (state) => {
-      state.entity = entity;
+      state.data = entity;
     },
 
     setData: (state, action) => {
-      state.entity = action.payload;
+      state.data = action.payload;
     },
 
     setDescription: (state, action) => {
-      state.entity.description = action.payload.description;
+      state.data.description = action.payload.description;
     },
   },
   extraReducers: (builder) => {
@@ -53,7 +53,7 @@ export const createCourseSlice = createSlice({
       .addCase(getCourseByIdAsync.fulfilled, (state, action) => {
         state.loading = "success";
         state.error = null;
-        state.entity = action.payload;
+        state.data = action.payload;
       })
       .addCase(getCourseByIdAsync.rejected, (state, action) => {
         state.loading = "fail";

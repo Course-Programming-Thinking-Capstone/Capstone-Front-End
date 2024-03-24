@@ -2,10 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 import { filterSyllabusesAsync } from "../../thunkApis/syllabuses/syllabusesThunk";
 import { getCourseByIdAsync } from "../../thunkApis/course/courseThunk";
 
+const initData = {
+  totalPages: 0,
+  totalRecords: 0,
+  results: [
+    {
+      id: 0,
+      name: "",
+      createdDate: "",
+      status: "Draft",
+    },
+  ],
+};
+
 export const syllabusesSlice = createSlice({
   name: "syllabuses",
   initialState: {
-    data: [],
+    data: initData,
     loading: "idle",
     error: {},
   },

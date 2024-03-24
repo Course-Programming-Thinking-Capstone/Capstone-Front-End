@@ -4,12 +4,27 @@ import {
   getCourseById,
   getCoursesApi,
 } from "../../../../../helper/apis/course/course";
+import { useDispatch, useSelector } from "react-redux";
+import { syllabusesSelector } from "../../../../../store/selector";
+import { filterSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
+import { filterSyllabus } from "../../../../../helper/apis/syllabus/syllabus";
+import SyllabusInformation from "./syllabusInformation/SyllabusInformation";
 
 const Syllabus = () => {
+  //useDispath
+  const dispatch = useDispatch();
+
   //set information message
   const [message, setMessage] = useState(undefined);
+
+  //syllabus list
+  const syllabuses = useSelector(syllabusesSelector);
+
+  //current syllabus Id
+  const [syllabusId, setSyllabusId] = useState(0);
+
   const [currentComponent, setCurrentComponent] = useState("default");
-  const [currentPageData, setCurrentPageData] = useState([]);
+  // const [currentPageData, setCurrentPageData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [courseStructure, setCourseStructure] = useState({});
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -450,21 +465,21 @@ const Syllabus = () => {
     }
   };
 
+  // fetch syllabuses list
   useEffect(() => {
     const fetchData = async () => {
-      //log
-      console.log(`Call get courses api`);
-
       try {
         setIsLoading(true);
-        const data = await getCoursesApi({
-          status: "Draft",
-          action: "manage",
-          page: 1,
-          size: 10,
-        });
 
-        setCurrentPageData(data.results || {});
+        dispatch(
+          filterSyllabusesAsync({
+            page: 1,
+            size: 10,
+          })
+        );
+
+        //log
+        console.log(`Fetch data: ${JSON.stringify(syllabuses, null, 2)}`);
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.Message}`);
@@ -477,150 +492,9 @@ const Syllabus = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
-  }, []);
+  }, [dispatch]);
 
-  const fetchCourseData = async (id) => {
-    try {
-      //log
-      console.log(`method: "fetchCourseData"\nCourse Id: ${id}}`);
-
-      setIsLoading(true);
-      const data = await getCourseById({ id: id, action: `manage` });
-
-      //log get course by id
-      console.log(
-        `Log getCourseById: Method: "fetchCourseData"\nCourse detail: ${JSON.stringify(
-          data,
-          null,
-          2
-        )}}`
-      );
-
-      setSelectedCourse(data);
-      setCurrentComponent("syllabusInformation"); // Switch to syllabusInformation component
-      setIsLoading(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(`Error response: ${error.response?.data?.Message}`);
-        setMessage(error.response?.data?.title || "Undefined.");
-      } else {
-        console.log(`Error message abc: ${error.message}`);
-        setMessage(error.message || "Undefined.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const SyllabusInformation = ({ goBack }) => {
-    if (!selectedCourse) {
-      return (
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      );
-    }
-    return (
-      <div>
-        <div className="header">
-          <div className="d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
-              <div>
-                <h5 className="mb">CREATE COURSE</h5>
-                <hr />
-              </div>
-              <i class="fa-solid fa-book"></i>
-            </div>
-            <div>
-              <button onClick={goBack}>Back</button>
-            </div>
-          </div>
-        </div>
-        <div className="syllabus-content">
-          <div className="pt-2 px-4 pb-2">
-            <div className="d-flex">
-              <div style={{ width: "120px" }}>
-                <p className="blue">Course title</p>
-              </div>
-              <div>
-                <p>{selectedCourse.name}</p>
-              </div>
-            </div>
-            <div className="d-flex">
-              <div style={{ width: "170px" }}>
-                <p className="blue">Course target</p>
-              </div>
-              <div>
-                <p>{selectedCourse.courseTarget}</p>
-              </div>
-            </div>
-            <div className="d-flex">
-              <div style={{ width: "120px" }}>
-                <p className="blue">Section</p>
-              </div>
-              <div>
-                {/* Load section in course Id*/}
-                {selectedCourse &&
-                  selectedCourse.sections.map((section, index) => (
-                    <div key={index}>{section.name}</div>
-                  ))}
-              </div>
-            </div>
-            <div>
-              <p className="mb-0 blue">Evaluation methods</p>
-              <div style={{ marginLeft: "200px" }}>
-                <div className="d-flex">
-                  <p className="mb-0 pt-1">Quiz section</p>
-                  <span
-                    style={{
-                      border: "1px solid #F69E4A",
-                      borderRadius: "5px",
-                      padding: "2px",
-                      marginLeft: "10px",
-                    }}
-                  >
-                    30%
-                  </span>
-                </div>
-                <div className="d-flex mt-2">
-                  <p className="mb-0 pt-1">Quiz total</p>
-                  <span
-                    style={{
-                      border: "1px solid #F69E4A",
-                      borderRadius: "5px",
-                      padding: "2px",
-                      marginLeft: "30px",
-                    }}
-                  >
-                    50%
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex justify-content-end">
-              <button
-                onClick={() => setCurrentComponent("createCourse")}
-                style={{
-                  backgroundColor: "#FD8569",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  height: "40px",
-                  width: "150px",
-                }}
-              >
-                CREATE COURSE
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  //create course function
   const CreateCourse = ({ selectedCourse, goBack }) => {
     const initializedCourseStructure = {
       ...selectedCourse,
@@ -965,7 +839,11 @@ const Syllabus = () => {
     switch (currentComponent) {
       case "syllabusInformation":
         return (
-          <SyllabusInformation goBack={() => setCurrentComponent("default")} />
+          <SyllabusInformation
+            goBack={() => setCurrentComponent("default")}
+            syllabusId={syllabusId}
+            setCurrentComponent={setCurrentComponent}
+          />
         );
       case "createCourse":
         return (
@@ -1018,22 +896,23 @@ const Syllabus = () => {
                       </div>
                     </div>
                   ) : (
-                    currentPageData.map((course, index) => (
+                    syllabuses.results.map((syllabus, index) => (
                       <div key={index} className="syllabus-item">
                         <div className="d-flex justify-content-between">
                           <div className="d-flex justify-content-start">
                             <img className="img-responsive" src={simp} alt="" />
                             <div className="ms-3">
-                              <p className="mb-1 mt-2">{course.name}</p>
+                              <p className="mb-1 mt-2">{syllabus.name}</p>
                               <p className="mb-1 title blue">
-                                Create date: {course.createdDate}
+                                Create date: {syllabus.createdDate}
                               </p>
                             </div>
                           </div>
                           <div>
                             <button
-                              onClick={async () => {
-                                await fetchCourseData(course.id);
+                              onClick={() => {
+                                setSyllabusId(syllabus.id);
+                                setCurrentComponent("syllabusInformation");
                               }}
                               className="mt-3"
                               style={{

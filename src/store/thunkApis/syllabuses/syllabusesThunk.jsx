@@ -10,6 +10,12 @@ export const filterSyllabusesAsync = createAsyncThunk(
   async (filter, thunkAPI) => {
     try {
       const response = await filterSyllabus(filter);
+      //log
+      console.log(
+        `Fetch data in filterSyllabusesAsync: ${
+          (JSON.stringify(response), null, 2)
+        }`
+      );
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
