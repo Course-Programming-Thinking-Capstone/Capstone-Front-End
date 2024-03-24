@@ -42,6 +42,13 @@ import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccout/TeacherAccount';
 import Staff from './Pages/Staff';
 import Admin from './Pages/Admin';
+import TeacherSchedule from './Pages/Teacher/TeacherAccout/TeacherSchedule/TeacherSchedule';
+import TeacherNotification from './Pages/Teacher/TeacherAccout/TeacherNotification/TeacherNotification';
+import TeacherCourse from './Pages/Teacher/TeacherAccout/TeacherCourse/TeacherCourse';
+import TeacherClasses from './Pages/Teacher/TeacherAccout/TeacherClass/TeacherClass';
+import Syllabus from './Pages/Teacher/TeacherAccout/Syllabus/Syllabus';
+import Quiz from './Pages/Teacher/TeacherAccout/CreateQuiz/Quiz';
+import TeacherSetting from './Pages/Teacher/TeacherAccout/TeacherSetting/TeacherSetting';
 
 
 export default function Markup() {
@@ -85,7 +92,15 @@ export default function Markup() {
 					<Route path='/payment-success' exact element={<PaymentSuccess />} />
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
+					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/teacher-account' exact element={<TeacherAccount />} />
+					<Route path='/teacher-account/schedule' exact element={<TeacherSchedule />} />
+					<Route path='/teacher-account/notification' exact element={<TeacherNotification />} />
+					<Route path='/teacher-account/courses' exact element={<TeacherCourse />} />
+					<Route path='/teacher-account/classes' exact element={<TeacherClasses />} />
+					<Route path='/teacher-account/syllabuses' exact element={<Syllabus />} />
+					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
+					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
 					<Route path='/staff' exact element={<Staff />} />
 					<Route path='/admin' exact element={<Admin />} />
 
