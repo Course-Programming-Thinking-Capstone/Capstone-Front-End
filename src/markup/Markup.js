@@ -39,7 +39,7 @@ import OrderCancel from './Pages/OrderCancel';
 import PaymentSuccess from './Pages/PaymentSuccess';
 import Account from './Pages/Account';
 import Verification from './Pages/Verification';
-import TeacherAccount from './Pages/Teacher/TeacherAccout/TeacherAccount';
+import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff';
 import Admin from './Pages/Admin';
 
