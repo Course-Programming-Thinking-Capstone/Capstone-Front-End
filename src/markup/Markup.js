@@ -42,6 +42,7 @@ import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff';
 import Admin from './Pages/Admin';
+import Login from './Pages/Login';
 
 
 export default function Markup() {
@@ -74,6 +75,7 @@ export default function Markup() {
 					<Route path='/contact-us' exact element={<Contact />} />
 					<Route path='/dashboard' exact element={<Dashboard />} />
 					<Route path='/register' exact element={<Register />} />
+					<Route path='/login' exact element={<Login />} />
 					<Route path='/schedule' exact element={<Schedule />} />
 					<Route path='/courses-plan' exact element={<CoursesPlan />} />
 					<Route path='/courses-study' exact element={<CourseStudy />} />
