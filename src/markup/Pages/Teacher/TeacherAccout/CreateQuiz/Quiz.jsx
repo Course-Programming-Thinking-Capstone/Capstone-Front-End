@@ -1,14 +1,14 @@
 import { useDispatch } from "react-redux";
 import TeacherAccount from "../TeacherAccount";
-import SyllabusComponent from "./SyllabusComponent";
+import QuizComponent from "./QuizComponent";
 import { changeTeacherActiveMenu } from "../../../../../store/slices/menu/menuSlice";
 
-const Syllabus = () => {
+const Quiz = () => {
   const dispatch = useDispatch();
 
   //change active menu
-  dispatch(changeTeacherActiveMenu({ teacherActiveMenu: "syllabuses" }));
-
-  return <TeacherAccount child={<SyllabusComponent />} />;
+  dispatch(changeTeacherActiveMenu({ teacherActiveMenu: "quizzes" }));
+  return <TeacherAccount child={<QuizComponent />} />;
 };
-export default Syllabus;
+
+export default Quiz;

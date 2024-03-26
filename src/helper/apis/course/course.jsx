@@ -41,7 +41,7 @@ export const getCoursesApi = async (filter) => {
 export const getCourseById = async ({ id, action }) => {
   let actionParam = action === undefined ? "" : `?action=${action}`;
   const response = await instance.get(
-    `https://www.kidpro-production.somee.com/api/v1/courses/${id}${actionParam}`
+    `api/v1/courses/${id}${actionParam}`
   );
 
   return response.data;

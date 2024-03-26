@@ -59,7 +59,6 @@ export default function CourseStudy() {
                         Game
                     </div>
                 );
-            // Add cases for other content types
             default:
                 return (
                     <>
