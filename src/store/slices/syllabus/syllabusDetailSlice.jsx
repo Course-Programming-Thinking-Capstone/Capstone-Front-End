@@ -15,6 +15,7 @@ const entity = {
     },
   ],
   teacherId: 0,
+  courseId: 0
 };
 
 export const syllabusDetailSlice = createSlice({

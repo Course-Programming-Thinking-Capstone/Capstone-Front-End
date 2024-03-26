@@ -9,6 +9,7 @@ import { syllabusesSelector } from "../../../../../store/selector";
 import { filterSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { filterSyllabus } from "../../../../../helper/apis/syllabus/syllabus";
 import SyllabusInformation from "./syllabusInformation/SyllabusInformation";
+import { Link } from "react-router-dom";
 
 const SyllabusComponent = () => {
   //useDispath
@@ -836,107 +837,88 @@ const SyllabusComponent = () => {
   };
 
   const renderComponent = () => {
-    switch (currentComponent) {
-      case "syllabusInformation":
-        return (
-          <SyllabusInformation
-            goBack={() => setCurrentComponent("default")}
-            syllabusId={syllabusId}
-            setCurrentComponent={setCurrentComponent}
-          />
-        );
-      case "createCourse":
-        return (
-          <CreateCourse
-            selectedCourse={selectedCourse}
-            goBack={() => setCurrentComponent("syllabusInformation")}
-          />
-        );
-      default:
-        return (
-          <div className="syllabus">
-            <div className="header">
-              <div className="d-flex justify-content-start">
-                <div>
-                  <h5 className="mb">CREATE COURSE</h5>
-                  <hr />
-                </div>
-                <i class="fa-solid fa-book"></i>
+    return (
+      <div className="syllabus">
+        <div className="header">
+          <div className="d-flex justify-content-start">
+            <div>
+              <h5 className="mb">CREATE COURSE</h5>
+              <hr />
+            </div>
+            <i class="fa-solid fa-book"></i>
+          </div>
+        </div>
+        <div className="syllabus-content">
+          <h5 className="mb-2 ms-3">Syllabus</h5>
+          <hr style={{ margin: "0px" }} />
+          <div>
+            <div className="search d-flex justify-content-center">
+              <input type="text" placeholder="Search course" />
+              <div
+                className="text-center"
+                style={{
+                  height: "30px",
+                  border: "1px solid #988E8E66",
+                  borderLeft: "none",
+                  width: "5%",
+                  paddingTop: "5px",
+                  borderRadius: "0 10px 10px 0",
+                }}
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
               </div>
             </div>
-            <div className="syllabus-content">
-              <h5 className="mb-2 ms-3">Syllabus</h5>
-              <hr style={{ margin: "0px" }} />
-              <div>
-                <div className="search d-flex justify-content-center">
-                  <input type="text" placeholder="Search course" />
-                  <div
-                    className="text-center"
-                    style={{
-                      height: "30px",
-                      border: "1px solid #988E8E66",
-                      borderLeft: "none",
-                      width: "5%",
-                      paddingTop: "5px",
-                      borderRadius: "0 10px 10px 0",
-                    }}
-                  >
-                    <i class="fa-solid fa-magnifying-glass"></i>
+
+            <div className="px-3" style={{ minHeight: "500px" }}>
+              {isLoading ? (
+                <div className="d-flex justify-content-center">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
-
-                <div className="px-3" style={{ minHeight: "500px" }}>
-                  {isLoading ? (
-                    <div className="d-flex justify-content-center">
-                      <div
-                        className="spinner-border text-primary"
-                        role="status"
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </div>
-                  ) : (
-                    syllabuses.results.map((syllabus, index) => (
-                      <div key={index} className="syllabus-item">
-                        <div className="d-flex justify-content-between">
-                          <div className="d-flex justify-content-start">
-                            <img className="img-responsive" src={simp} alt="" />
-                            <div className="ms-3">
-                              <p className="mb-1 mt-2">{syllabus.name}</p>
-                              <p className="mb-1 title blue">
-                                Create date: {syllabus.createdDate}
-                              </p>
-                            </div>
-                          </div>
-                          <div>
-                            <button
-                              onClick={() => {
-                                setSyllabusId(syllabus.id);
-                                setCurrentComponent("syllabusInformation");
-                              }}
-                              className="mt-3"
-                              style={{
-                                width: "100px",
-                                backgroundColor: "#EF7E54",
-                                border: "none",
-                                borderRadius: "10px",
-                                color: "white",
-                              }}
-                            >
-                              View
-                            </button>
-                          </div>
+              ) : (
+                syllabuses.results.map((syllabus, index) => (
+                  <div key={index} className="syllabus-item">
+                    <div className="d-flex justify-content-between">
+                      <div className="d-flex justify-content-start">
+                        <img className="img-responsive" src={simp} alt="" />
+                        <div className="ms-3">
+                          <p className="mb-1 mt-2">{syllabus.name}</p>
+                          <p className="mb-1 title blue">
+                            Create date: {syllabus.createdDate}
+                          </p>
                         </div>
                       </div>
-                    ))
-                  )}
-                </div>
-              </div>
+                      <div>
+                        <Link
+                          to={`/teacher-account/syllabuses/detail?id=${syllabus.id}`}
+                          className="mt-3"
+                          style={{
+                            display: "inline-block",
+                            width: "100px",
+                            backgroundColor: "#EF7E54",
+                            border: "none",
+                            borderRadius: "10px",
+                            color: "white",
+                            textDecoration: "none", // Ensure no underline
+                            textAlign: "center", // Center the text
+                            lineHeight: "36px", // Vertically center the text
+                          }}
+                        >
+                          View
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
-        );
-    }
+        </div>
+      </div>
+    );
   };
+  
   return renderComponent();
 };
 

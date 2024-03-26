@@ -49,6 +49,7 @@ import TeacherClasses from './Pages/Teacher/TeacherAccout/TeacherClass/TeacherCl
 import Syllabus from './Pages/Teacher/TeacherAccout/Syllabus/Syllabus';
 import Quiz from './Pages/Teacher/TeacherAccout/CreateQuiz/Quiz';
 import TeacherSetting from './Pages/Teacher/TeacherAccout/TeacherSetting/TeacherSetting';
+import SyllabusInformation from './Pages/Teacher/TeacherAccout/Syllabus/syllabusInformation/SyllabusInformation';
 
 
 export default function Markup() {
@@ -99,6 +100,7 @@ export default function Markup() {
 					<Route path='/teacher-account/courses' exact element={<TeacherCourse />} />
 					<Route path='/teacher-account/classes' exact element={<TeacherClasses />} />
 					<Route path='/teacher-account/syllabuses' exact element={<Syllabus />} />
+					<Route path='/teacher-account/syllabuses/detail' exact element={<SyllabusInformation />} />
 					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
 					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
 					<Route path='/staff' exact element={<Staff />} />
