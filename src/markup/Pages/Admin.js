@@ -376,6 +376,45 @@ const Syllabus = () => {
 }
 
 const Game = () => {
+    const [gameModes, setGameModes] = useState([]);
+
+    useEffect(() => {
+        const fetchGameModes = async () => {
+            try {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/games/game-mode', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE', // Replace YOUR_TOKEN_HERE with your actual token
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setGameModes(data);
+            } catch (error) {
+                console.error('Error fetching game modes:', error);
+            }
+        };
+
+        fetchGameModes();
+    }, []);
+
+    const getTotalLevels = (typeName) => {
+        const mode = gameModes.find(mode => mode.typeName.toLowerCase() === typeName.toLowerCase());
+        return mode ? mode.totalLevel : 0;
+    };
+
+    const modes = [
+        { typeName: 'Basic', src: basic },
+        { typeName: 'Sequence', src: sequence },
+        { typeName: 'Loop', src: loop },
+        { typeName: 'Function', src: functionGame },
+        { typeName: 'Condition', src: condition },
+        { typeName: 'Custom', src: custom },
+    ];
+
     return (
         <div className='game-setting'>
             <div className="game-setting-content">
@@ -390,95 +429,22 @@ const Game = () => {
                     </div>
                 </div>
                 <div className='row'>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-
-                            <p className="title blue fw-bold mb-2">Basic mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={basic} alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-
-                            <p className="title blue fw-bold mb-2">Sequence mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={sequence} alt="" />
+                    {modes.map(({ typeName, src }) => (
+                        <div className="item col-lg-6 col-md-6 col-sm-12" key={typeName}>
+                            <div className="item-content">
+                                <p className="title blue fw-bold mb-2">{typeName} mode</p>
+                                <div className="d-flex justify-content-between">
+                                    <div className="d-flex level">
+                                        <span>{getTotalLevels(typeName)}</span>
+                                        <p className='mb-0 ms-2'>Level</p>
+                                    </div>
+                                    <div>
+                                        <img className='img-responsive' src={src} alt="" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-
-                            <p className="title blue fw-bold mb-2">Loop mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={loop} alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-
-                            <p className="title blue fw-bold mb-2">Function mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={functionGame} alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-
-                            <p className="title blue fw-bold mb-2">Condition mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={condition} alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="item col-lg-6 col-md-6 col-sm-12">
-                        <div className="item-content">
-                            <p className="title blue fw-bold mb-2">Custom mode</p>
-                            <div className="d-flex justify-content-between">
-                                <div className="d-flex level">
-                                    <span>15</span>
-                                    <p className='mb-0 ms-2'>Level</p>
-                                </div>
-                                <div>
-                                    <img className='img-responsive' src={custom} alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
