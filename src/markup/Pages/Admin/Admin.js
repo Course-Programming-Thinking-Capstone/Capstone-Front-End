@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import background from './../../../images/background/adminStaffBackground.jpg';
 import simp from './../../../images/gallery/simp.jpg';
@@ -372,87 +373,16 @@ const Syllabus = () => {
     );
 }
 
-const GameData = () => {
-    const location = useLocation();
-    const { levels } = location.state;
-
-    return (
-        <div className='admin-syllabus'>
-            <div className='syllabus'>
-                <div className="header">
-                    <div className="d-flex justify-content-start">
-                        <div>
-                            <h5 className='mb'>GAME</h5>
-                            <hr />
-                        </div>
-                        <i class="fa-solid fa-book"></i>
-                    </div>
-                </div>
-
-                <div className="syllabus-content">
-                    <div className='d-flex justify-content-between'>
-                        <div className="d-flex justify-content-start" style={{ width: '30%', border: '1px solid #EF7E54', padding: '10px 15px', borderRadius: '10px', color: 'white' }}>
-                            <div className='text-center' style={{ width: '50%' }}>
-                                <h5 className='mb-0'> ... MODE</h5>
-                            </div>
-                            <div className="d-flex justify-content-around" style={{ width: '50%', backgroundColor: '#FF8A00', borderRadius: '10px' }}>
-                                <p className='mb-0'>Total level</p>
-                                <span>{levels.length}</span>
-                            </div>
-                        </div>
-                        <div>
-                            <button style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '10px', padding: '5px 10px' }}><i class="fa-solid fa-circle-plus"></i>        Create syllabus</button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="search d-flex justify-content-center">
-                            <input type="text" placeholder='Search course' />
-                            <div className='text-center' style={{ height: '30px', border: '1px solid #988E8E66', borderLeft: 'none', width: '5%', paddingTop: '5px', borderRadius: '0 10px 10px 0' }}>
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                        </div>
-
-                        <div className='px-3'>
-                            {levels.map((level, index) => (
-                                <div key={index}>Level {level.levelIndex + 1}</div>
-                            ))}
-
-                            <div key={index} className="syllabus-item">
-                                <div className="d-flex justify-content-between">
-                                    <div className="d-flex justify-content-start">
-                                        <img className='img-responsive' src={simp} alt="" />
-                                        <div className='ms-3'>
-                                            <p className='mb-1 mt-2'>Level ... </p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button className='mt-3' style={{ width: '100px', backgroundColor: '#EF7E54', border: 'none', borderRadius: '10px', color: 'white' }}>View/Edit</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div className="d-flex justify-content-center">
-                            <ReactPaginate />
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
-
 export default function Admin() {
     const [activeContent, setActiveContent] = useState('');
     const [activeItem, setActiveItem] = useState('');
     const accessToken = localStorage.getItem('accessToken');
+    const navigate = useNavigate();
 
     const handleMenuItemClick = (content) => {
         setActiveContent(content);
         setActiveItem(content);
+        navigate(`/admin/${content.toLowerCase()}`); 
     };
 
     const renderContent = () => {
@@ -534,7 +464,7 @@ export default function Admin() {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat', height: '100vh', overflow: 'hidden'
                 }}>
-                    {renderContent()}
+                    <Outlet /> 
                 </div>
             </div>
         </div>

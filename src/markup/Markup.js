@@ -37,6 +37,8 @@ import TeacherSetting from './Pages/Teacher/TeacherAccount/TeacherSetting/Teache
 import SyllabusInformation from './Pages/Teacher/TeacherAccount/Syllabus/syllabusInformation/SyllabusInformation';
 import Login from './Pages/Login';
 import VerifyEmail from './Pages/VerifyEmail';
+import Game from './Pages/Admin/Game/Game';
+import GameData from './Pages/Admin/Game/GameData';
 
 
 export default function Markup() {
@@ -82,9 +84,15 @@ export default function Markup() {
 					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
 					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
 					<Route path='/staff' exact element={<Staff />} />
-					<Route path='/admin' exact element={<Admin />} />
+
+
+					<Route path='/admin' exact element={<Admin />}>
+						<Route path='game' exact element={<Game />} />
+						<Route path='game-data' exact element={<GameData />} />
+					</Route>
 
 				</Routes>
+
 			</div>
 			<ScrollToTop />
 		</BrowserRouter>

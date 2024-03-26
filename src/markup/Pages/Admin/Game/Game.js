@@ -65,7 +65,7 @@ export default function Game() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const levels = await response.json();
-            navigate('/game-data', { state: { levels } });
+            navigate('/game-data', { state: { modeId } });
         } catch (error) {
             console.error('Error fetching game levels:', error);
         }
