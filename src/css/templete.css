@@ -1543,6 +1543,7 @@
 
 .game-setting .item {
   padding: 10px 20px;
+  user-select: none;
 }
 
 .game-setting .item .item-content {
