@@ -4,8 +4,45 @@
 	==========================*/
 /* Login, register starts*/
 
-/* Login, register */
+/* Login, register, verify */
+.register-container,
+.login-container,
+.verify {
+  user-select: none;
+  background-color: white;
+  width: 33%;
+  padding: 30px 35px 25px 35px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 8px;
+}
 
+.register-container input,
+.login-container input {
+  font-size: 18px;
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.register-container .error,
+.login-container .error {
+  color: red;
+  font-size: 14px;
+}
+
+.register-container button,
+.login-container button,
+.verify button {
+  background-color: #ff8a00;
+  color: white;
+  border-radius: 10px;
+  width: 60%;
+  border: none;
+  font-size: 20px;
+  height: 40px;
+}
 /* Header starts */
 .nav.navbar-nav li .nav-link:hover {
   color: #ed5ab0 !important;
@@ -1125,7 +1162,7 @@
 }
 
 .teacher-setting .active-menu-item {
-  color: #1a9cb7; /* Or any color you prefer */
+  color: #1a9cb7;
 }
 
 .teacher-setting-content {
@@ -1266,11 +1303,6 @@
 /* Teacher Account ends */
 
 /* Course starts */
-/* .all-course {
-  background-image: url("./../images/background/allCourseBackground.jpg");
-  background-position: center center;
-  background-repeat: no-repeat;
-} */
 
 .course .search {
   width: 50%;
@@ -1456,7 +1488,8 @@
 /* Staff ends */
 
 /* Admin starts */
-.admin-syllabus {
+.admin-syllabus,
+.game-setting {
   padding: 20px 80px;
   min-height: 500px;
 }
@@ -1473,6 +1506,70 @@
 .create-syllabus .orange {
   color: #ff8a00;
 }
+
+.game-setting-content {
+  margin-top: 30px;
+  background-color: #fbede1;
+  padding: 20px 40px;
+  min-height: 600px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.game-setting .title {
+  margin-bottom: 0;
+}
+
+.game-setting .blue {
+  color: #1a9cb7;
+}
+
+.game-setting .header h5 {
+  font-size: 22px;
+}
+
+.game-setting .header hr {
+  width: 50%;
+  color: #ff8a00;
+  margin: 0;
+  height: 3px;
+}
+
+.game-setting .header i {
+  color: #ff8a00;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.game-setting .item {
+  padding: 10px 20px;
+}
+
+.game-setting .item .item-content {
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.game-setting-content .item .item-content:hover.item-content{
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.game-setting .item .item-content .level {
+  background-color: #ffa63d;
+  border-radius: 50%;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+}
+
+.game-setting .item img {
+  width: 120px;
+  height: 120px;
+}
+
 /* Admin ends */
 
 /* BigShow Owl Slider */

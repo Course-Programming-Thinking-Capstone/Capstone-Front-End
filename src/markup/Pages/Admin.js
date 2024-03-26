@@ -4,6 +4,13 @@ import simp from './../../images/gallery/simp.jpg';
 import Modal from 'react-bootstrap/Modal';
 import ReactPaginate from 'react-paginate';
 
+import basic from './../../images/icon/basicGame.png';
+import sequence from './../../images/icon/sequenceGame.png';
+import loop from './../../images/icon/loopGame.png';
+import functionGame from './../../images/icon/functionGame.png';
+import condition from './../../images/icon/conditionGame.png';
+import custom from './../../images/icon/customGame.png';
+
 function SearchableDropdown({ options, selectedValue, onChange }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -60,7 +67,6 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
 }
 
 const Syllabus = () => {
-    // State to control visibility of CreateSyllabus component
     const [showCreateSyllabus, setShowCreateSyllabus] = useState(false);
     const [courses, setCourses] = useState([]);
     const accessToken = localStorage.getItem('accessToken');
@@ -292,8 +298,6 @@ const Syllabus = () => {
         return <CreateSyllabus />;
     }
 
-
-
     return (
         <div className='admin-syllabus'>
             <div className='syllabus'>
@@ -371,6 +375,116 @@ const Syllabus = () => {
     );
 }
 
+const Game = () => {
+    return (
+        <div className='game-setting'>
+            <div className="game-setting-content">
+
+                <div className="header">
+                    <div className="d-flex justify-content-start">
+                        <div>
+                            <h5 className='mb'>Game</h5>
+                            <hr />
+                        </div>
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+
+                            <p className="title blue fw-bold mb-2">Basic mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={basic} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+
+                            <p className="title blue fw-bold mb-2">Sequence mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={sequence} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+
+                            <p className="title blue fw-bold mb-2">Loop mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={loop} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+
+                            <p className="title blue fw-bold mb-2">Function mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={functionGame} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+
+                            <p className="title blue fw-bold mb-2">Condition mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={condition} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="item col-lg-6 col-md-6 col-sm-12">
+                        <div className="item-content">
+                            <p className="title blue fw-bold mb-2">Custom mode</p>
+                            <div className="d-flex justify-content-between">
+                                <div className="d-flex level">
+                                    <span>15</span>
+                                    <p className='mb-0 ms-2'>Level</p>
+                                </div>
+                                <div>
+                                    <img className='img-responsive' src={custom} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 export default function Admin() {
     const [activeContent, setActiveContent] = useState('');
     const [activeItem, setActiveItem] = useState('');
@@ -394,7 +508,7 @@ export default function Admin() {
             case 'Course':
                 return <div>Course details...</div>;
             case 'Game':
-                return <div>Course details...</div>;
+                return <Game />;
             case 'Order':
                 return <div>Course details...</div>;
             case 'Syllabus':

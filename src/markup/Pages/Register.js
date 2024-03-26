@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import background from './../../images/background/loginBackground.webp';
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -12,6 +14,10 @@ export default function Register() {
     const [passwordError, setPasswordError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [rePasswordError, setRePasswordError] = useState('');
+
+    const navigate = useNavigate();
+
+    const navigateToLogin = () => navigate('/login');
 
     const notifyRegisterSuccess = () => toast.success('Registration successful!', {
         position: "top-right",
@@ -94,37 +100,57 @@ export default function Register() {
     };
 
     return (
-        <div className="register-container">
-            <ToastContainer />
-            <form onSubmit={handleRegisterSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input type="text" className="form-control" id="username" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                    {usernameError && <div className="error">{usernameError}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email address</label>
-                    <input type="email" className="form-control" id="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    {emailError && <div className="error">{emailError}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input type="password" className="form-control" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    {passwordError && <div className="error">{passwordError}</div>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="reEnterPassword">Re-enter Password</label>
-                    <input type="password"
-                        className="form-control"
-                        id="reEnterPassword"
-                        placeholder="Re-enter Password"
-                        value={reEnteredPassword}
-                        onChange={(e) => setReEnteredPassword(e.target.value)}
-                    />
-                    {rePasswordError && <div className="error">{rePasswordError}</div>}
-                </div>
-                <button type="submit" className="btn btn-primary">Register</button>
-            </form>
+        <div style={{
+            backgroundImage: `url(${background})`,
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat'
+        }}>
+
+            <div className="register-container">
+                <h2 className='text-center' style={{ color: '#FF8A00' }}>Registration form</h2>
+                <ToastContainer />
+                <form onSubmit={handleRegisterSubmit}>
+                    <div className="form-group">
+                        <input type="text" className="form-control" id="username" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        {usernameError && <div className="error text-center">{usernameError}</div>}
+                    </div>
+                    <div className="form-group">
+                        <input type="email" className="form-control" id="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        {emailError && <div className="error text-center">{emailError}</div>}
+                    </div>
+                    <div className="form-group">
+                        <input type="password" className="form-control" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        {passwordError && <div className="error text-center">{passwordError}</div>}
+                    </div>
+                    <div className="form-group">
+                        <input type="password"
+                            className="form-control"
+                            id="reEnterPassword"
+                            placeholder="Re-enter password"
+                            value={reEnteredPassword}
+                            onChange={(e) => setReEnteredPassword(e.target.value)}
+                        />
+                        {rePasswordError && <div className="error text-center">{rePasswordError}</div>}
+                    </div>
+
+                    <div className="d-flex justify-content-center">
+
+                        <button type="submit">REGISTER</button>
+                    </div>
+
+                    <div className="d-flex justify-content-center mt-3">
+                        <div className='d-flex'>
+                            <p className='mb-0'>Already have an acount ?     </p>
+                            <span onClick={navigateToLogin} className='ms-2' style={{ color: '#FF8A00', cursor: 'pointer' }}>     Login</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

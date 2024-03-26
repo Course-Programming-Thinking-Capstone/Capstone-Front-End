@@ -28,6 +28,7 @@ import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff';
 import Admin from './Pages/Admin';
 import Login from './Pages/Login';
+import VerifyEmail from './Pages/VerifyEmail';
 
 
 export default function Markup() {
@@ -37,14 +38,20 @@ export default function Markup() {
 			<AuthCheck />
 			<div className="page-wraper">
 				<Routes>
+					//route for guess
 					<Route path='/' exact element={<Index1 />} />
+					<Route path='/login' exact element={<Login />} />
+					<Route path='/register' exact element={<Register />} />
+					<Route path='/verify' exact element={<VerifyEmail />} />
+
+
 					<Route path='/classes' exact element={<Classes />} />
 					<Route path='/classes-details' exact element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
 					<Route path='/error-404' exact element={<ErrorPage />} />
-					<Route path='/register' exact element={<Register />} />
-					<Route path='/login' exact element={<Login />} />
+
+
 					<Route path='/schedule' exact element={<Schedule />} />
 					<Route path='/courses-plan' exact element={<CoursesPlan />} />
 					<Route path='/courses-study' exact element={<CourseStudy />} />
