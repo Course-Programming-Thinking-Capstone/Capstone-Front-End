@@ -6,27 +6,12 @@ import ScrollToTop from './Element/ScrollToTop';
 import AuthCheck from './Element/AuthCheck';
 
 import Index1 from './Pages/Index1';
-import Index3 from './Pages/Index3';
-import Index2 from './Pages/Index2';
-import AboutUs1 from './Pages/AboutUs1';
-import AboutUs2 from './Pages/AboutUs2';
 import Classes from './Pages/Classes';
 import ClassesDetail from './Pages/ClassesDetail';
 import Teachers from './Pages/Teachers';
 import TeachersDetail from './Pages/TeachersDetail';
-import ComingSoon from './Pages/ComingSoon';
-import Faqs from './Pages/Faqs';
-import Event from './Pages/Event';
-import EventDetail from './Pages/EventDetail';
+
 import ErrorPage from './Pages/ErrorPage';
-import BlogStandard from './Pages/BlogStandard';
-import BlogClassicGrid from './Pages/BlogClassicGrid';
-import BlogDetails from './Pages/BlogDetails';
-import Gallery from './Pages/Gallery';
-import GalleryMasonary from './Pages/GalleryMasonary';
-import GalleryFilter from './Pages/GalleryFilter';
-import Contact from './Pages/Contact';
-import Dashboard from './Pages/Dashboard';
 import Register from './Pages/Register';
 import Schedule from './Pages/Schedule';
 import CoursesPlan from './Pages/CoursesPlan';
@@ -39,18 +24,20 @@ import OrderCancel from './Pages/OrderCancel';
 import PaymentSuccess from './Pages/PaymentSuccess';
 import Account from './Pages/Account';
 import Verification from './Pages/Verification';
-import TeacherAccount from './Pages/Teacher/TeacherAccout/TeacherAccount';
+import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff';
 import Admin from './Pages/Admin';
-import TeacherSchedule from './Pages/Teacher/TeacherAccout/TeacherSchedule/TeacherSchedule';
-import TeacherNotification from './Pages/Teacher/TeacherAccout/TeacherNotification/TeacherNotification';
-import TeacherCourse from './Pages/Teacher/TeacherAccout/TeacherCourse/TeacherCourse';
-import TeacherClasses from './Pages/Teacher/TeacherAccout/TeacherClass/TeacherClass';
-import Syllabus from './Pages/Teacher/TeacherAccout/Syllabus/Syllabus';
-import Quiz from './Pages/Teacher/TeacherAccout/CreateQuiz/Quiz';
-import TeacherSetting from './Pages/Teacher/TeacherAccout/TeacherSetting/TeacherSetting';
-import SyllabusInformation from './Pages/Teacher/TeacherAccout/Syllabus/syllabusInformation/SyllabusInformation';
-import CreateCourse from './Pages/Teacher/TeacherAccout/Syllabus/createCourse/createCourse';
+import TeacherSchedule from './Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule';
+import TeacherNotification from './Pages/Teacher/TeacherAccount/TeacherNotification/TeacherNotification';
+import TeacherCourse from './Pages/Teacher/TeacherAccount/TeacherCourse/TeacherCourse';
+import TeacherClasses from './Pages/Teacher/TeacherAccount/TeacherClass/TeacherClass';
+import Syllabus from './Pages/Teacher/TeacherAccount/Syllabus/Syllabus';
+import Quiz from './Pages/Teacher/TeacherAccount/CreateQuiz/Quiz';
+import TeacherSetting from './Pages/Teacher/TeacherAccount/TeacherSetting/TeacherSetting';
+import SyllabusInformation from './Pages/Teacher/TeacherAccount/Syllabus/syllabusInformation/SyllabusInformation';
+import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse';
+import Login from './Pages/Login';
+import VerifyEmail from './Pages/VerifyEmail';
 
 
 export default function Markup() {
@@ -60,29 +47,20 @@ export default function Markup() {
 			<AuthCheck />
 			<div className="page-wraper">
 				<Routes>
+					//route for guess
 					<Route path='/' exact element={<Index1 />} />
-					<Route path='/index-2' exact element={<Index2 />} />
-					<Route path='/index-3' exact element={<Index3 />} />
-					<Route path='/about-1' exact element={<AboutUs1 />} />
-					<Route path='/about-2' exact element={<AboutUs2 />} />
+					<Route path='/login' exact element={<Login />} />
+					<Route path='/register' exact element={<Register />} />
+					<Route path='/verify' exact element={<VerifyEmail />} />
+
+
 					<Route path='/classes' exact element={<Classes />} />
 					<Route path='/classes-details' exact element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
-					<Route path='/coming-soon' exact element={<ComingSoon />} />
-					<Route path='/faqs' exact element={<Faqs />} />
-					<Route path='/event' exact element={<Event />} />
-					<Route path='/event-details' exact element={<EventDetail />} />
 					<Route path='/error-404' exact element={<ErrorPage />} />
-					<Route path='/blog-standard' exact element={<BlogStandard />} />
-					<Route path='/blog-classic-grid' exact element={<BlogClassicGrid />} />
-					<Route path='/blog-details' exact element={<BlogDetails />} />
-					<Route path='/gallery' exact element={<Gallery />} />
-					<Route path='/gallery-masonary' exact element={<GalleryMasonary />} />
-					<Route path='/gallery-filter' exact element={<GalleryFilter />} />
-					<Route path='/contact-us' exact element={<Contact />} />
-					<Route path='/dashboard' exact element={<Dashboard />} />
-					<Route path='/register' exact element={<Register />} />
+
+
 					<Route path='/schedule' exact element={<Schedule />} />
 					<Route path='/courses-plan' exact element={<CoursesPlan />} />
 					<Route path='/courses-study' exact element={<CourseStudy />} />
