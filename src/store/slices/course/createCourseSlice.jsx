@@ -21,7 +21,7 @@ const entity = {
   modifiedByName: "",
   approvedById: 0,
   approvedByName: "",
-  setions: [],
+  sections: [],
 };
 
 export const createCourseSlice = createSlice({
@@ -42,6 +42,119 @@ export const createCourseSlice = createSlice({
 
     setDescription: (state, action) => {
       state.data.description = action.payload.description;
+    },
+
+    //action is video {sectionId, video: {}}
+    addVideo: (state, action) => {
+      const { sectionId, video } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (!state.data.sections[sectionIndex].lessons) {
+          state.data.sections[sectionIndex].lessons = [];
+        }
+
+        state.data.sections[sectionIndex].lessons.push(video);
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    //action is video {sectionId, lessonIndex, video: {}}
+    updateVideo: (state, action) => {
+      const { sectionId, lessonIndex, video } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (!state.data.sections[sectionIndex].lessons[lessonIndex]) {
+          state.data.sections[sectionIndex].lessons[lessonIndex] = video;
+        } else {
+          state.error = { message: `Lesson index ${lessonIndex} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    //action is document {sectionId, document: {}}
+    addDocument: (state, action) => {
+      const { sectionId, document } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (!state.data.sections[sectionIndex].lessons) {
+          state.data.sections[sectionIndex].lessons = [];
+        }
+
+        state.data.sections[sectionIndex].lessons.push(document);
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    //action is document {sectionId, lessonIndex, document: {}}
+    updateDocument: (state, action) => {
+      const { sectionId, lessonIndex, document } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (!state.data.sections[sectionIndex].lessons[lessonIndex]) {
+          state.data.sections[sectionIndex].lessons[lessonIndex] = document;
+        } else {
+          state.error = { message: `Lesson index ${lessonIndex} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    //action is  {sectionId, lessonIndex}
+    removeLesson: (state, action) => {
+      const { sectionId, lessonIndex } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (
+          state.data.sections[sectionIndex].lessons &&
+          state.data.sections[sectionIndex].lessons !== null
+        ) {
+          if (
+            lessonIndex >= 0 &&
+            lessonIndex < state.data.sections[sectionIndex].lessons.length
+          ) {
+            state.data.sections[sectionIndex].lessons.splice(lessonIndex, 1);
+          } else {
+            state.error = {
+              message: `Lesson index ${lessonIndex} is out of bounds.`,
+            };
+          }
+        } else {
+          state.error = {
+            message: `Lessons array in section id ${sectionId} is null or undefined.`,
+          };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    setError: (state, action) => {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {

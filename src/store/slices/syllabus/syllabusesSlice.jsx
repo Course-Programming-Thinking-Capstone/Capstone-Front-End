@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { filterSyllabusesAsync } from "../../thunkApis/syllabuses/syllabusesThunk";
-import { getCourseByIdAsync } from "../../thunkApis/course/courseThunk";
 
 const initData = {
   totalPages: 0,
@@ -28,7 +27,7 @@ export const syllabusesSlice = createSlice({
         state.error = null;
         state.data = action.payload;
       })
-      .addCase(getCourseByIdAsync.rejected, (state, action) => {
+      .addCase(filterSyllabusesAsync.rejected, (state, action) => {
         state.loading = "fail";
         state.error = action.payload;
       });

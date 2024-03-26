@@ -1,17 +1,32 @@
 import { useDispatch, useSelector } from "react-redux";
-import { createCourseSelector } from "../../../../../../store/selector";
-import { useEffect } from "react";
+import {
+  createCourseIdSelector,
+  createCourseSelector,
+} from "../../../../../../store/selector";
+import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
+import { useNavigate } from "react-router-dom";
 
-const CreateCourse = ({ id }) => {
+const CreateCourse = () => {
   const dispatch = useDispatch();
   const createCourse = useSelector(createCourseSelector);
 
-  // fetch syllabuses list
+  const navigate = useNavigate();
+
+  const courseId = useSelector(createCourseIdSelector);
+
+  //use state
+  const [message, setMessage] = useState(undefined);
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  // fetch course detail
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await dispatch(getCourseByIdAsync(id));
+        await dispatch(getCourseByIdAsync(courseId));
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.Message}`);
@@ -27,7 +42,7 @@ const CreateCourse = ({ id }) => {
   }, [dispatch]);
 
   const initializedCourseStructure = {
-    ...selectedCourse,
+    ...createCourse,
 
     //need to remove
     /*sections: selectedCourse.sections.map((section) => ({
@@ -90,108 +105,108 @@ const CreateCourse = ({ id }) => {
     );
   };
 
-  // Function to remove a content type from a section
-  const removeContentType = (sectionId, contentType, contentIndex) => {
-    switch (contentType) {
-      case "Video": {
-        //find section
-        const sectionIndex = courseStructure.sections.findIndex(
-          (section) => section.id === sectionId
-        );
+  // // Function to remove a content type from a section
+  // const removeContentType = (sectionId, contentType, contentIndex) => {
+  //   switch (contentType) {
+  //     case "Video": {
+  //       //find section
+  //       const sectionIndex = courseStructure.sections.findIndex(
+  //         (section) => section.id === sectionId
+  //       );
 
-        if (sectionIndex !== -1) {
-          const updateSection = { ...courseStructure.sections[sectionIndex] };
+  //       if (sectionIndex !== -1) {
+  //         const updateSection = { ...courseStructure.sections[sectionIndex] };
 
-          if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
-            const updatedCourseStructure = { ...courseStructure };
+  //         if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
+  //           const updatedCourseStructure = { ...courseStructure };
 
-            //remove lesson
-            updatedCourseStructure.sections[sectionIndex].lessons.splice(
-              contentIndex,
-              1
-            );
+  //           //remove lesson
+  //           updatedCourseStructure.sections[sectionIndex].lessons.splice(
+  //             contentIndex,
+  //             1
+  //           );
 
-            setCourseStructure(updatedCourseStructure);
-          }
-        } else {
-          console.error(`Lesson with index ${contentIndex} not found`);
-        }
-      }
+  //           setCourseStructure(updatedCourseStructure);
+  //         }
+  //       } else {
+  //         console.error(`Lesson with index ${contentIndex} not found`);
+  //       }
+  //     }
 
-      case "Document": {
-        //find section
-        const sectionIndex = courseStructure.sections.findIndex(
-          (section) => section.id === sectionId
-        );
+  //     case "Document": {
+  //       //find section
+  //       const sectionIndex = courseStructure.sections.findIndex(
+  //         (section) => section.id === sectionId
+  //       );
 
-        if (sectionIndex !== -1) {
-          const updateSection = { ...courseStructure.sections[sectionIndex] };
+  //       if (sectionIndex !== -1) {
+  //         const updateSection = { ...courseStructure.sections[sectionIndex] };
 
-          if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
-            const updatedCourseStructure = { ...courseStructure };
+  //         if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
+  //           const updatedCourseStructure = { ...courseStructure };
 
-            //remove lesson
-            updatedCourseStructure.sections[sectionIndex].lessons.splice(
-              contentIndex,
-              1
-            );
+  //           //remove lesson
+  //           updatedCourseStructure.sections[sectionIndex].lessons.splice(
+  //             contentIndex,
+  //             1
+  //           );
 
-            setCourseStructure(updatedCourseStructure);
-          }
-        } else {
-          console.error(`Lesson with index ${contentIndex} not found`);
-        }
-      }
-      case "Quiz": {
-        //log
-        console.log(`Call add new quiz.`);
-      }
+  //           setCourseStructure(updatedCourseStructure);
+  //         }
+  //       } else {
+  //         console.error(`Lesson with index ${contentIndex} not found`);
+  //       }
+  //     }
+  //     case "Quiz": {
+  //       //log
+  //       console.log(`Call add new quiz.`);
+  //     }
 
-      default: {
-        console.log(`Call method add content that not supported.`);
-      }
-    }
-  };
+  //     default: {
+  //       console.log(`Call method add content that not supported.`);
+  //     }
+  //   }
+  // };
 
-  // Function to render content types based on the state
-  const renderContentTypes = (section) => {
-    if (!Array.isArray(section.contentTypes)) {
-      // If contentTypes is not an array, return null or an appropriate fallback
-      return null;
-    }
+  // // Function to render content types based on the state
+  // const renderContentTypes = (section) => {
+  //   if (!Array.isArray(section.contentTypes)) {
+  //     // If contentTypes is not an array, return null or an appropriate fallback
+  //     return null;
+  //   }
 
-    return section.contentTypes.map((contentType) => {
-      switch (contentType.type) {
-        case "Video":
-          return (
-            <NewVideo
-              key={contentType.id}
-              removeSelf={() => removeContentType(section.id, contentType.id)}
-            />
-          );
-        case "Document":
-          return (
-            <NewDocument
-              key={contentType.id}
-              sectionId={section.id}
-              title={section.document ? section.document.title : ""}
-              content={section.document ? section.document.content : ""}
-              removeSelf={() => removeContentType(section.id, contentType.id)}
-              handleDocumentChange={handleDocumentChange} // Pass the function here
-            />
-          );
-        case "Quiz":
-          return (
-            <NewQuiz
-              key={contentType.id}
-              removeSelf={() => removeContentType(section.id, contentType.id)}
-            />
-          );
-        default:
-          return null;
-      }
-    });
-  };
+  //   return section.contentTypes.map((contentType) => {
+  //     switch (contentType.type) {
+  //       case "Video":
+  //         return (
+  //           <NewVideo
+  //             key={contentType.id}
+  //             removeSelf={() => removeContentType(section.id, contentType.id)}
+  //           />
+  //         );
+  //       case "Document":
+  //         return (
+  //           <NewDocument
+  //             key={contentType.id}
+  //             sectionId={section.id}
+  //             title={section.document ? section.document.title : ""}
+  //             content={section.document ? section.document.content : ""}
+  //             removeSelf={() => removeContentType(section.id, contentType.id)}
+  //             handleDocumentChange={handleDocumentChange} // Pass the function here
+  //           />
+  //         );
+  //       case "Quiz":
+  //         return (
+  //           <NewQuiz
+  //             key={contentType.id}
+  //             removeSelf={() => removeContentType(section.id, contentType.id)}
+  //           />
+  //         );
+  //       default:
+  //         return null;
+  //     }
+  //   });
+  // };
 
   return (
     <div className="teacher-create">
@@ -301,3 +316,5 @@ const CreateCourse = ({ id }) => {
     </div>
   );
 };
+
+export default CreateCourse;
