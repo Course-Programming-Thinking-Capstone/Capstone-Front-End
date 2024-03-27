@@ -6,9 +6,14 @@ import {
 import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
-import { Accordion, Col, Container, Form, Row } from "react-bootstrap";
-import VideoComponent from "./createCourseContent/VideoComponent";
-import DocumentComponent from "./createCourseContent/DocumentComponent";
+import { Accordion, Button, Col, Container, Form, Row } from "react-bootstrap";
+import VideoComponent, {
+  RemoveComponent,
+  UpdateVideoComponent,
+} from "./createCourseContent/VideoComponent";
+import DocumentComponent, {
+  UpdateDocumentComponent,
+} from "./createCourseContent/DocumentComponent";
 import {
   updateCourseApi,
   updateCoursePictureApi,
@@ -155,12 +160,14 @@ const CreateCourseComponent = () => {
                         {section.lessons.map((lesson, index) =>
                           lesson.type === "Video" ? (
                             <VideoContent
+                              sectionId={section.id}
                               key={index}
                               lesson={lesson}
                               index={index}
                             />
                           ) : (
                             <DocumentContent
+                              sectionId={section.id}
                               key={index}
                               lesson={lesson}
                               index={index}
@@ -246,28 +253,75 @@ const CreateCourseComponent = () => {
 
 export default CreateCourseComponent;
 
-const VideoContent = ({ lesson, index }) => {
+const VideoContent = ({ sectionId, lesson, index }) => {
   return (
     <Accordion defaultActiveKey="0" flush>
       <Accordion.Item eventKey={index}>
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
-          <p>Duration: {lesson.duration} minute</p>
-          <p>Url: {lesson.resourceUrl}</p>
+          <Container>
+            <Row>
+              <Col>
+                <p>Duration: {lesson.duration} minute</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>Url: {lesson.resourceUrl}</p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md="6">
+                <UpdateVideoComponent
+                  sectionId={sectionId}
+                  lessonIndex={index}
+                  video={lesson}
+                />
+              </Col>
+              <Col md="6">
+                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+              </Col>
+            </Row>
+          </Container>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
   );
 };
 
-const DocumentContent = ({ lesson, index }) => {
+const DocumentContent = ({ sectionId, lesson, index }) => {
   return (
     <Accordion defaultActiveKey="0" flush>
       <Accordion.Item eventKey={index}>
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
-          <p>Duration: {lesson.duration} minute</p>
-          <p>Content: {lesson.content}</p>
+          <Container>
+            <Row>
+              <Col>
+                <p>Duration: {lesson.duration} minute</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>Content: {lesson.content}</p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md="6">
+                <UpdateDocumentComponent
+                  sectionId={sectionId}
+                  lessonIndex={index}
+                  document={lesson}
+                />
+              </Col>
+
+              <Col md="6">
+                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+              </Col>
+            </Row>
+          </Container>
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

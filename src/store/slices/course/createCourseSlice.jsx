@@ -72,7 +72,10 @@ export const createCourseSlice = createSlice({
       );
 
       if (sectionIndex !== -1) {
-        if (!state.data.sections[sectionIndex].lessons[lessonIndex]) {
+        if (
+          state.data.sections[sectionIndex].lessons &&
+          state.data.sections[sectionIndex].lessons[lessonIndex] !== undefined
+        ) {
           state.data.sections[sectionIndex].lessons[lessonIndex] = video;
         } else {
           state.error = { message: `Lesson index ${lessonIndex} not found.` };
@@ -110,7 +113,10 @@ export const createCourseSlice = createSlice({
       );
 
       if (sectionIndex !== -1) {
-        if (!state.data.sections[sectionIndex].lessons[lessonIndex]) {
+        if (
+          state.data.sections[sectionIndex].lessons &&
+          state.data.sections[sectionIndex].lessons[lessonIndex] !== undefined
+        ) {
           state.data.sections[sectionIndex].lessons[lessonIndex] = document;
         } else {
           state.error = { message: `Lesson index ${lessonIndex} not found.` };
