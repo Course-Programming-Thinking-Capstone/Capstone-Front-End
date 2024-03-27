@@ -86,9 +86,9 @@ export default function Markup() {
 					<Route path='/staff' exact element={<Staff />} />
 
 
-					<Route path='/admin' exact element={<Admin />}>
-						<Route path='game' exact element={<Game />} />
-						<Route path='game-data' exact element={<GameData />} />
+					<Route path="/admin" element={<Admin />}>
+						<Route path="game" element={<Game />} />
+						<Route path="game-data" element={<GameData />} />
 					</Route>
 
 				</Routes>

@@ -5,21 +5,13 @@ import { useLocation } from 'react-router-dom';
 
 export default function GameData() {
     const location = useLocation();
-    const { levels } = location.state;
-    const accessToken = localStorage.getItem('accessToken');
-
+    console.log(location.state); 
+    const { modeId, levels } = location.state;
     const [gameLevels, setGameLevels] = useState([]);
+    const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
         const fetchLevels = async () => {
-            // Access the modeId from location.state
-            const { modeId } = location.state || {};
-
-            if (!modeId) {
-                console.error('Mode ID is undefined.');
-                return;
-            }
-
             try {
                 const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/games/game-mode/${modeId}/game-level`, {
                     method: 'GET',
@@ -40,8 +32,10 @@ export default function GameData() {
             }
         };
 
-        fetchLevels();
-    }, [location.state]);
+        if (modeId) {
+            fetchLevels();
+        }
+    }, [modeId, accessToken]);
 
     return (
         <div className='admin-syllabus'>
@@ -64,7 +58,7 @@ export default function GameData() {
                             </div>
                             <div className="d-flex justify-content-around" style={{ width: '50%', backgroundColor: '#FF8A00', borderRadius: '10px' }}>
                                 <p className='mb-0'>Total level</p>
-                                <span>{levels.length}</span>
+                                <span>{gameLevels.length}</span>
                             </div>
                         </div>
                         <div>
@@ -81,7 +75,7 @@ export default function GameData() {
                         </div>
 
                         <div className='px-3'>
-                            {levels.map((level, index) => (
+                            {gameLevels.map((level, index) => (
                                 <div key={index} className="syllabus-item">
                                     <div className="d-flex justify-content-between">
                                         <div className="d-flex justify-content-start">
