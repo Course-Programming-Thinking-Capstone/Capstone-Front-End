@@ -35,9 +35,9 @@ import Syllabus from './Pages/Teacher/TeacherAccount/Syllabus/Syllabus';
 import Quiz from './Pages/Teacher/TeacherAccount/CreateQuiz/Quiz';
 import TeacherSetting from './Pages/Teacher/TeacherAccount/TeacherSetting/TeacherSetting';
 import SyllabusInformation from './Pages/Teacher/TeacherAccount/Syllabus/syllabusInformation/SyllabusInformation';
-import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourse';
 import Login from './Pages/Login';
 import VerifyEmail from './Pages/VerifyEmail';
+import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourse';
 
 
 export default function Markup() {
