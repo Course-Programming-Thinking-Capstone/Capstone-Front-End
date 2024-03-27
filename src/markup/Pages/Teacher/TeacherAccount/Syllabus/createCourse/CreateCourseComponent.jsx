@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { Accordion, Col, Container, Form, Row } from "react-bootstrap";
 import VideoComponent from "./createCourseContent/VideoComponent";
 import DocumentComponent from "./createCourseContent/DocumentComponent";
+import {
+  updateCourseApi,
+  updateCoursePictureApi,
+} from "../../../../../../helper/apis/course/course";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -21,6 +25,11 @@ const CreateCourseComponent = () => {
 
   //use state
   const [message, setMessage] = useState(undefined);
+  const [coursePictureFile, setCoursePictureFile] = useState(null);
+
+  const handleFileInputChange = (event) => {
+    setCoursePictureFile(event.target.files[0]);
+  };
 
   const goBack = () => {
     navigate(-1);
@@ -47,175 +56,48 @@ const CreateCourseComponent = () => {
     fetchData();
   }, [courseId]);
 
-  //log
-  console.log(`createCourse content: ${JSON.stringify(createCourse, null, 2)}`);
+  // //log
+  // console.log(`createCourse content: ${JSON.stringify(createCourse, null, 2)}`);
 
-  const initializedCourseStructure = {
-    ...createCourse,
+  //Create course
+  const saveCourse = async (action) => {
+    try {
+      //log
+      console.log(
+        `createCourse content before send api: ${JSON.stringify(
+          createCourse,
+          null,
+          2
+        )}`
+      );
 
-    //need to remove
-    /*sections: selectedCourse.sections.map((section) => ({
-          ...section,
-          contentTypes: section.contentTypes || [], // Ensure each section has a contentTypes array
-        })),*/
+      await updateCourseApi({
+        id: createCourse.id,
+        action: action,
+        data: createCourse,
+      });
+
+      if (coursePictureFile != null) {
+        const pictureUrl = await updateCoursePictureApi({
+          id: createCourse.id,
+          file: coursePictureFile,
+        });
+
+        console.log(`Picture url: ${pictureUrl}`);
+      }
+
+      alert("Update success");
+    } catch (error) {
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        setMessage(error.response?.data?.title || "Undefined.");
+      } else {
+        console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
+        setMessage(error.message || "Undefined.");
+      }
+    } finally {
+    }
   };
-
-  // Function to add a new content type to a section
-  // const addContentTypeToSection = (sectionId, contentType) => {
-  //   switch (contentType) {
-  //     case "Video": {
-  //       //find section
-  //       const sectionIndex = courseStructure.sections.findIndex(
-  //         (section) => section.id === sectionId
-  //       );
-
-  //       //Add video to lesson
-  //       let newLesson = {
-  //         type: "Video",
-  //       };
-
-  //       const updatedCourseStructure = { ...courseStructure };
-
-  //       updatedCourseStructure.sections[sectionIndex].lessons.push(newLesson);
-
-  //       setCourseStructure(updatedCourseStructure);
-  //     }
-
-  //     case "Document": {
-  //       //find section
-  //       const sectionIndex = courseStructure.sections.findIndex(
-  //         (section) => section.id === sectionId
-  //       );
-
-  //       //Add video to lesson
-  //       let newLesson = {
-  //         type: "Document",
-  //       };
-
-  //       const updatedCourseStructure = { ...courseStructure };
-
-  //       updatedCourseStructure.sections[sectionIndex].lessons.push(newLesson);
-
-  //       setCourseStructure(updatedCourseStructure);
-  //     }
-  //     case "Quiz": {
-  //       //log
-  //       console.log(`Call add new quiz.`);
-  //     }
-
-  //     default: {
-  //       console.log(`Call method add content that not supported.`);
-  //     }
-  //   }
-
-  //   //Log result
-  //   console.log(
-  //     `\nCourse entity to update: ${JSON.stringify(courseStructure, null, 2)}`
-  //   );
-  // };
-
-  // // Function to remove a content type from a section
-  // const removeContentType = (sectionId, contentType, contentIndex) => {
-  //   switch (contentType) {
-  //     case "Video": {
-  //       //find section
-  //       const sectionIndex = courseStructure.sections.findIndex(
-  //         (section) => section.id === sectionId
-  //       );
-
-  //       if (sectionIndex !== -1) {
-  //         const updateSection = { ...courseStructure.sections[sectionIndex] };
-
-  //         if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
-  //           const updatedCourseStructure = { ...courseStructure };
-
-  //           //remove lesson
-  //           updatedCourseStructure.sections[sectionIndex].lessons.splice(
-  //             contentIndex,
-  //             1
-  //           );
-
-  //           setCourseStructure(updatedCourseStructure);
-  //         }
-  //       } else {
-  //         console.error(`Lesson with index ${contentIndex} not found`);
-  //       }
-  //     }
-
-  //     case "Document": {
-  //       //find section
-  //       const sectionIndex = courseStructure.sections.findIndex(
-  //         (section) => section.id === sectionId
-  //       );
-
-  //       if (sectionIndex !== -1) {
-  //         const updateSection = { ...courseStructure.sections[sectionIndex] };
-
-  //         if (contentIndex > 0 && contentIndex < updateSection.lessons.size) {
-  //           const updatedCourseStructure = { ...courseStructure };
-
-  //           //remove lesson
-  //           updatedCourseStructure.sections[sectionIndex].lessons.splice(
-  //             contentIndex,
-  //             1
-  //           );
-
-  //           setCourseStructure(updatedCourseStructure);
-  //         }
-  //       } else {
-  //         console.error(`Lesson with index ${contentIndex} not found`);
-  //       }
-  //     }
-  //     case "Quiz": {
-  //       //log
-  //       console.log(`Call add new quiz.`);
-  //     }
-
-  //     default: {
-  //       console.log(`Call method add content that not supported.`);
-  //     }
-  //   }
-  // };
-
-  // // Function to render content types based on the state
-  // const renderContentTypes = (section) => {
-  //   if (!Array.isArray(section.contentTypes)) {
-  //     // If contentTypes is not an array, return null or an appropriate fallback
-  //     return null;
-  //   }
-
-  //   return section.contentTypes.map((contentType) => {
-  //     switch (contentType.type) {
-  //       case "Video":
-  //         return (
-  //           <NewVideo
-  //             key={contentType.id}
-  //             removeSelf={() => removeContentType(section.id, contentType.id)}
-  //           />
-  //         );
-  //       case "Document":
-  //         return (
-  //           <NewDocument
-  //             key={contentType.id}
-  //             sectionId={section.id}
-  //             title={section.document ? section.document.title : ""}
-  //             content={section.document ? section.document.content : ""}
-  //             removeSelf={() => removeContentType(section.id, contentType.id)}
-  //             handleDocumentChange={handleDocumentChange} // Pass the function here
-  //           />
-  //         );
-  //       case "Quiz":
-  //         return (
-  //           <NewQuiz
-  //             key={contentType.id}
-  //             removeSelf={() => removeContentType(section.id, contentType.id)}
-  //           />
-  //         );
-  //       default:
-  //         return null;
-  //     }
-  //   });
-  // };
 
   return (
     <div className="teacher-create">
@@ -269,13 +151,30 @@ const CreateCourseComponent = () => {
                     <Accordion.Item eventKey={index}>
                       <Accordion.Header>{section.name}</Accordion.Header>
                       <Accordion.Body>
+                        {/* Content */}
+                        {section.lessons.map((lesson, index) =>
+                          lesson.type === "Video" ? (
+                            <VideoContent
+                              key={index}
+                              lesson={lesson}
+                              index={index}
+                            />
+                          ) : (
+                            <DocumentContent
+                              key={index}
+                              lesson={lesson}
+                              index={index}
+                            />
+                          )
+                        )}
+
                         <Container>
                           <Row>
                             <Col md="4">
                               <VideoComponent sectionId={section.id} />
                             </Col>
                             <Col md="4">
-                              <DocumentComponent sectionId={section.id}/>
+                              <DocumentComponent sectionId={section.id} />
                             </Col>
                             <Col md="4">
                               <button
@@ -295,7 +194,7 @@ const CreateCourseComponent = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <p className="title blue">Course picture</p>
               <p className="mb-0">
                 Max size <span className="orange">100Mb</span>. The required
@@ -304,6 +203,24 @@ const CreateCourseComponent = () => {
               <button className="button">
                 <i class="fa-solid fa-circle-plus"></i> Upload file
               </button>
+            </div> */}
+
+            <div>
+              <p className="title blue">Course picture</p>
+              <p className="mb-0">
+                Max size <span className="orange">100Mb</span>. The required
+                type image is <span className="orange">JPG, PNG</span>.
+              </p>
+              <input
+                type="file"
+                accept="image/jpeg, image/png"
+                onChange={handleFileInputChange}
+                className="d-none"
+                id="fileInput"
+              />
+              <label htmlFor="fileInput" className="button">
+                <i className="fa-solid fa-circle-plus"></i> Upload file
+              </label>
             </div>
 
             <div>
@@ -316,8 +233,8 @@ const CreateCourseComponent = () => {
               </div>
 
               <div className="d-flex justify-content-end">
-                <button>SAVE DRAFT</button>
-                <button>POST COURSE</button>
+                <button onClick={() => saveCourse("Save")}>SAVE DRAFT</button>
+                <button onClick={() => saveCourse("Post")}>POST COURSE</button>
               </div>
             </div>
           </div>
@@ -328,3 +245,31 @@ const CreateCourseComponent = () => {
 };
 
 export default CreateCourseComponent;
+
+const VideoContent = ({ lesson, index }) => {
+  return (
+    <Accordion defaultActiveKey="0" flush>
+      <Accordion.Item eventKey={index}>
+        <Accordion.Header>{lesson.name}</Accordion.Header>
+        <Accordion.Body>
+          <p>Duration: {lesson.duration} minute</p>
+          <p>Url: {lesson.resourceUrl}</p>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+};
+
+const DocumentContent = ({ lesson, index }) => {
+  return (
+    <Accordion defaultActiveKey="0" flush>
+      <Accordion.Item eventKey={index}>
+        <Accordion.Header>{lesson.name}</Accordion.Header>
+        <Accordion.Body>
+          <p>Duration: {lesson.duration} minute</p>
+          <p>Content: {lesson.content}</p>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+};

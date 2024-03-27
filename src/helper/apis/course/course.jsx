@@ -12,6 +12,23 @@ export const updateCourseApi = async ({ id, action, data }) => {
   return response.data;
 };
 
+export const updateCoursePictureApi = async ({id, file}) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await instance.patch(
+    `api/v1/courses/${id}/picture`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getCoursesApi = async (filter) => {
   let nameParam = filter.name === undefined ? "" : `name=${filter.name}&`;
   let statusParam =
@@ -40,9 +57,7 @@ export const getCoursesApi = async (filter) => {
 
 export const getCourseById = async ({ id, action }) => {
   let actionParam = action === undefined ? "" : `?action=${action}`;
-  const response = await instance.get(
-    `api/v1/courses/${id}${actionParam}`
-  );
+  const response = await instance.get(`api/v1/courses/${id}${actionParam}`);
 
   return response.data;
 };

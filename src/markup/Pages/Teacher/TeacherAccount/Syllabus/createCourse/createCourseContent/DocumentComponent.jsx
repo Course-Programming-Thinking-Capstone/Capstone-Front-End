@@ -21,6 +21,7 @@ const DocumentComponent = ({ sectionId }) => {
       name: lessonName,
       duration: duration,
       content: content,
+      type: "Document",
     };
     dispatch(addDocument({ sectionId: sectionId, document: document }));
     setShow(false);
@@ -31,7 +32,11 @@ const DocumentComponent = ({ sectionId }) => {
 
   const schema = yup.object().shape({
     lessonName: yup.string().required("Lesson name is required"),
-    duration: yup.number().required("Duration is required").positive("Duration must larger than 1").integer(),
+    duration: yup
+      .number()
+      .required("Duration is required")
+      .positive("Duration must larger than 1")
+      .integer(),
     content: yup.string().required("Content is required"),
   });
   //form validation

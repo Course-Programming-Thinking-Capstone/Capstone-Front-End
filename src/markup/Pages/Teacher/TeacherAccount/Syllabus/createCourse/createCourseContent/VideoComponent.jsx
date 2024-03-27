@@ -21,6 +21,7 @@ const VideoComponent = ({ sectionId }) => {
       name: lessonName,
       duration: duration,
       resourceUrl: resourceUrl,
+      type: "Video"
     };
     dispatch(addVideo({ sectionId: sectionId, video: video }));
     setShow(false);
