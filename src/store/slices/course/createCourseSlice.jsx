@@ -175,6 +175,16 @@ export const createCourseSlice = createSlice({
   },
 });
 
-export const { resetData, setData, setDescription } = createCourseSlice.actions;
+export const {
+  resetData,
+  setData,
+  setDescription,
+  addDocument,
+  addVideo,
+  removeLesson,
+  setError,
+  updateDocument,
+  updateVideo,
+} = createCourseSlice.actions;
 
 export default createCourseSlice.reducer;

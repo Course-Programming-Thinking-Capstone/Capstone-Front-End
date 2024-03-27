@@ -6,8 +6,9 @@ import {
 import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
-import { Accordion, Form } from "react-bootstrap";
+import { Accordion, Col, Container, Form, Row } from "react-bootstrap";
 import VideoComponent from "./createCourseContent/VideoComponent";
+import DocumentComponent from "./createCourseContent/DocumentComponent";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,9 @@ const CreateCourseComponent = () => {
     };
     fetchData();
   }, [courseId]);
+
+  //log
+  console.log(`createCourse content: ${JSON.stringify(createCourse, null, 2)}`);
 
   const initializedCourseStructure = {
     ...createCourse,
@@ -265,21 +269,25 @@ const CreateCourseComponent = () => {
                     <Accordion.Item eventKey={index}>
                       <Accordion.Header>{section.name}</Accordion.Header>
                       <Accordion.Body>
-                        <VideoComponent></VideoComponent>
-                        <button
-                        // onClick={() =>
-                        //   addContentTypeToSection(section.id, "Document")
-                        // }
-                        >
-                          Add Document
-                        </button>
-                        <button
-                        // onClick={() =>
-                        //   addContentTypeToSection(section.id, "Quiz")
-                        // }
-                        >
-                          Add Quiz
-                        </button>
+                        <Container>
+                          <Row>
+                            <Col md="4">
+                              <VideoComponent sectionId={section.id} />
+                            </Col>
+                            <Col md="4">
+                              <DocumentComponent sectionId={section.id}/>
+                            </Col>
+                            <Col md="4">
+                              <button
+                              // onClick={() =>
+                              //   addContentTypeToSection(section.id, "Quiz")
+                              // }
+                              >
+                                Add Quiz
+                              </button>
+                            </Col>
+                          </Row>
+                        </Container>
                       </Accordion.Body>
                     </Accordion.Item>
                   </Accordion>

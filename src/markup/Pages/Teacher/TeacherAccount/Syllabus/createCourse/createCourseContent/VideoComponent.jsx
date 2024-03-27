@@ -2,36 +2,55 @@ import { Button, Modal, Col, Form, InputGroup, Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addVideo } from "../../../../../../../store/slices/course/createCourseSlice";
 
-const VideoComponent = () => {
+const VideoComponent = ({ sectionId }) => {
+  const dispatch = useDispatch();
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   //handle submit
-  const handleSubmit = () => {};
+  const handleSubmit = (values) => {
+    const { lessonName, duration, resourceUrl } = values;
+
+    const video = {
+      name: lessonName,
+      duration: duration,
+      resourceUrl: resourceUrl,
+    };
+    dispatch(addVideo({ sectionId: sectionId, video: video }));
+    setShow(false);
+  };
 
   //form validation
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required(),
-    duration: yup.number().required().positive().integer(),
-    resourceUrl: yup.string().url().required(),
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    username: yup.string().required(),
-    city: yup.string().required(),
-    state: yup.string().required(),
-    zip: yup.string().required(),
-    terms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+    lessonName: yup.string().required("Lesson name is required"),
+    duration: yup
+      .number()
+      .required("Duration is required")
+      .positive("Duration must larger than 0")
+      .integer(),
+    resourceUrl: yup
+      .string()
+      .url("Url must be a valid URL")
+      .required("Content is required"),
   });
   //form validation
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={handleShow}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
         Add video
       </Button>
 
@@ -52,17 +71,10 @@ const VideoComponent = () => {
               lessonName: "Video",
               duration: 1,
               resourceUrl: "",
-              firstName: "Mark",
-              lastName: "Otto",
-              username: "",
-              city: "",
-              state: "",
-              zip: "",
-              terms: false,
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
-              <Form noValidate onSubmit={handleSubmit}>
+              <Form id="videoForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col} md="12" controlId="validationLessonName">
                     <Form.Label>Lesson name</Form.Label>
@@ -96,7 +108,7 @@ const VideoComponent = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
+                  <Form.Group as={Col} md="12" controlId="validationVideo">
                     <Form.Label>Url</Form.Label>
                     <Form.Control
                       type="url"
@@ -119,7 +131,7 @@ const VideoComponent = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
+          <Button variant="primary" type="submit" form="videoForm">
             Save
           </Button>
         </Modal.Footer>
