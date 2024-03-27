@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
 import { Accordion, Form } from "react-bootstrap";
+import VideoComponent from "./createCourseContent/VideoComponent";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -264,13 +265,7 @@ const CreateCourseComponent = () => {
                     <Accordion.Item eventKey={index}>
                       <Accordion.Header>{section.name}</Accordion.Header>
                       <Accordion.Body>
-                        <button
-                        // onClick={() =>
-                        //   addContentTypeToSection(section.id, "Video")
-                        // }
-                        >
-                          Add Video
-                        </button>
+                        <VideoComponent></VideoComponent>
                         <button
                         // onClick={() =>
                         //   addContentTypeToSection(section.id, "Document")
