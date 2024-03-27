@@ -1572,6 +1572,27 @@
   height: 120px;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* 8 columns */
+  grid-column-gap: 0px; /* Space between columns */
+  grid-row-gap: 20px; /* Space between rows */
+}
+
+.grid-item {
+  width: 60px; /* Width of grid items */
+  height: 60px; /* Height of grid items */
+  border: 1px solid black; /* Border for grid items */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-detail .map-item img {
+  height: 100px;
+  width: 100px;
+}
+
 /* Admin ends */
 
 /* BigShow Owl Slider */
