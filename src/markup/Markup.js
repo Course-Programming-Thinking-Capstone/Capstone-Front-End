@@ -73,7 +73,7 @@ export default function Markup() {
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
 					<Route path='/payment' exact element={<CoursePayment />} />
-					<Route path='/payment-success' exact element={<PaymentSuccess />} />
+					<Route path='/payment-success/:orderId' exact element={<PaymentSuccess />} />
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
