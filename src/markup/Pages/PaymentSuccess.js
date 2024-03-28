@@ -1,13 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Layout/Header'
 import PageTitle from '../Layout/PageTitle'
 import Footer from '../Layout/Footer'
 import background from './../../images/background/paymentSuccess.jpg';
 import demo from './../../images/gallery/simp.jpg';
+import momo from './../../images/icon/momo.png';
 
 export default function PaymentSuccess() {
+    const [orderDetails, setOrderDetails] = useState(null);
+    const orderId = 4; // You need to replace this with the actual order ID
+    const accessToken = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchOrderDetails = async () => {
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/orders/detail/${orderId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch order details');
+                }
+
+                const data = await response.json();
+                console.log('data: ', data);
+                setOrderDetails(data);
+            } catch (error) {
+                console.error('There was an error fetching the order details:', error);
+            }
+        };
+
+        fetchOrderDetails();
+    }, [orderId]); // orderId is a dependency, if it changes, useEffect will run again.
 
     const GoBack = () => {
         navigate('/classes');
@@ -29,8 +60,8 @@ export default function PaymentSuccess() {
                 <div className="container">
                     <div className="thanks text-center">
                         <p style={{ fontSize: '32px', color: '#ff8a00' }}><i class="fa-solid fa-circle-check"></i>   Thank you for your purchase</p>
-                        <p style={{ fontSize: '20px', fontWeight: '700' }}>đ 200.000</p>
-                        <p style={{ fontSize: '20px', fontWeight: '400' }}>Your order code <span>123123123</span></p>
+                        <p style={{ fontSize: '20px', fontWeight: '700' }}>{orderDetails.totalPrice} đ</p>
+                        <p style={{ fontSize: '20px', fontWeight: '400' }}>Your order code <span>{orderDetails.orderCode}</span></p>
                     </div>
 
                     <div className="thanks-info">
@@ -38,16 +69,18 @@ export default function PaymentSuccess() {
                             <div className='d-flex justify-content-between'>
                                 <img className='img-responsive' style={{ height: '100px', width: '100px' }} src={demo} alt="" />
                                 <div>
-                                    <p>What is programming?</p>
-                                    <p>Quantity: <span style={{ color: '#FF8A00' }}>2</span></p>
+                                    <p>{orderDetails.courseName}</p>
+                                    <p>Quantity purchased: <span style={{ color: '#FF8A00' }}>{orderDetails.quantityPurchased}</span></p>
                                 </div>
                                 <div>
-                                    <p>Teacher</p>
-                                    <p>LamNN</p>
+                                    <p>Course's price</p>
+                                    <p>{orderDetails.totalPrice} đ</p>
                                 </div>
                                 <div>
-                                    <p>Price</p>
-                                    <p>200.000 đ</p>
+                                    <p>Payment</p>
+                                    <div className="d-flex justify-content-center">
+                                        <img style={{ height: '50px', width: '50px' }} src={momo} alt="" />
+                                    </div>
                                 </div>
                             </div>
                             <hr />
