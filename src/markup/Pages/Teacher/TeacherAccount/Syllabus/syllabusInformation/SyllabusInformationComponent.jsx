@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { syllabusDetailSelector } from "../../../../../../store/selector";
 import { useEffect, useState } from "react";
 import { getSyllabusByIdAsync } from "../../../../../../store/thunkApis/syllabuses/syllabusesThunk";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const SyllabusInformationComponent = () => {
   const location = useLocation();
@@ -138,8 +138,8 @@ export const SyllabusInformationComponent = () => {
             </div>
           </div>
           <div className="d-flex justify-content-end">
-            <button
-              //   onClick={() => setCurrentComponent("createCourse")}
+            <Link
+              to={`/teacher-account/syllabuses/create-course`}
               style={{
                 backgroundColor: "#FD8569",
                 color: "white",
@@ -150,7 +150,7 @@ export const SyllabusInformationComponent = () => {
               }}
             >
               CREATE COURSE
-            </button>
+            </Link>
           </div>
         </div>
       </div>

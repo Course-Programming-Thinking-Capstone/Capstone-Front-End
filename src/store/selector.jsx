@@ -7,5 +7,10 @@ export const syllabusesSelector = (state) => state.syllabuses.data;
 //syllabusDetail
 export const syllabusDetailSelector = (state) => state.syllabusDetail.data;
 
+//createCourseId
+export const createCourseIdSelector = (state) =>
+  state.syllabusDetail.data.courseId;
+
 //teacherActiveMenu selector
-export const teacherActiveMenuSelector = (state) => state.menu.data.teacherActiveMenu;
+export const teacherActiveMenuSelector = (state) =>
+  state.menu.data.teacherActiveMenu;

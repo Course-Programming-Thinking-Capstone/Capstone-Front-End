@@ -6,7 +6,7 @@ export const getCourseByIdAsync = createAsyncThunk(
   "course/getById",
   async (courseId, action, thunkAPI) => {
     try {
-      const response = await getCourseById({ courseId, action });
+      const response = await getCourseById({ id: courseId, action: action });
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

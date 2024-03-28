@@ -40,6 +40,7 @@ import VerifyEmail from './Pages/VerifyEmail';
 import Game from './Pages/Admin/Game/Game';
 import GameData from './Pages/Admin/Game/GameData';
 import VerifyEmailConfirm from './Pages/VerifyEmailConfirm';
+import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourse';
 
 
 export default function Markup() {
@@ -83,6 +84,7 @@ export default function Markup() {
 					<Route path='/teacher-account/classes' exact element={<TeacherClasses />} />
 					<Route path='/teacher-account/syllabuses' exact element={<Syllabus />} />
 					<Route path='/teacher-account/syllabuses/detail' exact element={<SyllabusInformation />} />
+					<Route path='/teacher-account/syllabuses/create-course' exact element={<CreateCourse />} />
 					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
 					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
 					<Route path='/staff' exact element={<Staff />} />
