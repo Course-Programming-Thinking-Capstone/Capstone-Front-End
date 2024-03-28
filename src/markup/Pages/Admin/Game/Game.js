@@ -178,7 +178,7 @@ export default function Game() {
                     const row = Math.floor(index / columns);
                     const col = index % columns;
                     return (
-                        <div key={index} className={`grid-item ${selectedSquareIndex === index ? 'selected' : ''}`} onClick={() => handleSquareClick(row, col)}>
+                        <div key={index} className={`grid-item ${selectedSquareIndex === index ? 'selected' : ''}`}>
                             {content}
                         </div>
                     );
