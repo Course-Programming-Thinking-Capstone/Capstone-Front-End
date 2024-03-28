@@ -19,7 +19,7 @@ export default function CoursePayment() {
     const [newChildName, setNewChildName] = useState('');
     const [newChildDOB, setNewChildDOB] = useState('');
     const [newChildGender, setNewChildGender] = useState('');
-    const [error, setError] =useState('');
+    const [error, setError] = useState('');
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -30,13 +30,13 @@ export default function CoursePayment() {
 
     const fetchChildrenData = async () => {
         setLoading(true);
-        const accessToken = localStorage.getItem('accessToken'); // Assuming the access token is stored in localStorage
+        const accessToken = localStorage.getItem('accessToken');
         try {
             const response = await fetch('https://www.kidpro-production.somee.com/api/v1/students', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, // Assuming Bearer token authentication
+                    'Authorization': `Bearer ${accessToken}`,
                 },
             });
 
@@ -72,7 +72,7 @@ export default function CoursePayment() {
             setLoading(true);
             const accessToken = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment/15', {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment/4', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -86,6 +86,7 @@ export default function CoursePayment() {
 
                 const data = await response.json();
                 setCourseDetails(data);
+                console.log(courseDetails);
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
             } finally {
@@ -249,7 +250,10 @@ export default function CoursePayment() {
 
                                 <p className='mb-0' style={{ width: '90%', marginTop: '20px' }}>Date of birth</p>
                                 <div className="d-flex">
-                                    <DatePicker wrapperClassName="datePicker" selected={newChildDOB} onChange={(date) => setNewChildDOB(date)} />
+                                    <DatePicker wrapperClassName="datePicker"
+                                        selected={newChildDOB}
+                                        onChange={(date) => setNewChildDOB(date)}
+                                        maxDate={new Date()} />
                                     <div style={{ width: '15%', textAlign: 'center', border: '1px solid #21212180', borderLeft: 'none', height: '50px' }}>
                                         <i style={{ marginTop: '15px' }} class="fa-solid fa-calendar-days"></i>
                                     </div>
@@ -313,21 +317,13 @@ export default function CoursePayment() {
                                 </div>
                                 <div className='payment'>
                                     <p>Send the account via:</p>
-                                    <div className='d-flex justify-content-between'>
+                                    <div className="d-flex justify-content-center">
                                         <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid #1A9CB7', cursor: 'pointer', padding: '5px 20px', width: '45%' }}>
                                             <div className='text-center'>
                                                 <p className='mb'>Email</p>
                                                 <p className='mb-0' style={{ color: '#FF8A00' }}>anvip321@gmail.com</p>
                                             </div>
                                         </div>
-
-                                        <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid #1A9CB7', cursor: 'pointer', padding: '5px 20px', width: '45%' }}>
-                                            <div className='text-center'>
-                                                <p className='mb'>Zalo</p>
-                                                <p className='mb-0' style={{ color: '#FF8A00' }}>09123123123</p>
-                                            </div>
-                                        </div>
-
                                     </div>
                                     <div style={{ marginTop: '20px' }}>
                                         {loading ? (
@@ -401,36 +397,45 @@ export default function CoursePayment() {
                                     </div>
                                 </div>
 
-                                <div>
-                                    <h5>Order information</h5>
-                                    <div style={{ padding: '10px 35px' }}>
+                                {courseDetails ? (
+                                    <div>
+                                        <h5>Order information</h5>
+                                        <div style={{ padding: '10px 35px' }}>
 
-                                        <div className='d-flex justify-content-between'>
-                                            <p>Course</p>
-                                            <p>What is programming?</p>
-                                        </div>
-                                        <div className='d-flex justify-content-between'>
-                                            <p>Price</p>
-                                            <p>100.000 đ</p>
-                                        </div>
-                                        <div className='d-flex justify-content-between'>
-                                            <p>Quantity</p>
-                                            <p>{selectedChildren.length}</p>
-                                        </div>
-                                        <div className='d-flex justify-content-between'>
-                                            <p>Discount</p>
-                                            <p>0 đ</p>
-                                        </div>
-                                        <hr />
-                                        <div className='d-flex justify-content-between'>
-                                            <p>Total</p>
-                                            <p style={{ color: '#FF8A00' }}>100.000 đ</p>
-                                        </div>
-                                        <div className='d-flex justify-content-center'>
-                                            <button disabled={selectedChildren.length === 0} onClick={BuyCourse} style={{ width: '100%', backgroundColor: '#FF8A00', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>ORDER</button>
+                                            <div className='d-flex justify-content-between'>
+                                                <p>Course</p>
+                                                <p>What is programming?</p>
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <p>Price</p>
+                                                <p>{courseDetails.price.toLocaleString()} đ</p>
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <p>Quantity</p>
+                                                <p>{selectedChildren.length}</p>
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <p>Discount</p>
+                                                <p>0 đ</p>
+                                            </div>
+                                            <hr />
+                                            <div className='d-flex justify-content-between'>
+                                                <p>Total</p>
+                                                <p style={{ color: '#FF8A00' }}>{(courseDetails.price * selectedChildren.length).toLocaleString()} đ</p>
+                                            </div>
+                                            <div className='d-flex justify-content-center'>
+                                                {selectedChildren.length === 0 ? (
+                                                    <button disabled style={{ width: '100%', backgroundColor: 'gray', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>ORDER</button>
+                                                ) : (
+                                                    <button onClick={BuyCourse} style={{ width: '100%', backgroundColor: '#FF8A00', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>ORDER</button>
+                                                )}
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div>Loading course details...</div>
+                                )}
                             </div>
                         </div>
                     </div>

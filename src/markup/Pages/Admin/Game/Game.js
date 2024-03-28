@@ -23,6 +23,8 @@ export default function Game() {
     const [viewLevelDetail, setViewLevelDetail] = useState(false);
     const [currentLevelDetail, setCurrentLevelDetail] = useState(null);
 
+    const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
+
     useEffect(() => {
         if (!viewGameData) {
             const fetchGameModes = async () => {
@@ -164,7 +166,7 @@ export default function Game() {
                     content = <img src={rock} alt="Rock" />;
                     break;
                 default:
-                    content = null; 
+                    content = null;
             }
 
             grid[pos] = content;
@@ -172,11 +174,15 @@ export default function Game() {
 
         return (
             <div className="grid-container">
-                {grid.map((content, index) => (
-                    <div key={index} className="grid-item">
-                        {content}
-                    </div>
-                ))}
+                {grid.map((content, index) => {
+                    const row = Math.floor(index / columns);
+                    const col = index % columns;
+                    return (
+                        <div key={index} className={`grid-item ${selectedSquareIndex === index ? 'selected' : ''}`} onClick={() => handleSquareClick(row, col)}>
+                            {content}
+                        </div>
+                    );
+                })}
             </div>
         );
     };
@@ -198,7 +204,7 @@ export default function Game() {
                     <div className='d-flex justify-content-start'>
                         <div>
                             <p className='mb-1'>Level index</p>
-                            <input type="number" value={currentLevelDetail.levelIndex + 1}/>
+                            <input type="number" value={currentLevelDetail.levelIndex + 1} />
                         </div>
                         <div>
                             <p className='mb-1'>Coin earn</p>

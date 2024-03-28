@@ -39,6 +39,7 @@ import Login from './Pages/Login';
 import VerifyEmail from './Pages/VerifyEmail';
 import Game from './Pages/Admin/Game/Game';
 import GameData from './Pages/Admin/Game/GameData';
+import VerifyEmailConfirm from './Pages/VerifyEmailConfirm';
 
 
 export default function Markup() {
@@ -53,6 +54,7 @@ export default function Markup() {
 					<Route path='/login' exact element={<Login />} />
 					<Route path='/register' exact element={<Register />} />
 					<Route path='/verify' exact element={<VerifyEmail />} />
+					<Route path='/verify-confirm' exact element={<VerifyEmailConfirm />} />
 
 
 					<Route path='/classes' exact element={<Classes />} />

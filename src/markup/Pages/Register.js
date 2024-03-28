@@ -96,6 +96,7 @@ export default function Register() {
         if (!response.ok) {
             throw new Error(data.message || 'Could not register user.');
         }
+        navigate('/verify')
         return data;
     };
 

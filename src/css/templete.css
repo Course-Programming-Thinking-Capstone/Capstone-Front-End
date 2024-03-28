@@ -1579,6 +1579,10 @@
   grid-row-gap: 20px; /* Space between rows */
 }
 
+.grid-container .selected {
+  border: 2px solid red;
+}
+
 .grid-item {
   width: 60px; /* Width of grid items */
   height: 60px; /* Height of grid items */
@@ -1586,6 +1590,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.level-grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .level-detail .map-item img {
