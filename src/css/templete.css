@@ -353,8 +353,6 @@
 }
 
 .order-item .header span {
-  background-color: #4caf50;
-  color: white;
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 0.9em;
@@ -1385,7 +1383,8 @@
 .staff-notification,
 .staff-moderating,
 .moderating-detail,
-.moderating-lesson {
+.moderating-lesson,
+.staff-order {
   margin-top: 30px;
   padding: 20px 80px;
   min-height: 600px;
@@ -1484,6 +1483,47 @@
   border: 2px solid transparent;
   padding: 10px;
 }
+
+.staff-order {
+  background-color: #fbede1;
+}
+
+.staff-order-menu div.active p {
+  color: #1A9CB7;
+}
+
+.staff-order-menu div:hover p {
+  cursor: pointer;
+  color: #1A9CB7;
+}
+
+.staff-order-content .table-responsive {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.table thead th {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.staff-order thead tr {
+  border-radius: 8px!important;
+  text-align: center;
+  color: white!important;
+}
+
+.staff-order tr th {
+  background-color: #1a9cb7 !important;
+}
+
+.staff-order thead tr th {
+  color: white;
+}
+
+/* .staff-order tbody tr {
+  border: 1px solid gray;
+} */
 
 /* Staff ends */
 

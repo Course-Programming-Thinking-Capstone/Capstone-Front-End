@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import demo from './../../images/gallery/demo.jpg';
-import simp from './../../images/gallery/simp.jpg';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import demo from '../../../images/gallery/demo.jpg';
+import simp from '../../../images/gallery/simp.jpg';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import StaffOrder from './StaffOrder/StaffOrder';
+import background from './../../../images/background/adminStaffBackground.jpg';
 
 const ModeratingLesson = ({ onBack }) => {
     const [selectedContent, setSelectedContent] = useState(null);
@@ -509,32 +512,33 @@ const StaffModerating = () => {
 export default function Staff() {
     const [activeContent, setActiveContent] = useState('');
     const [activeItem, setActiveItem] = useState('');
+    const location = useLocation();
 
-    const handleMenuItemClick = (content) => {
-        setActiveContent(content);
-        setActiveItem(content); // Set the active item to manage styling
-    };
+    const navigate = useNavigate();
 
-    const renderContent = () => {
-        switch (activeContent) {
-            case 'Notification':
-                return <StaffNotification />;
-            case 'Moderating':
-                return <StaffModerating />;
-            case 'Order':
-                return <div>Your orders...</div>;
-            case 'Class':
-                return <div>Class information...</div>;
-            case 'Course':
-                return <div>Course details...</div>;
-            default:
-                return <div>Select a menu item to see the content</div>;
-        }
+    const handleMenuItemClick = (path) => {
+        navigate(`/staff/${path.toLowerCase()}`); // Adjust path as needed
     };
 
     const getItemClass = (itemName) => {
         return `item d-flex justify-content-start ${activeItem === itemName ? 'active' : ''}`;
     };
+
+    useEffect(() => {
+        const pathSegments = location.pathname.split('/');
+        let activePath = pathSegments[2]; 
+        let activeMenu;
+    
+        if (activePath && activePath.includes('staff-order')) {
+            activeMenu = 'Order';
+        } else {
+            activeMenu = activePath ? activePath.charAt(0).toUpperCase() + activePath.slice(1) : '';
+        }
+    
+        setActiveItem(activeMenu);
+    }, [location]);
+    
+    
 
     return (
         <div>
@@ -552,7 +556,7 @@ export default function Staff() {
                             <i class="fa-solid fa-circle-stop"></i>
                             <span>Moderating</span>
                         </div>
-                        <div className={getItemClass('Order')} onClick={() => handleMenuItemClick('Order')}>
+                        <div className={getItemClass('Order')} onClick={() => handleMenuItemClick('staff-order')}>
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span>Order</span>
                         </div>
@@ -564,15 +568,19 @@ export default function Staff() {
                             <i class="fa-solid fa-book"></i>
                             <span>Course</span>
                         </div>
-                    </div>
-                    <div className="d-flex">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Log out
+                        <div className="item d-flex justify-content-start">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Log out
+                        </div>
                     </div>
                 </div>
 
-                <div className='col-lg-10'>
-                    {renderContent()}
+                <div className='col-lg-10' style={{
+                    backgroundImage: `url(${background})`, backgroundPosition: 'center center',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat', height: '100vh', overflow: 'hidden'
+                }}>
+                    <Outlet />
                 </div>
             </div>
         </div>

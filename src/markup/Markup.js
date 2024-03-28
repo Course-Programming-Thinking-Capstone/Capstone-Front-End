@@ -25,7 +25,7 @@ import PaymentSuccess from './Pages/PaymentSuccess';
 import Account from './Pages/Account';
 import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
-import Staff from './Pages/Staff';
+import Staff from './Pages/Staff/Staff';
 import Admin from './Pages/Admin/Admin';
 import TeacherSchedule from './Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule';
 import TeacherNotification from './Pages/Teacher/TeacherAccount/TeacherNotification/TeacherNotification';
@@ -41,6 +41,8 @@ import Game from './Pages/Admin/Game/Game';
 import GameData from './Pages/Admin/Game/GameData';
 import VerifyEmailConfirm from './Pages/VerifyEmailConfirm';
 import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse';
+import StaffOrder from './Pages/Staff/StaffOrder/StaffOrder';
+import StaffOrderDetail from './Pages/Staff/StaffOrder/StaffOrderDetail';
 
 
 export default function Markup() {
@@ -87,8 +89,12 @@ export default function Markup() {
 					<Route path='/teacher-account/syllabuses/create-course' exact element={<CreateCourse />} />
 					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
 					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
-					<Route path='/staff' exact element={<Staff />} />
 
+					<Route path='/staff' exact element={<Staff />} >
+						<Route path="staff-order" element={<StaffOrder />} />
+						<Route path="staff-order-detail" element={<StaffOrderDetail />} />
+
+					</Route>
 
 					<Route path="/admin" element={<Admin />}>
 						<Route path="game" element={<Game />} />

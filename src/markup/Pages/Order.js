@@ -81,6 +81,21 @@ export default function Order() {
             );
         }
 
+        const getStatusStyle = (status) => {
+            switch (status) {
+                case 'Pending':
+                    return { backgroundColor: '#FF8A00', color: 'white' }; 
+                case 'Success':
+                    return { backgroundColor: '#28a745', color: 'white' }; 
+                case 'RequestRefund':
+                    return { backgroundColor: '#F11616', color: 'white' }; 
+                case 'Refunded':
+                    return { backgroundColor: '#dc3545', color: 'white' }; 
+                default:
+                    return { backgroundColor: '#6c757d', color: 'white' }; 
+            }
+        };
+
         return orders.map((order, index) => (
             <div key={index} onClick={() => ViewOrderDetail(order.orderId)} className='order-item'>
                 <div className="header d-flex justify-content-between">
@@ -89,7 +104,7 @@ export default function Order() {
                         <p style={{ marginLeft: '10px' }}>Order code: </p>
                         <p style={{ marginLeft: '10px' }}>{order.orderCode}</p>
                     </div>
-                    <span>{order.orderStatus}</span>
+                    <span style={getStatusStyle(order.orderStatus)}>{order.orderStatus}</span>
                 </div>
                 <div className="content d-flex">
                     <img className='img-responsive' src={demo} alt="" />

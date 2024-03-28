@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Header from '../Layout/Header'
 import Footer from '../Layout/Footer'
@@ -16,6 +17,7 @@ export default function OrderCancel() {
     const [loading, setLoading] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
     const [selectedReason, setSelectedReason] = useState('');
+    const navigate = useNavigate();
     const handleChange = (event) => {
         setInputValue(event.target.value);
     };
@@ -37,7 +39,7 @@ export default function OrderCancel() {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             setLoading(true);
-            const url = `https://www.kidpro-production.somee.com/api/v1/orders/detail?orderId=${orderId}`;
+            const url = `https://www.kidpro-production.somee.com/api/v1/orders/detail/${orderId}`;
 
             try {
                 const response = await fetch(url, {
@@ -66,38 +68,48 @@ export default function OrderCancel() {
     }, [orderId]);
 
     const cancelOrder = async () => {
-        const fullReason = `${selectedReason} ${inputValue}`.trim(); // Combine the reasons
+        const fullReason = `${selectedReason} ${inputValue}`.trim();
 
         try {
-            const response = await fetch('https://www.kidpro-production.somee.com/api/v1/orders/cancel', {
+            const response = await fetch('https://www.kidpro-production.somee.com/api/v1/orders/request-cancel', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, // Ensure accessToken is valid
+                    'Authorization': `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify({
-                    orderId: Number(orderId), // Make sure orderId is a number
-                    reason: fullReason, // Combined reason
+                    orderId: Number(orderId),
+                    reason: fullReason,
                 }),
             });
 
-            const data = await response.json(); // Parse JSON response
-
             if (!response.ok) {
-                // If response status code is not OK, log the message
-                console.error(data.message);
-                throw new Error(data.message || 'Failed to cancel order');
+                // If response status code is not OK, try to parse the error message
+                const contentType = response.headers.get('Content-Type');
+                if (contentType.includes('application/json')) {
+                    const errorBody = await response.json();
+                    console.error(errorBody.message);
+                    throw new Error(errorBody.message || 'Failed to cancel order');
+                } else {
+                    const errorText = await response.text();
+                    console.error(errorText);
+                    throw new Error('Failed to cancel order');
+                }
             }
 
-            // Handle success scenario
-            console.log(data); // You might want to show a success message or redirect the user
-            handleClose(); // Close modal if open
-            // Potentially navigate back or show a success message
+            // If the response is OK, we proceed to parse it as JSON
+            const data = await response.json();
+            console.log(data);
+            navigate(`/order-detail/${orderId}`);
         } catch (error) {
             console.error('Error cancelling order:', error);
-            // Handle error (e.g., show an error message)
+            if (error instanceof SyntaxError) {
+                console.log("Received a non-JSON response. Order might have been canceled successfully.");
+            }
+            // Additional logic here to handle non-JSON responses if needed
         }
     };
+
 
 
     return (
