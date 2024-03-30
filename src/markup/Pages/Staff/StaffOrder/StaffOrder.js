@@ -40,15 +40,15 @@ export default function StaffOrder() {
             <div className="staff-order-menu d-flex justify-content-start">
                 <div className={selectedStatus === 'Success' ? 'active' : ''} onClick={() => setSelectedStatus('Success')}>
                     <p className='mb-1'>Success</p>
-                    <hr />
+                    <hr className='mt-0' />
                 </div>
                 <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
                     <p className='mb-1'>Pending</p>
-                    <hr />
+                    <hr className='mt-0' />
                 </div>
                 <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
                     <p className='mb-1'>Refunded</p>
-                    <hr />
+                    <hr className='mt-0' />
                 </div>
             </div>
             <div className="staff-order-content">
@@ -79,16 +79,20 @@ export default function StaffOrder() {
                                         <tr>
                                             <td >
                                                 <div>
-                                                    <p>{order.parentName}</p>
-                                                    <p>{order.courseName}</p>
-                                                    <p>x {order.quantity}</p>
+                                                    <p className='mb-1'>{order.parentName}</p>
+                                                    <p className='mb-1'>{order.courseName}</p>
+                                                    <p className='mb-1'>x {order.quantity}</p>
                                                 </div>
                                             </td>
-                                            <td className='text-center'>{order.totalPrice}</td>
-                                            <td className='text-center'>{order.orderStatus}</td>
+                                            <td className='text-center mt-2'>
+                                                <p className='mt-2 mb-0'>{order.totalPrice}</p>
+                                            </td>
+                                            <td className='text-center mt-2'>
+                                                <p className='mt-2 mb-0'>{order.orderStatus}</p>
+                                            </td>
                                             <td className='text-center'>
-                                                <p>Order code: {order.orderCode}</p>
-                                                <button style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
+                                                <p className='mb-1'>Order code: {order.orderCode}</p>
+                                                <button className='mt-2' style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
                                             </td>
                                         </tr>
                                     </React.Fragment>

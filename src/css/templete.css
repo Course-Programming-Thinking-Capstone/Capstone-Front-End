@@ -1488,11 +1488,15 @@
   background-color: #fbede1;
 }
 
-.staff-order-menu div.active p {
+.staff-order-menu .active hr {
+  height: 2px;
+}
+
+.staff-order-menu div.active p, .staff-order-menu div.active hr {
   color: #1A9CB7;
 }
 
-.staff-order-menu div:hover p {
+.staff-order-menu div:hover {
   cursor: pointer;
   color: #1A9CB7;
 }
@@ -1502,12 +1506,16 @@
   overflow-y: auto;
 }
 
+.staff-order .table {
+  border-collapse: collapse;
+}
+
 .table thead th {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 
-.staff-order thead tr {
+.staff-order thead {
   border-radius: 8px!important;
   text-align: center;
   color: white!important;
@@ -1519,6 +1527,18 @@
 
 .staff-order thead tr th {
   color: white;
+}
+
+.staff-order tbody tr {
+  border-bottom: 1px solid gray;
+}
+
+.staff-order tbody tr td {
+  padding: 10px;
+}
+
+.Toastify__close-button {
+  display: none;
 }
 
 /* .staff-order tbody tr {
