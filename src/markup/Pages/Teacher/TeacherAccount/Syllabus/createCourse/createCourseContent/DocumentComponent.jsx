@@ -21,9 +21,9 @@ const DocumentComponent = ({ sectionId }) => {
     const { lessonName, duration, content } = values;
 
     const document = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      content: content,
+      content: content.trim(),
       type: "Document",
     };
     dispatch(addDocument({ sectionId: sectionId, document: document }));
@@ -34,11 +34,16 @@ const DocumentComponent = ({ sectionId }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .trim()
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 1")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     content: yup.string().required("Content is required"),
   });
@@ -158,9 +163,9 @@ export const UpdateDocumentComponent = ({
     const { lessonName, duration, content } = values;
 
     const updateData = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      content: content,
+      content: content.trim(),
       type: "Document",
     };
     dispatch(
@@ -177,11 +182,16 @@ export const UpdateDocumentComponent = ({
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .transform((value) => (value || "").trim())
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 1")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     content: yup.string().required("Content is required"),
   });

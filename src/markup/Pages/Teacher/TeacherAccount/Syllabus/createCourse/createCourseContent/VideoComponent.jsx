@@ -22,9 +22,9 @@ const VideoComponent = ({ sectionId }) => {
     const { lessonName, duration, resourceUrl } = values;
 
     const video = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      resourceUrl: resourceUrl,
+      resourceUrl: resourceUrl.trim(),
       type: "Video",
     };
     dispatch(addVideo({ sectionId: sectionId, video: video }));
@@ -35,16 +35,23 @@ const VideoComponent = ({ sectionId }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .trim()
+      .max(2, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 0")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     resourceUrl: yup
       .string()
       .url("Url must be a valid URL")
-      .required("Content is required"),
+      .required("Url is required")
+      .trim()
+      .max(250, "Url exceed 250 characters."),
   });
   //form validation
 
@@ -158,9 +165,9 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
     const { lessonName, duration, resourceUrl } = values;
 
     const updateData = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      resourceUrl: resourceUrl,
+      resourceUrl: resourceUrl.trim(),
       type: "Video",
     };
     dispatch(
@@ -178,16 +185,23 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .trim()
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 0")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     resourceUrl: yup
       .string()
       .url("Url must be a valid URL")
-      .required("Content is required"),
+      .required("Url is required")
+      .trim()
+      .max(250, "Url exceed 250 characters."),
   });
   //form validation
 

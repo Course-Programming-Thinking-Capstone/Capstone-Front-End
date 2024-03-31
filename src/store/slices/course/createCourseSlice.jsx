@@ -162,7 +162,6 @@ export const createCourseSlice = createSlice({
     /*
     ** Add quiz information to section. action is: {sectionId, quiz {
 
-          "id"?: 0,
           "title": "string",
           "description"?: "string",
           "duration": 0,

@@ -18,6 +18,18 @@ export const AddQuizComponent = ({ sectionId }) => {
     console.log(`Section id in addQuizComponent is missing.`);
   }
 
+  /*
+    ** Add quiz information to section. action is: {sectionId, quiz {
+
+          "title": "string",
+          "description"?: "string",
+          "duration": 0,
+          "isOrderRandom"?: true,
+          "numberOfQuestion"?: 0,
+          "numberOfAttempt"?: 0,
+    }}
+    */
+
   //handle submit
   const handleSubmit = (values) => {
     const { lessonName, duration, resourceUrl } = values;
@@ -36,16 +48,19 @@ export const AddQuizComponent = ({ sectionId }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
-    duration: yup
-      .number()
-      .required("Duration is required")
-      .positive("Duration must larger than 0")
-      .integer(),
-    resourceUrl: yup
+    title: yup
       .string()
-      .url("Url must be a valid URL")
-      .required("Content is required"),
+      .required("Quiz title is required.")
+      .transform((value) => (value || "").trim())
+      .max(250, "Quiz title can not exceed 250 characters."),
+    description: yup
+      .string()
+      .trim()
+      .max(250, "Quiz description can not exceed 750 characters."),
+    duration: 0,
+    numberOfAttempt: 3,
+    isOrderRandom: false,
+    numberOfQuestion: undefined,
   });
   //form validation
 
@@ -74,9 +89,12 @@ export const AddQuizComponent = ({ sectionId }) => {
             validationSchema={schema}
             onSubmit={handleSubmit}
             initialValues={{
-              lessonName: "Video",
-              duration: 1,
-              resourceUrl: "https://www.youtube.com/",
+              title: "Quiz",
+              description: undefined,
+              duration: 0,
+              numberOfAttempt: 3,
+              isOrderRandom: false,
+              numberOfQuestion: undefined,
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
