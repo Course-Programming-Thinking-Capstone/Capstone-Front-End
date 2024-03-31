@@ -75,7 +75,7 @@ const VideoComponent = ({ sectionId }) => {
             initialValues={{
               lessonName: "Video",
               duration: 1,
-              resourceUrl: "",
+              resourceUrl: "https://www.youtube.com/",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (

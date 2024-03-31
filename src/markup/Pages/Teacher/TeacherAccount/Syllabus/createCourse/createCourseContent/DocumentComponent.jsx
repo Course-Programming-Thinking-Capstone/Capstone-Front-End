@@ -71,7 +71,7 @@ const DocumentComponent = ({ sectionId }) => {
             initialValues={{
               lessonName: "Document",
               duration: 1,
-              content: "",
+              content: "Content",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (

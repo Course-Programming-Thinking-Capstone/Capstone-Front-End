@@ -159,6 +159,272 @@ export const createCourseSlice = createSlice({
       }
     },
 
+    /*
+    ** Add quiz information to section. action is: {sectionId, quiz {
+
+          "id"?: 0,
+          "title": "string",
+          "description"?: "string",
+          "duration": 0,
+          "isOrderRandom"?: true,
+          "numberOfQuestion"?: 0,
+          "numberOfAttempt"?: 0,
+    }}
+    */
+    addQuiz: (state, action) => {
+      const { sectionId, quiz } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (!state.data.sections[sectionIndex].quizzes) {
+          state.data.sections[sectionIndex].quizzes = [];
+        }
+
+        state.data.sections[sectionIndex].quizzes.push(quiz);
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /*
+    ** Update quiz common information in section. action is: {sectionId, index, quiz {
+
+          "id"?: 0,
+          "title": "string",
+          "description"?: "string",
+          "duration": 0,
+          "isOrderRandom"?: true,
+          "numberOfQuestion"?: 0,
+          "numberOfAttempt"?: 0,
+    }}
+    */
+    updateQuiz: (state, action) => {
+      const { sectionId, index, quiz } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes[index] !== undefined
+        ) {
+          state.data.sections[sectionIndex].quizzes[index].title = quiz.title;
+          state.data.sections[sectionIndex].quizzes[index].description =
+            quiz.description;
+          state.data.sections[sectionIndex].quizzes[index].duration =
+            quiz.duration;
+          state.data.sections[sectionIndex].quizzes[index].isOrderRandom =
+            quiz.isOrderRandom;
+          state.data.sections[sectionIndex].quizzes[index].numberOfQuestion =
+            quiz.numberOfQuestion;
+          state.data.sections[sectionIndex].quizzes[index].numberOfAttempt =
+            quiz.numberOfAttempt;
+        } else {
+          state.error = { message: `Quiz index ${index} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /*
+     ** Remove quiz. action is {sectionId, index}
+     */
+    removeQuiz: (state, action) => {
+      const { sectionId, index } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes !== null
+        ) {
+          if (
+            index >= 0 &&
+            index < state.data.sections[sectionIndex].quizzes.length
+          ) {
+            state.data.sections[sectionIndex].quizzes.splice(index, 1);
+          } else {
+            state.error = {
+              message: `Quiz index ${index} is out of bounds.`,
+            };
+          }
+        } else {
+          state.error = {
+            message: `Quizzes array in section id ${sectionId} is null or undefined.`,
+          };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /*
+    ** Add quiz question. action is {
+      sectionId, quizIndex, question: {
+              title: "string",
+              score?: 1 - 100,
+              options: [
+                {
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                },
+                {
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                },
+                {
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                }
+              ]
+      }
+    }
+
+    */
+    addQuestion: (state, action) => {
+      const { sectionId, quizIndex, question } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        //check quiz exist
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes[quizIndex] !== undefined
+        ) {
+          state.data.sections[sectionIndex].quizzes[quizIndex].push(question);
+        } else {
+          state.error = { message: `Quiz index ${quizIndex} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /*
+    ** Update question information. action is {sectionId, quizIndex, questionIndex, question: {
+      id?: 1,
+      title: "string",
+              score?: 1 - 100,
+              options: [
+                {
+                  id?: 0,
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                },
+                {
+                  id?: 0
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                },
+                {
+                  id?: 0
+                  content: "string",
+                  answerExplain?: "string",
+                  isCorrect: true/false
+                }
+              ]
+    }}
+    */
+    updateQuestion: (state, action) => {
+      const { sectionId, quizIndex, questionIndex, question } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes[quizIndex] !== undefined
+        ) {
+          if (
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions &&
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions[
+              questionIndex
+            ] !== undefined
+          ) {
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions[
+              questionIndex
+            ] = question;
+          } else {
+            state.error = {
+              message: `Question index ${questionIndex} not found.`,
+            };
+          }
+        } else {
+          state.error = { message: `Quiz index ${quizIndexP} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /*
+     ** Remove question. action is {sectionId, quizIndex, questionIndex}
+     */
+    removeQuestion: (state, action) => {
+      const { sectionId, quizIndex, questionIndex } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes !== null
+        ) {
+          if (
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions &&
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions !==
+              null
+          ) {
+            if (
+              questionIndex >= 0 &&
+              questionIndex <
+                state.data.sections[sectionIndex].quizzes[quizIndex].questions
+                  .length
+            ) {
+              state.data.sections[sectionIndex].quizzes[
+                quizIndex
+              ].questions.splice(questionIndex, 1);
+            } else {
+              state.error = {
+                message: `Question index ${questionIndex} is out of bounds.`,
+              };
+            }
+          } else {
+            state.error = {
+              message: `Questions array in quiz index ${quizIndex} is null or undefined.`,
+            };
+          }
+        } else {
+          state.error = {
+            message: `Quizzes array in section id ${sectionId} is null or undefined.`,
+          };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
     setError: (state, action) => {
       state.error = action.payload;
     },
