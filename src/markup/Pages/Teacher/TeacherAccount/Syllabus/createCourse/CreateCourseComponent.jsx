@@ -18,7 +18,11 @@ import {
   updateCourseApi,
   updateCoursePictureApi,
 } from "../../../../../../helper/apis/course/course";
-import { AddQuizComponent } from "./createCourseContent/QuizComponent";
+import {
+  AddQuizComponent,
+  RemoveQuizComponent,
+  UpdateQuizComponent,
+} from "./createCourseContent/QuizComponent";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -370,19 +374,19 @@ const QuizContent = ({ sectionId, quiz, index }) => {
               </Row>
             )}
 
-            {/* <Row className="mb-3">
+            <Row className="mb-3">
               <Col md="6">
-                <UpdateDocumentComponent
+                <UpdateQuizComponent
                   sectionId={sectionId}
-                  lessonIndex={index}
-                  document={lesson}
+                  quizIndex={index}
+                  quiz={quiz}
                 />
               </Col>
 
               <Col md="6">
-                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+                <RemoveQuizComponent sectionId={sectionId} index={index} />
               </Col>
-            </Row> */}
+            </Row>
           </Container>
         </Accordion.Body>
       </Accordion.Item>
