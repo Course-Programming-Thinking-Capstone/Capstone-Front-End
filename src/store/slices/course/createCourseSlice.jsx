@@ -369,7 +369,7 @@ export const createCourseSlice = createSlice({
             };
           }
         } else {
-          state.error = { message: `Quiz index ${quizIndexP} not found.` };
+          state.error = { message: `Quiz index ${quizIndex} not found.` };
         }
       } else {
         state.error = { message: `Section id ${sectionId} not found.` };
