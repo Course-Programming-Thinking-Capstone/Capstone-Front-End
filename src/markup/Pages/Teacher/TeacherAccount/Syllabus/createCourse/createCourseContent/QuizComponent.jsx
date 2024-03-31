@@ -3,14 +3,20 @@ import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { addQuiz } from "../../../../../../../store/slices/course/createCourseSlice";
 
 export const AddQuizComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
 
+  //useState
   const [show, setShow] = useState(false);
+  const [isOrderRandom, setIsOrderRandom] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleToggleRandom = () => {
+    setIsOrderRandom(!isOrderRandom);
+  };
 
   //Check if sectionId is empty then go to error page
   if (sectionId === undefined) {
@@ -32,15 +38,28 @@ export const AddQuizComponent = ({ sectionId }) => {
 
   //handle submit
   const handleSubmit = (values) => {
-    const { lessonName, duration, resourceUrl } = values;
+    const { title, description, duration, numberOfAttempt, numberOfQuestion } =
+      values;
 
-    const video = {
-      name: lessonName,
+    const quiz = {
+      title: title,
+      description: description,
       duration: duration,
-      resourceUrl: resourceUrl,
-      type: "Video",
+      numberOfAttempt: numberOfAttempt,
+      isOrderRandom: isOrderRandom,
+      numberOfQuestion: numberOfQuestion,
     };
-    dispatch(addVideo({ sectionId: sectionId, video: video }));
+
+    if (!isOrderRandom) {
+      quiz.numberOfQuestion = undefined;
+    } else {
+      if (quiz.numberOfQuestion === undefined) quiz.numberOfQuestion = 100;
+    }
+
+    //log form data
+    console.log(`Quiz data when submit form: ${JSON.stringify(quiz, null, 2)}`);
+
+    dispatch(addQuiz({ sectionId, quiz }));
     setShow(false);
   };
 
@@ -51,16 +70,28 @@ export const AddQuizComponent = ({ sectionId }) => {
     title: yup
       .string()
       .required("Quiz title is required.")
-      .transform((value) => (value || "").trim())
+      .trim()
       .max(250, "Quiz title can not exceed 250 characters."),
     description: yup
       .string()
       .trim()
-      .max(250, "Quiz description can not exceed 750 characters."),
-    duration: 0,
-    numberOfAttempt: 3,
-    isOrderRandom: false,
-    numberOfQuestion: undefined,
+      .max(750, "Quiz description can not exceed 750 characters."),
+    duration: yup
+      .number()
+      .required("Duration is required")
+      .min(1, "Duration must larger than 1 minute.")
+      .max(100, "Duration can not exceed 100 minute")
+      .integer(),
+    numberOfAttempt: yup
+      .number()
+      .integer()
+      .min(1, "Number of attempt must larger than 1 times.")
+      .max(10, "Number of attempt can not exceed 10 times."),
+    numberOfQuestion: yup
+      .number()
+      .integer()
+      .min(1, "Number of question must larger than 0.")
+      .max(100, "Number of question too big."),
   });
   //form validation
 
@@ -72,7 +103,7 @@ export const AddQuizComponent = ({ sectionId }) => {
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
-        Add video
+        Add quiz
       </Button>
 
       <Modal
@@ -82,7 +113,7 @@ export const AddQuizComponent = ({ sectionId }) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add video</Modal.Title>
+          <Modal.Title>Add quiz</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -91,32 +122,59 @@ export const AddQuizComponent = ({ sectionId }) => {
             initialValues={{
               title: "Quiz",
               description: undefined,
-              duration: 0,
+              duration: 10,
               numberOfAttempt: 3,
-              isOrderRandom: false,
               numberOfQuestion: undefined,
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form id="videoForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} md="12" controlId="validationLessonName">
-                    <Form.Label>Lesson name</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    className="mb-3"
+                    controlId="validationTitle"
+                  >
+                    <Form.Label>Title</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Lesson name"
-                      name="lessonName"
-                      value={values.lessonName}
+                      placeholder="Quiz title"
+                      name="title"
+                      value={values.title}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={!!errors.title} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
-                      {errors.lessonName}
+                      {errors.title}
                     </Form.Control.Feedback>
                   </Form.Group>
-
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
-                    <Form.Label>Duration</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    controlId="validationDescription"
+                    className="mb-3"
+                  >
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Description"
+                      name="description"
+                      value={values.description}
+                      onChange={handleChange}
+                      isInvalid={!!errors.description} // Set isInvalid based on validation errors
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.description}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    controlId="validationDuration"
+                    className="mb-3"
+                  >
+                    <Form.Label>Duration (minute)</Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -131,21 +189,61 @@ export const AddQuizComponent = ({ sectionId }) => {
                       {errors.duration}
                     </Form.Control.Feedback>
                   </Form.Group>
-
-                  <Form.Group as={Col} md="12" controlId="validationVideo">
-                    <Form.Label>Url</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    controlId="validationNumberOfAttempt"
+                    className="mb-3"
+                  >
+                    <Form.Label>Number of attempts</Form.Label>
                     <Form.Control
-                      type="url"
-                      placeholder="Video url"
-                      name="resourceUrl"
-                      value={values.resourceUrl}
+                      type="number"
+                      min={1}
+                      max={10}
+                      placeholder="Number of attempts"
+                      name="numberOfAttempt"
+                      value={values.numberOfAttempt}
                       onChange={handleChange}
-                      isInvalid={!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={!!errors.numberOfAttempt} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
-                      {errors.resourceUrl}
+                      {errors.numberOfAttempt}
                     </Form.Control.Feedback>
                   </Form.Group>
+                  <Col md={12}>
+                    <Form.Check
+                      // md= {12} // prettier-ignore
+                      type="switch"
+                      id="is-order-random-switch"
+                      label="Random order?"
+                      className="px-0"
+                      checked={isOrderRandom}
+                      onChange={() => handleToggleRandom()}
+                    />
+                  </Col>
+
+                  {isOrderRandom && (
+                    <Form.Group
+                      as={Col}
+                      md={12}
+                      controlId="validationNumberOfQuestion"
+                    >
+                      <Form.Label>Number of questions</Form.Label>
+                      <Form.Control
+                        type="number"
+                        min={1}
+                        max={100}
+                        placeholder="Number of questions"
+                        name="numberOfQuestion"
+                        value={values.numberOfQuestion}
+                        onChange={handleChange}
+                        isInvalid={!!errors.numberOfQuestion} // Set isInvalid based on validation errors
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.numberOfQuestion}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  )}
                 </Row>
               </Form>
             )}

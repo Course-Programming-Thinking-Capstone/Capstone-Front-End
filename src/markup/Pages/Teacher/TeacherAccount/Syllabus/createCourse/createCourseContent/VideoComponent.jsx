@@ -39,7 +39,7 @@ const VideoComponent = ({ sectionId }) => {
       .string()
       .required("Lesson name is required")
       .trim()
-      .max(2, "Lesson name exceed 250 characters."),
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")

@@ -456,6 +456,12 @@ export const {
   setError,
   updateDocument,
   updateVideo,
+  addQuiz,
+  updateQuiz,
+  removeQuiz,
+  addQuestion,
+  updateQuestion,
+  removeQuestion,
 } = createCourseSlice.actions;
 
 export default createCourseSlice.reducer;

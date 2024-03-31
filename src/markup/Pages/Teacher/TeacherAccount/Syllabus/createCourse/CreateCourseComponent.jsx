@@ -18,6 +18,7 @@ import {
   updateCourseApi,
   updateCoursePictureApi,
 } from "../../../../../../helper/apis/course/course";
+import { AddQuizComponent } from "./createCourseContent/QuizComponent";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -175,6 +176,14 @@ const CreateCourseComponent = () => {
                           )
                         )}
 
+                        {section.quizzes.map((quiz, index) => (
+                          <QuizContent
+                            sectionId={section.id}
+                            quiz={quiz}
+                            index={index}
+                          />
+                        ))}
+
                         <Container>
                           <Row>
                             <Col md="4">
@@ -184,13 +193,7 @@ const CreateCourseComponent = () => {
                               <DocumentComponent sectionId={section.id} />
                             </Col>
                             <Col md="4">
-                              <button
-                              // onClick={() =>
-                              //   addContentTypeToSection(section.id, "Quiz")
-                              // }
-                              >
-                                Add Quiz
-                              </button>
+                              <AddQuizComponent sectionId={section.id} />
                             </Col>
                           </Row>
                         </Container>
@@ -260,18 +263,18 @@ const VideoContent = ({ sectionId, lesson, index }) => {
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
           <Container>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Duration: {lesson.duration} minute</p>
               </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Url: {lesson.resourceUrl}</p>
               </Col>
             </Row>
 
-            <Row>
+            <Row className="mb-3">
               <Col md="6">
                 <UpdateVideoComponent
                   sectionId={sectionId}
@@ -297,18 +300,18 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
           <Container>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Duration: {lesson.duration} minute</p>
               </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Content: {lesson.content}</p>
               </Col>
             </Row>
 
-            <Row>
+            <Row className="mb-3">
               <Col md="6">
                 <UpdateDocumentComponent
                   sectionId={sectionId}
@@ -321,6 +324,65 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
                 <RemoveComponent sectionId={sectionId} lessonIndex={index} />
               </Col>
             </Row>
+          </Container>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+};
+
+const QuizContent = ({ sectionId, quiz, index }) => {
+  return (
+    <Accordion defaultActiveKey="0" flush>
+      <Accordion.Item eventKey={index}>
+        <Accordion.Header>{quiz.title}</Accordion.Header>
+        <Accordion.Body>
+          <Container>
+            <Row className="mb-3">
+              <Col>
+                <p>Description: {quiz.description}</p>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <p>Duration: {quiz.duration}</p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <p>Number of attempts: {quiz.numberOfAttempt}</p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <p>
+                  Random order: {quiz.isOrderRandom === true ? "Yes" : "No"}
+                </p>
+              </Col>
+            </Row>
+            {quiz.isOrderRandom && (
+              <Row className="mb-3">
+                <Col>
+                  <p>Number of questions: {quiz.numberOfQuestion}</p>
+                </Col>
+              </Row>
+            )}
+
+            {/* <Row className="mb-3">
+              <Col md="6">
+                <UpdateDocumentComponent
+                  sectionId={sectionId}
+                  lessonIndex={index}
+                  document={lesson}
+                />
+              </Col>
+
+              <Col md="6">
+                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+              </Col>
+            </Row> */}
           </Container>
         </Accordion.Body>
       </Accordion.Item>
