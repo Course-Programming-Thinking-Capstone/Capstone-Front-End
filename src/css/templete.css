@@ -625,20 +625,20 @@
   border-radius: 5px;
 }
 
-.datePicker {
+.payment .datePicker {
   width: 85%;
 }
 
-.datePicker .react-datepicker-wrapper {
+.payment .datePicker .react-datepicker-wrapper {
   width: 100% !important;
   border-right: none !important;
 }
 
-.datePicker .react-datepicker__input-container {
+.payment .datePicker .react-datepicker__input-container {
   width: 100% !important;
 }
 
-.datePicker .react-datepicker__input-container input {
+.payment .datePicker .react-datepicker__input-container input {
   width: 100% !important;
   height: 50px;
   border: 1px solid #21212180;
@@ -1384,7 +1384,10 @@
 .staff-moderating,
 .moderating-detail,
 .moderating-lesson,
-.staff-order {
+.staff-order,
+.staff-class-detail,
+.staff-create-class,
+.staff-schedule {
   margin-top: 30px;
   padding: 20px 80px;
   min-height: 600px;
@@ -1393,14 +1396,20 @@
 .staff-notification .header h5,
 .staff-moderating .header h5,
 .moderating-detail .header h5,
-.moderating-lesson .header h5 {
+.moderating-lesson .header h5,
+.staff-class-detail .header h5,
+.staff-create-class .header h5,
+.staff-schedule .header h5 {
   font-size: 22px;
 }
 
 .staff-notification .header hr,
 .staff-moderating .header hr,
 .moderating-detail .header hr,
-.moderating-lesson .header hr {
+.moderating-lesson .header hr,
+.staff-class-detail .header hr,
+.staff-create-class .header hr,
+.staff-schedule .header hr {
   width: 50%;
   color: #ff8a00;
   margin: 0;
@@ -1408,7 +1417,10 @@
 }
 
 .staff-notification .header i,
-.staff-moderating .header i {
+.staff-moderating .header i,
+.staff-class-detail .header i,
+.staff-create-class .header i,
+.staff-schedule .header i {
   color: #ff8a00;
   margin-left: 10px;
   font-size: 20px;
@@ -1537,10 +1549,9 @@
   padding: 10px;
 }
 
-.Toastify__close-button {
-  display: none;
+.staff-class-detail, .staff-create-class, .staff-schedule {
+  background-color: white;
 }
-
 /* .staff-order tbody tr {
   border: 1px solid gray;
 } */

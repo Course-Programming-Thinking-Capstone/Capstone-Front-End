@@ -29,7 +29,7 @@ export default function StaffOrder() {
             } catch (error) {
                 console.error('There was an error fetching the orders:', error);
             } finally {
-                setLoading(false); // Set loading to false when the API call completes
+                setLoading(false); 
             }
         };
 

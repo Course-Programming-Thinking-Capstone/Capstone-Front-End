@@ -43,6 +43,8 @@ import VerifyEmailConfirm from './Pages/VerifyEmailConfirm';
 import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse';
 import StaffOrder from './Pages/Staff/StaffOrder/StaffOrder';
 import StaffOrderDetail from './Pages/Staff/StaffOrder/StaffOrderDetail';
+import StaffModerating from './Pages/Staff/StaffModerating/StaffModerating';
+import StaffClassDetail from './Pages/Staff/StaffClassDetail/StaffClassDetail';
 
 
 export default function Markup() {
@@ -78,6 +80,7 @@ export default function Markup() {
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
+
 					<Route path='/teacher-account' exact element={<TeacherAccount />} />
 					<Route path='/teacher-account/schedule' exact element={<TeacherSchedule />} />
 					<Route path='/teacher-account/notification' exact element={<TeacherNotification />} />
@@ -92,6 +95,8 @@ export default function Markup() {
 					<Route path='/staff' exact element={<Staff />} >
 						<Route path="staff-order" element={<StaffOrder />} />
 						<Route path="staff-order-detail" element={<StaffOrderDetail />} />
+						<Route path="moderating" element={<StaffModerating />} />
+						<Route path="class" element={<StaffClassDetail />} />
 
 					</Route>
 
