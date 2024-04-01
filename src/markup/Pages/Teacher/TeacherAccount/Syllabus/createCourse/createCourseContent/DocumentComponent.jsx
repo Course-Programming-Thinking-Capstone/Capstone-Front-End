@@ -90,7 +90,7 @@ const DocumentComponent = ({ sectionId }) => {
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -107,7 +107,7 @@ const DocumentComponent = ({ sectionId }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -122,7 +122,7 @@ const DocumentComponent = ({ sectionId }) => {
                       name="content"
                       value={values.content}
                       onChange={handleChange}
-                      isInvalid={!!errors.content} // Set isInvalid based on validation errors
+                      isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.content}
@@ -238,7 +238,7 @@ export const UpdateDocumentComponent = ({
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -255,7 +255,7 @@ export const UpdateDocumentComponent = ({
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -270,7 +270,7 @@ export const UpdateDocumentComponent = ({
                       name="content"
                       value={values.content}
                       onChange={handleChange}
-                      isInvalid={!!errors.content} // Set isInvalid based on validation errors
+                      isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.content}

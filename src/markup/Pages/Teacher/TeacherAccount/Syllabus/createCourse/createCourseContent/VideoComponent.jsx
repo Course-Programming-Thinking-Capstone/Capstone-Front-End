@@ -96,7 +96,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -113,7 +113,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -128,7 +128,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="resourceUrl"
                       value={values.resourceUrl}
                       onChange={handleChange}
-                      isInvalid={!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={touched.resourceUrl &&!!errors.resourceUrl} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}
@@ -246,7 +246,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -263,7 +263,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -278,7 +278,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="resourceUrl"
                       value={values.resourceUrl}
                       onChange={handleChange}
-                      isInvalid={!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={touched.resourceUrl && !!errors.resourceUrl} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}

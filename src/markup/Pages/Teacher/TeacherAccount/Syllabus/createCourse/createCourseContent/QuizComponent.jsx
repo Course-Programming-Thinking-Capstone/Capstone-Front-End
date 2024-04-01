@@ -1,11 +1,22 @@
-import { Button, Modal, Col, Form, InputGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Modal,
+  Col,
+  Form,
+  InputGroup,
+  Row,
+  FormCheck,
+} from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
+  addQuestion,
   addQuiz,
+  removeQuestion,
   removeQuiz,
+  updateQuestion,
   updateQuiz,
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
@@ -145,7 +156,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       name="title"
                       value={values.title}
                       onChange={handleChange}
-                      isInvalid={!!errors.title} // Set isInvalid based on validation errors
+                      isInvalid={touched.title && !!errors.title} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -164,7 +175,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       name="description"
                       value={values.description}
                       onChange={handleChange}
-                      isInvalid={!!errors.description} // Set isInvalid based on validation errors
+                      isInvalid={touched.description && !!errors.description} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.description}
@@ -185,7 +196,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -206,7 +217,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                       name="numberOfAttempt"
                       value={values.numberOfAttempt}
                       onChange={handleChange}
-                      isInvalid={!!errors.numberOfAttempt} // Set isInvalid based on validation errors
+                      isInvalid={
+                        touched.numberOfAttempt && !!errors.numberOfAttempt
+                      } // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.numberOfAttempt}
@@ -239,7 +252,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                         name="numberOfQuestion"
                         value={values.numberOfQuestion}
                         onChange={handleChange}
-                        isInvalid={!!errors.numberOfQuestion} // Set isInvalid based on validation errors
+                        isInvalid={
+                          touched.numberOfQuestion && !!errors.numberOfQuestion
+                        } // Set isInvalid based on validation errors
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.numberOfQuestion}
@@ -315,9 +330,6 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
     } else {
       if (data.numberOfQuestion === undefined) data.numberOfQuestion = 100;
     }
-
-    //log form data
-    console.log(`Quiz data when submit form: ${JSON.stringify(data, null, 2)}`);
 
     dispatch(
       updateQuiz({ sectionId: sectionId, index: quizIndex, quiz: data })
@@ -535,6 +547,530 @@ export const RemoveQuizComponent = ({ sectionId, index }) => {
   return (
     <Button
       variant="delete"
+      size="sm"
+      onClick={handleDelete}
+      style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+    >
+      Remove
+    </Button>
+  );
+};
+
+//add question
+export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
+  const dispatch = useDispatch();
+
+  //useState
+  const [show, setShow] = useState(false);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleAnswerChange = (index) => {
+    setCorrectAnswerIndex(index);
+  };
+
+  const handleAddOption = (push) => {
+    push({ content: "Option", answerExplain: "", isCorrect: false });
+  };
+
+  const handleRemoveOption = (remove, index) => {
+    remove(index);
+  };
+
+  //Check if sectionId is empty then go to error page
+  if (sectionId === undefined) {
+    //log error
+    console.log(`Section id in addQuestionComponent is missing.`);
+  }
+
+  //handle submit
+  const handleSubmit = (values) => {
+    const { title, options } = values;
+
+    options[correctAnswerIndex].isCorrect = true;
+
+    const question = {
+      title: title,
+      options: options,
+    };
+
+    dispatch(
+      addQuestion({
+        sectionId: sectionId,
+        quizIndex: quizIndex,
+        question: question,
+      })
+    );
+
+    setShow(false);
+  };
+
+  //form validation
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    title: yup
+      .string()
+      .required("Question title is required.")
+      .trim()
+      .max(250, "Question title can not exceed 250 characters."),
+    options: yup
+      .array()
+      .of(
+        yup.object().shape({
+          content: yup
+            .string()
+            .required("Option content is required.")
+            .trim()
+            .max(250, "Option content cannot exceed 250 characters."),
+          answerExplain: yup
+            .string()
+            .trim()
+            .max(750, "Answer explain can not exceed 750 characters."),
+          isCorrect: yup.bool(),
+        })
+      )
+      .min(1, "Question must have at least one option.")
+      .max(10, "Too many option"),
+  });
+  //form validation
+
+  return (
+    <>
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={handleShow}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
+        Add Question
+      </Button>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Question</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            validationSchema={schema}
+            onSubmit={handleSubmit}
+            initialValues={{
+              title: "Question",
+              options: [
+                { content: "Option 1", answerExplain: "", isCorrect: false },
+              ],
+            }}
+          >
+            {({ handleSubmit, handleChange, values, touched, errors }) => (
+              <Form id="questionForm" noValidate onSubmit={handleSubmit}>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    className="mb-3"
+                    controlId="validationTitle"
+                  >
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Question title"
+                      name="title"
+                      value={values.title}
+                      onChange={handleChange}
+                      isInvalid={touched.title && !!errors.title}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.title}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
+
+                <p>Options</p>
+
+                <formik.FieldArray name="options">
+                  {({ push, remove }) => (
+                    <>
+                      {values.options.map((option, index) => (
+                        <Row key={index} className="mb-3">
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionContent${index}`}
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Write option"
+                              name={`options[${index}].content`}
+                              value={option.content}
+                              onChange={handleChange}
+                              isInvalid={
+                                touched.options &&
+                                touched.options[index] &&
+                                !!errors.options &&
+                                !!errors.options[index]?.content
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.options && errors.options[index]?.content}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionExplain${index}`}
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Explain"
+                              name={`options[${index}].answerExplain`}
+                              value={option.answerExplain}
+                              onChange={handleChange}
+                              isInvalid={
+                                touched.options &&
+                                touched.options[index] &&
+                                !!errors.options &&
+                                !!errors.options[index]?.answerExplain
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.options &&
+                                errors.options[index]?.answerExplain}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+
+                          {/* isCorrect field */}
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionIsCorrect${index}`}
+                          >
+                            <Form.Check
+                              type="switch"
+                              id={`custom-switch-${index}`}
+                              label="Is correct answer?"
+                              checked={correctAnswerIndex === index}
+                              onChange={() => handleAnswerChange(index)}
+                            />
+                          </Form.Group>
+
+                          <Col md={2}>
+                            <Button
+                              variant="danger"
+                              onClick={() => handleRemoveOption(remove, index)}
+                            >
+                              Remove
+                            </Button>
+                          </Col>
+                        </Row>
+                      ))}
+
+                      {errors.options && !Array.isArray(errors.options) && (
+                        <div className="text-danger mb-3">{errors.options}</div>
+                      )}
+
+                      <Button
+                        variant="primary"
+                        onClick={() => handleAddOption(push)}
+                      >
+                        Add Option
+                      </Button>
+                    </>
+                  )}
+                </formik.FieldArray>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" form="questionForm">
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+//update question
+export const UpdateQuestionComponent = ({
+  sectionId,
+  quizIndex,
+  questionIndex,
+  question,
+}) => {
+  const dispatch = useDispatch();
+
+  //useState
+  const [show, setShow] = useState(false);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleAnswerChange = (index) => {
+    setCorrectAnswerIndex(index);
+  };
+
+  const handleAddOption = (push) => {
+    push({ content: "Option", answerExplain: "", isCorrect: false });
+  };
+
+  const handleRemoveOption = (remove, index) => {
+    remove(index);
+  };
+
+  //Check if sectionId is empty then go to error page
+  if (sectionId === undefined) {
+    //log error
+    console.log(`Section id in addQuestionComponent is missing.`);
+  }
+
+  //handle submit
+  const handleSubmit = (values) => {
+    const { title, options } = values;
+
+    options[correctAnswerIndex].isCorrect = true;
+
+    const question = {
+      title: title,
+      options: options,
+    };
+
+    dispatch(
+      updateQuestion({
+        sectionId: sectionId,
+        quizIndex: quizIndex,
+        questionIndex: questionIndex,
+        question: question,
+      })
+    );
+
+    setShow(false);
+  };
+
+  //form validation
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    title: yup
+      .string()
+      .required("Question title is required.")
+      .trim()
+      .max(250, "Question title can not exceed 250 characters."),
+    options: yup
+      .array()
+      .of(
+        yup.object().shape({
+          content: yup
+            .string()
+            .required("Option content is required.")
+            .trim()
+            .max(250, "Option content cannot exceed 250 characters."),
+          answerExplain: yup
+            .string()
+            .trim()
+            .max(750, "Answer explain can not exceed 750 characters."),
+          isCorrect: yup.bool(),
+        })
+      )
+      .min(1, "Question must have at least one option.")
+      .max(10, "Too many option"),
+  });
+  //form validation
+
+  return (
+    <>
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={handleShow}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
+        Add Question
+      </Button>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Question</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            validationSchema={schema}
+            onSubmit={handleSubmit}
+            initialValues={{
+              title: question.title,
+              options: question.options,
+            }}
+          >
+            {({ handleSubmit, handleChange, values, touched, errors }) => (
+              <Form id="questionForm" noValidate onSubmit={handleSubmit}>
+                <Row className="mb-3">
+                  <Form.Group
+                    as={Col}
+                    md={12}
+                    className="mb-3"
+                    controlId="validationTitle"
+                  >
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Question title"
+                      name="title"
+                      value={values.title}
+                      onChange={handleChange}
+                      isInvalid={touched.title && !!errors.title}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.title}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
+
+                <p>Options</p>
+
+                <formik.FieldArray name="options">
+                  {({ push, remove }) => (
+                    <>
+                      {values.options.map((option, index) => (
+                        <Row key={index} className="mb-3">
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionContent${index}`}
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Write option"
+                              name={`options[${index}].content`}
+                              value={option.content}
+                              onChange={handleChange}
+                              isInvalid={
+                                touched.options &&
+                                touched.options[index] &&
+                                !!errors.options &&
+                                !!errors.options[index]?.content
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.options && errors.options[index]?.content}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionExplain${index}`}
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Explain"
+                              name={`options[${index}].answerExplain`}
+                              value={option.answerExplain}
+                              onChange={handleChange}
+                              isInvalid={
+                                touched.options &&
+                                touched.options[index] &&
+                                !!errors.options &&
+                                !!errors.options[index]?.answerExplain
+                              }
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.options &&
+                                errors.options[index]?.answerExplain}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+
+                          {/* isCorrect field */}
+                          <Form.Group
+                            as={Col}
+                            md={12}
+                            controlId={`validationOptionIsCorrect${index}`}
+                          >
+                            <Form.Check
+                              type="switch"
+                              id={`custom-switch-${index}`}
+                              label="Is correct answer?"
+                              checked={correctAnswerIndex === index}
+                              onChange={() => handleAnswerChange(index)}
+                            />
+                          </Form.Group>
+
+                          <Col md={2}>
+                            <Button
+                              variant="danger"
+                              onClick={() => handleRemoveOption(remove, index)}
+                            >
+                              Remove
+                            </Button>
+                          </Col>
+                        </Row>
+                      ))}
+
+                      {errors.options && !Array.isArray(errors.options) && (
+                        <div className="text-danger mb-3">{errors.options}</div>
+                      )}
+
+                      <Button
+                        variant="primary"
+                        onClick={() => handleAddOption(push)}
+                      >
+                        Add Option
+                      </Button>
+                    </>
+                  )}
+                </formik.FieldArray>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" form="questionForm">
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+//remove question
+export const RemoveQuestionComponent = ({
+  sectionId,
+  quizIndex,
+  questionIndex,
+}) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(
+      removeQuestion({
+        sectionId: sectionId,
+        quizIndex: quizIndex,
+        questionIndex: questionIndex,
+      })
+    );
+  };
+
+  return (
+    <Button
+      variant="remove"
       size="sm"
       onClick={handleDelete}
       style={{ borderRadius: "4px", width: "120px", height: "40px" }}

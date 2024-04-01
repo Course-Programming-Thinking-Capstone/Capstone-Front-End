@@ -237,31 +237,19 @@ export const createCourseSlice = createSlice({
     removeQuiz: (state, action) => {
       const { sectionId, index } = action.payload;
 
-      //log
-      console.log(
-        `Call remove quiz reducer with information:\n sectionId: ${sectionId}\nindex: ${index}`
-      );
-
       const sectionIndex = state.data.sections.findIndex(
         (section) => section.id === sectionId
       );
 
       if (sectionIndex !== -1) {
-        //
-        console.log(`Section id valid.`);
         if (
           state.data.sections[sectionIndex].quizzes &&
           state.data.sections[sectionIndex].quizzes !== null
         ) {
-          //log
-          console.log(`Quizzes list is not null.`);
           if (
             index >= 0 &&
             index < state.data.sections[sectionIndex].quizzes.length
           ) {
-            //log
-            console.log(`Call remove action to remove quiz`);
-
             state.data.sections[sectionIndex].quizzes.splice(index, 1);
           } else {
             state.error = {
@@ -317,7 +305,10 @@ export const createCourseSlice = createSlice({
           state.data.sections[sectionIndex].quizzes &&
           state.data.sections[sectionIndex].quizzes[quizIndex] !== undefined
         ) {
-          state.data.sections[sectionIndex].quizzes[quizIndex].push(question);
+          if (!state.data.sections[sectionIndex].quizzes[quizIndex].questions) {
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions = [];
+          }
+          state.data.sections[sectionIndex].quizzes[quizIndex].questions.push(question);
         } else {
           state.error = { message: `Quiz index ${quizIndex} not found.` };
         }
