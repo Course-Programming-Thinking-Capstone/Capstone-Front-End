@@ -891,21 +891,26 @@
 
 /* Teacher Account starts */
 .teacher-account .menu {
-  background-color: white;
-  height: 100vh;
+  background-color: #f7f8fb;
+  height: 90vh;
+  overflow: auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-radius: 5px;
 }
 
 .teacher-account {
   display: flex;
   flex-direction: column;
-  min-height: 1500px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .teacher-account .menu img {
   border-radius: 50%;
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
 }
 
 .teacher-account .menu i {
@@ -976,7 +981,8 @@
   margin-top: 30px;
   background-color: #fbede1;
   padding: 20px 40px;
-  min-height: 600px;
+  min-height: 90vh;
+  border-radius: 5px;
 }
 
 .teacher-notification .header h5,
@@ -1492,13 +1498,14 @@
   height: 2px;
 }
 
-.staff-order-menu div.active p, .staff-order-menu div.active hr {
-  color: #1A9CB7;
+.staff-order-menu div.active p,
+.staff-order-menu div.active hr {
+  color: #1a9cb7;
 }
 
 .staff-order-menu div:hover {
   cursor: pointer;
-  color: #1A9CB7;
+  color: #1a9cb7;
 }
 
 .staff-order-content .table-responsive {
@@ -1516,9 +1523,9 @@
 }
 
 .staff-order thead {
-  border-radius: 8px!important;
+  border-radius: 8px !important;
   text-align: center;
-  color: white!important;
+  color: white !important;
 }
 
 .staff-order tr th {

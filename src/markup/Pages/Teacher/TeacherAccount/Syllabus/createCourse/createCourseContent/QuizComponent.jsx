@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   addQuestion,
@@ -348,6 +348,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
       .max(250, "Quiz title can not exceed 250 characters."),
     description: yup
       .string()
+      .nullable()
       .trim()
       .max(750, "Quiz description can not exceed 750 characters."),
     duration: yup
@@ -834,6 +835,14 @@ export const UpdateQuestionComponent = ({
     console.log(`Section id in addQuestionComponent is missing.`);
   }
 
+  useEffect(() => {
+    question.options.map((option, key) => {
+      if (option.isCorrect === true) {
+        setCorrectAnswerIndex(key);
+      }
+    });
+  }, []);
+
   //handle submit
   const handleSubmit = (values) => {
     const { title, options } = values;
@@ -895,7 +904,7 @@ export const UpdateQuestionComponent = ({
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
-        Add Question
+        Update
       </Button>
 
       <Modal
@@ -905,7 +914,7 @@ export const UpdateQuestionComponent = ({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add Question</Modal.Title>
+          <Modal.Title>Update Question</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -932,7 +941,7 @@ export const UpdateQuestionComponent = ({
                       name="title"
                       value={values.title}
                       onChange={handleChange}
-                      isInvalid={touched.title && !!errors.title}
+                      isInvalid={!!errors.title}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -959,8 +968,6 @@ export const UpdateQuestionComponent = ({
                               value={option.content}
                               onChange={handleChange}
                               isInvalid={
-                                touched.options &&
-                                touched.options[index] &&
                                 !!errors.options &&
                                 !!errors.options[index]?.content
                               }
@@ -982,8 +989,6 @@ export const UpdateQuestionComponent = ({
                               value={option.answerExplain}
                               onChange={handleChange}
                               isInvalid={
-                                touched.options &&
-                                touched.options[index] &&
                                 !!errors.options &&
                                 !!errors.options[index]?.answerExplain
                               }

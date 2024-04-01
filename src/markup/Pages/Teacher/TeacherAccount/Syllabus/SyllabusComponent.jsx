@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
 import { filterSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link } from "react-router-dom";
+import { Container, Spinner } from "react-bootstrap";
 
 const SyllabusComponent = () => {
   //useDispath
@@ -488,15 +489,13 @@ const SyllabusComponent = () => {
         <div className="header">
           <div className="d-flex justify-content-start">
             <div>
-              <h5 className="mb">CREATE COURSE</h5>
+              <h5 className="mb">Syllabus</h5>
               <hr />
             </div>
             <i class="fa-solid fa-book"></i>
           </div>
         </div>
         <div className="syllabus-content">
-          <h5 className="mb-2 ms-3">Syllabus</h5>
-          <hr style={{ margin: "0px" }} />
           <div>
             <div className="search d-flex justify-content-center">
               <input type="text" placeholder="Search course" />
@@ -515,12 +514,15 @@ const SyllabusComponent = () => {
               </div>
             </div>
 
-            <div className="px-3" style={{ minHeight: "500px" }}>
+            <div className="px-3" style={{ minHeight: "60vh" }}>
               {isLoading ? (
-                <div className="d-flex justify-content-center">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
+                // <div className="d-flex justify-content-center">
+                //   <div className="spinner-border text-primary" role="status">
+                //     <span className="visually-hidden">Loading...</span>
+                //   </div>
+                // </div>
+                <div className="d-flex justify-content-center my-5">
+                  <Spinner animation="border" variant="success" />
                 </div>
               ) : (
                 syllabuses.results.map((syllabus, index) => (
@@ -564,7 +566,7 @@ const SyllabusComponent = () => {
       </div>
     );
   };
-  
+
   return renderComponent();
 };
 
