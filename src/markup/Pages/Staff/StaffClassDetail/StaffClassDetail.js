@@ -146,7 +146,7 @@ const CreateSchedule = ({ onBack, classData }) => {
     };
 
     const SlotTimeSelection = () => {
-        const slotDuration = Number(classData.slotTime);
+        const slotDuration = Number(classData.slotDuration);
         if (isNaN(slotDuration)) {
             // If slotTime is not a valid number, log an error and return early
             console.error('slotTime is not a valid number:', classData.slotTime);
@@ -255,7 +255,7 @@ const CreateSchedule = ({ onBack, classData }) => {
                 <div className='p-3'>
                     <div className="d-flex">
                         <p>Slot duration</p>
-                        <span>{classData.slotTime}</span>
+                        <span>{classData.slotDuration}</span>
                     </div>
                     <div className="study-day">
                         {renderRow(firstRowDays)}
