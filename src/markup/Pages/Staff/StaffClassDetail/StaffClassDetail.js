@@ -138,7 +138,7 @@ const CreateSchedule = ({ onBack, classData }) => {
     const [scheduleCreated, setScheduleCreated] = useState(false);
     const [classDetails, setClassDetails] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
-    console.log(classData.slotTime);
+    const [createdClassId, setCreatedClassId] = useState(null);
 
     const toggleDay = (day) => {
         setCheckedDays(prevState => ({
@@ -158,26 +158,6 @@ const CreateSchedule = ({ onBack, classData }) => {
 
     const [roomUrl, setRoomUrl] = useState('');
     const [selectedSlotId, setSelectedSlotId] = useState(null);
-
-    const fetchClassDetails = async (classId) => {
-        try {
-            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            setClassDetails(data); // Assuming 'data' contains the class details
-            setScheduleCreated(true); // Update state to indicate successful schedule creation
-        } catch (error) {
-            console.error("Failed to fetch class details", error);
-        }
-    };
 
     const renderRow = (days) => (
         <div className="d-flex justify-content-around">
@@ -269,7 +249,7 @@ const CreateSchedule = ({ onBack, classData }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Authorization': `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(data),
             });
@@ -282,15 +262,15 @@ const CreateSchedule = ({ onBack, classData }) => {
             // Handle response data if necessary
             const responseData = await response.json();
             console.log(responseData);
-            alert('Schedule created successfully!');
-            fetchClassDetails(classData.classId);
+            setCreatedClassId(classData.classId);
+            setScheduleCreated(true);
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     };
 
-    if (scheduleCreated) {
-        return <ClassContent classDetails={classDetails} />;
+    if (scheduleCreated && createdClassId) {
+        return <ClassContent classId={createdClassId} setView={setView} />;
     }
 
     return (
@@ -340,9 +320,47 @@ const CreateSchedule = ({ onBack, classData }) => {
     )
 }
 
-const ClassContent = ({ classDetails }) => {
-    console.log(classDetails);
+const ClassContent = ({ classId, setView }) => {
+    const [classDetails, setClassDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const accessToken = localStorage.getItem('accessToken');
 
+    useEffect(() => {
+        const fetchClassDetails = async () => {
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('data: ', data);
+                setClassDetails(data);
+            } catch (error) {
+                console.error("Failed to fetch class details", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClassDetails();
+    }, [classId, accessToken]); // Fetch class details when classId changes
+
+    if (loading) {
+        return <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>;
+    }
+
+    if (!classDetails) {
+        return <div>Class details not found.</div>;
+    }
     const getDayStyle = (day) => {
         const isScheduledDay = classDetails.studyDay.includes(day);
         return {
@@ -383,7 +401,13 @@ const ClassContent = ({ classDetails }) => {
                         <div style={{ marginLeft: '50px' }}>
                             <p className='mb-1'>{classDetails.courseName}</p>
                             <p className='mb-1'>{classDetails.students.length}</p>
-                            <p className='mb-1'>null</p>
+                            <p className='mb-1'>
+                                {classDetails.teacherName ? (
+                                    <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => setView('addTeacher')} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Edit</button></p>
+                                ) : (
+                                    <button onClick={() => setView('addTeacher')} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Add teacher</button>
+                                )}
+                            </p>
                             <p className='mb-1'>{classDetails.openClass} - {classDetails.closeClass}</p>
                             <p className='mb-1'>{classDetails.slotDuration} minutes/slot</p>
                         </div>
@@ -433,6 +457,45 @@ const ClassContent = ({ classDetails }) => {
                     </div>
                 </div>
             </div>
+        </div>
+    )
+}
+
+const TeacherForm = ({ onBack, onSave }) => {
+    return (
+        <div>
+            <div className='d-flex justify-content-between'>
+                <p>Add teacher</p>
+                <button>Back</button>
+            </div>
+            <p>Current class</p>
+            <div></div>
+
+            <div>
+                <p className='blue'>Teacher</p>
+                <select name="" id=""></select>
+            </div>
+            <div>
+                <p>His/her classes</p>
+                <div>
+                    <div className="d-flex">
+                        <p className='blue'>Class code</p>
+                        <select name="" id=""></select>
+                    </div>
+                    <div className="d-flex">
+                        <p className='blue'>Study day</p>
+                        <p></p>
+                    </div>
+                    <div className="d-flex">
+                        <p className='blue'>Slot</p>
+
+                    </div>
+                    <div className="d-flex justify-content-end">
+                        <button>Save Teacher</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     )
 }
@@ -488,6 +551,10 @@ const StaffClassDetail = () => {
                     }} />;
             case 'createSchedule':
                 return <CreateSchedule onBack={() => setView('createClass')} classData={classData} />;
+            case 'addTeacher':
+                return <TeacherForm onBack={() => setView('detail')} />;
+                case 'classContent':
+                    return <ClassContent classId={selectedClassId} setView={setView} />;
             default:
                 return (
                     <div className='staff-class-detail mx-5'>
