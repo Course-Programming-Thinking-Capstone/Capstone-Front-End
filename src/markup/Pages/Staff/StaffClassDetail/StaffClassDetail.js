@@ -138,6 +138,7 @@ const CreateSchedule = ({ onBack, classData }) => {
     const [scheduleCreated, setScheduleCreated] = useState(false);
     const [classDetails, setClassDetails] = useState(null);
     const accessToken = localStorage.getItem('accessToken');
+    console.log(classData.slotTime);
 
     const toggleDay = (day) => {
         setCheckedDays(prevState => ({
@@ -259,7 +260,7 @@ const CreateSchedule = ({ onBack, classData }) => {
             days: days,
             classId: classData.classId,
             slot: selectedSlotId,
-            slotTime: classData.slotTime,
+            slotTime: classData.slotDuration,
             roomUrl: roomUrl
         };
 
@@ -341,74 +342,90 @@ const CreateSchedule = ({ onBack, classData }) => {
 
 const ClassContent = ({ classDetails }) => {
     console.log(classDetails);
-    if (!classDetails) {
-        return
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>; // Placeholder for loading state
-    }
+
+    const getDayStyle = (day) => {
+        const isScheduledDay = classDetails.studyDay.includes(day);
+        return {
+            borderRadius: '50%',
+            border: isScheduledDay ? 'none' : "1px solid black",
+            height: '45px',
+            width: '45px',
+            backgroundColor: isScheduledDay ? '#FD8569' : 'transparent',
+            color: isScheduledDay ? 'white' : 'black',
+        };
+    };
+
+
 
     return (
-        <div>
+        <div className='staff-class-content' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', minHeight: '700px', }}>
             <div className="header">
-                <div className="d-flex justify-content-between">
-                    <div className="d-flex justify-content-start">
-                        <div>
-                            <h5 className='mb'>Class detail</h5>
-                            <hr />
-                        </div>
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
+                <div className="d-flex justify-content-start">
                     <div>
-                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}>Back</button>
+                        <h5 className='mb'>Class detail</h5>
+                        <hr />
                     </div>
+                    <i class="fa-solid fa-bell"></i>
                 </div>
             </div>
             <div>
-                <div>CLASS</div>
-                <div>
-                    <p>CLASS INFORMATION</p>
+                <div>CLASS {classDetails.classCode}</div>
+                <div className='px-4'>
+                    <p className='mb-2 blue'>CLASS INFORMATION</p>
                     <div className="d-flex">
-                        <div>
-                            <p>Course</p>
-                            <p>Number of students</p>
-                            <p>Teacher</p>
-                            <p>Class time</p>
-                            <p>Duration</p>
-                            <p>Slot time</p>
+                        <div style={{ marginLeft: '200px' }}>
+                            <p className='mb-1'>Course</p>
+                            <p className='mb-1'>Number of students</p>
+                            <p className='mb-1'>Teacher</p>
+                            <p className='mb-1'>Class time</p>
+                            <p className='mb-1'>Slot time</p>
                         </div>
-                        <div>
-                            <p>{classDetails.courseName}</p>
-                            <p>0</p>
-                            <p>null</p>
-                            <p>{classDetails.openClass} - {classDetails.closeClass}</p>
-                            <p></p>
-                            <p>{classDetails.slotDuration} minutes/slot</p>
+                        <div style={{ marginLeft: '50px' }}>
+                            <p className='mb-1'>{classDetails.courseName}</p>
+                            <p className='mb-1'>{classDetails.students.length}</p>
+                            <p className='mb-1'>null</p>
+                            <p className='mb-1'>{classDetails.openClass} - {classDetails.closeClass}</p>
+                            <p className='mb-1'>{classDetails.slotDuration} minutes/slot</p>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <p>CLASS SCHEDULE</p>
+                <div className='px-4'>
+                    <p className='mb-2 blue'>CLASS SCHEDULE</p>
                     <div className="d-flex">
-                        <div>
-                            <p>Study day</p>
-                            <p>Slot</p>
-                            <p>Total slot</p>
-                            <p>Link discord</p>
+                        <div style={{ marginLeft: '200px' }}>
+                            <p className='mb-1'>Study day</p>
+                            <p className='mb-1 mt-4'>Slot</p>
+                            <p className='mb-1'>Total slot</p>
+                            <p className='mb-1'>Link discord</p>
                         </div>
-                        <div>
+                        <div style={{ marginLeft: '100px' }}>
                             <div className='d-flex'>
-                                <div style={{ borderRadius: '50%', border: '1px solid black' }}>
-                                    M
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Monday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>M</p>
+                                </div>
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Tuesday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>T</p>
+                                </div>
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Wednesday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>W</p>
+                                </div>
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Thursday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>Th</p>
+                                </div>
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Friday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>F</p>
+                                </div>
+                                <div className='mb-1 ms-3 text-center' style={getDayStyle("Saturday")}>
+                                    <p className='text-center mt-2' style={{ fontSize: '18px' }}>Sa</p>
                                 </div>
                             </div>
-                            <p></p>
-                            <p></p>
-                            <p></p>
+                            <p className='mb-1'>Slot {classDetails.slotNumber} ({classDetails.startSlot} - {classDetails.endSlot})</p>
+                            <p className='mb-1'>{classDetails.totalSlot}</p>
+                            <p className='mb-1'>{classDetails.roomUrl}</p>
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className='px-4'>
                     <div className="d-flex justify-content-between">
                         <p>LIST STUDENT</p>
                         <button>Add student</button>

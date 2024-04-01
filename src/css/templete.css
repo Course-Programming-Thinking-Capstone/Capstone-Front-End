@@ -1399,7 +1399,8 @@
 .moderating-lesson .header h5,
 .staff-class-detail .header h5,
 .staff-create-class .header h5,
-.staff-schedule .header h5 {
+.staff-schedule .header h5,
+.staff-class-content .header h5 {
   font-size: 22px;
 }
 
@@ -1409,7 +1410,8 @@
 .moderating-lesson .header hr,
 .staff-class-detail .header hr,
 .staff-create-class .header hr,
-.staff-schedule .header hr {
+.staff-schedule .header hr,
+.staff-class-content .header hr {
   width: 50%;
   color: #ff8a00;
   margin: 0;
@@ -1420,7 +1422,8 @@
 .staff-moderating .header i,
 .staff-class-detail .header i,
 .staff-create-class .header i,
-.staff-schedule .header i {
+.staff-schedule .header i,
+.staff-class-content .header i {
   color: #ff8a00;
   margin-left: 10px;
   font-size: 20px;
