@@ -135,6 +135,9 @@ const CreateSchedule = ({ onBack, classData }) => {
         Friday: false,
         Saturday: false,
     });
+    const [scheduleCreated, setScheduleCreated] = useState(false);
+    const [classDetails, setClassDetails] = useState(null);
+    const accessToken = localStorage.getItem('accessToken');
 
     const toggleDay = (day) => {
         setCheckedDays(prevState => ({
@@ -154,6 +157,26 @@ const CreateSchedule = ({ onBack, classData }) => {
 
     const [roomUrl, setRoomUrl] = useState('');
     const [selectedSlotId, setSelectedSlotId] = useState(null);
+
+    const fetchClassDetails = async (classId) => {
+        try {
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setClassDetails(data); // Assuming 'data' contains the class details
+            setScheduleCreated(true); // Update state to indicate successful schedule creation
+        } catch (error) {
+            console.error("Failed to fetch class details", error);
+        }
+    };
 
     const renderRow = (days) => (
         <div className="d-flex justify-content-around">
@@ -259,11 +282,16 @@ const CreateSchedule = ({ onBack, classData }) => {
             const responseData = await response.json();
             console.log(responseData);
             alert('Schedule created successfully!');
-
+            fetchClassDetails(classData.classId);
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     };
+
+    if (scheduleCreated) {
+        return <ClassContent classDetails={classDetails} />;
+    }
+
     return (
         <div className='staff-schedule mx-5'>
             <div className="header">
@@ -307,6 +335,87 @@ const CreateSchedule = ({ onBack, classData }) => {
                 </div>
             </div>
 
+        </div>
+    )
+}
+
+const ClassContent = ({ classDetails }) => {
+    console.log(classDetails);
+    if (!classDetails) {
+        return
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>; // Placeholder for loading state
+    }
+
+    return (
+        <div>
+            <div className="header">
+                <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-start">
+                        <div>
+                            <h5 className='mb'>Class detail</h5>
+                            <hr />
+                        </div>
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}>Back</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>CLASS</div>
+                <div>
+                    <p>CLASS INFORMATION</p>
+                    <div className="d-flex">
+                        <div>
+                            <p>Course</p>
+                            <p>Number of students</p>
+                            <p>Teacher</p>
+                            <p>Class time</p>
+                            <p>Duration</p>
+                            <p>Slot time</p>
+                        </div>
+                        <div>
+                            <p>{classDetails.courseName}</p>
+                            <p>0</p>
+                            <p>null</p>
+                            <p>{classDetails.openClass} - {classDetails.closeClass}</p>
+                            <p></p>
+                            <p>{classDetails.slotDuration} minutes/slot</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p>CLASS SCHEDULE</p>
+                    <div className="d-flex">
+                        <div>
+                            <p>Study day</p>
+                            <p>Slot</p>
+                            <p>Total slot</p>
+                            <p>Link discord</p>
+                        </div>
+                        <div>
+                            <div className='d-flex'>
+                                <div style={{ borderRadius: '50%', border: '1px solid black' }}>
+                                    M
+                                </div>
+                            </div>
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div className="d-flex justify-content-between">
+                        <p>LIST STUDENT</p>
+                        <button>Add student</button>
+
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
