@@ -1552,9 +1552,10 @@
 .staff-class-detail, .staff-create-class, .staff-schedule {
   background-color: white;
 }
-/* .staff-order tbody tr {
-  border: 1px solid gray;
-} */
+
+.blue {
+  color: #1a9cb7;
+}
 
 /* Staff ends */
 

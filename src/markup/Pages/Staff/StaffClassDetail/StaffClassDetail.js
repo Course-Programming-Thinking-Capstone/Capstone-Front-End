@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ReactPaginate from 'react-paginate';
+
+const CustomInput = forwardRef(({ value, onClick }, ref) => (
+    <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '150px', height: '30px' }} >
+        <div>
+            {value}
+        </div>
+        <div>
+            <i className="fa-regular fa-calendar-days" />
+        </div>
+    </div>
+));
 
 const CreateClass = ({ onBack, onNext }) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -76,20 +88,38 @@ const CreateClass = ({ onBack, onNext }) => {
                     </div>
                 </div>
             </div>
-            <div>
-                <p>Create class</p>
-                <div className='p-3'>
+            <div className='mt-3'>
+                <p className='mb-2' style={{ color: '#F69E4A' }}>Create class</p>
+                <div className='p-5'>
                     <p className='blue mb-1'>Class's code</p>
-                    <input type="text" placeholder="Type class's code. Ex: VNR202" value={classCode} onChange={e => setClassCode(e.target.value)} />
+                    <input type="text" placeholder="Type class's code. Ex: VNR202" value={classCode} onChange={e => setClassCode(e.target.value)} style={{ width: '300px' }} />
 
                     <p className='blue mb-1 mt-4'>Select course</p>
                     <select name="" id=""></select>
                     <p className='blue mb-1 mt-4'>Duration start class</p>
-                    <div className='d-flex justify-content-around'>
-                        <DatePicker selected={openDay} onChange={(date) => setOpenDay(date)} minDate={today} enableTabLoop={false} />
-                        <DatePicker selected={closeDay} onChange={(date) => setCloseDay(date)} minDate={openDay || today} enableTabLoop={false} />
+                    <div className='d-flex justify-content-center'>
+                        <div className="d-flex">
+                            <DatePicker
+                                selected={openDay}
+                                onChange={(date) => setOpenDay(date)}
+                                minDate={today}
+                                enableTabLoop={false}
+                                customInput={<CustomInput />} />
+
+                        </div>
+                        <i style={{ fontSize: '18px' }} class="fa-solid fa-arrow-right mx-3 mt-1"></i>
+                        <div className="d-flex">
+                            <DatePicker
+                                selected={closeDay}
+                                onChange={(date) => setCloseDay(date)}
+                                minDate={openDay || today}
+                                enableTabLoop={false}
+                                customInput={<CustomInput />} />
+                        </div>
                     </div>
-                    <button className='mt-4' onClick={handleCreateClass}>Create class</button>
+                    <div className='d-flex justify-content-end'>
+                        <button className='mt-4' style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateClass}>Create class</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -250,27 +280,33 @@ const CreateSchedule = ({ onBack, classData }) => {
                     </div>
                 </div>
             </div>
-            <div>
-                <p>Create schedule</p>
-                <div className='p-3'>
+            <div className='mt-3'>
+                <p className='mb-2' style={{ color: '#F69E4A' }}>Create schedule</p>
+                <div className='p-5'>
                     <div className="d-flex">
-                        <p>Slot duration</p>
-                        <span>{classData.slotDuration}</span>
+                        <p className='blue'>Slot duration</p>
+                        <span className='ms-5'>{classData.slotDuration} minutes/slot</span>
                     </div>
+                    <p className='blue'>Study day</p>
                     <div className="study-day">
                         {renderRow(firstRowDays)}
                         {renderRow(secondRowDays)}
                     </div>
+                    <p className='blue'>Slot time</p>
                     <div>
                         <SlotTimeSelection />
                     </div>
                     <div>
+                        <p className='blue'>Link discord</p>
                         <input value={roomUrl}
                             onChange={e => setRoomUrl(e.target.value)} type="text" placeholder='Link discord' />
                     </div>
+                    <div className="d-flex justify-content-end">
+                        <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateSchedule}>Create schedule</button>
+                    </div>
                 </div>
             </div>
-            <button onClick={handleCreateSchedule}>Create schedule</button>
+
         </div>
     )
 }
@@ -278,6 +314,42 @@ const CreateSchedule = ({ onBack, classData }) => {
 const StaffClassDetail = () => {
     const [view, setView] = useState('detail');
     const [classData, setClassData] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const accessToken = localStorage.getItem('accessToken');
+
+    useEffect(() => {
+        if (view === 'detail') {
+            fetchClassData(currentPage);
+        }
+    }, [view, currentPage]);
+
+    const fetchClassData = async (page) => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/Classes?page=${page}&size=4`;
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log('data: ', data);
+            setClassData(data.classes); // Adjust to use 'classes' based on your actual data structure
+            setTotalPages(data.totalPage); // Use 'totalPage' directly from the API response
+        } catch (error) {
+            console.error("Failed to fetch class data", error);
+        }
+    };
+
+
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected + 1);
+    };
 
     const renderView = () => {
         switch (view) {
@@ -306,6 +378,40 @@ const StaffClassDetail = () => {
                                     <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={() => setView('createClass')}><i style={{ color: 'white' }} className="fa-solid fa-circle-plus"></i>Create class</button>
                                 </div>
                             </div>
+                        </div>
+                        <div className='render-list'>
+                            {classData && classData.map((classItem, index) => (
+                                <div key={index} className='py-2 px-5 mt-2'>
+                                    <div className="d-flex justify-content-between px-3 py-2" style={{ border: '1px solid #EF7E54', borderRadius: '8px' }}>
+                                        <div>
+                                            <p>Class Code: {classItem.classCode}</p>
+                                            <div className="d-flex justify-content-start">
+                                                <p className='mb-1'>Start: {classItem.start}</p>
+                                                <p className='mb-1'>End: {classItem.end}</p>
+                                            </div>
+                                        </div>
+                                        <div className='d-flex align-items-center'>
+                                            <button style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className='d-flex justify-content-center'>
+                            {totalPages > 0 && ( // Conditional rendering
+                                <ReactPaginate
+                                    previousLabel={'previous'}
+                                    nextLabel={'next'}
+                                    breakLabel={'...'}
+                                    pageCount={totalPages} // Make sure this is a valid number
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={handlePageClick}
+                                    containerClassName={'pagination'}
+                                    subContainerClassName={'pages pagination'}
+                                    activeClassName={'active'}
+                                />
+                            )}
                         </div>
                     </div>
                 );
