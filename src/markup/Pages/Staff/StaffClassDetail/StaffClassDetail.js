@@ -476,7 +476,6 @@ const TeacherForm = ({ onBack, classId }) => {
     const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
     const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
 
-
     useEffect(() => {
         // Optionally, fetch class details if needed to get study days and slots
         const fetchClassDetails = async () => {
@@ -504,7 +503,6 @@ const TeacherForm = ({ onBack, classId }) => {
             fetchClassDetails();
         }
     }, [classId, accessToken]);
-
 
     useEffect(() => {
         const fetchTeachers = async () => {
@@ -675,8 +673,19 @@ const TeacherForm = ({ onBack, classId }) => {
 const StudentForm = ({ onBack, classId }) => {
     const [currentClass, setCurrentClass] = useState([]);
     const accessToken = localStorage.getItem('accessToken');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [pageNumber, setPageNumber] = useState(0);
+    const studentsPerPage = 5;
+    const pagesVisited = pageNumber * studentsPerPage;
+
+    const pageCount = Math.ceil(searchResults.length / studentsPerPage);
+    const changePage = ({ selected }) => {
+        setPageNumber(selected);
+    };
+
     useEffect(() => {
-        // Optionally, fetch class details if needed to get study days and slots
         const fetchClassDetails = async () => {
             try {
                 const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
@@ -702,8 +711,123 @@ const StudentForm = ({ onBack, classId }) => {
             fetchClassDetails();
         }
     }, [classId, accessToken]);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const executeSearch = async () => {
+        if (!searchTerm.trim()) return;
+
+        setIsSearching(true);
+        try {
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/students/search?input=${encodeURIComponent(searchTerm)}&classId=${classId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const searchData = await response.json();
+            console.log('searchData: ', searchData);
+            setSearchResults(searchData); // Update your state with the search result
+        } catch (error) {
+            console.error("Search failed", error);
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
     return (
-        <div><button onClick={onBack}>Back to Class Details</button></div>
+        <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
+            <div className="d-flex justify-content-between">
+                <div>
+                    <p className='orange' style={{ fontSize: '22px' }}>Add/Update students</p>
+                </div>
+                <div>
+                    <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
+                </div>
+            </div>
+            <div>
+                <div className="d-flex">
+                    <p className='blue'>Class name</p>
+                    <p>{currentClass.classCode}</p>
+                </div>
+                <div>
+                    <p className='blue'>Search student's name</p>
+                    <div className="d-flex justify-content-center">
+                        <div>
+                            <input value={searchTerm}
+                                onChange={handleSearchChange}
+                                style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
+                        </div>
+                        <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
+                            <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p className='blue'>List student add to class</p>
+                    <div></div>
+                </div>
+            </div>
+            <div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Full name</th>
+                                <th>Date of birth</th>
+                                <th>Gender</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchResults.length > 0 ? (
+                                searchResults
+                                    .slice(pagesVisited, pagesVisited + studentsPerPage)
+                                    .map((student, index) => (
+                                        <tr key={index}>
+                                            <td>{student.studentName}</td>
+                                            <td>{student.dateOfBirth}</td>
+                                            <td>{student.gender}</td>
+                                            <td>
+                                                <button>
+                                                    <i class="fa-solid fa-circle-plus"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="text-center">
+                                        No students found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="d-flex justify-content-center">
+
+                    <ReactPaginate
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        pageCount={pageCount}
+                        onPageChange={changePage}
+                        containerClassName={"pagination"}
+                        previousLinkClassName={"pagination__link"}
+                        nextLinkClassName={"pagination__link"}
+                        disabledClassName={"pagination__link--disabled"}
+                        activeClassName={"pagination__link--active"}
+                    />
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -785,7 +909,7 @@ const StaffClassDetail = () => {
                     classId={selectedClassId}
                     setView={setView}
                     navigateToTeacherForm={navigateToTeacherForm}
-                    navigateToStudentForm={navigateToStudentForm} 
+                    navigateToStudentForm={navigateToStudentForm}
                 />;
             default:
                 return (
