@@ -324,6 +324,20 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
     const [classDetails, setClassDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const accessToken = localStorage.getItem('accessToken');
+    const [currentPage, setCurrentPage] = useState(0); // Note: react-paginate uses 0-indexing for pages
+    const studentsPerPage = 3; // Number of students you want per page
+
+    const pageCount = Math.ceil(classDetails?.students.length / studentsPerPage);
+
+    const handlePageClick = (selectedItem) => {
+        setCurrentPage(selectedItem.selected);
+    };
+
+    // Calculate the students to be displayed on the current page
+    const currentStudents = classDetails?.students.slice(
+        currentPage * studentsPerPage,
+        (currentPage + 1) * studentsPerPage
+    );
 
     useEffect(() => {
         const fetchClassDetails = async () => {
@@ -387,7 +401,7 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
                         <i class="fa-solid fa-bell"></i>
                     </div>
                     <div>
-                        <button onClick={() => setView('detail')}>Back</button>
+                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => setView('detail')}>Back</button>
                     </div>
                 </div>
             </div>
@@ -408,9 +422,9 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
                             <p className='mb-1'>{classDetails.students.length}</p>
                             <p className='mb-1'>
                                 {classDetails.teacherName ? (
-                                    <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Edit</button></p>
+                                    <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Edit</button></p>
                                 ) : (
-                                    <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Add teacher</button>
+                                    <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Add teacher</button>
                                 )}
                             </p>
                             <p className='mb-1'>{classDetails.openClass} - {classDetails.closeClass}</p>
@@ -456,9 +470,45 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
                 </div>
                 <div className='px-4'>
                     <div className="d-flex justify-content-between">
-                        <p>LIST STUDENT</p>
-                        <button onClick={() => navigateToStudentForm(classId)}>Add student</button>
+                        <p className='blue'>LIST STUDENT</p>
+                        <button onClick={() => navigateToStudentForm(classId)} style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px', height: '35px' }}>Add student</button>
 
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead >
+                                <tr>
+                                    <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>#</th>
+                                    <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
+                                    <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
+                                    <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Gender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentStudents?.map((student, index) => (
+                                    <tr key={index}>
+                                        <td className='text-center'>{index + 1 + currentPage * studentsPerPage}</td>
+                                        <td className='text-center'>{student.studentName}</td>
+                                        <td className='text-center'>{student.dateOfBirth}</td>
+                                        <td className='text-center'>{student.gender}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className='d-flex justify-content-center'>
+                        <ReactPaginate
+                            previousLabel={'previous'}
+                            nextLabel={'next'}
+                            breakLabel={'...'}
+                            pageCount={pageCount}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                        />
                     </div>
                 </div>
             </div>
@@ -681,6 +731,20 @@ const StudentForm = ({ onBack, classId }) => {
     const studentsPerPage = 5;
     const pagesVisited = pageNumber * studentsPerPage;
     const [enrolledStudents, setEnrolledStudents] = useState([]);
+    const [enrolledStudentsPageNumber, setEnrolledStudentsPageNumber] = useState(0);
+    const enrolledStudentsPagesVisited = enrolledStudentsPageNumber * studentsPerPage;
+
+    const enrolledStudentsPageCount = Math.ceil(enrolledStudents.length / studentsPerPage);
+
+    const changeEnrolledStudentsPage = ({ selected }) => {
+        setEnrolledStudentsPageNumber(selected);
+    };
+
+    // Displaying enrolled students for the current page
+    const currentEnrolledStudents = enrolledStudents.slice(
+        enrolledStudentsPagesVisited,
+        enrolledStudentsPagesVisited + studentsPerPage
+    );
 
     const pageCount = Math.ceil(searchResults.length / studentsPerPage);
     const changePage = ({ selected }) => {
@@ -697,13 +761,13 @@ const StudentForm = ({ onBack, classId }) => {
                         'Content-Type': 'application/json',
                     },
                 });
-    
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const classData = await response.json();
                 console.log('classData: ', classData);
-    
+
                 // Assuming classData includes a 'students' array with the necessary details
                 // Update the state for both currentClass and enrolledStudents
                 setCurrentClass(classData);
@@ -712,12 +776,12 @@ const StudentForm = ({ onBack, classId }) => {
                 console.error("Failed to fetch class details", error);
             }
         };
-    
+
         if (classId) {
             fetchClassDetails();
         }
     }, [classId, accessToken]);
-    
+
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -815,7 +879,7 @@ const StudentForm = ({ onBack, classId }) => {
 
 
     return (
-        <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
+        <div className='m-5 p-5' style={{ backgroundColor: 'white', minHeight: '600px' }}>
             <div className="d-flex justify-content-between">
                 <div>
                     <p className='orange' style={{ fontSize: '22px' }}>Add/Update students</p>
@@ -824,105 +888,122 @@ const StudentForm = ({ onBack, classId }) => {
                     <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
                 </div>
             </div>
-            <div>
-                <div className="d-flex">
-                    <p className='blue'>Class name</p>
-                    <p>{currentClass.classCode}</p>
-                </div>
+            <div className='px-3'>
+                <div>
+                    <div className="d-flex">
+                        <p className='blue'>Class name</p>
+                        <p className='ms-3'>{currentClass.classCode}</p>
+                    </div>
 
-            </div>
-            <div className='d-flex justify-content-between'>
-                <div style={{ width: '45%' }}>
-                    <div>
-                        <p className='blue'>Search student's name</p>
-                        <div className="d-flex justify-content-center">
-                            <div>
-                                <input value={searchTerm}
-                                    onChange={handleSearchChange}
-                                    style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
-                            </div>
-                            <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
-                                <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div className='d-flex justify-content-between'>
+                    <div style={{ width: '45%' }}>
+                        <div>
+                            <p className='blue mb-1'>Search student's name</p>
+                            <div className="d-flex justify-content-center mb-2">
+                                <div>
+                                    <input value={searchTerm}
+                                        onChange={handleSearchChange}
+                                        style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
+                                </div>
+                                <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
+                                    <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Full name</th>
-                                    <th>Date of birth</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {searchResults.length > 0 ? (
-                                    searchResults
-                                        .slice(pagesVisited, pagesVisited + studentsPerPage)
-                                        .map((student, index) => (
-                                            <tr key={index}>
-                                                <td>{student.studentName}</td>
-                                                <td>{student.dateOfBirth}</td>
-                                                <td>
-                                                    <button onClick={() => handleAddStudent(student)}>
-                                                        <i class="fa-solid fa-circle-plus"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                ) : (
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
                                     <tr>
-                                        <td colSpan="4" className="text-center">
-                                            No students found
-                                        </td>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="d-flex justify-content-center">
+                                </thead>
+                                <tbody>
+                                    {searchResults.length > 0 ? (
+                                        searchResults
+                                            .slice(pagesVisited, pagesVisited + studentsPerPage)
+                                            .map((student, index) => (
+                                                <tr key={index}>
+                                                    <td className='text-center'>{student.studentName}</td>
+                                                    <td className='text-center'>{student.dateOfBirth}</td>
+                                                    <td className='text-center'>
+                                                        <button style={{ border: 'none', color: '#FFA63D' }}
+                                                            onClick={() => handleAddStudent(student)}>
+                                                            <i style={{ fontSize: '18px' }} class="fa-solid fa-circle-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="text-center">
+                                                No students found
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="d-flex justify-content-center">
 
-                        <ReactPaginate
-                            previousLabel={"Previous"}
-                            nextLabel={"Next"}
-                            pageCount={pageCount}
-                            onPageChange={changePage}
-                            containerClassName={"pagination"}
-                            previousLinkClassName={"pagination__link"}
-                            nextLinkClassName={"pagination__link"}
-                            disabledClassName={"pagination__link--disabled"}
-                            activeClassName={"pagination__link--active"}
-                        />
+                            <ReactPaginate
+                                previousLabel={"Previous"}
+                                nextLabel={"Next"}
+                                pageCount={pageCount}
+                                onPageChange={changePage}
+                                containerClassName={"pagination"}
+                                previousLinkClassName={"pagination__link"}
+                                nextLinkClassName={"pagination__link"}
+                                disabledClassName={"pagination__link--disabled"}
+                                activeClassName={"pagination__link--active"}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div style={{ width: '45%', marginTop: '58px' }}>
-                    <p className='blue mb-0'>Current class student list</p>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Full name</th>
-                                    <th>Date of birth</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {enrolledStudents.map((student, index) => (
-                                    <tr key={index}>
-                                        <td>{student.studentName}</td> {/* Ensure these property names match */}
-                                        <td>{student.dateOfBirth}</td> {/* Ensure these property names match */}
-                                        <td>
-                                            <button onClick={() => handleRemoveStudent(student.studentId)}>
-                                                <i className="fa-solid fa-circle-minus"></i> Remove
-                                            </button>
-                                        </td>
+                    <div style={{ width: '45%', marginTop: '50px' }}>
+                        <p className='blue mb-0'>Current class student list</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
+                                        <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className='d-flex justify-content-end'>
-                        <button onClick={handleSaveChanges}>Save changes</button>
+                                </thead>
+                                <tbody>
+                                    {enrolledStudents.map((student, index) => (
+                                        <tr key={index}>
+                                            <td className='text-center'>{student.studentName}</td>
+                                            <td className='text-center'>{student.dateOfBirth}</td>
+                                            <td className='text-center'>
+                                                <button style={{ border: 'none', color: '#FFA63D' }}
+                                                    onClick={() => handleRemoveStudent(student.studentId)}>
+                                                    <i style={{ fontSize: '18px' }} className="fa-solid fa-circle-minus"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className='d-flex justify-content-center'>
+                            <ReactPaginate
+                                previousLabel={"Previous"}
+                                nextLabel={"Next"}
+                                pageCount={enrolledStudentsPageCount}
+                                onPageChange={changeEnrolledStudentsPage}
+                                containerClassName={"pagination"}
+                                previousLinkClassName={"pagination__link"}
+                                nextLinkClassName={"pagination__link"}
+                                disabledClassName={"pagination__link--disabled"}
+                                activeClassName={"pagination__link--active"}
+                            />
+                        </div>
+                        <div className='d-flex justify-content-end'>
+                            <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={handleSaveChanges}>Save changes</button>
+                        </div>
                     </div>
                 </div>
             </div>
