@@ -757,74 +757,97 @@ const StudentForm = ({ onBack, classId }) => {
                     <p className='blue'>Class name</p>
                     <p>{currentClass.classCode}</p>
                 </div>
-                <div>
-                    <p className='blue'>Search student's name</p>
-                    <div className="d-flex justify-content-center">
-                        <div>
-                            <input value={searchTerm}
-                                onChange={handleSearchChange}
-                                style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
-                        </div>
-                        <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
-                            <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+
+            </div>
+            <div className='d-flex justify-content-between'>
+                <div style={{ width: '45%' }}>
+                    <div>
+                        <p className='blue'>Search student's name</p>
+                        <div className="d-flex justify-content-center">
+                            <div>
+                                <input value={searchTerm}
+                                    onChange={handleSearchChange}
+                                    style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
+                            </div>
+                            <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
+                                <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <p className='blue'>List student add to class</p>
-                    <div></div>
-                </div>
-            </div>
-            <div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Full name</th>
-                                <th>Date of birth</th>
-                                <th>Gender</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {searchResults.length > 0 ? (
-                                searchResults
-                                    .slice(pagesVisited, pagesVisited + studentsPerPage)
-                                    .map((student, index) => (
-                                        <tr key={index}>
-                                            <td>{student.studentName}</td>
-                                            <td>{student.dateOfBirth}</td>
-                                            <td>{student.gender}</td>
-                                            <td>
-                                                <button>
-                                                    <i class="fa-solid fa-circle-plus"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                            ) : (
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td colSpan="4" className="text-center">
-                                        No students found
+                                    <th>Full name</th>
+                                    <th>Date of birth</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {searchResults.length > 0 ? (
+                                    searchResults
+                                        .slice(pagesVisited, pagesVisited + studentsPerPage)
+                                        .map((student, index) => (
+                                            <tr key={index}>
+                                                <td>{student.studentName}</td>
+                                                <td>{student.dateOfBirth}</td>
+                                                <td>
+                                                    <button>
+                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="text-center">
+                                            No students found
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="d-flex justify-content-center">
+
+                        <ReactPaginate
+                            previousLabel={"Previous"}
+                            nextLabel={"Next"}
+                            pageCount={pageCount}
+                            onPageChange={changePage}
+                            containerClassName={"pagination"}
+                            previousLinkClassName={"pagination__link"}
+                            nextLinkClassName={"pagination__link"}
+                            disabledClassName={"pagination__link--disabled"}
+                            activeClassName={"pagination__link--active"}
+                        />
+                    </div>
+                </div>
+                <div style={{ width: '45%', marginTop:'58px' }}>
+                    <p className='blue mb-0'>Current class student list</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Full name</th>
+                                    <th>Date of birth</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <button><i class="fa-solid fa-circle-minus"></i></button>
                                     </td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="d-flex justify-content-center">
-
-                    <ReactPaginate
-                        previousLabel={"Previous"}
-                        nextLabel={"Next"}
-                        pageCount={pageCount}
-                        onPageChange={changePage}
-                        containerClassName={"pagination"}
-                        previousLinkClassName={"pagination__link"}
-                        nextLinkClassName={"pagination__link"}
-                        disabledClassName={"pagination__link--disabled"}
-                        activeClassName={"pagination__link--active"}
-                    />
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className='d-flex justify-content-end'>
+                        <button>Save changes</button>
+                    </div>
                 </div>
             </div>
         </div>
