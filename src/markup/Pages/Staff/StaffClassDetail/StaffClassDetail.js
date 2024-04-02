@@ -126,7 +126,7 @@ const CreateClass = ({ onBack, onNext }) => {
     )
 }
 
-const CreateSchedule = ({ onBack, classData }) => {
+const CreateSchedule = ({ onBack, classData, setView }) => {
     const [checkedDays, setCheckedDays] = useState({
         Monday: false,
         Tuesday: false,
@@ -378,12 +378,17 @@ const ClassContent = ({ classId, setView }) => {
     return (
         <div className='staff-class-content' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', minHeight: '700px', }}>
             <div className="header">
-                <div className="d-flex justify-content-start">
-                    <div>
-                        <h5 className='mb'>Class detail</h5>
-                        <hr />
+                <div className='d-flex justify-content-between'>
+                    <div className="d-flex justify-content-start">
+                        <div>
+                            <h5 className='mb'>Class detail</h5>
+                            <hr />
+                        </div>
+                        <i class="fa-solid fa-bell"></i>
                     </div>
-                    <i class="fa-solid fa-bell"></i>
+                    <div>
+                        <button onClick={() => setView('detail')}>Back</button>
+                    </div>
                 </div>
             </div>
             <div>
@@ -461,12 +466,12 @@ const ClassContent = ({ classId, setView }) => {
     )
 }
 
-const TeacherForm = ({ onBack, onSave }) => {
+const TeacherForm = ({ onBack, classId }) => {
     return (
         <div>
             <div className='d-flex justify-content-between'>
                 <p>Add teacher</p>
-                <button>Back</button>
+                <button onClick={onBack}>Back</button>
             </div>
             <p>Current class</p>
             <div></div>
@@ -506,6 +511,13 @@ const StaffClassDetail = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const accessToken = localStorage.getItem('accessToken');
+    const [selectedClassId, setSelectedClassId] = useState(null);
+
+    const handleViewClassContent = (classId) => {
+        setSelectedClassId(classId);
+        setView('classContent');
+    };
+
 
     useEffect(() => {
         if (view === 'detail') {
@@ -528,8 +540,8 @@ const StaffClassDetail = () => {
             }
             const data = await response.json();
             console.log('data: ', data);
-            setClassData(data.classes); // Adjust to use 'classes' based on your actual data structure
-            setTotalPages(data.totalPage); // Use 'totalPage' directly from the API response
+            setClassData(data.classes);
+            setTotalPages(data.totalPage);
         } catch (error) {
             console.error("Failed to fetch class data", error);
         }
@@ -550,11 +562,11 @@ const StaffClassDetail = () => {
                         setView('createSchedule');
                     }} />;
             case 'createSchedule':
-                return <CreateSchedule onBack={() => setView('createClass')} classData={classData} />;
+                return <CreateSchedule onBack={() => setView('createClass')} classData={classData} setView={setView} />;
             case 'addTeacher':
-                return <TeacherForm onBack={() => setView('detail')} />;
-                case 'classContent':
-                    return <ClassContent classId={selectedClassId} setView={setView} />;
+                return <TeacherForm onBack={() => setView('classContent')} />;
+            case 'classContent':
+                return <ClassContent classId={selectedClassId} setView={setView} />;
             default:
                 return (
                     <div className='staff-class-detail mx-5'>
@@ -584,7 +596,7 @@ const StaffClassDetail = () => {
                                             </div>
                                         </div>
                                         <div className='d-flex align-items-center'>
-                                            <button style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>View</button>
+                                            <button onClick={() => handleViewClassContent(classItem.classId)} style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>View</button>
                                         </div>
                                     </div>
                                 </div>
