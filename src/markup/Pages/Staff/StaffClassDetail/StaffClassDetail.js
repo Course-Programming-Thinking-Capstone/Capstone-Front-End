@@ -474,6 +474,8 @@ const TeacherForm = ({ onBack, classId }) => {
     const [isTeacherLoading, setIsTeacherLoading] = useState(false);
     const [selectedTeacherId, setSelectedTeacherId] = useState(null);
     const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
+    const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
+
 
     useEffect(() => {
         // Optionally, fetch class details if needed to get study days and slots
@@ -535,13 +537,27 @@ const TeacherForm = ({ onBack, classId }) => {
     const handleTeacherSelection = (event) => {
         const teacherId = event.target.value;
         setSelectedTeacherId(teacherId);
-        setSelectedTeacherSchedules([]);
+        setIsTeacherLoading(true);
 
         const selectedTeacher = teachers.find(teacher => teacher.teacherId.toString() === teacherId);
         if (selectedTeacher) {
-            setSelectedTeacherSchedules(selectedTeacher.schedules || []);
+            const hasSchedules = selectedTeacher.schedules && selectedTeacher.schedules.length > 0;
+            if (hasSchedules) {
+                setSelectedTeacherSchedules(selectedTeacher.schedules);
+                setSelectedScheduleIndex(0);
+            } else {
+                setSelectedTeacherSchedules([]);
+                setSelectedScheduleIndex(null);
+            }
+        } else {
+            setSelectedTeacherSchedules([]);
+            setSelectedScheduleIndex(null);
         }
+
+        setIsTeacherLoading(false);
     };
+
+
 
     const addTeacherToClass = async () => {
         if (!selectedTeacherId) {
@@ -557,12 +573,12 @@ const TeacherForm = ({ onBack, classId }) => {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             if (!response.ok) {
                 // If the response is not 2xx, throw an error
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-    
+
             const addTeacher = await response.json();
             console.log('Success:', addTeacher);
             alert('Teacher added successfully to the class.');
@@ -574,7 +590,7 @@ const TeacherForm = ({ onBack, classId }) => {
             setIsLoading(false); // Stop loading indicator
         }
     };
-    
+
 
     return (
         <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
@@ -615,19 +631,37 @@ const TeacherForm = ({ onBack, classId }) => {
                     <div>
                         <div className="d-flex">
                             <p className='blue'>Class code</p>
-                            <select name="" id=""></select>
+                            <select name="scheduleSelect"
+                                id="schedule-select"
+                                onChange={(e) => setSelectedScheduleIndex(e.target.value)}
+                                value={selectedScheduleIndex}>
+                                {selectedTeacherSchedules.map((schedule, index) => (
+                                    <option key={index} value={index}>
+                                        {schedule.className}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                        <div className="d-flex">
-                            <p className='blue'>Study day</p>
-                            <p></p>
-                        </div>
-                        <div className="d-flex">
-                            <p className='blue'>Slot</p>
+                        {selectedScheduleIndex !== null && selectedTeacherSchedules[selectedScheduleIndex] && (
+                            <div>
+                                <div className="d-flex">
+                                    <p className='blue'>Class Name:</p>
+                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].studyDays}</p>
+                                </div>
 
-                        </div>
-                        <div className="d-flex justify-content-end">
-                            <button>Save Teacher</button>
-                        </div>
+                                <div className="d-flex">
+                                    <p className='blue'>Slot:</p>
+                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].slot}</p>
+                                </div>
+
+                                <div className="d-flex">
+                                    <p className='blue'>Time:</p>
+                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].open} - {selectedTeacherSchedules[selectedScheduleIndex].close}</p>
+                                </div>
+                            </div>
+                        )}
+
+
                     </div>
                 )}
             </div>
