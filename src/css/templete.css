@@ -892,7 +892,7 @@
 /* Teacher Account starts */
 .teacher-account .menu {
   background-color: #f7f8fb;
-  height: 90vh;
+  min-height: 90vh;
   overflow: auto;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -977,6 +977,7 @@
 .teacher-classes,
 .teacher-setting,
 .syllabus,
+.syllabus-detail,
 .create-syllabus {
   margin-top: 30px;
   background-color: #fbede1;
@@ -991,6 +992,7 @@
 .teacher-setting .header h5,
 .create-course .header h5,
 .syllabus .header h5,
+.syllabus-detail .header h5,
 .create-syllabus .header h5 {
   font-size: 22px;
 }
@@ -1001,6 +1003,7 @@
 .teacher-setting .header hr,
 .create-course .header hr,
 .syllabus .header hr,
+.syllabus-detail .header hr,
 .create-syllabus .header hr {
   width: 50%;
   color: #ff8a00;
@@ -1014,6 +1017,7 @@
 .teacher-setting .header i,
 .create-course .header i,
 .syllabus .header i,
+.syllabus-detail .header i,
 .create-syllabus .header i {
   color: #ff8a00;
   margin-left: 10px;
@@ -1273,6 +1277,7 @@
 .syllabus-content {
   background-color: white;
   padding-top: 10px;
+  border-radius: 20px;
 }
 
 .syllabus-content .blue {
@@ -5178,4 +5183,23 @@ select:-internal-autofill-selected {
       right: 30%;
     }
   }
+}
+
+.pagination-item {
+  color: "#F69E4A";
+  background-color: white;
+  border-radius: 50%;
+  border-collapse: none;
+  border-width: 1px;
+  border-color: #F69E4A;
+  margin-right: 5px;
+  box-shadow: none;
+}
+
+.pagination-item:hover,
+.pagination-item:active,
+.pagination-item:focus {
+  border-radius: 50%;
+  color: white;
+  background-color: #F69E4A;
 }

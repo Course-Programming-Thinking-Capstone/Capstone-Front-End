@@ -4,12 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
 import { filterSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link } from "react-router-dom";
-import { Container, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
   formatDateV1,
-  getTimeZone,
 } from "../../../../../helper/utils/DateUtil";
+import {
+  CustomPagination,
+  PaginationCustom,
+} from "../../../../Layout/Components/Pagination";
 
 const SyllabusComponent = () => {
   //useDispath
@@ -17,6 +20,8 @@ const SyllabusComponent = () => {
 
   //set information message
   const [message, setMessage] = useState(undefined);
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState(undefined);
 
   //syllabus list
   const syllabuses = useSelector(syllabusesSelector);
@@ -30,8 +35,9 @@ const SyllabusComponent = () => {
 
         await dispatch(
           filterSyllabusesAsync({
-            page: 1,
-            size: 10,
+            name: query,
+            page: page,
+            size: 3,
           })
         );
       } catch (error) {
@@ -47,15 +53,15 @@ const SyllabusComponent = () => {
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, page, query]);
 
   const renderComponent = () => {
     return (
       <div className="syllabus">
         <div className="header">
-          <div className="d-flex justify-content-start">
+          <div className="d-flex justify-content-start align-items-center mb-3">
             <div>
-              <h5 className="mb-3">Syllabus</h5>
+              <h5 className="my-0">Syllabus</h5>
               <hr />
             </div>
             <i class="fa-solid fa-book"></i>
@@ -80,55 +86,64 @@ const SyllabusComponent = () => {
               </div>
             </div>
 
-            <div className="px-3" style={{ minHeight: "60vh" }}>
-              {isLoading ? (
-                // <div className="d-flex justify-content-center">
-                //   <div className="spinner-border text-primary" role="status">
-                //     <span className="visually-hidden">Loading...</span>
-                //   </div>
-                // </div>
-                <div className="d-flex justify-content-center my-5">
-                  <Spinner animation="border" variant="success" />
-                </div>
-              ) : (
-                syllabuses.results.map((syllabus, index) => (
-                  <div key={index} className="syllabus-item">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex justify-content-start">
-                        <img className="img-responsive" src={simp} alt="" />
-                        <div className="ms-3">
-                          <p className="mb-1 mt-2">{syllabus.name}</p>
-                          <p className="mb-1 title blue">
-                            Create date:{" "}
-                            {formatDateV1(
-                              convertUtcToLocalTime(syllabus.createdDate)
-                            )}
-                          </p>
+            <div className="px-3 pb-3" style={{ minHeight: "60vh" }}>
+              <div style={{ height: "50vh" }}>
+                {isLoading ? (
+                  // <div className="d-flex justify-content-center">
+                  //   <div className="spinner-border text-primary" role="status">
+                  //     <span className="visually-hidden">Loading...</span>
+                  //   </div>
+                  // </div>
+                  <div className="d-flex justify-content-center py-5">
+                    <Spinner animation="border" variant="success" />
+                  </div>
+                ) : (
+                  syllabuses.results.map((syllabus, index) => (
+                    <div key={index} className="syllabus-item">
+                      <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-start">
+                          <img className="img-responsive" src={simp} alt="" />
+                          <div className="ms-3">
+                            <p className="mb-1 mt-2">{syllabus.name}</p>
+                            <p className="mb-1 title blue">
+                              Create date:{" "}
+                              {formatDateV1(
+                                convertUtcToLocalTime(syllabus.createdDate)
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <Link
+                            to={`/teacher-account/syllabuses/detail?id=${syllabus.id}`}
+                            className="mt-3"
+                            style={{
+                              display: "inline-block",
+                              width: "100px",
+                              backgroundColor: "#EF7E54",
+                              border: "none",
+                              borderRadius: "10px",
+                              color: "white",
+                              textDecoration: "none", 
+                              textAlign: "center",
+                              lineHeight: "36px", 
+                            }}
+                          >
+                            View
+                          </Link>
                         </div>
                       </div>
-                      <div>
-                        <Link
-                          to={`/teacher-account/syllabuses/detail?id=${syllabus.id}`}
-                          className="mt-3"
-                          style={{
-                            display: "inline-block",
-                            width: "100px",
-                            backgroundColor: "#EF7E54",
-                            border: "none",
-                            borderRadius: "10px",
-                            color: "white",
-                            textDecoration: "none", // Ensure no underline
-                            textAlign: "center", // Center the text
-                            lineHeight: "36px", // Vertically center the text
-                          }}
-                        >
-                          View
-                        </Link>
-                      </div>
                     </div>
-                  </div>
-                ))
-              )}
+                  ))
+                )}
+              </div>
+
+              {/* Paging */}
+              <CustomPagination
+                page={page}
+                setPage={setPage}
+                totalPage={syllabuses.totalPages}
+              />
             </div>
           </div>
         </div>

@@ -35,7 +35,7 @@ export default function TeacherAccount({ child }) {
             <div className="menu col-lg-3">
               <div className="d-flex justify-content-center">
                 <Image
-                  src={user.pictureUrl !== undefined ? user.pictureUrl : demo}
+                  src={user.pictureUrl !== null ? user.pictureUrl : demo}
                   alt="User avatar"
                   title="avatar"
                   roundedCircle
