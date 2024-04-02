@@ -44,6 +44,18 @@ export default function Login() {
             const response = await loginUser(email, password);
             if (response.accessToken && response.role) {
                 localStorage.setItem("accessToken", response.accessToken);
+
+                //store user information
+                const user = {
+                    role: response.role,
+                    fullName: response.fullName,
+                    pictureUrl: response.pictureUrl,
+                    email: response.email,
+                    id: response.id
+                };
+            
+                localStorage.setItem("user", JSON.stringify(user));
+
                 switch (response.role) {
                     case 'Admin':
                         window.location.href = '/admin';

@@ -1,62 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import background from "./../../../../images/background/teacherBackground.jpg";
 import demo from "./../../../../images/gallery/demo.jpg";
 import { Link } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { teacherActiveMenuSelector } from "../../../../store/selector";
-
-const updateLessonInSection = (
-  sectionId,
-  lessonIndex,
-  lessonFieldName,
-  lessonFieldValue,
-  courseStructure,
-  setCourseStructure
-) => {
-  const sectionIndex = courseStructure.sections.findIndex(
-    (section) => section.id === sectionId
-  );
-
-  if (sectionIndex !== -1) {
-    const section = { ...courseStructure.sections[sectionIndex] };
-
-    // Check if the lesson index is valid for the section
-    if (lessonIndex >= 0 && lessonIndex < section.lessons.length) {
-      // Update the lesson with the new information
-      const updatedLessons = [...section.lessons];
-      //update lesson
-      updatedLessons[lessonIndex] = {
-        ...updatedLessons[lessonIndex],
-        [lessonFieldName]: lessonFieldValue,
-      };
-
-      // Update the section with the modified lessons
-      const updatedSections = [...courseStructure.sections];
-      updatedSections[sectionIndex] = { ...section, lessons: updatedLessons };
-
-      // Update the courseStructure state with the modified section
-      setCourseStructure((prevCourseStructure) => ({
-        ...prevCourseStructure,
-        sections: updatedSections,
-      }));
-    } else {
-      console.error(
-        `Invalid lesson index ${lessonIndex} in section with ID ${sectionId}`
-      );
-    }
-  } else {
-    console.error(`Section with ID ${sectionId} not found`);
-  }
-};
+import { Image } from "react-bootstrap";
 
 export default function TeacherAccount({ child }) {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const teacherActiveMenu = useSelector(teacherActiveMenuSelector);
 
   const getMenuItemStyle = (menuItem) => {
     return menuItem === teacherActiveMenu
       ? { backgroundColor: "#F69E4A", color: "white" }
-      : {}; // Example: light grey background for active menu
+      : { color: "#212121CC" }; // Example: light grey background for active menu
   };
 
   return (
@@ -75,9 +34,15 @@ export default function TeacherAccount({ child }) {
           <div className="row">
             <div className="menu col-lg-3">
               <div className="d-flex justify-content-center">
-                <img src={demo} alt="" />
+                <Image
+                  src={user.pictureUrl !== null ? user.pictureUrl : demo}
+                  alt="User avatar"
+                  title="avatar"
+                  roundedCircle
+                  style={{ height: "100px", width: "100px" }}
+                />
               </div>
-              <h5 className="text-center">Kim Jennie</h5>
+              <h5 className="text-center mt-2">{user.fullName}</h5>
               <div className="d-flex justify-content-center">
                 <button>Edit profile</button>
               </div>
@@ -96,70 +61,73 @@ export default function TeacherAccount({ child }) {
               <div className="menu-content">
                 <Link
                   to="/teacher-account/notification"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("notification")}
                 >
-                  <i class="fa-solid fa-bell"></i>
-                  <p className="mb">Notification</p>
+                  <i className="fa-solid fa-bell"></i>
+                  <div className="mx-4">Notification</div>
                 </Link>
 
                 <Link
                   to="/teacher-account/courses"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("myCourses")}
                 >
-                  <i class="fa-solid fa-book-open"></i>
-                  <p className="mb">My courses</p>
+                  <i
+                    className="fa-solid fa-book-open"
+                    style={{ width: "19px", height: "100%" }}
+                  ></i>
+                  <div className="mx-4">My courses</div>
                 </Link>
 
                 <Link
                   to="/teacher-account/schedule"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("schedule")}
                 >
-                  <i class="fa-solid fa-calendar-days"></i>
-                  <p className="mb">Schedule</p>
+                  <i className="fa-solid fa-calendar-days"></i>
+                  <div className="mx-4">Schedule</div>
                 </Link>
 
                 <Link
                   to="/teacher-account/classes"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("classes")}
                 >
-                  <i class="fa-solid fa-user"></i>
-                  <p className="mb">My class</p>
+                  <i className="fa-solid fa-user"></i>
+                  <div className="mx-4">My class</div>
                 </Link>
 
                 <Link
                   to="/teacher-account/syllabuses"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("syllabuses")}
                 >
-                  <i class="fa-solid fa-book"></i>
-                  <p className="mb">Syllabus</p>
+                  <i className="fa-solid fa-book"></i>
+                  <div className="mx-4">Syllabus</div>
                 </Link>
 
-                <Link
+                {/* <Link
                   to="/teacher-account/quizzes"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("quizzes")}
                 >
-                  <i class="fa-solid fa-pen-to-square"></i>
-                  <p className="mb">Quiz</p>
-                </Link>
+                  <i className="fa-solid fa-pen-to-square"></i>
+                  <div className="mx-4">Quiz</div>
+                </Link> */}
 
                 <Link
                   to="/teacher-account/setting"
-                  className="item d-flex justify-content-start"
+                  className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("setting")}
                 >
-                  <i class="fa-solid fa-gear"></i>
-                  <p className="mb">Setting</p>
+                  <i className="fa-solid fa-gear"></i>
+                  <div className="mx-4">Setting</div>
                 </Link>
 
-                <div className="item d-flex justify-content-start">
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                  <p className="mb">Log out</p>
+                <div className="item d-flex justify-content-start align-items-center">
+                  <i className="fa-solid fa-right-from-bracket"></i>
+                  <div className="mx-4">Log out</div>
                 </div>
               </div>
             </div>

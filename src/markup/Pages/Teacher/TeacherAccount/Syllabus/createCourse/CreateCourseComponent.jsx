@@ -6,7 +6,15 @@ import {
 import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
-import { Accordion, Button, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  Row,
+} from "react-bootstrap";
 import VideoComponent, {
   RemoveComponent,
   UpdateVideoComponent,
@@ -18,6 +26,17 @@ import {
   updateCourseApi,
   updateCoursePictureApi,
 } from "../../../../../../helper/apis/course/course";
+import {
+  AddQuestionComponent,
+  AddQuizComponent,
+  RemoveQuestionComponent,
+  RemoveQuizComponent,
+  UpdateQuestionComponent,
+  UpdateQuizComponent,
+} from "./createCourseContent/QuizComponent";
+
+import checkButton from "../../../../../../images/course/checked button.png";
+import uncheckButton from "../../../../../../images/course/uncheck button.png";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -45,8 +64,6 @@ const CreateCourseComponent = () => {
     const fetchData = async () => {
       try {
         await dispatch(getCourseByIdAsync(courseId, "manage"));
-        //
-        console.log(`Create course: ${JSON.stringify(createCourse, null, 2)}`);
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.Message}`);
@@ -60,9 +77,6 @@ const CreateCourseComponent = () => {
     };
     fetchData();
   }, [courseId]);
-
-  // //log
-  // console.log(`createCourse content: ${JSON.stringify(createCourse, null, 2)}`);
 
   //Create course
   const saveCourse = async (action) => {
@@ -87,8 +101,6 @@ const CreateCourseComponent = () => {
           id: createCourse.id,
           file: coursePictureFile,
         });
-
-        console.log(`Picture url: ${pictureUrl}`);
       }
 
       alert("Update success");
@@ -175,6 +187,14 @@ const CreateCourseComponent = () => {
                           )
                         )}
 
+                        {section.quizzes.map((quiz, index) => (
+                          <QuizContent
+                            sectionId={section.id}
+                            quiz={quiz}
+                            index={index}
+                          />
+                        ))}
+
                         <Container>
                           <Row>
                             <Col md="4">
@@ -184,13 +204,7 @@ const CreateCourseComponent = () => {
                               <DocumentComponent sectionId={section.id} />
                             </Col>
                             <Col md="4">
-                              <button
-                              // onClick={() =>
-                              //   addContentTypeToSection(section.id, "Quiz")
-                              // }
-                              >
-                                Add Quiz
-                              </button>
+                              <AddQuizComponent sectionId={section.id} />
                             </Col>
                           </Row>
                         </Container>
@@ -260,18 +274,18 @@ const VideoContent = ({ sectionId, lesson, index }) => {
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
           <Container>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Duration: {lesson.duration} minute</p>
               </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Url: {lesson.resourceUrl}</p>
               </Col>
             </Row>
 
-            <Row>
+            <Row className="mb-3">
               <Col md="6">
                 <UpdateVideoComponent
                   sectionId={sectionId}
@@ -297,18 +311,18 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
         <Accordion.Header>{lesson.name}</Accordion.Header>
         <Accordion.Body>
           <Container>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Duration: {lesson.duration} minute</p>
               </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
               <Col>
                 <p>Content: {lesson.content}</p>
               </Col>
             </Row>
 
-            <Row>
+            <Row className="mb-3">
               <Col md="6">
                 <UpdateDocumentComponent
                   sectionId={sectionId}
@@ -321,6 +335,138 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
                 <RemoveComponent sectionId={sectionId} lessonIndex={index} />
               </Col>
             </Row>
+          </Container>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+};
+
+const QuizContent = ({ sectionId, quiz, index }) => {
+  return (
+    <Accordion defaultActiveKey="0" flush>
+      <Accordion.Item eventKey={index}>
+        <Accordion.Header>{quiz.title}</Accordion.Header>
+        <Accordion.Body>
+          <Container>
+            <Row className="mb-3">
+              <Col>
+                <p>Description: {quiz.description}</p>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <p>Duration: {quiz.duration} minute</p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <p>Number of attempts: {quiz.numberOfAttempt}</p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <p>
+                  Random order: {quiz.isOrderRandom === true ? "Yes" : "No"}
+                </p>
+              </Col>
+            </Row>
+            {quiz.isOrderRandom && (
+              <Row className="mb-3">
+                <Col>
+                  <p>Number of questions: {quiz.numberOfQuestion}</p>
+                </Col>
+              </Row>
+            )}
+
+            {quiz.questions && (
+              <Row className="mb-3">
+                <Col>
+                  <p>Content</p>
+                  {quiz.questions.map((question, key) => (
+                    <QuestionContent
+                      sectionId={sectionId}
+                      quizIndex={index}
+                      question={question}
+                      questionIndex={key}
+                    />
+                  ))}
+                </Col>
+              </Row>
+            )}
+
+            <Row className="mb-3">
+              <Col md="6">
+                <AddQuestionComponent sectionId={sectionId} quizIndex={index} />
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md="6">
+                <UpdateQuizComponent
+                  sectionId={sectionId}
+                  quizIndex={index}
+                  quiz={quiz}
+                />
+              </Col>
+
+              <Col md="6">
+                <RemoveQuizComponent sectionId={sectionId} index={index} />
+              </Col>
+            </Row>
+          </Container>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+};
+
+const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
+  return (
+    <Accordion defaultActiveKey="0" flush>
+      <Accordion.Item eventKey={questionIndex}>
+        <Accordion.Header>{question.title}</Accordion.Header>
+        <Accordion.Body>
+          <Container>
+            {question.options &&
+              question.options.map((option, key) => (
+                <Row className="mb=3">
+                  <Col xs="10">
+                    <p>{option.content}</p>
+                  </Col>
+                  <Col xs="2">
+                    <Image
+                      src={
+                        option.isCorrect == true ? checkButton : uncheckButton
+                      }
+                      roundedCircle
+                    />
+                  </Col>
+                  {option.answerExplain && option.answerExplain !== "" && (
+                    <Col xs="12">
+                       <p>Explain: {option.answerExplain}</p>
+                    </Col>
+                  )}
+                </Row>
+              ))}
+
+            <Col md="6">
+              <UpdateQuestionComponent
+                sectionId={sectionId}
+                quizIndex={quizIndex}
+                questionIndex={questionIndex}
+                question={question}
+              />
+            </Col>
+            <Col md="6">
+              <RemoveQuestionComponent
+                sectionId={sectionId}
+                quizIndex={quizIndex}
+                questionIndex={questionIndex}
+              />
+            </Col>
           </Container>
         </Accordion.Body>
       </Accordion.Item>

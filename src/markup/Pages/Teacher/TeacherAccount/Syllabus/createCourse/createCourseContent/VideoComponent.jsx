@@ -22,9 +22,9 @@ const VideoComponent = ({ sectionId }) => {
     const { lessonName, duration, resourceUrl } = values;
 
     const video = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      resourceUrl: resourceUrl,
+      resourceUrl: resourceUrl.trim(),
       type: "Video",
     };
     dispatch(addVideo({ sectionId: sectionId, video: video }));
@@ -35,16 +35,23 @@ const VideoComponent = ({ sectionId }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .trim()
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 0")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     resourceUrl: yup
       .string()
       .url("Url must be a valid URL")
-      .required("Content is required"),
+      .required("Url is required")
+      .trim()
+      .max(250, "Url exceed 250 characters."),
   });
   //form validation
 
@@ -75,7 +82,7 @@ const VideoComponent = ({ sectionId }) => {
             initialValues={{
               lessonName: "Video",
               duration: 1,
-              resourceUrl: "",
+              resourceUrl: "https://www.youtube.com/",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -89,7 +96,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -106,7 +113,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -121,7 +128,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="resourceUrl"
                       value={values.resourceUrl}
                       onChange={handleChange}
-                      isInvalid={!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={touched.resourceUrl &&!!errors.resourceUrl} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}
@@ -158,9 +165,9 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
     const { lessonName, duration, resourceUrl } = values;
 
     const updateData = {
-      name: lessonName,
+      name: lessonName.trim(),
       duration: duration,
-      resourceUrl: resourceUrl,
+      resourceUrl: resourceUrl.trim(),
       type: "Video",
     };
     dispatch(
@@ -178,16 +185,23 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
   const { Formik } = formik;
 
   const schema = yup.object().shape({
-    lessonName: yup.string().required("Lesson name is required"),
+    lessonName: yup
+      .string()
+      .required("Lesson name is required")
+      .trim()
+      .max(250, "Lesson name exceed 250 characters."),
     duration: yup
       .number()
       .required("Duration is required")
-      .positive("Duration must larger than 0")
+      .min(1, "Duration must larger than 0 minute")
+      .max(100, "Duration can not exceed 100 minute.")
       .integer(),
     resourceUrl: yup
       .string()
       .url("Url must be a valid URL")
-      .required("Content is required"),
+      .required("Url is required")
+      .trim()
+      .max(250, "Url exceed 250 characters."),
   });
   //form validation
 
@@ -232,7 +246,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="lessonName"
                       value={values.lessonName}
                       onChange={handleChange}
-                      isInvalid={!!errors.lessonName} // Set isInvalid based on validation errors
+                      isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
@@ -249,7 +263,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="duration"
                       value={values.duration}
                       onChange={handleChange}
-                      isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -264,7 +278,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       name="resourceUrl"
                       value={values.resourceUrl}
                       onChange={handleChange}
-                      isInvalid={!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={touched.resourceUrl && !!errors.resourceUrl} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}

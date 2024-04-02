@@ -891,21 +891,26 @@
 
 /* Teacher Account starts */
 .teacher-account .menu {
-  background-color: white;
-  height: 100vh;
+  background-color: #f7f8fb;
+  min-height: 90vh;
+  overflow: auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-radius: 5px;
 }
 
 .teacher-account {
   display: flex;
   flex-direction: column;
-  min-height: 1500px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .teacher-account .menu img {
   border-radius: 50%;
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
 }
 
 .teacher-account .menu i {
@@ -972,11 +977,13 @@
 .teacher-classes,
 .teacher-setting,
 .syllabus,
+.syllabus-detail,
 .create-syllabus {
   margin-top: 30px;
   background-color: #fbede1;
   padding: 20px 40px;
-  min-height: 600px;
+  min-height: 90vh;
+  border-radius: 5px;
 }
 
 .teacher-notification .header h5,
@@ -985,6 +992,7 @@
 .teacher-setting .header h5,
 .create-course .header h5,
 .syllabus .header h5,
+.syllabus-detail .header h5,
 .create-syllabus .header h5 {
   font-size: 22px;
 }
@@ -995,6 +1003,7 @@
 .teacher-setting .header hr,
 .create-course .header hr,
 .syllabus .header hr,
+.syllabus-detail .header hr,
 .create-syllabus .header hr {
   width: 50%;
   color: #ff8a00;
@@ -1008,6 +1017,7 @@
 .teacher-setting .header i,
 .create-course .header i,
 .syllabus .header i,
+.syllabus-detail .header i,
 .create-syllabus .header i {
   color: #ff8a00;
   margin-left: 10px;
@@ -1267,6 +1277,7 @@
 .syllabus-content {
   background-color: white;
   padding-top: 10px;
+  border-radius: 20px;
 }
 
 .syllabus-content .blue {
@@ -1507,13 +1518,14 @@
   height: 2px;
 }
 
-.staff-order-menu div.active p, .staff-order-menu div.active hr {
-  color: #1A9CB7;
+.staff-order-menu div.active p,
+.staff-order-menu div.active hr {
+  color: #1a9cb7;
 }
 
 .staff-order-menu div:hover {
   cursor: pointer;
-  color: #1A9CB7;
+  color: #1a9cb7;
 }
 
 .staff-order-content .table-responsive {
@@ -1531,9 +1543,9 @@
 }
 
 .staff-order thead {
-  border-radius: 8px!important;
+  border-radius: 8px !important;
   text-align: center;
-  color: white!important;
+  color: white !important;
 }
 
 .staff-order tr th {
@@ -5186,4 +5198,23 @@ select:-internal-autofill-selected {
       right: 30%;
     }
   }
+}
+
+.pagination-item {
+  color: "#F69E4A";
+  background-color: white;
+  border-radius: 50%;
+  border-collapse: none;
+  border-width: 1px;
+  border-color: #F69E4A;
+  margin-right: 5px;
+  box-shadow: none;
+}
+
+.pagination-item:hover,
+.pagination-item:active,
+.pagination-item:focus {
+  border-radius: 50%;
+  color: white;
+  background-color: #F69E4A;
 }

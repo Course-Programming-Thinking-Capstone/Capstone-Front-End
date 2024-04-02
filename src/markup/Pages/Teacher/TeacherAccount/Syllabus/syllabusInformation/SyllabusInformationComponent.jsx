@@ -3,6 +3,7 @@ import { syllabusDetailSelector } from "../../../../../../store/selector";
 import { useEffect, useState } from "react";
 import { getSyllabusByIdAsync } from "../../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 export const SyllabusInformationComponent = () => {
   const location = useLocation();
@@ -48,108 +49,116 @@ export const SyllabusInformationComponent = () => {
     );
   }
   return (
-    <div>
+    <div className="syllabus-detail">
       <div className="header">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex justify-content-start">
+        <div className="d-flex justify-content-between mb-3 align-items-center">
+          <div className="d-flex justify-content-start align-items-center ">
             <div>
-              <h5 className="mb">CREATE COURSE</h5>
+              <h5 className="my-0">Syllabus detail</h5>
               <hr />
             </div>
             <i class="fa-solid fa-book"></i>
           </div>
           <div>
-            <button onClick={() => navigate(-1)}>Back</button>
+            <Button
+              variant="outline-warning"
+              className="px-3 py-2"
+              style={{borderRadius: "5px" }}
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
           </div>
         </div>
       </div>
       <div className="syllabus-content">
         <div className="pt-2 px-4 pb-2">
-          <div className="d-flex">
-            <div style={{ width: "120px" }}>
-              <p className="blue">Course title</p>
-            </div>
-            <div>
-              <p>{syllabus.name}</p>
-            </div>
-          </div>
-          <div className="d-flex">
-            <div style={{ width: "170px" }}>
-              <p className="blue">Course target</p>
-            </div>
-            <div>
-              <p>{syllabus.target}</p>
-            </div>
-          </div>
-          <div className="d-flex">
-            <div style={{ width: "120px" }}>
-              <p className="blue">Section</p>
-            </div>
-            <div>
-              {/* Load section in course Id*/}
-              {syllabus &&
-                syllabus.sections.map((section, index) => (
-                  <div key={index}>{section.name}</div>
-                ))}
-            </div>
-          </div>
-          <div>
-            <p className="mb-0 blue">Evaluation methods</p>
-            <div style={{ marginLeft: "200px" }}>
-              <div className="d-flex">
-                <p className="mb-0 pt-1">Quiz score higher</p>
-                <span
-                  style={{
-                    border: "1px solid #F69E4A",
-                    borderRadius: "5px",
-                    padding: "2px",
-                    marginLeft: "10px",
-                  }}
-                >
-                  {syllabus.minQuizScoreRatio}%
-                </span>
-              </div>
-              <div className="d-flex mt-2">
-                <p className="mb-0 pt-1">Total slot</p>
-                <span
-                  style={{
-                    border: "1px solid #F69E4A",
-                    borderRadius: "5px",
-                    padding: "2px",
-                    marginLeft: "30px",
-                  }}
-                >
-                  {syllabus.totalSlot}
-                </span>
-              </div>
-              <div className="d-flex mt-2">
-                <p className="mb-0 pt-1">Slot time</p>
-                <span
-                  style={{
-                    border: "1px solid #F69E4A",
-                    borderRadius: "5px",
-                    padding: "2px",
-                    marginLeft: "30px",
-                  }}
-                >
-                  {syllabus.slotTime}
-                </span>
-              </div>
-            </div>
-          </div>
+          <Container className="px-0">
+            <Row>
+              <Col md="3">
+                <p className="blue fw-bold">Course title</p>
+              </Col>
+              <Col md="9">
+                <p>{syllabus.name}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="3">
+                <p className="blue fw-bold">Course target</p>
+              </Col>
+              <Col md="9">
+                <p>{syllabus.target}</p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md="3">
+                <p className="blue fw-bold">Sections</p>
+              </Col>
+              <Col md="9">
+                <div>
+                  {/* Load section in course Id*/}
+                  {syllabus &&
+                    syllabus.sections.map((section, index) => (
+                      <div
+                        className="d-flex justify-content-center align-items-center mb-1"
+                        key={index}
+                        style={sectionTitle}
+                      >
+                        {section.name}
+                      </div>
+                    ))}
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md="3">
+                <p className="blue fw-bold">Pass condition</p>
+              </Col>
+              <Col md="9">
+                <p>
+                  Quiz score higher{" "}
+                  <span style={syllabusContentStyle}>
+                    {syllabus.minQuizScoreRatio}%
+                  </span>
+                </p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md="3">
+                <p className="blue fw-bold">Course slot</p>
+              </Col>
+              <Col md="9">
+                <p>
+                  <span style={syllabusContentStyle}>{syllabus.totalSlot}</span>{" "}
+                  slots
+                </p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md="3">
+                <p className="blue fw-bold">Slot time</p>
+              </Col>
+              <Col md="9">
+                <p>
+                  <span style={syllabusContentStyle}>{syllabus.slotTime}</span>{" "}
+                  minute
+                </p>
+              </Col>
+            </Row>
+          </Container>
           <div className="d-flex justify-content-end">
-            <Link
-              to={`/teacher-account/syllabuses/create-course`}
-              style={{
-                backgroundColor: "#FD8569",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                height: "40px",
-                width: "150px",
-              }}
-            >
-              CREATE COURSE
+            <Link to={`/teacher-account/syllabuses/create-course`}>
+              <Button
+                variant="danger"
+                className="px-3 mb-3"
+                style={{ borderRadius: "8px" }}
+              >
+                Create course
+              </Button>
             </Link>
           </div>
         </div>
@@ -159,3 +168,16 @@ export const SyllabusInformationComponent = () => {
 };
 
 export default SyllabusInformationComponent;
+
+const sectionTitle = {
+  backgroundColor: "#7F7C7C",
+  color: "white",
+  borderRadius: "5px",
+  textAlign: "center",
+  height: "30px",
+};
+
+const syllabusContentStyle = {
+  color: "#F69E4A",
+  fontWeight: "bold",
+};
