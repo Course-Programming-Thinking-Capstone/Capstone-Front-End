@@ -320,7 +320,7 @@ const CreateSchedule = ({ onBack, classData, setView }) => {
     )
 }
 
-const ClassContent = ({ classId, setView, navigateToTeacherForm }) => {
+const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStudentForm }) => {
     const [classDetails, setClassDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const accessToken = localStorage.getItem('accessToken');
@@ -457,7 +457,7 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm }) => {
                 <div className='px-4'>
                     <div className="d-flex justify-content-between">
                         <p>LIST STUDENT</p>
-                        <button>Add student</button>
+                        <button onClick={() => navigateToStudentForm(classId)}>Add student</button>
 
                     </div>
                 </div>
@@ -469,7 +469,7 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm }) => {
 const TeacherForm = ({ onBack, classId }) => {
     const accessToken = localStorage.getItem('accessToken');
     const [teachers, setTeachers] = useState([]);
-    const [currentClass, setCurrenClass] = useState([]);
+    const [currentClass, setCurrentClass] = useState([]);
     const [isLoading, setIsLoading] = useState([])
     const [isTeacherLoading, setIsTeacherLoading] = useState(false);
     const [selectedTeacherId, setSelectedTeacherId] = useState(null);
@@ -494,7 +494,7 @@ const TeacherForm = ({ onBack, classId }) => {
                 }
                 const classData = await response.json();
                 console.log('classData: ', classData);
-                setCurrenClass(classData);
+                setCurrentClass(classData);
             } catch (error) {
                 console.error("Failed to fetch class details", error);
             }
@@ -672,6 +672,41 @@ const TeacherForm = ({ onBack, classId }) => {
     )
 }
 
+const StudentForm = ({ onBack, classId }) => {
+    const [currentClass, setCurrentClass] = useState([]);
+    const accessToken = localStorage.getItem('accessToken');
+    useEffect(() => {
+        // Optionally, fetch class details if needed to get study days and slots
+        const fetchClassDetails = async () => {
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const classData = await response.json();
+                console.log('classData: ', classData);
+                setCurrentClass(classData);
+            } catch (error) {
+                console.error("Failed to fetch class details", error);
+            }
+        };
+
+        if (classId) {
+            fetchClassDetails();
+        }
+    }, [classId, accessToken]);
+    return (
+        <div><button onClick={onBack}>Back to Class Details</button></div>
+    )
+}
+
 const StaffClassDetail = () => {
     const [view, setView] = useState('detail');
     const [classData, setClassData] = useState(null);
@@ -680,6 +715,7 @@ const StaffClassDetail = () => {
     const accessToken = localStorage.getItem('accessToken');
     const [selectedClassId, setSelectedClassId] = useState(null);
     const [classIdForTeacherForm, setClassIdForTeacherForm] = useState(null);
+    const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
 
     const handleViewClassContent = (classId) => {
         setSelectedClassId(classId);
@@ -689,6 +725,11 @@ const StaffClassDetail = () => {
     const navigateToTeacherForm = (classId) => {
         setClassIdForTeacherForm(classId);
         setView('addTeacher');
+    };
+
+    const navigateToStudentForm = (classId) => {
+        setClassIdForStudentForm(classId);
+        setView('addStudent');
     };
 
     useEffect(() => {
@@ -736,9 +777,16 @@ const StaffClassDetail = () => {
             case 'createSchedule':
                 return <CreateSchedule onBack={() => setView('createClass')} classData={classData} setView={setView} />;
             case 'addTeacher':
-                return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('detail')} />;
+                return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('classContent')} />;
+            case 'addStudent':
+                return <StudentForm classId={classIdForStudentForm} onBack={() => setView('classContent')} />;
             case 'classContent':
-                return <ClassContent classId={selectedClassId} setView={setView} navigateToTeacherForm={navigateToTeacherForm} />;
+                return <ClassContent
+                    classId={selectedClassId}
+                    setView={setView}
+                    navigateToTeacherForm={navigateToTeacherForm}
+                    navigateToStudentForm={navigateToStudentForm} 
+                />;
             default:
                 return (
                     <div className='staff-class-detail mx-5'>
