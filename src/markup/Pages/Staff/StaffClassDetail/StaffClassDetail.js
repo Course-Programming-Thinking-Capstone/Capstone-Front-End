@@ -320,7 +320,7 @@ const CreateSchedule = ({ onBack, classData, setView }) => {
     )
 }
 
-const ClassContent = ({ classId, setView }) => {
+const ClassContent = ({ classId, setView, navigateToTeacherForm }) => {
     const [classDetails, setClassDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const accessToken = localStorage.getItem('accessToken');
@@ -408,9 +408,9 @@ const ClassContent = ({ classId, setView }) => {
                             <p className='mb-1'>{classDetails.students.length}</p>
                             <p className='mb-1'>
                                 {classDetails.teacherName ? (
-                                    <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => setView('addTeacher')} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Edit</button></p>
+                                    <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Edit</button></p>
                                 ) : (
-                                    <button onClick={() => setView('addTeacher')} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Add teacher</button>
+                                    <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px' }}>Add teacher</button>
                                 )}
                             </p>
                             <p className='mb-1'>{classDetails.openClass} - {classDetails.closeClass}</p>
@@ -467,40 +467,173 @@ const ClassContent = ({ classId, setView }) => {
 }
 
 const TeacherForm = ({ onBack, classId }) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const [teachers, setTeachers] = useState([]);
+    const [currentClass, setCurrenClass] = useState([]);
+    const [isLoading, setIsLoading] = useState([])
+    const [isTeacherLoading, setIsTeacherLoading] = useState(false);
+    const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+    const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
+
+    useEffect(() => {
+        // Optionally, fetch class details if needed to get study days and slots
+        const fetchClassDetails = async () => {
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const classData = await response.json();
+                console.log('classData: ', classData);
+                setCurrenClass(classData);
+            } catch (error) {
+                console.error("Failed to fetch class details", error);
+            }
+        };
+
+        if (classId) {
+            fetchClassDetails();
+        }
+    }, [classId, accessToken]);
+
+
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/teachers', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('data: ', data);
+                setTeachers(data);
+            } catch (error) {
+                console.error("Failed to fetch teachers", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTeachers();
+    }, [accessToken]);
+
+    const handleTeacherSelection = (event) => {
+        const teacherId = event.target.value;
+        setSelectedTeacherId(teacherId);
+        setSelectedTeacherSchedules([]);
+
+        const selectedTeacher = teachers.find(teacher => teacher.teacherId.toString() === teacherId);
+        if (selectedTeacher) {
+            setSelectedTeacherSchedules(selectedTeacher.schedules || []);
+        }
+    };
+
+    const addTeacherToClass = async () => {
+        if (!selectedTeacherId) {
+            alert('Please select a teacher first.');
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                // If the response is not 2xx, throw an error
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const addTeacher = await response.json();
+            console.log('Success:', addTeacher);
+            alert('Teacher added successfully to the class.');
+
+        } catch (error) {
+            console.error('Failed to add teacher to class:', error);
+            alert('Failed to add teacher to class.');
+        } finally {
+            setIsLoading(false); // Stop loading indicator
+        }
+    };
+    
+
     return (
-        <div>
+        <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
             <div className='d-flex justify-content-between'>
                 <p>Add teacher</p>
                 <button onClick={onBack}>Back</button>
             </div>
-            <p>Current class</p>
+            <div className="d-flex">
+                <p>Current class</p>
+                <p>{currentClass.studyDay}</p>
+            </div>
+            <div className="d-flex">
+                <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
+            </div>
             <div></div>
 
             <div>
                 <p className='blue'>Teacher</p>
-                <select name="" id=""></select>
+                <select name="teacher" id="teacher-select" disabled={isLoading} onChange={handleTeacherSelection}>
+                    {isLoading ? (
+                        <option>Loading teachers...</option>
+                    ) : (
+                        teachers.map((teacher) => (
+                            <option key={teacher.teacherId} value={teacher.teacherId}>
+                                {teacher.teacherName}
+                            </option>
+                        ))
+                    )}
+                </select>
             </div>
             <div>
                 <p>His/her classes</p>
-                <div>
-                    <div className="d-flex">
-                        <p className='blue'>Class code</p>
-                        <select name="" id=""></select>
-                    </div>
-                    <div className="d-flex">
-                        <p className='blue'>Study day</p>
-                        <p></p>
-                    </div>
-                    <div className="d-flex">
-                        <p className='blue'>Slot</p>
+                {isTeacherLoading ? (
+                    <p>Loading teacher schedules...</p>
+                ) : selectedTeacherSchedules.length === 0 ? (
+                    <p>This teacher does not have any schedules yet.</p>
+                ) : (
+                    <div>
+                        <div className="d-flex">
+                            <p className='blue'>Class code</p>
+                            <select name="" id=""></select>
+                        </div>
+                        <div className="d-flex">
+                            <p className='blue'>Study day</p>
+                            <p></p>
+                        </div>
+                        <div className="d-flex">
+                            <p className='blue'>Slot</p>
 
+                        </div>
+                        <div className="d-flex justify-content-end">
+                            <button>Save Teacher</button>
+                        </div>
                     </div>
-                    <div className="d-flex justify-content-end">
-                        <button>Save Teacher</button>
-                    </div>
-                </div>
+                )}
             </div>
-
+            <div className="d-flex justify-content-end">
+                <button onClick={addTeacherToClass}>Add teacher</button>
+            </div>
         </div>
     )
 }
@@ -512,12 +645,17 @@ const StaffClassDetail = () => {
     const [totalPages, setTotalPages] = useState(0);
     const accessToken = localStorage.getItem('accessToken');
     const [selectedClassId, setSelectedClassId] = useState(null);
+    const [classIdForTeacherForm, setClassIdForTeacherForm] = useState(null);
 
     const handleViewClassContent = (classId) => {
         setSelectedClassId(classId);
         setView('classContent');
     };
 
+    const navigateToTeacherForm = (classId) => {
+        setClassIdForTeacherForm(classId);
+        setView('addTeacher');
+    };
 
     useEffect(() => {
         if (view === 'detail') {
@@ -564,9 +702,9 @@ const StaffClassDetail = () => {
             case 'createSchedule':
                 return <CreateSchedule onBack={() => setView('createClass')} classData={classData} setView={setView} />;
             case 'addTeacher':
-                return <TeacherForm onBack={() => setView('classContent')} />;
+                return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('detail')} />;
             case 'classContent':
-                return <ClassContent classId={selectedClassId} setView={setView} />;
+                return <ClassContent classId={selectedClassId} setView={setView} navigateToTeacherForm={navigateToTeacherForm} />;
             default:
                 return (
                     <div className='staff-class-detail mx-5'>
