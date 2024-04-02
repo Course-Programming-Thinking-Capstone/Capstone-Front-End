@@ -40,7 +40,7 @@ import VerifyEmail from './Pages/VerifyEmail';
 import Game from './Pages/Admin/Game/Game';
 import GameData from './Pages/Admin/Game/GameData';
 import VerifyEmailConfirm from './Pages/VerifyEmailConfirm';
-import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse';
+import CreateCourse from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourse';
 import StaffOrder from './Pages/Staff/StaffOrder/StaffOrder';
 import StaffOrderDetail from './Pages/Staff/StaffOrder/StaffOrderDetail';
 import StaffModerating from './Pages/Staff/StaffModerating/StaffModerating';
