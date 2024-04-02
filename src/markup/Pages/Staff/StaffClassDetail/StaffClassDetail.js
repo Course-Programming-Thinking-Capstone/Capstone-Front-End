@@ -470,7 +470,7 @@ const TeacherForm = ({ onBack, classId }) => {
     const accessToken = localStorage.getItem('accessToken');
     const [teachers, setTeachers] = useState([]);
     const [currentClass, setCurrentClass] = useState([]);
-    const [isLoading, setIsLoading] = useState([])
+    const [isLoading, setIsLoading] = useState([]);
     const [isTeacherLoading, setIsTeacherLoading] = useState(false);
     const [selectedTeacherId, setSelectedTeacherId] = useState(null);
     const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
@@ -675,10 +675,12 @@ const StudentForm = ({ onBack, classId }) => {
     const accessToken = localStorage.getItem('accessToken');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [isLoading, setIsLoading] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
     const studentsPerPage = 5;
     const pagesVisited = pageNumber * studentsPerPage;
+    const [enrolledStudents, setEnrolledStudents] = useState([]);
 
     const pageCount = Math.ceil(searchResults.length / studentsPerPage);
     const changePage = ({ selected }) => {
@@ -695,22 +697,27 @@ const StudentForm = ({ onBack, classId }) => {
                         'Content-Type': 'application/json',
                     },
                 });
-
+    
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const classData = await response.json();
                 console.log('classData: ', classData);
+    
+                // Assuming classData includes a 'students' array with the necessary details
+                // Update the state for both currentClass and enrolledStudents
                 setCurrentClass(classData);
+                setEnrolledStudents(classData.students || []);
             } catch (error) {
                 console.error("Failed to fetch class details", error);
             }
         };
-
+    
         if (classId) {
             fetchClassDetails();
         }
     }, [classId, accessToken]);
+    
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -741,6 +748,71 @@ const StudentForm = ({ onBack, classId }) => {
             setIsSearching(false);
         }
     };
+
+    // Function to handle adding a student
+    const handleAddStudent = (studentToAdd) => {
+        setEnrolledStudents((prevStudents) => {
+            // Check if the student is already added to prevent duplicates
+            const isAlreadyAdded = prevStudents.some(student => student.studentId === studentToAdd.studentId);
+            if (!isAlreadyAdded) {
+                return [...prevStudents, studentToAdd];
+            }
+            return prevStudents;
+        });
+    };
+
+    // Function to handle removing a student
+    const handleRemoveStudent = (studentIdToRemove) => {
+        setEnrolledStudents((prevStudents) => prevStudents.filter(student => student.studentId !== studentIdToRemove));
+    };
+
+    // Function to save changes
+    const handleSaveChanges = async () => {
+        setIsLoading(true);
+        let response;
+        try {
+            response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/students/add-or-remove', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    studentIds: enrolledStudents.map((student) => student.studentId), // Make sure to use student.studentId if that's the correct property
+                    classId: classId,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const postListStudent = await response.json();
+            console.log('postListStudent: ', postListStudent);
+            alert('Students updated successfully.');
+        } catch (error) {
+            console.error("An error occurred:", error);
+            if (response) {
+                try {
+                    const errorResponse = await response.json();
+                    console.log('Error response:', errorResponse);
+                    alert(`Failed to update students: ${errorResponse.message || ''}`);
+                } catch (jsonError) {
+                    console.error("Error reading error response:", jsonError);
+                    alert('Failed to update students. An unknown error occurred.');
+                }
+            } else {
+                alert('Failed to update students. No response from the server.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        console.log(enrolledStudents);
+    }, [enrolledStudents]);
+
 
     return (
         <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
@@ -792,7 +864,7 @@ const StudentForm = ({ onBack, classId }) => {
                                                 <td>{student.studentName}</td>
                                                 <td>{student.dateOfBirth}</td>
                                                 <td>
-                                                    <button>
+                                                    <button onClick={() => handleAddStudent(student)}>
                                                         <i class="fa-solid fa-circle-plus"></i>
                                                     </button>
                                                 </td>
@@ -823,7 +895,7 @@ const StudentForm = ({ onBack, classId }) => {
                         />
                     </div>
                 </div>
-                <div style={{ width: '45%', marginTop:'58px' }}>
+                <div style={{ width: '45%', marginTop: '58px' }}>
                     <p className='blue mb-0'>Current class student list</p>
                     <div class="table-responsive">
                         <table class="table table-bordered">
@@ -835,18 +907,22 @@ const StudentForm = ({ onBack, classId }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <button><i class="fa-solid fa-circle-minus"></i></button>
-                                    </td>
-                                </tr>
+                                {enrolledStudents.map((student, index) => (
+                                    <tr key={index}>
+                                        <td>{student.studentName}</td> {/* Ensure these property names match */}
+                                        <td>{student.dateOfBirth}</td> {/* Ensure these property names match */}
+                                        <td>
+                                            <button onClick={() => handleRemoveStudent(student.studentId)}>
+                                                <i className="fa-solid fa-circle-minus"></i> Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div className='d-flex justify-content-end'>
-                        <button>Save changes</button>
+                        <button onClick={handleSaveChanges}>Save changes</button>
                     </div>
                 </div>
             </div>
