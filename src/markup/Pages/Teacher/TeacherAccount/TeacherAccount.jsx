@@ -43,9 +43,6 @@ export default function TeacherAccount({ child }) {
                 />
               </div>
               <h5 className="text-center mt-2">{user.fullName}</h5>
-              <div className="d-flex justify-content-center">
-                <button>Edit profile</button>
-              </div>
               <div className="info d-flex justify-content-center">
                 <div className="d-flex justify-content-between">
                   <div>

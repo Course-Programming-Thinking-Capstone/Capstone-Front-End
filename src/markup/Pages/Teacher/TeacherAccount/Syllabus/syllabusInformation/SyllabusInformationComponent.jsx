@@ -67,7 +67,6 @@ export const SyllabusInformationComponent = () => {
       </div>
       <div className="syllabus-content">
         <div className="pt-2 px-4 pb-2">
-          {/* Place holder here */}
 
           {isLoading ? (
             <>
@@ -187,9 +186,9 @@ export const SyllabusInformationComponent = () => {
               <div className="d-flex justify-content-end">
                 <Link to={`/teacher-account/syllabuses/create-course`}>
                   <Button
-                    variant="danger"
-                    className="px-3 mb-3"
-                    style={{ borderRadius: "8px" }}
+                     variant="danger"
+                     className="px-3 py-2"
+                     style={{ borderRadius: "5px" }}
                   >
                     Create course
                   </Button>

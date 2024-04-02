@@ -892,7 +892,7 @@
 /* Teacher Account starts */
 .teacher-account .menu {
   background-color: #f7f8fb;
-  min-height: 90vh;
+  height: 90vh;
   overflow: auto;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -904,7 +904,7 @@
 .teacher-account {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .teacher-account .menu img {
@@ -977,6 +977,7 @@
 .teacher-classes,
 .teacher-setting,
 .syllabus,
+.create-course,
 .syllabus-detail,
 .create-syllabus {
   margin-top: 30px;
@@ -1022,6 +1023,13 @@
   color: #ff8a00;
   margin-left: 10px;
   font-size: 20px;
+}
+
+.create-course,
+.syllabus-detail {
+  height: 90vh;
+  margin-bottom: 30px;
+  overflow: auto;
 }
 
 .teacher-notification .item {
@@ -1208,21 +1216,14 @@
 }
 
 .create-course {
-  height: 100vh;
-  overflow: auto;
   background-color: #fbede1;
   padding: 20px 40px;
 }
 
 .create-course-content {
-  max-height: 800px;
-  overflow-y: scroll;
   background-color: white;
-}
-
-.create-course-content .super-render {
-  height: 400px;
-  overflow-y: scroll;
+  padding-top: 10px;
+  border-radius: 20px;
 }
 
 .create-course-content .blue {
@@ -1258,6 +1259,10 @@
   border: 1px solid #d4d4d4;
   border-top: none;
   padding: 0 25px 15px 25px;
+}
+
+textarea.form-control {
+  resize: vertical;
 }
 
 .create-course-content .button {
@@ -2151,10 +2156,10 @@
 }
 
 /* Teacher Info */
-.teacher-create {
-  min-height: 100vh; /* Ensure it covers at least the whole viewport initially */
+/* .teacher-create {
+  min-height: 100vh; 
   overflow-y: auto;
-}
+} */
 
 .scrollable-section {
   max-height: 400px;
