@@ -1,21 +1,28 @@
 import React from "react";
 import background from "./../../../../images/background/teacherBackground.jpg";
 import demo from "./../../../../images/gallery/demo.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { teacherActiveMenuSelector } from "../../../../store/selector";
 import { Image } from "react-bootstrap";
 
 export default function TeacherAccount({ child }) {
+  //retrieve user information
   const user = JSON.parse(localStorage.getItem("user"));
 
   const teacherActiveMenu = useSelector(teacherActiveMenuSelector);
+  const navigate = useNavigate();
 
   const getMenuItemStyle = (menuItem) => {
     return menuItem === teacherActiveMenu
       ? { backgroundColor: "#F69E4A", color: "white" }
       : { color: "#212121CC" }; // Example: light grey background for active menu
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (
@@ -122,10 +129,13 @@ export default function TeacherAccount({ child }) {
                   <div className="mx-4">Setting</div>
                 </Link>
 
-                <div className="item d-flex justify-content-start align-items-center">
+                <i
+                  className="item d-flex justify-content-start align-items-center"
+                  onClick={handleLogout}
+                >
                   <i className="fa-solid fa-right-from-bracket"></i>
                   <div className="mx-4">Log out</div>
-                </div>
+                </i>
               </div>
             </div>
             <div className="col-lg-9">{child}</div>
