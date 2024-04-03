@@ -54,7 +54,8 @@ export default function Markup() {
 			<AuthCheck />
 			<div className="page-wraper">
 				<Routes>
-					//route for guess
+					
+					{/* routed */}
 					<Route path='/' exact element={<Index1 />} />
 					<Route path='/login' exact element={<Login />} />
 					<Route path='/register' exact element={<Register />} />
@@ -80,8 +81,9 @@ export default function Markup() {
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
-
 					<Route path='/teacher-account' exact element={<TeacherAccount />} />
+
+					{/* routed */}
 					<Route path='/teacher-account/schedule' exact element={<TeacherSchedule />} />
 					<Route path='/teacher-account/notification' exact element={<TeacherNotification />} />
 					<Route path='/teacher-account/courses' exact element={<TeacherCourse />} />
@@ -100,6 +102,7 @@ export default function Markup() {
 
 					</Route>
 
+					{/* routed */}
 					<Route path="/admin" element={<Admin />}>
 						<Route path="game" element={<Game />} />
 						<Route path="game-data" element={<GameData />} />

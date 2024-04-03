@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import background from './../../images/background/loginBackground.webp';
-import CenterSliderHome3 from './../Element/CenterSliderHome3';
+import CenterSliderHome3 from '../Element/CenterSliderHome3';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
