@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import background from '../../../../images/background/adminStaffBackground.jpg';
 
 export default function StaffOrder() {
@@ -6,6 +7,12 @@ export default function StaffOrder() {
     const [selectedStatus, setSelectedStatus] = useState('Success');
     const accessToken = localStorage.getItem('accessToken');
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleViewDetail = (orderId) => {
+        navigate(`/staff/staff-order-detail/${orderId}`);
+    };    
 
     useEffect(() => {
         setLoading(true);
@@ -29,7 +36,7 @@ export default function StaffOrder() {
             } catch (error) {
                 console.error('There was an error fetching the orders:', error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
 
@@ -92,7 +99,7 @@ export default function StaffOrder() {
                                             </td>
                                             <td className='text-center'>
                                                 <p className='mb-1'>Order code: {order.orderCode}</p>
-                                                <button className='mt-2' style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
+                                                <button onClick={() => handleViewDetail(order.orderId)} className='mt-2' style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
                                             </td>
                                         </tr>
                                     </React.Fragment>

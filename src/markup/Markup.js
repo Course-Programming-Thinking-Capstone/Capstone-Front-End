@@ -94,7 +94,7 @@ export default function Markup() {
 
 					<Route path='/staff' exact element={<Staff />} >
 						<Route path="staff-order" element={<StaffOrder />} />
-						<Route path="staff-order-detail" element={<StaffOrderDetail />} />
+						<Route path="staff-order-detail/:orderId" element={<StaffOrderDetail />} />
 						<Route path="moderating" element={<StaffModerating />} />
 						<Route path="class" element={<StaffClassDetail />} />
 
