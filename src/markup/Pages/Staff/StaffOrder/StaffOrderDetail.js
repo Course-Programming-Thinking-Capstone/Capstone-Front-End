@@ -13,7 +13,7 @@ const SuccessOrder = ({ orderDetail }) => {
         navigate(-1);
     };
     return (
-        <div className='staff-order-detail mt-3 mx-5 py-3 px-5' style={{ backgroundColor: 'white' }}>
+        <div className='staff-order-detail mt-3 mx-5 py-3 px-5' style={{ backgroundColor: 'white', height: '690px', overflow: 'scroll' }}>
             <div className="d-flex justify-content-between">
                 <h2 className='orange mb-1'>Order detail</h2>
                 <div>
@@ -126,9 +126,9 @@ const PendingOrder = ({ orderDetail }) => {
     };
 
     const handleClose = () => {
-        setShow(false); // Close the first modal
-        setShowSecondModal(false); // Close the second modal
-        setCurrentStudentId(null); // Reset the current student ID
+        setShow(false);
+        setShowSecondModal(false);
+        setCurrentStudentId(null);
     };
 
     const handleShow = (studentId) => {
@@ -254,7 +254,7 @@ const PendingOrder = ({ orderDetail }) => {
             password: accountCreationResponse.password,
             note: note,
             email: accountCreationResponse.email,
-            parentId: orderDetail.parentId, // Make sure this is the correct parent ID
+            parentId: orderDetail.parentId,
         };
 
         try {
@@ -270,15 +270,43 @@ const PendingOrder = ({ orderDetail }) => {
             if (!response.ok) {
                 throw new Error('Email sending failed with status: ' + response.status);
             }
-
-            // Close the second modal
             setShowSecondModal(false);
-
-            // Reset account creation response state if needed
             setAccountCreationResponse(null);
 
-            // Display success message
-            toast.success('Email sent successfully', {
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Error sending email: ' + error.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
+    const handleOrderConfirmation = async () => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/orders/confirm/${orderDetail.orderId}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Order confirmation failed with status: ${response.status}`);
+            }
+
+            toast.success('Order confirmed successfully', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -289,9 +317,12 @@ const PendingOrder = ({ orderDetail }) => {
                 theme: "light",
             });
 
+            // If you need to navigate the user away after confirmation or perform some state update, do it here.
+            // navigate('/some-path');
+
         } catch (error) {
-            console.error('Error:', error);
-            toast.error('Error sending email: ' + error.message, {
+            console.error('Error confirming order:', error);
+            toast.error(`Error confirming order: ${error.message}`, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -528,7 +559,7 @@ const PendingOrder = ({ orderDetail }) => {
                 <button
                     style={buttonStyle}
                     disabled={!isChecked}
-                    onClick={() => { /* handle confirmation action here if needed */ }}
+                    onClick={handleOrderConfirmation}
                 >
                     Order confirmation
                 </button>
@@ -537,11 +568,314 @@ const PendingOrder = ({ orderDetail }) => {
     );
 }
 
-const RefundedOrder = () => {
-    return (
-        <div>
+const RefundedOrder = ({ orderDetail }) => {
+    const navigate = useNavigate();
 
-        </div>
+    const handleBackClick = () => {
+        navigate(-1);
+    };
+
+    return (
+        <div className='staff-order-detail mt-3 mx-5 py-3 px-5' style={{ backgroundColor: 'white', height: '690px', overflow: 'scroll' }}>
+            <div className="d-flex justify-content-between">
+                <h2 className='orange mb-1'>Order detail</h2>
+                <div>
+                    <button onClick={handleBackClick} style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}>Back</button>
+                </div>
+            </div>
+            <div className='d-flex justify-content-between py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px', height: '50px' }}>
+                <div className="d-flex justify-content-start">
+                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Parent: </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                </div>
+                <div className='text-center' style={{ width: '100px', height: '35px' }}>
+                    <div className='pt-1' style={{ backgroundColor: '#2C44D8', borderRadius: '8px', color: 'white', width: '90px', height: '30px' }}>Request</div>
+                </div>
+            </div>
+            <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
+                <div className="d-flex justify-content-start">
+                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                </div>
+                <hr className='my-1' />
+                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
+                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <p className='mb-0'>{orderDetail.courseName}</p>
+                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                </div>
+            </div>
+            <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
+                <div style={{ width: "60%" }}>
+                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                </div>
+                <div className='d-flex' style={{ width: "40%" }}>
+                    <img style={{ height: '50px', width: '50px' }} src={momo} />
+                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                </div>
+            </div>
+            <div className="d-flex justify-content-between mt-3">
+                <div style={{ width: '45%' }} className='py-2 px-3'>
+                    <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Number of students selected: <span></span></p>
+                    <div className=' px-4'>
+                        {orderDetail.students.map((student) => (
+                            <div key={student.studentId} className='d-flex justify-content-center'>
+                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className='mt-4'>
+                        <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
+                        <div className='d-flex justify-content-center'>
+                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ width: '45%' }} className='py-2 px-3'>
+                    <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-1 ps-3 py-1'>Order information</p>
+                    <div className='px-4'>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Course</span>
+                            <span>{orderDetail.courseName}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Price</span>
+                            <span>{orderDetail.price}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Quantity</span>
+                            <span>{orderDetail.quantityPurchased}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Discount</span>
+                            <span>0</span>
+                        </div>
+                        <hr />
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Total</span>
+                            <span className='orange'>{orderDetail.totalPrice}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div >
+    );
+}
+
+const RequestOrder = ({ orderDetail }) => {
+    const navigate = useNavigate();
+    const [cancellationReason, setCancellationReason] = useState('');
+    const accessToken = localStorage.getItem('accessToken');
+
+    const handleBackClick = () => {
+        navigate(-1);
+    };
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [refusalReason, setRefusalReason] = useState('');
+
+    const handleRefusal = async () => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/orders/handle-cancel?status=Refuse`;
+        const payload = {
+            parentId: orderDetail.parentId,
+            orderId: orderDetail.orderId,
+            reasonRefuse: refusalReason
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Refusal failed with status: ${response.status}`);
+            }
+            console.log('Refusal sent successfully');
+            handleClose();
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleApproval = async () => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/orders/handle-cancel?status=Approve`;
+        const payload = {
+            parentId: orderDetail.parentId,
+            orderId: orderDetail.orderId,
+            reasonRefuse: null // as per API requirement for approval
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Approval failed with status: ${response.status}`);
+            }
+            console.log('Approval sent successfully');
+            handleClose(); // Close the modal
+            window.location.reload(); // Optionally, refresh the page or update state to reflect changes
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const viewCancellationReason = async () => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/staffs/order/view-reason/${orderDetail.orderId}`;
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch cancellation reason: ${response.status}`);
+            }
+            const reasondata = await response.json();
+            console.log('reasondata: ', reasondata);
+            setCancellationReason(reasondata);
+            handleShow();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    return (
+        <div className='staff-order-detail mt-3 mx-5 py-3 px-5' style={{ backgroundColor: 'white', height: '690px', overflow: 'scroll' }}>
+            <div className="d-flex justify-content-between">
+                <h2 className='orange mb-1'>Order detail</h2>
+                <div>
+                    <button onClick={handleBackClick} style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}>Back</button>
+                </div>
+            </div>
+            <div className='d-flex justify-content-between py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px', height: '50px' }}>
+                <div className="d-flex justify-content-start">
+                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Parent: </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                </div>
+                <div className='text-center' style={{ width: '150px', height: '35px' }}>
+                    <div className='pt-1' style={{ backgroundColor: '#F11616', borderRadius: '8px', color: 'white', width: '150px', height: '30px' }}>Request refunded</div>
+                </div>
+            </div>
+            <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
+                <div className="d-flex justify-content-start">
+                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                </div>
+                <hr className='my-1' />
+                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
+                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <p className='mb-0'>{orderDetail.courseName}</p>
+                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                </div>
+            </div>
+            <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
+                <div style={{ width: "60%" }}>
+                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                </div>
+                <div className='d-flex' style={{ width: "40%" }}>
+                    <img style={{ height: '50px', width: '50px' }} src={momo} />
+                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                </div>
+            </div>
+            <div className="d-flex justify-content-between mt-3">
+                <div style={{ width: '45%' }} className='py-2 px-3'>
+                    <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Number of students selected: <span></span></p>
+                    <div className=' px-4'>
+                        {orderDetail.students.map((student) => (
+                            <div key={student.studentId} className='d-flex justify-content-center'>
+                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className='mt-4'>
+                        <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
+                        <div className='d-flex justify-content-center'>
+                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ width: '45%' }} className='py-2 px-3'>
+                    <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-1 ps-3 py-1'>Order information</p>
+                    <div className='px-4'>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Course</span>
+                            <span>{orderDetail.courseName}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Price</span>
+                            <span>{orderDetail.price}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Quantity</span>
+                            <span>{orderDetail.quantityPurchased}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Discount</span>
+                            <span>0</span>
+                        </div>
+                        <hr />
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Total</span>
+                            <span className='orange'>{orderDetail.totalPrice}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='d-flex justify-content-end'>
+                <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '35px', width: '300px', fontSize: '16px' }} onClick={viewCancellationReason}>VIEW REASON FOR CANCELLATION</button>
+            </div>
+            <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter"
+                centered>
+                <Modal.Body>
+                    <p className='mb-1 blue' style={{ fontSize: '18px' }}>Reason cancel</p>
+                    <div className='ps-3'>
+                        <p>{cancellationReason.reason}</p>
+                    </div>
+
+                    <p className='mb-1 mt-3' style={{ color: '#F11616', fontSize: '18px' }}>Reason for refuse the request</p>
+                    <div className='ps-3'>
+
+                        <input value={refusalReason}
+                            onChange={(e) => setRefusalReason(e.target.value)}
+                            style={{ borderColor: '#F11616', outline: 'none', borderRadius: '8px', color: '#F11616', paddingLeft: '5px', width: '300px' }} type="text" />
+                    </div>
+
+                    <div className='d-flex justify-content-end mt-3'>
+                        <button onClick={handleClose} className='me-2' style={{ color: '#F15C58', backgroundColor: 'white', border: 'none', borderRadius: '8px', height: '30px' }}>Cancel</button>
+                        <button onClick={handleRefusal} className='me-2' style={{ color: 'white', backgroundColor: '#7F7C7C', border: 'none', borderRadius: '8px', height: '30px' }}>Refuse</button>
+                        <button onClick={handleApproval} style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }}>Approve</button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </div >
     );
 }
 
@@ -597,6 +931,7 @@ export default function StaffOrderDetail() {
             {orderDetail.status === 'Success' && <SuccessOrder orderDetail={orderDetail} />}
             {orderDetail.status === 'Pending' && <PendingOrder orderDetail={orderDetail} />}
             {orderDetail.status === 'Refunded' && <RefundedOrder orderDetail={orderDetail} />}
+            {orderDetail.status === 'RequestRefund' && <RequestOrder orderDetail={orderDetail} />}
         </div>
     )
 }

@@ -406,11 +406,12 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
                 </div>
             </div>
             <div>
-                <div>CLASS {classDetails.classCode}</div>
-                <div className='px-4'>
+                <div className='px-4 mt-2'>
                     <p className='mb-2 blue'>CLASS INFORMATION</p>
                     <div className="d-flex">
                         <div style={{ marginLeft: '200px' }}>
+
+                            <p className='mb-1'>Class</p>
                             <p className='mb-1'>Course</p>
                             <p className='mb-1'>Number of students</p>
                             <p className='mb-1'>Teacher</p>
@@ -418,6 +419,9 @@ const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStude
                             <p className='mb-1'>Slot time</p>
                         </div>
                         <div style={{ marginLeft: '50px' }}>
+                            <p className=' mb-1' style={{ color: '#FD8569', fontWeight: 'bold' }}>
+                                {classDetails.classCode}
+                            </p>
                             <p className='mb-1'>{classDetails.courseName}</p>
                             <p className='mb-1'>{classDetails.students.length}</p>
                             <p className='mb-1'>
@@ -640,7 +644,7 @@ const TeacherForm = ({ onBack, classId }) => {
     };
 
     return (
-        <div className='my-5 p-5' style={{ backgroundColor: 'white', marginLeft:'120px', marginRight:'120px' }}>
+        <div className='my-5 p-5' style={{ backgroundColor: 'white', marginLeft: '120px', marginRight: '120px' }}>
             <div className='d-flex justify-content-between'>
                 <div>
                     <h3 className='orange mb-1'>Add teacher</h3>
@@ -722,7 +726,7 @@ const TeacherForm = ({ onBack, classId }) => {
                     </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                    <button style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', width:'150px', height:'35px' }} onClick={addTeacherToClass}>Add teacher</button>
+                    <button style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', width: '150px', height: '35px' }} onClick={addTeacherToClass}>Add teacher</button>
                 </div>
             </div>
         </div>

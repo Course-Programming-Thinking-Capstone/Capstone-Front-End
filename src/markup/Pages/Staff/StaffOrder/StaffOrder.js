@@ -12,7 +12,7 @@ export default function StaffOrder() {
 
     const handleViewDetail = (orderId) => {
         navigate(`/staff/staff-order-detail/${orderId}`);
-    };    
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -44,18 +44,24 @@ export default function StaffOrder() {
     }, [selectedStatus, accessToken]);
     return (
         <div className='staff-order mx-5'>
-            <div className="staff-order-menu d-flex justify-content-start">
-                <div className={selectedStatus === 'Success' ? 'active' : ''} onClick={() => setSelectedStatus('Success')}>
-                    <p className='mb-1'>Success</p>
-                    <hr className='mt-0' />
-                </div>
-                <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
-                    <p className='mb-1'>Pending</p>
-                    <hr className='mt-0' />
-                </div>
-                <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
-                    <p className='mb-1'>Refunded</p>
-                    <hr className='mt-0' />
+            <div className="d-flex justify-content between">
+                <div className="staff-order-menu d-flex justify-content-start">
+                    <div className={selectedStatus === 'Success' ? 'active' : ''} onClick={() => setSelectedStatus('Success')}>
+                        <p className='mb-1'>Success</p>
+                        <hr className='mt-0' />
+                    </div>
+                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
+                        <p className='mb-1'>Pending</p>
+                        <hr className='mt-0' />
+                    </div>
+                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
+                        <p className='mb-1'>Refunded</p>
+                        <hr className='mt-0' />
+                    </div>
+                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'RequestRefund' ? 'active' : ''} onClick={() => setSelectedStatus('RequestRefund')}>
+                        <p className='mb-1'>Request Refund</p>
+                        <hr className='mt-0' />
+                    </div>
                 </div>
             </div>
             <div className="staff-order-content">
