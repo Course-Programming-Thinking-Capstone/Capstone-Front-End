@@ -113,6 +113,9 @@ const PendingOrder = ({ orderDetail }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const accessToken = localStorage.getItem('accessToken');
+    const [showSecondModal, setShowSecondModal] = useState(false);
+    const [accountCreationResponse, setAccountCreationResponse] = useState(null);
+
 
     const handleBackClick = () => {
         navigate(-1);
@@ -123,9 +126,11 @@ const PendingOrder = ({ orderDetail }) => {
     };
 
     const handleClose = () => {
-        setShow(false);
-        setCurrentStudentId(null);
+        setShow(false); // Close the first modal
+        setShowSecondModal(false); // Close the second modal
+        setCurrentStudentId(null); // Reset the current student ID
     };
+
     const handleShow = (studentId) => {
         setShow(true);
         setCurrentStudentId(studentId);
@@ -206,6 +211,12 @@ const PendingOrder = ({ orderDetail }) => {
 
             const accountData = await response.json();
             console.log('Account created: ', accountData);
+
+            // Store the account creation response data
+            setAccountCreationResponse(accountData);
+
+            // Open the second modal
+            setShowSecondModal(true);
 
             toast.success('Account created successfully', {
                 position: "top-right",
@@ -311,18 +322,18 @@ const PendingOrder = ({ orderDetail }) => {
                     <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Number of students selected: <span></span></p>
                     <div className='px-4'>
                         {orderDetail.students.map((student) => (
-                            <div key={student.studentId} className='d-flex justify-content-center'>
-                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>
+                            <div key={student.studentId} className='d-flex justify-content-center align-items-center my-1'>
+                                <div className='text-center py-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>
                                     {student.studentName}
                                 </div>
-                                {/* Render the edit icon only if currentStudentDetail.username is null */}
-                                {(currentStudentId === student.studentId && !currentStudentDetail?.username) && (
-                                    <div className='ms-2 ps-1 pt-2'>
+                                {student.userName === null && (
+                                    <div className='ms-2'>
                                         <i onClick={() => handleShow(student.studentId)} style={{ fontSize: '18px', color: '#1A9CB7', cursor: 'pointer' }} className="fa-solid fa-pen-to-square"></i>
                                     </div>
                                 )}
                             </div>
                         ))}
+
 
                         <ToastContainer />
                         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -349,15 +360,48 @@ const PendingOrder = ({ orderDetail }) => {
                                         <h4 className='orange mb-1 mt-2'>Create account</h4>
                                         <div className='px-3'>
                                             <p className='mb-1 blue'>Username</p>
-                                            <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
+                                            <input style={{ outline: 'none' }} type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
                                             <p className='mb-1 blue'>Password</p>
-                                            <input type="text" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <input style={{ outline: 'none' }} type="text" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
                                         </div>
 
                                         <div className="d-flex justify-content-end">
                                             <button onClick={handleClose}>Cancel</button>
-                                            <button onClick={createStudentAccount}>Create</button>
+                                            <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={createStudentAccount}>Create</button>
                                         </div>
+                                    </div>
+                                )}
+                            </Modal.Body>
+                        </Modal>
+                        <Modal backdrop="static" show={showSecondModal} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
+                            <Modal.Body>
+                                {loading && <div>Loading...</div>}
+                                {accountCreationResponse && (
+                                    <div>
+                                        <p className='mb-1 blue'>Student information</p>
+                                        <div>
+                                            <div className="d-flex justify-content-start">
+                                                <p>Student's name: </p>
+                                                <p>{accountCreationResponse.studentName}</p>
+                                            </div>
+                                            <div className="d-flex justify-content-start">
+                                                <p>Date of birth: </p>
+                                                <p>{accountCreationResponse.birthday}</p>
+                                            </div>
+                                            <div className="d-flex justify-content-start">
+                                                <p>Username: </p>
+                                                <p>{accountCreationResponse.account}</p>
+                                            </div>
+                                            <div className="d-flex justify-content-start">
+                                                <p>Password: </p>
+                                                <p>{accountCreationResponse.password}</p>
+                                            </div>
+                                        </div>
+                                        <div className="d-flex">
+                                            <p>Send to email account: </p>
+                                            <p>{accountCreationResponse.email}</p>
+                                        </div>
+                                        {/* Further actions or close button */}
                                     </div>
                                 )}
                             </Modal.Body>
