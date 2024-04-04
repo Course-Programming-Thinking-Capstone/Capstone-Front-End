@@ -584,28 +584,28 @@ const TeacherForm = ({ onBack, classId }) => {
 
     const handleTeacherSelection = (event) => {
         const teacherId = event.target.value;
-        setSelectedTeacherId(teacherId);
-        setIsTeacherLoading(true);
 
-        const selectedTeacher = teachers.find(teacher => teacher.teacherId.toString() === teacherId);
-        if (selectedTeacher) {
-            const hasSchedules = selectedTeacher.schedules && selectedTeacher.schedules.length > 0;
-            if (hasSchedules) {
+        if (!teacherId) {
+            setSelectedTeacherId(null);
+            setSelectedTeacherSchedules([]);
+            setSelectedScheduleIndex(null);
+        } else {
+            setSelectedTeacherId(teacherId);
+            setIsTeacherLoading(true);
+
+            const selectedTeacher = teachers.find(teacher => teacher.teacherId.toString() === teacherId);
+
+            if (selectedTeacher && selectedTeacher.schedules && selectedTeacher.schedules.length > 0) {
                 setSelectedTeacherSchedules(selectedTeacher.schedules);
                 setSelectedScheduleIndex(0);
             } else {
                 setSelectedTeacherSchedules([]);
                 setSelectedScheduleIndex(null);
             }
-        } else {
-            setSelectedTeacherSchedules([]);
-            setSelectedScheduleIndex(null);
+
+            setIsTeacherLoading(false);
         }
-
-        setIsTeacherLoading(false);
     };
-
-
 
     const addTeacherToClass = async () => {
         if (!selectedTeacherId) {
@@ -639,82 +639,91 @@ const TeacherForm = ({ onBack, classId }) => {
         }
     };
 
-
     return (
-        <div className='m-5 p-5' style={{ backgroundColor: 'white' }}>
+        <div className='my-5 p-5' style={{ backgroundColor: 'white', marginLeft:'120px', marginRight:'120px' }}>
             <div className='d-flex justify-content-between'>
-                <p>Add teacher</p>
-                <button onClick={onBack}>Back</button>
+                <div>
+                    <h3 className='orange mb-1'>Add teacher</h3>
+                </div>
+                <div>
+                    <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
+                </div>
             </div>
-            <div className="d-flex">
-                <p>Current class</p>
-                <p>{currentClass.studyDay}</p>
-            </div>
-            <div className="d-flex">
-                <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
-            </div>
-            <div></div>
+            <div className='p-3'>
 
-            <div>
-                <p className='blue'>Teacher</p>
-                <select name="teacher" id="teacher-select" disabled={isLoading} onChange={handleTeacherSelection}>
-                    {isLoading ? (
-                        <option>Loading teachers...</option>
-                    ) : (
-                        teachers.map((teacher) => (
-                            <option key={teacher.teacherId} value={teacher.teacherId}>
-                                {teacher.teacherName}
-                            </option>
-                        ))
-                    )}
-                </select>
-            </div>
-            <div>
-                <p>His/her classes</p>
-                {isTeacherLoading ? (
-                    <p>Loading teacher schedules...</p>
-                ) : selectedTeacherSchedules.length === 0 ? (
-                    <p>This teacher does not have any schedules yet.</p>
-                ) : (
-                    <div>
-                        <div className="d-flex">
-                            <p className='blue'>Class code</p>
-                            <select name="scheduleSelect"
-                                id="schedule-select"
-                                onChange={(e) => setSelectedScheduleIndex(e.target.value)}
-                                value={selectedScheduleIndex}>
-                                {selectedTeacherSchedules.map((schedule, index) => (
-                                    <option key={index} value={index}>
-                                        {schedule.className}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {selectedScheduleIndex !== null && selectedTeacherSchedules[selectedScheduleIndex] && (
+                <div className="d-flex">
+                    <p style={{ color: '#F11616' }}>Current class</p>
+                    <p className='ms-3'>{currentClass.studyDay?.join(', ')}</p>
+                </div>
+
+                <div className="d-flex ms-5">
+                    <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
+                </div>
+                <div></div>
+
+                <div>
+                    <p className='blue mb-1'>Teacher</p>
+                    <select name="teacher" id="teacher-select" disabled={isLoading} onChange={handleTeacherSelection}>
+                        <option value="">Please choose the teacher</option>
+                        {isLoading ? (
+                            <option disabled>Loading teachers...</option>
+                        ) : (
+                            teachers.map((teacher) => (
+                                <option key={teacher.teacherId} value={teacher.teacherId}>
+                                    {teacher.teacherName}
+                                </option>
+                            ))
+                        )}
+                    </select>
+                </div>
+                <div>
+                    <p className='blue mb-1 mt-3'>His/her classes</p>
+                    <div className='p-3'>
+                        {isTeacherLoading ? (
+                            <p>Loading teacher schedules...</p>
+                        ) : selectedTeacherId && selectedTeacherSchedules.length === 0 ? (
+                            <p>This teacher does not have any schedules yet.</p>
+                        ) : (
                             <div>
                                 <div className="d-flex">
-                                    <p className='blue'>Class Name:</p>
-                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].studyDays}</p>
+                                    <div>
+                                        <p className='blue'>Class code</p>
+                                    </div>
+                                    <div>
+                                        <select name="scheduleSelect"
+                                            id="schedule-select"
+                                            onChange={(e) => setSelectedScheduleIndex(e.target.value)}
+                                            value={selectedScheduleIndex}>
+                                            {selectedTeacherSchedules.map((schedule, index) => (
+                                                <option key={index} value={index}>
+                                                    {schedule.className}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
+                                {selectedScheduleIndex !== null && selectedTeacherSchedules[selectedScheduleIndex] && (
+                                    <div>
+                                        <div className="d-flex">
+                                            <p className='blue'>Study day :</p>
+                                            <p>{selectedTeacherSchedules[selectedScheduleIndex].studyDays?.join(', ')}</p>
+                                        </div>
 
-                                <div className="d-flex">
-                                    <p className='blue'>Slot:</p>
-                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].slot}</p>
-                                </div>
+                                        <div className="d-flex">
+                                            <p className='blue'>Slot:</p>
+                                            <p>{selectedTeacherSchedules[selectedScheduleIndex].slot} ({selectedTeacherSchedules[selectedScheduleIndex].open} - {selectedTeacherSchedules[selectedScheduleIndex].close})</p>
+                                        </div>
+                                    </div>
+                                )}
 
-                                <div className="d-flex">
-                                    <p className='blue'>Time:</p>
-                                    <p>{selectedTeacherSchedules[selectedScheduleIndex].open} - {selectedTeacherSchedules[selectedScheduleIndex].close}</p>
-                                </div>
+
                             </div>
                         )}
-
-
                     </div>
-                )}
-            </div>
-            <div className="d-flex justify-content-end">
-                <button onClick={addTeacherToClass}>Add teacher</button>
+                </div>
+                <div className="d-flex justify-content-end">
+                    <button style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', width:'150px', height:'35px' }} onClick={addTeacherToClass}>Add teacher</button>
+                </div>
             </div>
         </div>
     )

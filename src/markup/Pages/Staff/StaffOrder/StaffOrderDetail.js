@@ -110,7 +110,8 @@ const PendingOrder = ({ orderDetail }) => {
     const [currentStudentId, setCurrentStudentId] = useState(null);
     const [currentStudentDetail, setCurrentStudentDetail] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const accessToken = localStorage.getItem('accessToken');
 
     const handleBackClick = () => {
@@ -138,18 +139,18 @@ const PendingOrder = ({ orderDetail }) => {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
-                    'Accept': 'text/plain', // Make sure the 'Accept' header is set to expect plain text
+                    'Accept': 'text/plain',
                 },
             });
-    
+
             if (!response.ok) {
                 throw new Error('Request failed with status: ' + response.status);
             }
-    
+
             // Since the response is plain text, use response.text() instead of response.json()
             const message = await response.text();
             console.log(message); // Log the plain text message
-    
+
             // Display success message
             toast.success(message, { // Use the message from the response for the toast
                 position: "top-right",
@@ -175,9 +176,61 @@ const PendingOrder = ({ orderDetail }) => {
             });
         }
     };
-    
 
+    const createStudentAccount = async () => {
+        const url = `https://www.kidpro-production.somee.com/api/v1/staffs/student`;
+        const payload = {
+            studendId: currentStudentId,
+            userName: username,
+            password: password,
+            orderId: orderDetail.orderId
+        };
 
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error('Account creation failed with status: ' + response.status);
+            }
+
+            // Here you could clear the username and password from state if needed
+            setUsername('');
+            setPassword('');
+
+            const accountData = await response.json();
+            console.log('Account created: ', accountData);
+
+            toast.success('Account created successfully', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Error creating account: ' + error.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
 
     useEffect(() => {
         const fetchStudentDetails = async () => {
@@ -195,7 +248,7 @@ const PendingOrder = ({ orderDetail }) => {
                         throw new Error('Could not fetch student details');
                     }
                     const studentData = await response.json();
-                    console.log('data: ', studentData);
+                    console.log('StudentData: ', studentData);
                     setCurrentStudentDetail(studentData);
                 } catch (error) {
                     console.error("Error fetching student details:", error);
@@ -259,12 +312,18 @@ const PendingOrder = ({ orderDetail }) => {
                     <div className='px-4'>
                         {orderDetail.students.map((student) => (
                             <div key={student.studentId} className='d-flex justify-content-center'>
-                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
-                                <div className='ms-2 ps-1 pt-2'>
-                                    <i onClick={() => handleShow(student.studentId)} style={{ fontSize: '18px', color: '#1A9CB7', cursor: 'pointer' }} class="fa-solid fa-pen-to-square"></i>
+                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>
+                                    {student.studentName}
                                 </div>
+                                {/* Render the edit icon only if currentStudentDetail.username is null */}
+                                {(currentStudentId === student.studentId && !currentStudentDetail?.username) && (
+                                    <div className='ms-2 ps-1 pt-2'>
+                                        <i onClick={() => handleShow(student.studentId)} style={{ fontSize: '18px', color: '#1A9CB7', cursor: 'pointer' }} className="fa-solid fa-pen-to-square"></i>
+                                    </div>
+                                )}
                             </div>
                         ))}
+
                         <ToastContainer />
                         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
                             <Modal.Body>
@@ -290,14 +349,14 @@ const PendingOrder = ({ orderDetail }) => {
                                         <h4 className='orange mb-1 mt-2'>Create account</h4>
                                         <div className='px-3'>
                                             <p className='mb-1 blue'>Username</p>
-                                            <input type="text" placeholder='Username' />
+                                            <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
                                             <p className='mb-1 blue'>Password</p>
-                                            <input type="text" placeholder='Password' />
+                                            <input type="text" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
                                         </div>
 
                                         <div className="d-flex justify-content-end">
                                             <button onClick={handleClose}>Cancel</button>
-                                            <button onClick={handleClose}>Create</button>
+                                            <button onClick={createStudentAccount}>Create</button>
                                         </div>
                                     </div>
                                 )}
