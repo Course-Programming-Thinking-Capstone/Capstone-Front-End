@@ -39,6 +39,7 @@ import Staff from "./markup/Pages/Staff/Staff";
 import StaffOrder from "./markup/Pages/Staff/StaffOrder/StaffOrder";
 import StaffOrderDetail from "./markup/Pages/Staff/StaffOrder/StaffOrderDetail";
 import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule";
+import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 
 // function App() {
 // 	return (
@@ -248,6 +249,9 @@ const App = () => {
 
             {/* Error pages  */}
             <Route path="/error-404" element={<Index1 />} />
+
+            {/* Test pages */}
+            <Route path="/test" element={<DragAndDropComponent />} />
           </Routes>
         </div>
       </BrowserRouter>

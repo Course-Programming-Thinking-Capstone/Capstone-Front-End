@@ -31,37 +31,3 @@ export const CustomPagination = ({ page, totalPage, setPage }) => {
     </Pagination>
   );
 };
-
-export const PaginationCustom = ({ page, setPage, totalPage }) => {
-  return (
-    <nav>
-      <ul>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            Previous
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            1
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            2
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            3
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            Next
-          </a>
-        </li>
-      </ul>
-    </nav>
-  );
-};
