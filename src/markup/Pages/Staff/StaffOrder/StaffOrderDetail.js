@@ -134,34 +134,24 @@ const PendingOrder = ({ orderDetail }) => {
         const url = `https://www.kidpro-production.somee.com/api/v1/staffs/parent/request-email?parentId=${parentId}&studentName=${encodeURIComponent(studentName)}`;
         try {
             const response = await fetch(url, {
-                method: 'POST', // or 'PUT'
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
+                    'Accept': 'text/plain', // Make sure the 'Accept' header is set to expect plain text
                 },
-                // If your API does require a body, make sure it's correctly stringified
-                // body: JSON.stringify({ parentId, studentName }),
             });
-
-            // First, check if the response status is OK; if not, throw an error before attempting to parse JSON
+    
             if (!response.ok) {
-                // You might get more detailed error info in the body, attempt to parse it
-                let errorMessage = 'Request failed with status: ' + response.status;
-                try {
-                    const errorResponse = await response.json(); // Attempt to parse error response
-                    errorMessage += '. Message: ' + errorResponse.message; // Customize with actual error message field
-                } catch (parseError) {
-                    // If parsing fails, stick with the original error message
-                }
-                throw new Error(errorMessage);
+                throw new Error('Request failed with status: ' + response.status);
             }
-
-            // Now, safely assume the response is JSON (but you could double-check with response headers)
-            const data = await response.json();
-            console.log(data); // Debugging: Log the response data
-
+    
+            // Since the response is plain text, use response.text() instead of response.json()
+            const message = await response.text();
+            console.log(message); // Log the plain text message
+    
             // Display success message
-            toast.success('Request create email successfully', {
+            toast.success(message, { // Use the message from the response for the toast
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -173,8 +163,7 @@ const PendingOrder = ({ orderDetail }) => {
             });
         } catch (error) {
             console.error('Error:', error);
-            // Handle/display error message with toast
-            toast.error(error.message || 'Error requesting email creation', {
+            toast.error('Error requesting email creation: ' + error.message, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -186,6 +175,7 @@ const PendingOrder = ({ orderDetail }) => {
             });
         }
     };
+    
 
 
 
