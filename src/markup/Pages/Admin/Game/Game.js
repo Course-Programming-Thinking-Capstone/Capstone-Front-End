@@ -30,7 +30,7 @@ import {
 } from "@dnd-kit/core";
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { elementType } from "prop-types";
 
 export default function Game() {
@@ -41,15 +41,12 @@ export default function Game() {
   const [viewLevelDetail, setViewLevelDetail] = useState(false);
   const [currentLevelDetail, setCurrentLevelDetail] = useState(null);
   const [message, setMessage] = useState(null);
+  const [isVStartExist, setIsVStartExist] = useState(false);
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
 
   const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
 
-  //create initial array data
-  const initArr = Array.from({ length: 6 * 8 }, (_, index) => ({
-    id: index + 1,
-    content: null,
-  }));
-  const [arr, setArr] = useState(initArr);
+  const [arr, setArr] = useState([]);
 
   useEffect(() => {
     if (!viewGameData) {
@@ -122,22 +119,27 @@ export default function Game() {
       setCurrentLevelDetail(levelDetails);
 
       //create updated array to update arr:
-      const updatedArr = [...arr];
+      const updatedArr = Array.from({ length: 6 * 8 }, (_, index) => ({
+        id: index + 1,
+        content: null,
+        typeId: undefined,
+      }));
 
       // Place the start position
-      if (levelDetails && levelDetails.vStartPosition !== undefined) {
-        // Adjust position to account for bottom-to-top index
-        // const startPos = calculateGridPosition(
-        //   currentLevelDetail.vStartPosition,
-        //   columns,
-        //   rows
-        // );
-        // grid[startPos] = <img src={start} alt="Start" />;
+      if (
+        levelDetails &&
+        levelDetails.vStartPosition !== undefined &&
+        levelDetails.vStartPosition != 0
+      ) {
+        setIsVStartExist(true);
         const startPos = levelDetails.vStartPosition;
         updatedArr[startPos - 1] = {
           ...updatedArr[startPos - 1],
           content: <img src={start} alt="Start" />,
+          typeId: 0,
         };
+      } else {
+        setIsVStartExist(false);
       }
 
       levelDetails?.levelDetail.forEach((detail) => {
@@ -146,23 +148,37 @@ export default function Game() {
         const pos = detail.vPosition;
 
         let content;
+        let typeId;
 
         switch (detail.typeId) {
-          case 1: // street
+          case 1: {
+            // street
             content = <img src={street} alt="Street" />;
+            typeId = 1;
             break;
-          case 2: // end
+          }
+          case 2: {
+            // end
             content = <img src={end} alt="End" />;
+            typeId = 2;
             break;
-          case 3: // rock
+          }
+          case 3: {
+            // rock
             content = <img src={rock} alt="Rock" />;
+            typeId = 3;
             break;
+          }
           default:
             content = null;
         }
 
         // grid[pos] = content;
-        updatedArr[pos - 1] = { ...updatedArr[pos - 1], content: content };
+        updatedArr[pos - 1] = {
+          ...updatedArr[pos - 1],
+          content: content,
+          typeId: typeId,
+        };
       });
 
       //update arr
@@ -177,8 +193,11 @@ export default function Game() {
   const handleUpdateLevel = async () => {
     const updateData = async () => {
       try {
-        //log
-        console.log(`Call handle update`);
+        setIsUpdateLoading(true);
+
+        if (!isVStartExist) {
+          throw new Error("Missing start position.");
+        }
 
         let levelDetailsUpdate = [];
         let vStartPositionUpdate = undefined;
@@ -203,11 +222,6 @@ export default function Game() {
 
         setCurrentLevelDetail(updateData);
 
-        //log
-        console.log(
-          `Data before update: ${JSON.stringify(updateData, null, 2)}`
-        );
-
         await updateGameLevelApi({ data: updateData });
 
         alert("Update success");
@@ -221,6 +235,7 @@ export default function Game() {
         }
         alert(message);
       } finally {
+        setIsUpdateLoading(false);
       }
     };
     updateData();
@@ -243,6 +258,10 @@ export default function Game() {
         return row;
       });
 
+      if (active.data.current.typeId == 0) {
+        setIsVStartExist(true);
+      }
+
       setArr(updatedArray);
     }
   };
@@ -253,6 +272,9 @@ export default function Game() {
   const handleResetChild = ({ rowId, resetChildComponent }) => {
     const updatedArray = arr.map((row) => {
       if (row.id === rowId) {
+        if (row.typeId === 0) {
+          setIsVStartExist(false);
+        }
         return {
           ...row,
           content: resetChildComponent,
@@ -385,18 +407,20 @@ export default function Game() {
                 <div>
                   {/* Make these draggable */}
                   <div className="d-flex">
-                    <Draggable
-                      id={1}
-                      child={
-                        <img
-                          src={start}
-                          style={{ width: "100%", height: "auto" }}
-                          alt=""
-                        />
-                      }
-                      resetChild={null}
-                      typeId={0}
-                    />
+                    {isVStartExist == false && (
+                      <Draggable
+                        id={1}
+                        child={
+                          <img
+                            src={start}
+                            style={{ width: "100%", height: "auto" }}
+                            alt=""
+                          />
+                        }
+                        resetChild={null}
+                        typeId={0}
+                      />
+                    )}
 
                     <Draggable
                       id={2}
@@ -439,7 +463,10 @@ export default function Game() {
                     />
                   </div>
                   <Button className="my-3" onClick={handleUpdateLevel}>
-                    Save
+                    <span>Save</span>
+                    {isUpdateLoading === true && (
+                      <Spinner animation="border" variant="success" />
+                    )}
                   </Button>
                 </div>
               </div>
