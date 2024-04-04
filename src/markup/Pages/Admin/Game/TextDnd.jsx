@@ -8,7 +8,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { Draggable } from "./TestDnd/Draggable";
-import { Droppable } from "./TestDnd/Droppable";
+import { Droppable, DroppableTest } from "./TestDnd/Droppable";
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
@@ -80,7 +80,7 @@ export const DragAndDropComponent = () => {
   return (
     <DndContext
       onDragEnd={handleDragEnd}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
       sensors={sensor}
     >
       <Container className="mt-5">
@@ -89,12 +89,12 @@ export const DragAndDropComponent = () => {
             <Row>
               {array.map((row, key) => (
                 <Col md={3} className="mb-5" key={key}>
-                  <Droppable
+                  <DroppableTest
                     id={row.id}
                     title={row.title}
                     child={row.child}
                     handleResetChild={handleResetChild}
-                  ></Droppable>{" "}
+                  ></DroppableTest>{" "}
                 </Col>
               ))}
             </Row>

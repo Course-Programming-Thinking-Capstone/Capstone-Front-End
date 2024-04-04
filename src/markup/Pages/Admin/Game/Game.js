@@ -19,6 +19,16 @@ import {
   getLevelDetailByLevelId,
   getLevelDetailByModeId,
 } from "../../../../helper/apis/game/game";
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { Droppable } from "./TestDnd/Droppable";
+import { Draggable } from "./TestDnd/Draggable";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -29,6 +39,13 @@ export default function Game() {
   const [currentLevelDetail, setCurrentLevelDetail] = useState(null);
 
   const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
+
+  //create initial array data
+  const initArr = Array.from({ length: 6 * 8 }, (_, index) => ({
+    id: index + 1,
+    content: null,
+  }));
+  const [arr, setArr] = useState(initArr);
 
   useEffect(() => {
     if (!viewGameData) {
@@ -89,6 +106,7 @@ export default function Game() {
     setViewGameData(false);
   };
 
+  //get current level detail
   const handleViewEditClick = async (level) => {
     const levelId = level.id;
 
@@ -96,77 +114,130 @@ export default function Game() {
       const levelDetails = await getLevelDetailByLevelId({ levelId: levelId });
 
       setCurrentLevelDetail(levelDetails);
+
+      //create updated array to update arr:
+      const updatedArr = [...arr];
+
+      // Place the start position
+      if (levelDetails && levelDetails.vStartPosition !== undefined) {
+        // Adjust position to account for bottom-to-top index
+        // const startPos = calculateGridPosition(
+        //   currentLevelDetail.vStartPosition,
+        //   columns,
+        //   rows
+        // );
+        // grid[startPos] = <img src={start} alt="Start" />;
+        const startPos = levelDetails.vStartPosition;
+        updatedArr[startPos - 1] = {
+          ...updatedArr[startPos - 1],
+          content: <img src={start} alt="Start" />,
+        };
+      }
+
+      levelDetails?.levelDetail.forEach((detail) => {
+        // Adjust position to account for bottom-to-top index
+        // const pos = calculateGridPosition(detail.vPosition, columns, rows);
+        const pos = detail.vPosition;
+
+        let content;
+
+        switch (detail.typeId) {
+          case 1: // street
+            content = <img src={street} alt="Street" />;
+            break;
+          case 2: // end
+            content = <img src={end} alt="End" />;
+            break;
+          case 3: // rock
+            content = <img src={rock} alt="Rock" />;
+            break;
+          default:
+            content = null;
+        }
+
+        // grid[pos] = content;
+        updatedArr[pos - 1] = { ...updatedArr[pos - 1], content: content };
+      });
+
+      //update arr
+      setArr(updatedArr);
+
       setViewLevelDetail(true);
     } catch (error) {
       console.error("Error fetching level details:", error);
     }
   };
 
+  //Drag and Drop
+  //handle event when finish
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active && over) {
+      const updatedArray = arr.map((row) => {
+        if (row.id === over.id) {
+          return {
+            ...row,
+            content: active.data.current.child,
+          };
+        }
+        return row;
+      });
+
+      setArr(updatedArray);
+    }
+  };
+
+  //sensor
+  const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+
+  const handleResetChild = ({ rowId, resetChildComponent }) => {
+    const updatedArray = arr.map((row) => {
+      if (row.id === rowId) {
+        return {
+          ...row,
+          content: resetChildComponent,
+        };
+      }
+      return row;
+    });
+
+    setArr(updatedArray);
+  };
+
+  //Drag and Drop
 
   //make these droppable
   const LevelGrid = () => {
     const columns = 8;
     const rows = 6;
-    const totalSquares = columns * rows;
 
     // Generate the grid with blank squares
-    const grid = Array.from({ length: totalSquares }, () => null);
+    // const grid = Array.from({ length: totalSquares }, () => null);
 
     function calculateGridPosition(vPosition, columns, rows) {
       // Subtract 1 to convert from 1-based to 0-based indexing
-      const zeroBasedPosition = vPosition - 1;
+      const zeroBasedPosition = vPosition;
       const rowFromBottom = Math.floor(zeroBasedPosition / columns);
       const colFromLeft = zeroBasedPosition % columns;
       // Calculate the new position by inverting the row
       return (rows - 1 - rowFromBottom) * columns + colFromLeft;
     }
 
-    // Place the start position
-    if (currentLevelDetail && currentLevelDetail.vStartPosition !== undefined) {
-      // Adjust position to account for bottom-to-top index
-      const startPos = calculateGridPosition(
-        currentLevelDetail.vStartPosition,
-        columns,
-        rows
-      );
-      grid[startPos] = <img src={start} alt="Start" />;
-    }
-
-    currentLevelDetail?.levelDetail.forEach((detail) => {
-      // Adjust position to account for bottom-to-top index
-      const pos = calculateGridPosition(detail.vPosition, columns, rows);
-      let content;
-
-      switch (detail.typeId) {
-        case 1: // street
-          content = <img src={street} alt="Street" />;
-          break;
-        case 2: // end
-          content = <img src={end} alt="End" />;
-          break;
-        case 3: // rock
-          content = <img src={rock} alt="Rock" />;
-          break;
-        default:
-          content = null;
-      }
-
-      grid[pos] = content;
-    });
-
+    // return content of droppable
     return (
       <div className="grid-container">
-        {grid.map((content, index) => {
+        {arr.map((a, index) => {
           const row = Math.floor(index / columns);
           const col = index % columns;
           return (
-            <div
-              key={index}
-              className={`grid-item ${
-                selectedSquareIndex === index ? "selected" : ""
-              }`}
-            >
-              {content}
+            <div key={index} className={`grid-item `}>
+              <Droppable
+                id={a.id}
+                child={a.content}
+                handleResetChild={handleResetChild}
+                resetComponent={null}
+              />
             </div>
           );
         })}
@@ -204,15 +275,27 @@ export default function Game() {
           <div className="d-flex justify-content-start">
             <div>
               <p className="mb-1">Level index</p>
-              <input type="number" value={currentLevelDetail.levelIndex + 1} />
+              <input
+                type="number"
+                value={currentLevelDetail.levelIndex + 1}
+                readOnly
+              />
             </div>
             <div>
               <p className="mb-1">Coin earn</p>
-              <input type="number" value={currentLevelDetail.coinReward} />
+              <input
+                type="number"
+                value={currentLevelDetail.coinReward}
+                readOnly
+              />
             </div>
             <div>
               <p className="mb-1">Game earn</p>
-              <input type="number" value={currentLevelDetail.gemReward} />
+              <input
+                type="number"
+                value={currentLevelDetail.gemReward}
+                readOnly
+              />
             </div>
           </div>
           <div>
@@ -229,23 +312,72 @@ export default function Game() {
           </div>
         </div>
         <div className="mt-3 d-flex">
-          <div className="map" style={{ width: "65%" }}>
-            <LevelGrid />
-          </div>
-          <div className="map-item" style={{ width: "30%" }}>
-            <div className="d-flex justify-content-center">
-              <div>
-                <div className="d-flex">
-                  <img src={start} alt="" />
-                  <img src={street} alt="" />
-                </div>
-                <div className="d-flex">
-                  <img src={end} alt="" />
-                  <img src={rock} alt="" />
+          <DndContext
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCorners}
+            sensors={sensor}
+          >
+            <div className="map" style={{ width: "65%" }}>
+              <LevelGrid />
+            </div>
+            <div className="map-item" style={{ width: "30%" }}>
+              <div className="d-flex justify-content-center">
+                <div>
+                  {/* Make these draggable */}
+                  <div className="d-flex">
+                    <Draggable
+                      id={1}
+                      child={
+                        <img
+                          src={start}
+                          style={{ width: "100%", height: "auto" }}
+                          alt=""
+                        />
+                      }
+                      resetChild={null}
+                    />
+
+                    <Draggable
+                      id={2}
+                      child={
+                        <img
+                          src={street}
+                          style={{ width: "100%", height: "auto" }}
+                          alt=""
+                        />
+                      }
+                      resetChild={null}
+                    />
+                  </div>
+                  <div className="d-flex">
+                    <Draggable
+                      id={3}
+                      child={
+                        <img
+                          src={end}
+                          style={{ width: "100%", height: "auto" }}
+                          alt=""
+                        />
+                      }
+                      resetChild={null}
+                    />
+
+                    <Draggable
+                      id={4}
+                      child={
+                        <img
+                          src={rock}
+                          style={{ width: "100%", height: "auto" }}
+                          alt=""
+                        />
+                      }
+                      resetChild={null}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </DndContext>
         </div>
       </div>
     );
