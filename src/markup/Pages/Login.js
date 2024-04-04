@@ -30,6 +30,7 @@ export default function Login() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
+        closeButton: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
