@@ -15,9 +15,10 @@ import street from "../../../../images/icon/gameStreet.png";
 import rock from "../../../../images/icon/gameRock.png";
 import end from "../../../../images/icon/gameEnd.png";
 import {
-  getGameMode,
-  getLevelDetailByLevelId,
-  getLevelDetailByModeId,
+  getGameModeApi,
+  getLevelDetailByLevelIdApi,
+  getLevelDetailByModeIdApi,
+  updateGameLevelApi,
 } from "../../../../helper/apis/game/game";
 import {
   DndContext,
@@ -29,6 +30,8 @@ import {
 } from "@dnd-kit/core";
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
+import { Button } from "react-bootstrap";
+import { elementType } from "prop-types";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -37,6 +40,7 @@ export default function Game() {
   const [gameLevels, setGameLevels] = useState([]);
   const [viewLevelDetail, setViewLevelDetail] = useState(false);
   const [currentLevelDetail, setCurrentLevelDetail] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
 
@@ -51,7 +55,7 @@ export default function Game() {
     if (!viewGameData) {
       const fetchGameModes = async () => {
         try {
-          const data = await getGameMode();
+          const data = await getGameModeApi();
 
           const typeToId = {
             Basic: 1,
@@ -93,7 +97,7 @@ export default function Game() {
     if (typeof modeId === "undefined") return;
 
     try {
-      const levels = await getLevelDetailByModeId({ modeId: modeId });
+      const levels = await getLevelDetailByModeIdApi({ modeId: modeId });
 
       setGameLevels(levels);
       setViewGameData(true);
@@ -111,7 +115,9 @@ export default function Game() {
     const levelId = level.id;
 
     try {
-      const levelDetails = await getLevelDetailByLevelId({ levelId: levelId });
+      const levelDetails = await getLevelDetailByLevelIdApi({
+        levelId: levelId,
+      });
 
       setCurrentLevelDetail(levelDetails);
 
@@ -168,6 +174,58 @@ export default function Game() {
     }
   };
 
+  const handleUpdateLevel = async () => {
+    const updateData = async () => {
+      try {
+        //log
+        console.log(`Call handle update`);
+
+        let levelDetailsUpdate = [];
+        let vStartPositionUpdate = undefined;
+        arr.forEach((element) => {
+          if (element.typeId !== undefined) {
+            if (element.typeId == 0) {
+              vStartPositionUpdate = element.id;
+            } else {
+              levelDetailsUpdate.push({
+                vPosition: element.id,
+                typeId: element.typeId,
+              });
+            }
+          }
+        });
+
+        const updateData = {
+          ...currentLevelDetail,
+          levelDetail: levelDetailsUpdate,
+          vStartPosition: vStartPositionUpdate,
+        };
+
+        setCurrentLevelDetail(updateData);
+
+        //log
+        console.log(
+          `Data before update: ${JSON.stringify(updateData, null, 2)}`
+        );
+
+        await updateGameLevelApi({ data: updateData });
+
+        alert("Update success");
+      } catch (error) {
+        if (error.response) {
+          console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+          setMessage(error.response?.data?.title || "Undefined.");
+        } else {
+          console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
+          setMessage(error.message || "Undefined.");
+        }
+        alert(message);
+      } finally {
+      }
+    };
+    updateData();
+  };
+
   //Drag and Drop
   //handle event when finish
   const handleDragEnd = (event) => {
@@ -179,6 +237,7 @@ export default function Game() {
           return {
             ...row,
             content: active.data.current.child,
+            typeId: active.data.current.typeId,
           };
         }
         return row;
@@ -197,6 +256,7 @@ export default function Game() {
         return {
           ...row,
           content: resetChildComponent,
+          typeId: undefined,
         };
       }
       return row;
@@ -335,6 +395,7 @@ export default function Game() {
                         />
                       }
                       resetChild={null}
+                      typeId={0}
                     />
 
                     <Draggable
@@ -347,6 +408,7 @@ export default function Game() {
                         />
                       }
                       resetChild={null}
+                      typeId={1}
                     />
                   </div>
                   <div className="d-flex">
@@ -360,6 +422,7 @@ export default function Game() {
                         />
                       }
                       resetChild={null}
+                      typeId={2}
                     />
 
                     <Draggable
@@ -372,8 +435,12 @@ export default function Game() {
                         />
                       }
                       resetChild={null}
+                      typeId={3}
                     />
                   </div>
+                  <Button className="my-3" onClick={handleUpdateLevel}>
+                    Save
+                  </Button>
                 </div>
               </div>
             </div>

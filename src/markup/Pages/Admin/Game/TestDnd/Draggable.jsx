@@ -39,6 +39,7 @@ export const Draggable = (props) => {
     data: {
       child: <DraggableContent child={props.child} />,
       resetChild: props.resetChild,
+      typeId: props.typeId,
     },
   });
 
