@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
-import ReactPaginate from "react-paginate";
+import { toast, ToastContainer } from "react-toastify";
 import basic from "../../../../images/icon/basicGame.png";
 import sequence from "../../../../images/icon/sequenceGame.png";
 import loop from "../../../../images/icon/loopGame.png";
 import functionGame from "../../../../images/icon/functionGame.png";
 import condition from "../../../../images/icon/conditionGame.png";
 import custom from "../../../../images/icon/customGame.png";
-import simp from "../../../../images/gallery/simp.jpg";
 
 import start from "../../../../images/icon/gameStart.png";
 import street from "../../../../images/icon/gameStreet.png";
@@ -30,7 +27,7 @@ import {
 } from "@dnd-kit/core";
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { elementType } from "prop-types";
 
 export default function Game() {
@@ -43,8 +40,32 @@ export default function Game() {
   const [message, setMessage] = useState(null);
   const [isVStartExist, setIsVStartExist] = useState(false);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
+
+  const handleLevelDetailInputNumberChange = (event) => {
+    let value = parseInt(event.target.value);
+    let name = event.target.name;
+    if (name === "levelIndex") {
+      let levelIndex = value - 1;
+      if (levelIndex < 0) {
+        levelIndex = 0;
+      }
+      if (levelIndex > 99) {
+        levelIndex = 99;
+      }
+      setCurrentLevelDetail({ ...currentLevelDetail, levelIndex: levelIndex });
+    } else {
+      if (value < 0) {
+        value = 0;
+      }
+      if (value > 100) {
+        value = 100;
+      }
+      setCurrentLevelDetail({ ...currentLevelDetail, [name]: value });
+    }
+  };
 
   const [arr, setArr] = useState([]);
 
@@ -52,6 +73,8 @@ export default function Game() {
     if (!viewGameData) {
       const fetchGameModes = async () => {
         try {
+          setIsLoading(true);
+
           const data = await getGameModeApi();
 
           const typeToId = {
@@ -83,12 +106,22 @@ export default function Game() {
           setEnhancedModes(tempModes);
         } catch (error) {
           console.error("Error fetching game modes:", error);
+        } finally {
+          setIsLoading(false);
         }
       };
 
       fetchGameModes();
     }
   }, [viewGameData, accessToken]);
+
+  //Show message error
+  useEffect(() => {
+    if (message) {
+      alert(`Error: ${message}`);
+      setMessage(null);
+    }
+  }, [message]);
 
   const handleGameModeClick = async (modeId) => {
     if (typeof modeId === "undefined") return;
@@ -99,7 +132,15 @@ export default function Game() {
       setGameLevels(levels);
       setViewGameData(true);
     } catch (error) {
-      console.error("Error fetching game levels:", error);
+      let errorMessage = null;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.title || "Undefined.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Undefined.";
+      }
+      setMessage(errorMessage);
     }
   };
 
@@ -186,7 +227,15 @@ export default function Game() {
 
       setViewLevelDetail(true);
     } catch (error) {
-      console.error("Error fetching level details:", error);
+      let errorMessage = null;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.title || "Undefined.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Undefined.";
+      }
+      setMessage(errorMessage);
     }
   };
 
@@ -226,14 +275,15 @@ export default function Game() {
 
         alert("Update success");
       } catch (error) {
+        let errorMessage = null;
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.response?.data?.title || "Undefined.");
+          errorMessage = error.response?.data?.title || "Undefined.";
         } else {
-          console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.message || "Undefined.");
+          console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+          errorMessage = error.message || "Undefined.";
         }
-        alert(message);
+        setMessage(errorMessage);
       } finally {
         setIsUpdateLoading(false);
       }
@@ -294,18 +344,6 @@ export default function Game() {
     const columns = 8;
     const rows = 6;
 
-    // Generate the grid with blank squares
-    // const grid = Array.from({ length: totalSquares }, () => null);
-
-    function calculateGridPosition(vPosition, columns, rows) {
-      // Subtract 1 to convert from 1-based to 0-based indexing
-      const zeroBasedPosition = vPosition;
-      const rowFromBottom = Math.floor(zeroBasedPosition / columns);
-      const colFromLeft = zeroBasedPosition % columns;
-      // Calculate the new position by inverting the row
-      return (rows - 1 - rowFromBottom) * columns + colFromLeft;
-    }
-
     // return content of droppable
     return (
       <div className="grid-container">
@@ -359,24 +397,36 @@ export default function Game() {
               <p className="mb-1">Level index</p>
               <input
                 type="number"
+                name="levelIndex"
                 value={currentLevelDetail.levelIndex + 1}
-                readOnly
+                required
+                min={1}
+                max={100}
+                onChange={handleLevelDetailInputNumberChange}
               />
             </div>
             <div>
               <p className="mb-1">Coin earn</p>
               <input
                 type="number"
+                name="coinReward"
                 value={currentLevelDetail.coinReward}
-                readOnly
+                required
+                min={0}
+                max={100}
+                onChange={handleLevelDetailInputNumberChange}
               />
             </div>
             <div>
               <p className="mb-1">Game earn</p>
               <input
                 type="number"
+                name="gemReward"
                 value={currentLevelDetail.gemReward}
-                readOnly
+                required
+                min={0}
+                max={100}
+                onChange={handleLevelDetailInputNumberChange}
               />
             </div>
           </div>
@@ -463,9 +513,10 @@ export default function Game() {
                     />
                   </div>
                   <Button className="my-3" onClick={handleUpdateLevel}>
-                    <span>Save</span>
-                    {isUpdateLoading === true && (
-                      <Spinner animation="border" variant="success" />
+                    {isUpdateLoading === false ? (
+                      <div>Save</div>
+                    ) : (
+                      <Spinner animation="border" size="sm" variant="warning" />
                     )}
                   </Button>
                 </div>
@@ -572,33 +623,45 @@ export default function Game() {
           </div>
         ) : (
           <div className="row">
-            {enhancedModes.map(({ typeName, src, totalLevel, id }) => (
-              <div
-                className="item col-lg-6 col-md-6 col-sm-12"
-                key={typeName}
-                onClick={() => handleGameModeClick(id)}
-              >
-                <div className="item-content">
-                  <p className="title blue fw-bold mb-2">{typeName} mode</p>
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex level">
-                      <span>{totalLevel}</span>
-                      <p className="mb-0 ms-2">Level</p>
-                    </div>
-                    <div>
-                      <img
-                        className="img-responsive"
-                        src={src}
-                        alt={`${typeName} mode`}
-                      />
+            {isLoading && isLoading === true ? (
+              <CustomSpinner />
+            ) : (
+              enhancedModes.map(({ typeName, src, totalLevel, id }) => (
+                <div
+                  className="item col-lg-6 col-md-6 col-sm-12"
+                  key={typeName}
+                  onClick={() => handleGameModeClick(id)}
+                >
+                  <div className="item-content">
+                    <p className="title blue fw-bold mb-2">{typeName} mode</p>
+                    <div className="d-flex justify-content-between">
+                      <div className="d-flex level">
+                        <span>{totalLevel}</span>
+                        <p className="mb-0 ms-2">Level</p>
+                      </div>
+                      <div>
+                        <img
+                          className="img-responsive"
+                          src={src}
+                          alt={`${typeName} mode`}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>
     </div>
   );
 }
+
+const CustomSpinner = () => {
+  return (
+    <div className="d-flex justify-content-center py-5">
+      <Spinner animation="border" variant="success" />
+    </div>
+  );
+};
