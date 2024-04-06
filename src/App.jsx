@@ -32,7 +32,6 @@ import TeacherCourse from "./markup/Pages/Teacher/TeacherAccount/TeacherCourse/T
 import TeacherClasses from "./markup/Pages/Teacher/TeacherAccount/TeacherClass/TeacherClass";
 import Syllabus from "./markup/Pages/Teacher/TeacherAccount/Syllabus/Syllabus";
 import SyllabusInformation from "./markup/Pages/Teacher/TeacherAccount/Syllabus/syllabusInformation/SyllabusInformation";
-import CreateCourse from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourse";
 import Quiz from "./markup/Pages/Teacher/TeacherAccount/CreateQuiz/Quiz";
 import TeacherSetting from "./markup/Pages/Teacher/TeacherAccount/TeacherSetting/TeacherSetting";
 import Staff from "./markup/Pages/Staff/Staff";
@@ -40,6 +39,7 @@ import StaffOrder from "./markup/Pages/Staff/StaffOrder/StaffOrder";
 import StaffOrderDetail from "./markup/Pages/Staff/StaffOrder/StaffOrderDetail";
 import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule";
 import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
+import CreateCourse from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse";
 
 // function App() {
 // 	return (

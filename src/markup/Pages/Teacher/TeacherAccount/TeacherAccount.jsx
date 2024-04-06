@@ -20,14 +20,10 @@ export default function TeacherAccount({ child }) {
       : { color: "#212121CC" }; // Example: light grey background for active menu
   };
 
-<<<<<<< HEAD
-
-=======
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
->>>>>>> e4a7e23877b22805a98672b7cc6ae5d4f6eb0126
 
   return (
     <div>
