@@ -40,6 +40,7 @@ import StaffOrderDetail from "./markup/Pages/Staff/StaffOrder/StaffOrderDetail";
 import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule";
 import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 import CreateCourse from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse";
+import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
 
 // function App() {
 // 	return (
@@ -137,6 +138,15 @@ const App = () => {
                   <PrivateRoute
                     page="staff/staff-order-detail"
                     component={<StaffOrderDetail />}
+                  />
+                }
+              />
+              <Route
+                path="class"
+                element={
+                  <PrivateRoute
+                    page="staff/class"
+                    component={<StaffClassDetail />}
                   />
                 }
               />

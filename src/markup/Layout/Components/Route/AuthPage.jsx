@@ -21,7 +21,7 @@ export const ErrorPages = ["error-404"];
 export const AdminPages = ["admin", "admin/game", "admin/game-data"];
 
 //Lưu đường dẫn các trang mà staff được truy cập
-export const StaffPages = ["staff", "staff/order", "staff/staff-order-detail"];
+export const StaffPages = ["staff", "staff/staff-order", "staff/staff-order-detail", "staff/class"];
 
 //Lưu đường dẫn các trang mà teacher được truy cập
 export const TeacherPages = [
