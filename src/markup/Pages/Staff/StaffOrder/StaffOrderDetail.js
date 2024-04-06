@@ -356,7 +356,6 @@ const PendingOrder = ({ orderDetail }) => {
                     setCurrentStudentDetail(studentData);
                 } catch (error) {
                     console.error("Error fetching student details:", error);
-                    setError(error.message);
                 } finally {
                     setLoading(false);
                 }
