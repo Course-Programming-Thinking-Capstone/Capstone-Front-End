@@ -18,6 +18,8 @@ export default function TeacherAccount({ child }) {
       : { color: "#212121CC" }; // Example: light grey background for active menu
   };
 
+
+
   return (
     <div>
       <div
