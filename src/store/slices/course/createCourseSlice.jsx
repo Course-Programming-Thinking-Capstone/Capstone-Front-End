@@ -41,7 +41,12 @@ export const createCourseSlice = createSlice({
     },
 
     setDescription: (state, action) => {
-      state.data.description = action.payload.description;
+      const { description } = action.payload;
+
+      //log
+      console.log(`Description in setDescription reducer: ${description}`);
+
+      state.data.description = description;
     },
 
     //action is video {sectionId, video: {}}
@@ -308,7 +313,9 @@ export const createCourseSlice = createSlice({
           if (!state.data.sections[sectionIndex].quizzes[quizIndex].questions) {
             state.data.sections[sectionIndex].quizzes[quizIndex].questions = [];
           }
-          state.data.sections[sectionIndex].quizzes[quizIndex].questions.push(question);
+          state.data.sections[sectionIndex].quizzes[quizIndex].questions.push(
+            question
+          );
         } else {
           state.error = { message: `Quiz index ${quizIndex} not found.` };
         }

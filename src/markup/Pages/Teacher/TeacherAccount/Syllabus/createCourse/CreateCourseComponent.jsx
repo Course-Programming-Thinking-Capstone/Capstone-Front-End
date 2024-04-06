@@ -37,6 +37,7 @@ import {
 
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
+import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -48,11 +49,17 @@ const CreateCourseComponent = () => {
   console.log(`CourseId: ${courseId}`);
 
   //use state
-  const [message, setMessage] = useState(undefined);
+  const [message, setMessage] = useState(null);
   const [coursePictureFile, setCoursePictureFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [description, setDescriptionInput] = useState(undefined);
 
   const handleFileInputChange = (event) => {
     setCoursePictureFile(event.target.files[0]);
+  };
+
+  const handleDescriptionChange = (event) => {
+    setDescriptionInput(event.target.value);
   };
 
   const goBack = () => {
@@ -63,16 +70,26 @@ const CreateCourseComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         await dispatch(getCourseByIdAsync(courseId, "manage"));
+
+        //log
+        console.log(`Course description: ${createCourse.description}`);
+        setDescriptionInput(createCourse.description);
       } catch (error) {
+        //log
+        console.log(`Error: ${JSON.stringify(error, null, 2)}`);
+
         if (error.response) {
-          console.log(`Error response: ${error.response?.data?.Message}`);
           setMessage(error.response?.data?.title || "Undefined.");
         } else {
-          console.log(`Error message abc: ${error.message}`);
           setMessage(error.message || "Undefined.");
         }
       } finally {
+        if (message !== null) {
+          alert(message);
+        }
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -80,142 +97,154 @@ const CreateCourseComponent = () => {
 
   //Create course
   const saveCourse = async (action) => {
-    try {
-      //log
-      console.log(
-        `createCourse content before send api: ${JSON.stringify(
-          createCourse,
-          null,
-          2
-        )}`
-      );
+    //update description
+    dispatch(setDescription({ description: description }));
 
-      await updateCourseApi({
-        id: createCourse.id,
-        action: action,
-        data: createCourse,
-      });
+    const updateData = async () => {
+      try {
+        const updatedData = { ...createCourse, description };
 
-      if (coursePictureFile != null) {
-        const pictureUrl = await updateCoursePictureApi({
+        await updateCourseApi({
           id: createCourse.id,
-          file: coursePictureFile,
+          action: action,
+          data: updatedData,
         });
-      }
 
-      alert("Update success");
-    } catch (error) {
-      if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        setMessage(error.response?.data?.title || "Undefined.");
-      } else {
-        console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
-        setMessage(error.message || "Undefined.");
+        if (coursePictureFile != null) {
+          const pictureUrl = await updateCoursePictureApi({
+            id: createCourse.id,
+            file: coursePictureFile,
+          });
+        }
+
+        alert("Update success");
+      } catch (error) {
+        if (error.response) {
+          console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+          setMessage(error.response?.data?.title || "Undefined.");
+        } else {
+          console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
+          setMessage(error.message || "Undefined.");
+        }
+        alert(message);
+      } finally {
       }
-    } finally {
-    }
+    };
+    updateData();
   };
 
   return (
-    <div className="teacher-create">
-      <div className="create-course">
-        <div className="header">
-          <div className="d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
-              <div>
-                <h5 className="mb">CREATE COURSE</h5>
-                <hr />
-              </div>
-              <i class="fa-solid fa-book"></i>
-            </div>
+    <div className="create-course">
+      <div className="header">
+        <div className="d-flex justify-content-between mb-3 align-items-center">
+          <div className="d-flex justify-content-start align-items-center">
             <div>
-              {/* return link */}
-              <button onClick={goBack}>Back</button>
+              <h5 className="mb">Create course</h5>
+              <hr />
             </div>
+            <i class="fa-solid fa-book"></i>
+          </div>
+          <div>
+            <Button
+              variant="outline-warning"
+              className="px-3 py-2"
+              style={{ borderRadius: "5px" }}
+              onClick={goBack}
+            >
+              Back
+            </Button>
           </div>
         </div>
-        <div className="create-course-content">
-          <div style={{ padding: "10px 20px" }}>
-            <Form.Label htmlFor="title" className="title blue">
-              Course title
-            </Form.Label>
-            <Form.Control
-              type="text"
-              id="title"
-              placeholder={`${createCourse.name}`}
-              disabled
-              readOnly
-            />
+      </div>
+      <div className="create-course-content">
+        <div style={{ padding: "10px 20px" }}>
+          <Form.Label htmlFor="title" className="blue fw-bold">
+            Course title
+          </Form.Label>
+          <Form.Control
+            type="text"
+            id="title"
+            placeholder={`${createCourse.name}`}
+            disabled
+            readOnly
+            className="mb-3"
+          />
 
-            <Form.Label htmlFor="description" className="title blue">
+          <Form.Group>
+            <Form.Label htmlFor="description" className="blue fw-bold">
               Description
             </Form.Label>
             <Form.Control
               type="text"
               id="description"
-              placeholder={`Course description`}
+              placeholder={`Description`}
+              value={description}
+              onChange={handleDescriptionChange}
+              className="mb-3 form-control"
+              maxLength={1000}
             />
+          </Form.Group>
 
-            <div>
-              <div className="d-flex justify-content-start">
-                <p className="title blue ">Section</p>
-                <span className="sub-title orange">*</span>
-              </div>
-
-              <div className="super-render">
-                {createCourse.sections.map((section, index) => (
-                  <Accordion defaultActiveKey="0" flush>
-                    <Accordion.Item eventKey={index}>
-                      <Accordion.Header>{section.name}</Accordion.Header>
-                      <Accordion.Body>
-                        {/* Content */}
-                        {section.lessons.map((lesson, index) =>
-                          lesson.type === "Video" ? (
-                            <VideoContent
-                              sectionId={section.id}
-                              key={index}
-                              lesson={lesson}
-                              index={index}
-                            />
-                          ) : (
-                            <DocumentContent
-                              sectionId={section.id}
-                              key={index}
-                              lesson={lesson}
-                              index={index}
-                            />
-                          )
-                        )}
-
-                        {section.quizzes.map((quiz, index) => (
-                          <QuizContent
-                            sectionId={section.id}
-                            quiz={quiz}
-                            index={index}
-                          />
-                        ))}
-
-                        <Container>
-                          <Row>
-                            <Col md="4">
-                              <VideoComponent sectionId={section.id} />
-                            </Col>
-                            <Col md="4">
-                              <DocumentComponent sectionId={section.id} />
-                            </Col>
-                            <Col md="4">
-                              <AddQuizComponent sectionId={section.id} />
-                            </Col>
-                          </Row>
-                        </Container>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
-                ))}
-              </div>
+          <div>
+            <div className="d-flex justify-content-start">
+              <p className="blue fw-bold">Section</p>
+              <span className="sub-title orange">*</span>
             </div>
 
-            {/* <div>
+            <div>
+              {createCourse.sections.map((section, index) => (
+                <Accordion defaultActiveKey="0" flush>
+                  <Accordion.Item eventKey={index}>
+                    <Accordion.Header>{section.name}</Accordion.Header>
+                    <Accordion.Body>
+                      {/* Content */}
+                      {section.lessons.map((lesson, index) =>
+                        lesson.type === "Video" ? (
+                          <VideoContent
+                            sectionId={section.id}
+                            key={index}
+                            lesson={lesson}
+                            index={index}
+                          />
+                        ) : (
+                          <DocumentContent
+                            sectionId={section.id}
+                            key={index}
+                            lesson={lesson}
+                            index={index}
+                          />
+                        )
+                      )}
+
+                      {section.quizzes.map((quiz, index) => (
+                        <QuizContent
+                          sectionId={section.id}
+                          quiz={quiz}
+                          index={index}
+                        />
+                      ))}
+
+                      <Container>
+                        <Row>
+                          <Col md="4">
+                            <VideoComponent sectionId={section.id} />
+                          </Col>
+                          <Col md="4">
+                            <DocumentComponent sectionId={section.id} />
+                          </Col>
+                          <Col md="4">
+                            <AddQuizComponent sectionId={section.id} />
+                          </Col>
+                        </Row>
+                      </Container>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              ))}
+            </div>
+          </div>
+
+          {/* <div>
               <p className="title blue">Course picture</p>
               <p className="mb-0">
                 Max size <span className="orange">100Mb</span>. The required
@@ -226,37 +255,49 @@ const CreateCourseComponent = () => {
               </button>
             </div> */}
 
-            <div>
-              <p className="title blue">Course picture</p>
-              <p className="mb-0">
-                Max size <span className="orange">100Mb</span>. The required
-                type image is <span className="orange">JPG, PNG</span>.
-              </p>
-              <input
-                type="file"
-                accept="image/jpeg, image/png"
-                onChange={handleFileInputChange}
-                className="d-none"
-                id="fileInput"
-              />
-              <label htmlFor="fileInput" className="button">
-                <i className="fa-solid fa-circle-plus"></i> Upload file
+          <div className="mb-4">
+            <p className="blue fw-bold">Course picture</p>
+            <p className="mb-1">
+              Max size <span className="orange">10Mb</span>. The required type
+              image is <span className="orange">JPG, PNG</span>.
+            </p>
+            {/* <label htmlFor="fileInput" className="button">
+              <i className="fa-solid fa-circle-plus"></i> Upload file
+            </label> */}
+            <input
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={handleFileInputChange}
+              id="fileInput"
+            />
+          </div>
+
+          <div>
+            <div className="d-flex">
+              <input id="check" type="checkbox" />
+              <label for="check">
+                Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn mực
+                với đạo đức của một giáo viên
               </label>
             </div>
 
-            <div>
-              <div className="d-flex">
-                <input id="check" type="checkbox" />
-                <label for="check">
-                  Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn mực
-                  với đạo đức của một giáo viên
-                </label>
-              </div>
-
-              <div className="d-flex justify-content-end">
-                <button onClick={() => saveCourse("Save")}>SAVE DRAFT</button>
-                <button onClick={() => saveCourse("Post")}>POST COURSE</button>
-              </div>
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="primary"
+                className="mx-3 px-3 py-2"
+                style={{ borderRadius: "5px" }}
+                onClick={() => saveCourse("Save")}
+              >
+                SAVE DRAFT
+              </Button>
+              <Button
+                variant="danger"
+                className="px-3 py-2"
+                style={{ borderRadius: "5px" }}
+                onClick={() => saveCourse("Post")}
+              >
+                POST COURSE
+              </Button>
             </div>
           </div>
         </div>
@@ -446,7 +487,7 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
                   </Col>
                   {option.answerExplain && option.answerExplain !== "" && (
                     <Col xs="12">
-                       <p>Explain: {option.answerExplain}</p>
+                      <p>Explain: {option.answerExplain}</p>
                     </Col>
                   )}
                 </Row>

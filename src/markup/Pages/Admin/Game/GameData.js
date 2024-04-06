@@ -46,7 +46,7 @@ export default function GameData() {
                             <h5 className='mb'>GAME</h5>
                             <hr />
                         </div>
-                        <i class="fa-solid fa-book"></i>
+                        <i className="fa-solid fa-book"></i>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@ export default function GameData() {
                             </div>
                         </div>
                         <div>
-                            <button style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '10px', padding: '5px 10px' }}><i class="fa-solid fa-circle-plus"></i>        Create syllabus</button>
+                            <button style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '10px', padding: '5px 10px' }}><i className="fa-solid fa-circle-plus"></i>        Create syllabus</button>
                         </div>
                     </div>
 
@@ -70,7 +70,7 @@ export default function GameData() {
                         <div className="search d-flex justify-content-center">
                             <input type="text" placeholder='Search course' />
                             <div className='text-center' style={{ height: '30px', border: '1px solid #988E8E66', borderLeft: 'none', width: '5%', paddingTop: '5px', borderRadius: '0 10px 10px 0' }}>
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <i className="fa-solid fa-magnifying-glass"></i>
                             </div>
                         </div>
 

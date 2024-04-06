@@ -14,7 +14,7 @@ const CustomInput = forwardRef(({ value, onClick }, ref) => (
     </div>
 ));
 
-const CreateClass = ({ onBack, onNext }) => {
+const CreateClass = ({ onBack, onNext, navigateToTeacherForm, navigateToStudentForm }) => {
     const accessToken = localStorage.getItem('accessToken');
     const [classCode, setClassCode] = useState('');
     const [openDay, setOpenDay] = useState('');
@@ -126,7 +126,7 @@ const CreateClass = ({ onBack, onNext }) => {
     )
 }
 
-const CreateSchedule = ({ onBack, classData, setView }) => {
+const CreateSchedule = ({ onBack, classData, setView, navigateToTeacherForm, navigateToStudentForm }) => {
     const [checkedDays, setCheckedDays] = useState({
         Monday: false,
         Tuesday: false,
@@ -1042,6 +1042,7 @@ const StaffClassDetail = () => {
     const navigateToTeacherForm = (classId) => {
         setClassIdForTeacherForm(classId);
         setView('addTeacher');
+        console.log(classId);
     };
 
     const navigateToStudentForm = (classId) => {
@@ -1086,13 +1087,18 @@ const StaffClassDetail = () => {
         switch (view) {
             case 'createClass':
                 return <CreateClass
+                    navigateToTeacherForm={navigateToTeacherForm}
+                    navigateToStudentForm={navigateToStudentForm}
                     onBack={() => setView('detail')}
                     onNext={(data) => {
-                        setClassData(data); // Set class data on successful API call
-                        setView('createSchedule');
+                        setClassData(data); // This sets the state with the data from CreateClass
+                        setView('createSchedule'); // This changes the view to createSchedule
                     }} />;
             case 'createSchedule':
-                return <CreateSchedule onBack={() => setView('createClass')} classData={classData} setView={setView} />;
+                return <CreateSchedule
+                    navigateToTeacherForm={navigateToTeacherForm}
+                    navigateToStudentForm={navigateToStudentForm}
+                    onBack={() => setView('createClass')} classData={classData} setView={setView} />;
             case 'addTeacher':
                 return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('classContent')} />;
             case 'addStudent':

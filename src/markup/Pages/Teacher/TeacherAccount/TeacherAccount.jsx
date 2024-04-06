@@ -1,16 +1,18 @@
 import React from "react";
 import background from "./../../../../images/background/teacherBackground.jpg";
 import demo from "./../../../../images/gallery/demo.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { teacherActiveMenuSelector } from "../../../../store/selector";
 import { Image } from "react-bootstrap";
 
 export default function TeacherAccount({ child }) {
+  //retrieve user information
   const user = JSON.parse(localStorage.getItem("user"));
 
   const teacherActiveMenu = useSelector(teacherActiveMenuSelector);
+  const navigate = useNavigate();
 
   const getMenuItemStyle = (menuItem) => {
     return menuItem === teacherActiveMenu
@@ -18,7 +20,14 @@ export default function TeacherAccount({ child }) {
       : { color: "#212121CC" }; // Example: light grey background for active menu
   };
 
+<<<<<<< HEAD
 
+=======
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+>>>>>>> e4a7e23877b22805a98672b7cc6ae5d4f6eb0126
 
   return (
     <div>
@@ -45,9 +54,6 @@ export default function TeacherAccount({ child }) {
                 />
               </div>
               <h5 className="text-center mt-2">{user.fullName}</h5>
-              <div className="d-flex justify-content-center">
-                <button>Edit profile</button>
-              </div>
               <div className="info d-flex justify-content-center">
                 <div className="d-flex justify-content-between">
                   <div>
@@ -127,10 +133,13 @@ export default function TeacherAccount({ child }) {
                   <div className="mx-4">Setting</div>
                 </Link>
 
-                <div className="item d-flex justify-content-start align-items-center">
+                <i
+                  className="item d-flex justify-content-start align-items-center"
+                  onClick={handleLogout}
+                >
                   <i className="fa-solid fa-right-from-bracket"></i>
                   <div className="mx-4">Log out</div>
-                </div>
+                </i>
               </div>
             </div>
             <div className="col-lg-9">{child}</div>
