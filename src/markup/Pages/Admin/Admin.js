@@ -5,7 +5,6 @@ import background from "./../../../images/background/adminStaffBackground.jpg";
 import simp from "./../../../images/gallery/simp.jpg";
 import Modal from "react-bootstrap/Modal";
 import ReactPaginate from "react-paginate";
-
 import Game from "./Game/Game";
 import Syllabus from "./Syllabus/SyllabusAd";
 
@@ -19,6 +18,29 @@ export default function Admin() {
     setActiveContent(content);
     setActiveItem(content);
     navigate(`/admin/${content.toLowerCase()}`);
+  };
+
+  const renderContent = () => {
+    switch (activeContent) {
+      case "Notification":
+        return <div></div>;
+      case "Dashboard":
+        return <div></div>;
+      case "Certificate":
+        return <div>Your orders...</div>;
+      case "User":
+        return <div>Class information...</div>;
+      case "Course":
+        return <div>Course details...</div>;
+      case "Game":
+        return <Game />;
+      case "Order":
+        return <div>Course details...</div>;
+      case "Syllabus":
+        return <Syllabus />;
+      default:
+        return <div>Select a menu item to see the content</div>;
+    }
   };
 
   const getItemClass = (itemName) => {
@@ -90,7 +112,7 @@ export default function Admin() {
               <i className="fa-solid fa-book"></i>
               <span>Syllabus</span>
             </div>
-            <div className="item">
+            <div className="item" onClick={handleLogout}>
               <i className="fa-solid fa-book"></i>
               <span>Log out</span>
             </div>

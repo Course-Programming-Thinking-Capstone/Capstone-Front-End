@@ -129,13 +129,13 @@ export default function TeacherAccount({ child }) {
                   <div className="mx-4">Setting</div>
                 </Link>
 
-                <i
+                <div
                   className="item d-flex justify-content-start align-items-center"
                   onClick={handleLogout}
                 >
                   <i className="fa-solid fa-right-from-bracket"></i>
                   <div className="mx-4">Log out</div>
-                </i>
+                </div>
               </div>
             </div>
             <div className="col-lg-9">{child}</div>

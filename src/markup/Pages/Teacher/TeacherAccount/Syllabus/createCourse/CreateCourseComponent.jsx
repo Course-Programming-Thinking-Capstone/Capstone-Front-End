@@ -14,6 +14,7 @@ import {
   Form,
   Image,
   Row,
+  Placeholder,
 } from "react-bootstrap";
 import VideoComponent, {
   RemoveComponent,
@@ -72,9 +73,6 @@ const CreateCourseComponent = () => {
       try {
         setIsLoading(true);
         await dispatch(getCourseByIdAsync(courseId, "manage"));
-
-        //log
-        console.log(`Course description: ${createCourse.description}`);
         setDescriptionInput(createCourse.description);
       } catch (error) {
         //log
@@ -158,148 +156,173 @@ const CreateCourseComponent = () => {
       </div>
       <div className="create-course-content">
         <div style={{ padding: "10px 20px" }}>
-          <Form.Label htmlFor="title" className="blue fw-bold">
-            Course title
-          </Form.Label>
-          <Form.Control
-            type="text"
-            id="title"
-            placeholder={`${createCourse.name}`}
-            disabled
-            readOnly
-            className="mb-3"
-          />
+          {isLoading === true ? (
+            <>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={3} size="lg" bg="primary" /> {""}
+              </Placeholder>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={12} size="lg" />
+              </Placeholder>
 
-          <Form.Group>
-            <Form.Label htmlFor="description" className="blue fw-bold">
-              Description
-            </Form.Label>
-            <Form.Control
-              type="text"
-              id="description"
-              placeholder={`Description`}
-              value={description}
-              onChange={handleDescriptionChange}
-              className="mb-3 form-control"
-              maxLength={1000}
-            />
-          </Form.Group>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={3} size="lg" bg="primary" /> {""}
+              </Placeholder>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={12} size="lg" />
+              </Placeholder>
 
-          <div>
-            <div className="d-flex justify-content-start">
-              <p className="blue fw-bold">Section</p>
-              <span className="sub-title orange">*</span>
-            </div>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={3} size="lg" bg="primary" /> {""}
+              </Placeholder>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={12} size="lg" />
+                <Placeholder xs={12} size="lg" />
+                <Placeholder xs={12} size="lg" />
+                <Placeholder xs={12} size="lg" />
+                <Placeholder xs={12} size="lg" />
+              </Placeholder>
 
-            <div>
-              {createCourse.sections.map((section, index) => (
-                <Accordion defaultActiveKey="0" flush>
-                  <Accordion.Item eventKey={index}>
-                    <Accordion.Header>{section.name}</Accordion.Header>
-                    <Accordion.Body>
-                      {/* Content */}
-                      {section.lessons.map((lesson, index) =>
-                        lesson.type === "Video" ? (
-                          <VideoContent
-                            sectionId={section.id}
-                            key={index}
-                            lesson={lesson}
-                            index={index}
-                          />
-                        ) : (
-                          <DocumentContent
-                            sectionId={section.id}
-                            key={index}
-                            lesson={lesson}
-                            index={index}
-                          />
-                        )
-                      )}
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={3} size="lg" bg="primary" /> {""}
+              </Placeholder>
+              <Placeholder as="p" animation="glow">
+                <Placeholder xs={12} size="lg" />
+              </Placeholder>
+            </>
+          ) : (
+            <>
+              {" "}
+              <Form.Label htmlFor="title" className="blue fw-bold">
+                Course title
+              </Form.Label>
+              <Form.Control
+                type="text"
+                id="title"
+                placeholder={`${createCourse.name}`}
+                disabled
+                readOnly
+                className="mb-3"
+              />
+              <Form.Group>
+                <Form.Label htmlFor="description" className="blue fw-bold">
+                  Description
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  id="description"
+                  placeholder={`Description`}
+                  value={description}
+                  onChange={handleDescriptionChange}
+                  className="mb-3 form-control"
+                  maxLength={1000}
+                />
+              </Form.Group>
+              <div>
+                <div className="d-flex justify-content-start">
+                  <p className="blue fw-bold">Section</p>
+                  <span className="sub-title orange">*</span>
+                </div>
 
-                      {section.quizzes.map((quiz, index) => (
-                        <QuizContent
-                          sectionId={section.id}
-                          quiz={quiz}
-                          index={index}
-                        />
-                      ))}
+                <div>
+                  {createCourse.sections.map((section, index) => (
+                    <Accordion key={index} defaultActiveKey="0" flush>
+                      <Accordion.Item eventKey={index}>
+                        <Accordion.Header>{section.name}</Accordion.Header>
+                        <Accordion.Body>
+                          {/* Content */}
+                          {section.lessons.map((lesson, index) =>
+                            lesson.type === "Video" ? (
+                              <VideoContent
+                                sectionId={section.id}
+                                key={index}
+                                lesson={lesson}
+                                index={index}
+                              />
+                            ) : (
+                              <DocumentContent
+                                sectionId={section.id}
+                                key={index}
+                                lesson={lesson}
+                                index={index}
+                              />
+                            )
+                          )}
 
-                      <Container>
-                        <Row>
-                          <Col md="4">
-                            <VideoComponent sectionId={section.id} />
-                          </Col>
-                          <Col md="4">
-                            <DocumentComponent sectionId={section.id} />
-                          </Col>
-                          <Col md="4">
-                            <AddQuizComponent sectionId={section.id} />
-                          </Col>
-                        </Row>
-                      </Container>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              ))}
-            </div>
-          </div>
+                          {section.quizzes.map((quiz, index) => (
+                            <QuizContent
+                              key={index}
+                              sectionId={section.id}
+                              quiz={quiz}
+                              index={index}
+                            />
+                          ))}
 
-          {/* <div>
-              <p className="title blue">Course picture</p>
-              <p className="mb-0">
-                Max size <span className="orange">100Mb</span>. The required
-                type image is <span className="orange">JPG, PNG</span>.
-              </p>
-              <button className="button">
-                <i class="fa-solid fa-circle-plus"></i> Upload file
-              </button>
-            </div> */}
-
-          <div className="mb-4">
-            <p className="blue fw-bold">Course picture</p>
-            <p className="mb-1">
-              Max size <span className="orange">10Mb</span>. The required type
-              image is <span className="orange">JPG, PNG</span>.
-            </p>
-            {/* <label htmlFor="fileInput" className="button">
+                          <Container>
+                            <Row>
+                              <Col md="4">
+                                <VideoComponent sectionId={section.id} />
+                              </Col>
+                              <Col md="4">
+                                <DocumentComponent sectionId={section.id} />
+                              </Col>
+                              <Col md="4">
+                                <AddQuizComponent sectionId={section.id} />
+                              </Col>
+                            </Row>
+                          </Container>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </Accordion>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-4">
+                <p className="blue fw-bold">Course picture</p>
+                <p className="mb-1">
+                  Max size <span className="orange">10Mb</span>. The required
+                  type image is <span className="orange">JPG, PNG</span>.
+                </p>
+                {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-            <input
-              type="file"
-              accept="image/jpeg, image/png"
-              onChange={handleFileInputChange}
-              id="fileInput"
-            />
-          </div>
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                />
+              </div>
+              <div>
+                <div className="d-flex">
+                  <input id="check" type="checkbox" />
+                  <label htmlFor="check">
+                    Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
+                    mực với đạo đức của một giáo viên
+                  </label>
+                </div>
 
-          <div>
-            <div className="d-flex">
-              <input id="check" type="checkbox" />
-              <label for="check">
-                Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn mực
-                với đạo đức của một giáo viên
-              </label>
-            </div>
-
-            <div className="d-flex justify-content-end">
-              <Button
-                variant="primary"
-                className="mx-3 px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Save")}
-              >
-                SAVE DRAFT
-              </Button>
-              <Button
-                variant="danger"
-                className="px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Post")}
-              >
-                POST COURSE
-              </Button>
-            </div>
-          </div>
+                <div className="d-flex justify-content-end">
+                  <Button
+                    variant="primary"
+                    className="mx-3 px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Save")}
+                  >
+                    SAVE DRAFT
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Post")}
+                  >
+                    POST COURSE
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -480,7 +503,7 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
                   <Col xs="2">
                     <Image
                       src={
-                        option.isCorrect == true ? checkButton : uncheckButton
+                        option.isCorrect === true ? checkButton : uncheckButton
                       }
                       roundedCircle
                     />

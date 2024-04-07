@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import basic from "../../../../images/icon/basicGame.png";
 import sequence from "../../../../images/icon/sequenceGame.png";
 import loop from "../../../../images/icon/loopGame.png";
@@ -28,7 +27,6 @@ import {
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
-import { elementType } from "prop-types";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -41,8 +39,7 @@ export default function Game() {
   const [isVStartExist, setIsVStartExist] = useState(false);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [selectedSquareIndex, setSelectedSquareIndex] = useState(null);
+  const [arr, setArr] = useState([]);
 
   const handleLevelDetailInputNumberChange = (event) => {
     let value = parseInt(event.target.value);
@@ -66,8 +63,6 @@ export default function Game() {
       setCurrentLevelDetail({ ...currentLevelDetail, [name]: value });
     }
   };
-
-  const [arr, setArr] = useState([]);
 
   useEffect(() => {
     if (!viewGameData) {
@@ -151,6 +146,8 @@ export default function Game() {
   //get current level detail
   const handleViewEditClick = async (level) => {
     const levelId = level.id;
+    const columns = 8;
+    const rows = 6;
 
     try {
       const levelDetails = await getLevelDetailByLevelIdApi({
@@ -159,9 +156,25 @@ export default function Game() {
 
       setCurrentLevelDetail(levelDetails);
 
+      //convert array index to postion
+      const convertArrayIndexToPostion = (index, rows, columns) => {
+        const quotient = Math.floor(index / columns);
+        const remainder = index % columns;
+        const position = columns * (rows - quotient - 1) + remainder + 1;
+        return position;
+      };
+
+      //convert postion to array index
+      const convertPositionToArrayIndex = (position, rows, columns) => {
+        const quotient = Math.floor(position / columns);
+        const remainder = position % columns;
+        const index = columns * (rows - quotient - 1) + remainder - 1;
+        return index;
+      };
+
       //create updated array to update arr:
-      const updatedArr = Array.from({ length: 6 * 8 }, (_, index) => ({
-        id: index + 1,
+      const updatedArr = Array.from({ length: rows * columns }, (_, index) => ({
+        id: convertArrayIndexToPostion(index, rows, columns),
         content: null,
         typeId: undefined,
       }));
@@ -173,9 +186,13 @@ export default function Game() {
         levelDetails.vStartPosition != 0
       ) {
         setIsVStartExist(true);
-        const startPos = levelDetails.vStartPosition;
-        updatedArr[startPos - 1] = {
-          ...updatedArr[startPos - 1],
+        const startPos = convertPositionToArrayIndex(
+          levelDetails.vStartPosition,
+          rows,
+          columns
+        );
+        updatedArr[startPos] = {
+          ...updatedArr[startPos],
           content: <img src={start} alt="Start" />,
           typeId: 0,
         };
@@ -186,7 +203,11 @@ export default function Game() {
       levelDetails?.levelDetail.forEach((detail) => {
         // Adjust position to account for bottom-to-top index
         // const pos = calculateGridPosition(detail.vPosition, columns, rows);
-        const pos = detail.vPosition;
+        const pos = convertPositionToArrayIndex(
+          detail.vPosition,
+          rows,
+          columns
+        );
 
         let content;
         let typeId;
@@ -214,9 +235,8 @@ export default function Game() {
             content = null;
         }
 
-        // grid[pos] = content;
-        updatedArr[pos - 1] = {
-          ...updatedArr[pos - 1],
+        updatedArr[pos] = {
+          ...updatedArr[pos],
           content: content,
           typeId: typeId,
         };
@@ -341,15 +361,15 @@ export default function Game() {
 
   //make these droppable
   const LevelGrid = () => {
-    const columns = 8;
-    const rows = 6;
+    // const columns = 8;
+    // const rows = 6;
 
     // return content of droppable
     return (
       <div className="grid-container">
         {arr.map((a, index) => {
-          const row = Math.floor(index / columns);
-          const col = index % columns;
+          // const row = Math.floor(index / columns);
+          // const col = index % columns;
           return (
             <div key={index} className={`grid-item `}>
               <Droppable
