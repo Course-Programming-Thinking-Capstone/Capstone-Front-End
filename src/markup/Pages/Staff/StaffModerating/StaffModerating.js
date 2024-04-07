@@ -152,7 +152,7 @@ const ModeratingDetail = ({ onBack }) => {
     const handleCourseTypeSelect = (type) => setCourseType(type);
 
     return (
-        <div className='moderating-detail'>
+        <div className='moderating-detail' style={{ backgroundColor: 'white', height: '650px', overflow: 'scroll' }}>
             <Modal
                 show={modalApproveShow}
                 onHide={() => setApproveModalShow(false)}
