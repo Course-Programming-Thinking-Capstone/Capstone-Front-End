@@ -813,7 +813,20 @@ export const UpdateQuestionComponent = ({
 
   //useState
   const [show, setShow] = useState(false);
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
+
+  const getIsCorrectOptionkey = () => {
+    if (question !== undefined && Array.isArray(question.options)) {
+      question.options.map((option, key) => {
+        if (option.isCorrect === true) {
+          return key;
+        }
+      });
+    }
+    return 0;
+  };
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(
+    getIsCorrectOptionkey
+  );
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -835,23 +848,21 @@ export const UpdateQuestionComponent = ({
     console.log(`Section id in addQuestionComponent is missing.`);
   }
 
-  useEffect(() => {
-    question.options.map((option, key) => {
-      if (option.isCorrect === true) {
-        setCorrectAnswerIndex(key);
-      }
-    });
-  }, []);
-
   //handle submit
   const handleSubmit = (values) => {
     const { title, options } = values;
 
-    options[correctAnswerIndex].isCorrect = true;
+    const updatedOptions = options.map((option, index) => {
+      if (index === correctAnswerIndex) {
+        return { ...option, isCorrect: true };
+      } else {
+        return { ...option, isCorrect: false };
+      }
+    });
 
     const question = {
       title: title,
-      options: options,
+      options: updatedOptions,
     };
 
     dispatch(

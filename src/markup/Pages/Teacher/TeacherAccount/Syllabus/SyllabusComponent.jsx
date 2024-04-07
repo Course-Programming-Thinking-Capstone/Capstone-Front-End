@@ -64,7 +64,7 @@ const SyllabusComponent = () => {
               <h5 className="my-0">Syllabus</h5>
               <hr />
             </div>
-            <i class="fa-solid fa-book"></i>
+            <i className="fa-solid fa-book"></i>
           </div>
         </div>
         <div className="syllabus-content">
@@ -82,7 +82,7 @@ const SyllabusComponent = () => {
                   borderRadius: "0 10px 10px 0",
                 }}
               >
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i className="fa-solid fa-magnifying-glass"></i>
               </div>
             </div>
 
@@ -124,9 +124,9 @@ const SyllabusComponent = () => {
                               border: "none",
                               borderRadius: "10px",
                               color: "white",
-                              textDecoration: "none", 
+                              textDecoration: "none",
                               textAlign: "center",
-                              lineHeight: "36px", 
+                              lineHeight: "36px",
                             }}
                           >
                             View

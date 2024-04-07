@@ -51,7 +51,7 @@ export const SyllabusInformationComponent = () => {
               <h5 className="my-0">Syllabus detail</h5>
               <hr />
             </div>
-            <i class="fa-solid fa-book"></i>
+            <i className="fa-solid fa-book"></i>
           </div>
           <div>
             <Button
@@ -67,7 +67,6 @@ export const SyllabusInformationComponent = () => {
       </div>
       <div className="syllabus-content">
         <div className="pt-2 px-4 pb-2">
-
           {isLoading ? (
             <>
               <Placeholder as="p" animation="glow">
@@ -186,9 +185,9 @@ export const SyllabusInformationComponent = () => {
               <div className="d-flex justify-content-end">
                 <Link to={`/teacher-account/syllabuses/create-course`}>
                   <Button
-                     variant="danger"
-                     className="px-3 py-2"
-                     style={{ borderRadius: "5px" }}
+                    variant="danger"
+                    className="px-3 py-2"
+                    style={{ borderRadius: "5px" }}
                   >
                     Create course
                   </Button>

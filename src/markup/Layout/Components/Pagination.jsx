@@ -5,6 +5,7 @@ export const CustomPagination = ({ page, totalPage, setPage }) => {
   for (let index = 1; index <= totalPage; index++) {
     pageItems.push(
       <Pagination.Item
+        key={index}
         onClick={() => {
           setPage(index);
         }}

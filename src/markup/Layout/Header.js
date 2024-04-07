@@ -31,7 +31,7 @@ const Header = () => {
             { maintitle: 'Home', to: '/' },
             { maintitle: 'Course', to: '/classes' },
             { maintitle: 'Teacher', to: '/teachers' },
-            { maintitle: 'Login', to: '/register' },
+            { maintitle: 'Login', to: '/login' },
         ],
         Staff: [
             { maintitle: 'Courses', to: '/courses' },
