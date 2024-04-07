@@ -41,6 +41,7 @@ import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedu
 import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 import CreateCourse from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse";
 import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
+import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 
 // function App() {
 // 	return (
@@ -112,6 +113,15 @@ const App = () => {
                   <PrivateRoute
                     page="admin/game-data"
                     component={<GameData />}
+                  />
+                }
+              />
+              <Route
+                path="syllabusad"
+                element={
+                  <PrivateRoute
+                    page="admin/syllabusad"
+                    component={<SyllabusAd />}
                   />
                 }
               />

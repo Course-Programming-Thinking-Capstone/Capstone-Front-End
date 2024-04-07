@@ -18,7 +18,7 @@ export const CommonAuthenticatedPages = [""];
 export const ErrorPages = ["error-404"];
 
 //Lưu đường dẫn các trang mà admin được truy cập
-export const AdminPages = ["admin", "admin/game", "admin/game-data"];
+export const AdminPages = ["admin", "admin/game", "admin/game-data", "admin/syllabusad"];
 
 //Lưu đường dẫn các trang mà staff được truy cập
 export const StaffPages = ["staff", "staff/staff-order", "staff/staff-order-detail", "staff/class"];
