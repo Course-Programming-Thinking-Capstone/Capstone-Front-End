@@ -2,9 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import background from "./../../../images/background/adminStaffBackground.jpg";
-import simp from "./../../../images/gallery/simp.jpg";
-import Modal from "react-bootstrap/Modal";
-import ReactPaginate from "react-paginate";
 import Game from "./Game/Game";
 import Syllabus from "./Syllabus/SyllabusAd";
 
@@ -18,6 +15,11 @@ export default function Admin() {
     setActiveContent(content);
     setActiveItem(content);
     navigate(`/admin/${content.toLowerCase()}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
   };
 
   const renderContent = () => {
@@ -44,8 +46,9 @@ export default function Admin() {
   };
 
   const getItemClass = (itemName) => {
-    return `item d-flex justify-content-start ${activeItem === itemName ? "active" : ""
-      }`;
+    return `item d-flex justify-content-start ${
+      activeItem === itemName ? "active" : ""
+    }`;
   };
 
   return (
