@@ -112,7 +112,7 @@ export default function Admin() {
               <i className="fa-solid fa-book"></i>
               <span>Syllabus</span>
             </div>
-            <div className="item" onClick={handleLogout}>
+            <div className="item">
               <i className="fa-solid fa-book"></i>
               <span>Log out</span>
             </div>

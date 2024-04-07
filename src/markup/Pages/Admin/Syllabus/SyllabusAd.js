@@ -96,7 +96,7 @@ export default function SyllabusAd() {
     const accessToken = localStorage.getItem("accessToken");
 
     const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 4; // You can set this to however many items you want per page
+    const itemsPerPage = 4;
     const pageCount = Math.ceil(courses.length / itemsPerPage);
 
     const handlePageClick = ({ selected: selectedPage }) => {
@@ -110,7 +110,7 @@ export default function SyllabusAd() {
         const fetchCourses = async () => {
             try {
                 const response = await fetch(
-                    "https://www.kidpro-production.somee.com/api/v1/courses?status=Draft&action=manage",
+                    "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Draft",
                     {
                         method: "GET",
                         headers: {
@@ -128,6 +128,7 @@ export default function SyllabusAd() {
 
                 const data = await response.json();
                 setCourses(data.results || []);
+                console.log(courses);
             } catch (error) {
                 console.error("Error fetching courses:", error.message);
             }
@@ -146,12 +147,30 @@ export default function SyllabusAd() {
         const [courseTarget, setCourseTarget] = useState("");
         const [selectedTeacherId, setSelectedTeacherId] = useState(null);
 
+        const [activePassCondition, setActivePassCondition] = useState(null);
+        const [activeCourseSlot, setActiveCourseSlot] = useState(null);
+        const [activeSlotTime, setActiveSlotTime] = useState(null);
+
+        const handleSelect = (category, value) => {
+            if (category === 'passCondition') {
+                setActivePassCondition(value);
+            } else if (category === 'courseSlot') {
+                setActiveCourseSlot(value);
+            } else if (category === 'slotTime') {
+                setActiveSlotTime(value);
+            }
+        };
+
         const handleAddSection = () => {
             if (newSectionName.trim() !== "") {
                 setSections([...sections, newSectionName.trim()]);
                 setNewSectionName("");
                 setModalShow(false);
             }
+        };
+
+        const handleRemoveSection = (indexToRemove) => {
+            setSections(sections.filter((_, index) => index !== indexToRemove));
         };
 
         useEffect(() => {
@@ -197,14 +216,17 @@ export default function SyllabusAd() {
         const handleSaveChanges = async () => {
             const courseData = {
                 name: courseName,
-                courseTarget: courseTarget,
+                target: courseTarget,
                 teacherId: selectedTeacherId,
+                totalSlot: activeCourseSlot,     
+                slotTime: activeSlotTime,        
+                minQuizScoreRatio: activePassCondition,
                 sections: sections.map((sectionName) => ({ name: sectionName })),
             };
 
             try {
                 const response = await fetch(
-                    "https://www.kidpro-production.somee.com/api/v1/courses",
+                    "https://www.kidpro-production.somee.com/api/v1/syllabuses",
                     {
                         method: "POST",
                         headers: {
@@ -355,11 +377,13 @@ export default function SyllabusAd() {
                         <div className="render-section">
                             {sections.map((section, index) => (
                                 <div
-                                    className="ps-4 pt-2 pb-2"
+                                    className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
                                     key={index}
                                     style={{ border: "1px solid #D4D4D4" }}
                                 >
                                     <p className="mb-0">{section}</p>
+                                    <i onClick={() => handleRemoveSection(index)}
+                                        style={{ cursor: "pointer" }} class="fa-solid fa-trash-can"></i>
                                 </div>
                             ))}
                         </div>
@@ -376,6 +400,55 @@ export default function SyllabusAd() {
                             >
                                 <i className="fa-solid fa-circle-plus"></i>New section
                             </button>
+                        </div>
+
+                        <div className="point d-flex">
+                            <div>
+                                <p className="blue mb-1">Pass condition</p>
+                                <p className="ms-5">Quiz score higher</p>
+                                <p className="blue mb-1">Course slot</p>
+                                <p className="ms-5">Total number of slot</p>
+                                <p className="blue mb-1">Slot time</p>
+                                <p className="ms-5">Minutes</p>
+                            </div>
+                            <div className="ms-5">
+                                <div className="d-flex" style={{ marginTop: '30px' }}>
+                                    {[60, 70, 80, 90].map((value) => (
+                                        <div
+                                            key={value}
+                                            className="item d-flex"
+                                            onClick={() => handleSelect('passCondition', value)}
+                                        >
+                                            <i className={activePassCondition === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
+                                            <div>{value}%</div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="d-flex" style={{ marginTop: '60px' }}>
+                                    {[25, 30, 35, 40].map((value) => (
+                                        <div
+                                            key={value}
+                                            className="item d-flex"
+                                            onClick={() => handleSelect('courseSlot', value)}
+                                        >
+                                            <i className={activeCourseSlot === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
+                                            <div>{value}%</div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="d-flex" style={{ marginTop: '55px' }}>
+                                    {[20, 30, 45, 50].map((value) => (
+                                        <div
+                                            key={value}
+                                            className="item d-flex"
+                                            onClick={() => handleSelect('slotTime', value)}
+                                        >
+                                            <i className={activeSlotTime === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
+                                            <div>{value}%</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         <div>
@@ -453,7 +526,7 @@ export default function SyllabusAd() {
                                 }}
                             >
                                 <p className="mb-0">Total syllabus</p>
-                                <span>12</span>
+                                <span></span>
                             </div>
                         </div>
                         <div>

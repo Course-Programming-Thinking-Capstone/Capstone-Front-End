@@ -42,6 +42,7 @@ import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
 import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
+import StaffModerating from "./markup/Pages/Staff/StaffModerating/StaffModerating";
 
 // function App() {
 // 	return (
@@ -157,6 +158,15 @@ const App = () => {
                   <PrivateRoute
                     page="staff/class"
                     component={<StaffClassDetail />}
+                  />
+                }
+              />
+              <Route
+                path="moderating"
+                element={
+                  <PrivateRoute
+                    page="staff/moderating"
+                    component={<StaffModerating />}
                   />
                 }
               />
