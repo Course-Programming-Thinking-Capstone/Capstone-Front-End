@@ -39,8 +39,8 @@ import StaffOrder from "./markup/Pages/Staff/StaffOrder/StaffOrder";
 import StaffOrderDetail from "./markup/Pages/Staff/StaffOrder/StaffOrderDetail";
 import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule";
 import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
-import CreateCourse from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/createCourse";
 import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
+import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
 
 // function App() {
 // 	return (
@@ -228,7 +228,7 @@ const App = () => {
               element={
                 <PrivateRoute
                   page="teacher-account/syllabuses/create-course"
-                  component={<CreateCourse />}
+                  component={<CreateCourseContent />}
                 />
               }
             />

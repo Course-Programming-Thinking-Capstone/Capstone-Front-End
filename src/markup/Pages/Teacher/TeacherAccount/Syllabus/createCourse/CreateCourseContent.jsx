@@ -3,7 +3,7 @@ import { changeTeacherActiveMenu } from "../../../../../../store/slices/menu/men
 import CreateCourseComponent from "./CreateCourseComponent";
 import TeacherAccount from "../../TeacherAccount";
 
-const CreateCourse = () => {
+const CreateCourseContent = () => {
   const dispatch = useDispatch();
 
   //change active menu
@@ -11,4 +11,4 @@ const CreateCourse = () => {
 
   return <TeacherAccount child={<CreateCourseComponent />} />;
 };
-export default CreateCourse;
+export default CreateCourseContent;

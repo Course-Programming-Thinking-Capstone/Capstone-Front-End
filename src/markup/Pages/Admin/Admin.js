@@ -14,6 +14,8 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const filtered = options.filter((option) =>
       option.fullName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -556,6 +558,11 @@ export default function Admin() {
     navigate(`/admin/${content.toLowerCase()}`);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   const renderContent = () => {
     switch (activeContent) {
       case "Notification":
@@ -649,7 +656,7 @@ export default function Admin() {
               <i className="fa-solid fa-book"></i>
               <span>Syllabus</span>
             </div>
-            <div className="item">
+            <div className="item" onClick={handleLogout}>
               <i className="fa-solid fa-book"></i>
               <span>Log out</span>
             </div>
