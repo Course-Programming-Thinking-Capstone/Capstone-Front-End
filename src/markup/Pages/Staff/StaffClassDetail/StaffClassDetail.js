@@ -13,6 +13,7 @@ export default function StaffClassDetail() {
     const [selectedClassId, setSelectedClassId] = useState(null);
     const [classIdForTeacherForm, setClassIdForTeacherForm] = useState(null);
     const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
+    const [classIdForForm, setClassIdForForm] = useState(null);
 
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
         <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '150px', height: '30px' }} >
@@ -31,6 +32,36 @@ export default function StaffClassDetail() {
         const [openDay, setOpenDay] = useState('');
         const [closeDay, setCloseDay] = useState('');
         const today = new Date().toISOString().split('T')[0];
+        const [courses, setCourses] = useState([]);
+        const [selectedCourseId, setSelectedCourseId] = useState('');
+
+        useEffect(() => {
+            const fetchCourses = async () => {
+                try {
+                    const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses?status=Active&action=manage', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch courses');
+                    }
+                    const data = await response.json();
+                    setCourses(data.results); // Assuming the results are in data.results
+                    if (data.results.length > 0) {
+                        setSelectedCourseId(data.results[0].id); // Default to the first course
+                    }
+                } catch (error) {
+                    alert(error.message);
+                }
+            };
+
+            fetchCourses();
+        }, [accessToken]); // accessToken is a dependency here
+
 
         const formatBirthday = (date) => {
             const d = new Date(date);
@@ -57,7 +88,7 @@ export default function StaffClassDetail() {
                 classCode: classCode,
                 openDay: formatBirthday(openDay),
                 closeDay: formatBirthday(closeDay),
-                courseId: 1 // Set courseId to 1 as default
+                courseId: selectedCourseId
             };
 
             try {
@@ -106,7 +137,13 @@ export default function StaffClassDetail() {
                         <input type="text" placeholder="Type class's code. Ex: VNR202" value={classCode} onChange={e => setClassCode(e.target.value)} style={{ width: '300px' }} />
 
                         <p className='blue mb-1 mt-4'>Select course</p>
-                        <select name="" id=""></select>
+                        <select value={selectedCourseId} onChange={(e) => setSelectedCourseId(e.target.value)}>
+                            {courses.map(course => (
+                                <option key={course.id} value={course.id}>{course.name}</option>
+                            ))}
+                        </select>
+
+
                         <p className='blue mb-1 mt-4'>Duration start class</p>
                         <div className='d-flex justify-content-center'>
                             <div className="d-flex">
@@ -329,7 +366,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const ClassContent = ({ classId, setView, navigateToTeacherForm, navigateToStudentForm }) => {
+    const ClassContent = ({ classId, setView }) => {
         const [classDetails, setClassDetails] = useState(null);
         const [loading, setLoading] = useState(true);
         const accessToken = localStorage.getItem('accessToken');
@@ -340,6 +377,10 @@ export default function StaffClassDetail() {
 
         const handlePageClick = (selectedItem) => {
             setCurrentPage(selectedItem.selected);
+        };
+
+        const handleAddTeacherClick = () => {
+            navigateToView('addTeacher', classId);
         };
 
         // Calculate the students to be displayed on the current page
@@ -410,7 +451,7 @@ export default function StaffClassDetail() {
                             <i class="fa-solid fa-bell"></i>
                         </div>
                         <div>
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => setView('detail')}>Back</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>Back</button>
                         </div>
                     </div>
                 </div>
@@ -437,7 +478,7 @@ export default function StaffClassDetail() {
                                     {classDetails.teacherName ? (
                                         <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Edit</button></p>
                                     ) : (
-                                        <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Add teacher</button>
+                                        <button onClick={handleAddTeacherClick} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Add teacher</button>
                                     )}
                                 </p>
                                 <p className='mb-1'>{classDetails.openClass} - {classDetails.closeClass}</p>
@@ -529,7 +570,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const TeacherForm = ({ onBack, classId }) => {
+    const TeacherForm = ({ onBack}) => {
         const accessToken = localStorage.getItem('accessToken');
         const [teachers, setTeachers] = useState([]);
         const [currentClass, setCurrentClass] = useState([]);
@@ -538,6 +579,7 @@ export default function StaffClassDetail() {
         const [selectedTeacherId, setSelectedTeacherId] = useState(null);
         const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
         const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
+        const classId = classIdForForm;
 
         useEffect(() => {
             // Optionally, fetch class details if needed to get study days and slots
@@ -659,7 +701,7 @@ export default function StaffClassDetail() {
                         <h3 className='orange mb-1'>Add teacher</h3>
                     </div>
                     <div>
-                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
+                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('classContent', classId)}>Back</button>
                     </div>
                 </div>
                 <div className='p-3'>
@@ -1049,6 +1091,15 @@ export default function StaffClassDetail() {
         setView('addStudent');
     };
 
+    // Adjust the navigateToView function to handle classId for navigation
+    const navigateToView = (viewName, classId = null) => {
+        if (classId) {
+            setClassIdForForm(classId);
+        }
+        setView(viewName);
+    };
+
+
     useEffect(() => {
         if (view === 'detail') {
             fetchClassData(currentPage);
@@ -1091,8 +1142,7 @@ export default function StaffClassDetail() {
         switch (view) {
             case 'createClass':
                 return <CreateClass
-                    navigateToTeacherForm={navigateToTeacherForm}
-                    navigateToStudentForm={navigateToStudentForm}
+
                     onBack={() => setView('detail')}
                     onNext={(data) => {
                         setClassData(data); // This sets the state with the data from CreateClass
@@ -1100,8 +1150,7 @@ export default function StaffClassDetail() {
                     }} />;
             case 'createSchedule':
                 return <CreateSchedule
-                    navigateToTeacherForm={navigateToTeacherForm}
-                    navigateToStudentForm={navigateToStudentForm}
+
                     onBack={() => setView('createClass')} classData={classData} setView={setView} />;
             case 'addTeacher':
                 return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('classContent')} />;
@@ -1111,8 +1160,6 @@ export default function StaffClassDetail() {
                 return <ClassContent
                     classId={selectedClassId}
                     setView={setView}
-                    navigateToTeacherForm={navigateToTeacherForm}
-                    navigateToStudentForm={navigateToStudentForm}
                 />;
             default:
                 return (
