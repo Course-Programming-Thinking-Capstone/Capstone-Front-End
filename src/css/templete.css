@@ -5278,3 +5278,38 @@ button.admin-save:hover {
   cursor: pointer;
 }
 
+.teacher-accordion {
+  margin-bottom: 20px;
+  padding: 4px 8px;
+  
+  border: 1px solid #D4D4D4;
+  border-radius: 5px;
+}
+
+
+
+.teacher-accordion button.accordion-button,
+.teacher-accordion button.collapsed {
+  
+  padding: 4px 8px;
+  background-color: white;
+  height: 40px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.teacher-accordion .accordion-collapse {
+  border: none;
+  padding: 10px;
+}
+
+.teacher-accordion .section-title button{
+  color: #EF7E54;
+  font-weight: bold;
+}
+
+.teacher-accordion .lesson-title button{
+  color: #EF7E54;
+  font-weight: bold;
+}

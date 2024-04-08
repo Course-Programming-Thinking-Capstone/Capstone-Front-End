@@ -3,6 +3,9 @@ import {
   createCourseIdSelector,
   createCourseSelector,
 } from "../../../../../../store/selector";
+import videoIcon from "../../../../../../images/icon/video-icon.png";
+import quizIcon from "../../../../../../images/icon/quiz-icon.png";
+import documentIcon from "../../../../../../images/icon/document-icon.png";
 import { useEffect, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
@@ -221,14 +224,21 @@ const CreateCourseComponent = () => {
               <div>
                 <div className="d-flex justify-content-start">
                   <p className="blue fw-bold">Section</p>
-                  <span className="sub-title orange">*</span>
+                  {/* <span className="sub-title orange">*</span> */}
                 </div>
 
                 <div>
                   {createCourse.sections.map((section, index) => (
-                    <Accordion key={index} defaultActiveKey="0" flush>
+                    <Accordion
+                      key={index}
+                      defaultActiveKey="0"
+                      flush
+                      className="teacher-accordion"
+                    >
                       <Accordion.Item eventKey={index}>
-                        <Accordion.Header>{section.name}</Accordion.Header>
+                        <Accordion.Header className="section-title">
+                          {section.name}
+                        </Accordion.Header>
                         <Accordion.Body>
                           {/* Content */}
                           {section.lessons.map((lesson, index) =>
@@ -333,19 +343,24 @@ export default CreateCourseComponent;
 
 const VideoContent = ({ sectionId, lesson, index }) => {
   return (
-    <Accordion defaultActiveKey="0" flush>
+    <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
       <Accordion.Item eventKey={index}>
-        <Accordion.Header>{lesson.name}</Accordion.Header>
+        <Accordion.Header className="lesson-title">
+          <div className="d-flex justify-content-start align-items-center">
+            <img src={videoIcon} title="Video icon" />
+            <p className="mb-0 mx-2">{lesson.name}</p>
+          </div>
+        </Accordion.Header>
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
               <Col>
-                <p>Duration: {lesson.duration} minute</p>
+                <p><span className="blue fw-bold">Duration:</span> {lesson.duration} minute</p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p>Url: {lesson.resourceUrl}</p>
+                <p><span className="blue fw-bold">Url:</span> {lesson.resourceUrl}</p>
               </Col>
             </Row>
 
@@ -370,19 +385,28 @@ const VideoContent = ({ sectionId, lesson, index }) => {
 
 const DocumentContent = ({ sectionId, lesson, index }) => {
   return (
-    <Accordion defaultActiveKey="0" flush>
+    <Accordion
+      defaultActiveKey="0"
+      flush
+      className="teacher-accordion lesson-title"
+    >
       <Accordion.Item eventKey={index}>
-        <Accordion.Header>{lesson.name}</Accordion.Header>
+        <Accordion.Header className="lesson-title">
+          <div className="d-flex justify-content-start align-items-center">
+            <img src={documentIcon} title="Document icon" />
+            <p className="mb-0 mx-2">{lesson.name}</p>
+          </div>
+        </Accordion.Header>
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
               <Col>
-                <p>Duration: {lesson.duration} minute</p>
+                <p><span className="blue fw-bold">Duration:</span> {lesson.duration} minute</p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p>Content: {lesson.content}</p>
+                <p><span className="blue fw-bold">Content:</span> {lesson.content}</p>
               </Col>
             </Row>
 
@@ -408,39 +432,48 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
 
 const QuizContent = ({ sectionId, quiz, index }) => {
   return (
-    <Accordion defaultActiveKey="0" flush>
+    <Accordion
+      defaultActiveKey="0"
+      flush
+      className="teacher-accordion lesson-title"
+    >
       <Accordion.Item eventKey={index}>
-        <Accordion.Header>{quiz.title}</Accordion.Header>
+        <Accordion.Header className="lesson-title">
+          <div className="d-flex justify-content-start align-items-center">
+            <img src={quizIcon} title="Quiz icon" />
+            <p className="mb-0 mx-2">{quiz.title}</p>
+          </div>
+        </Accordion.Header>
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
               <Col>
-                <p>Description: {quiz.description}</p>
+                <p><span className="blue fw-bold">Description:</span> {quiz.description}</p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p>Duration: {quiz.duration} minute</p>
+                <p><span className="blue fw-bold">Duration:</span> {quiz.duration} minute</p>
               </Col>
             </Row>
 
             <Row className="mb-3">
               <Col>
-                <p>Number of attempts: {quiz.numberOfAttempt}</p>
+                <p><span className="blue fw-bold">Number of attempts:</span> {quiz.numberOfAttempt}</p>
               </Col>
             </Row>
 
             <Row className="mb-3">
               <Col>
                 <p>
-                  Random order: {quiz.isOrderRandom === true ? "Yes" : "No"}
+                <span className="blue fw-bold">Random order:</span> {quiz.isOrderRandom === true ? "Yes" : "No"}
                 </p>
               </Col>
             </Row>
             {quiz.isOrderRandom && (
               <Row className="mb-3">
                 <Col>
-                  <p>Number of questions: {quiz.numberOfQuestion}</p>
+                  <p><span className="blue fw-bold">Number of questions:</span> {quiz.numberOfQuestion}</p>
                 </Col>
               </Row>
             )}
@@ -448,7 +481,7 @@ const QuizContent = ({ sectionId, quiz, index }) => {
             {quiz.questions && (
               <Row className="mb-3">
                 <Col>
-                  <p>Content</p>
+                  <p><span className="blue fw-bold">Content</span></p>
                   {quiz.questions.map((question, key) => (
                     <QuestionContent
                       sectionId={sectionId}
@@ -489,7 +522,11 @@ const QuizContent = ({ sectionId, quiz, index }) => {
 
 const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
   return (
-    <Accordion defaultActiveKey="0" flush>
+    <Accordion
+      defaultActiveKey="0"
+      flush
+      className="teacher-accordion lesson-title"
+    >
       <Accordion.Item eventKey={questionIndex}>
         <Accordion.Header>{question.title}</Accordion.Header>
         <Accordion.Body>
