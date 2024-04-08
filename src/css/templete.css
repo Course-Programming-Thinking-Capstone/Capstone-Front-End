@@ -5251,3 +5251,118 @@ select:-internal-autofill-selected {
   color: white;
   background-color: #f69e4a;
 }
+
+button.add {
+  background-color: #EF7E54; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+button.add:hover {
+  background-color: #ee5c27;
+  cursor: pointer;
+}
+
+button.admin-back {
+  background-color: #7F7C7C; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+button.admin-back:hover {
+  background-color: #504f4f;
+  cursor: pointer;
+}
+
+button.admin-save {
+  background-color: #2A7FFF; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button.admin-save:hover {
+  background-color: #0951bd;
+  cursor: pointer;
+}
+
+.teacher-accordion {
+  margin-bottom: 20px;
+  padding: 4px 8px;
+  
+  border: 1px solid #D4D4D4;
+  border-radius: 5px;
+}
+
+
+
+.teacher-accordion button.accordion-button,
+.teacher-accordion button.collapsed {
+  
+  padding: 4px 8px;
+  background-color: white;
+  height: 40px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.teacher-accordion .accordion-collapse {
+  border: none;
+  padding: 10px;
+}
+
+/* .teacher-accordion .section-title button{
+  font-weight: bold;
+} */
+
+.teacher-accordion .lesson-title button{
+  color: #EF7E54;
+  font-weight: bold;
+}
+
+button.teacher-button {
+  background-color: white; 
+  border: 1px solid #FF8A00;
+  border-radius: 5px;
+  color: #FF8A00;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button.teacher-button:hover {
+  background-color: #f7cc9c; 
+}
+
+button.teacher-button-remove {
+  border: none;
+  background-color: white; 
+  color: #FF8A00;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}

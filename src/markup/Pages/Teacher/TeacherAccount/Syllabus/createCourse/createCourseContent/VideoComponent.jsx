@@ -9,6 +9,9 @@ import {
   updateVideo,
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
+import videoIcon from "../../../../../../../images/icon/video-icon.png";
+import removeIcon from "../../../../../../../images/icon/remove-icon.png";
+
 const VideoComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
 
@@ -57,14 +60,21 @@ const VideoComponent = ({ sectionId }) => {
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="primary"
         size="sm"
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
         Add video
-      </Button>
+      </Button> */}
+
+      <button className="teacher-button" onClick={handleShow}>
+        <div className="d-flex justify-content-start align-items-center">
+          <img src={videoIcon} title="Video icon" />
+          <p className="mb-0 mx-2">Video</p>
+        </div>
+      </button>
 
       <Modal
         show={show}
@@ -128,7 +138,7 @@ const VideoComponent = ({ sectionId }) => {
                       name="resourceUrl"
                       value={values.resourceUrl}
                       onChange={handleChange}
-                      isInvalid={touched.resourceUrl &&!!errors.resourceUrl} // Set isInvalid based on validation errors
+                      isInvalid={touched.resourceUrl && !!errors.resourceUrl} // Set isInvalid based on validation errors
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}
@@ -310,14 +320,20 @@ export const RemoveComponent = ({ sectionId, lessonIndex }) => {
   };
 
   return (
-    <Button
-      variant="delete"
-      size="sm"
-      onClick={handleDelete}
-      style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-    >
-      Remove
-    </Button>
+    <>
+      {/* <Button
+        variant="delete"
+        size="sm"
+        onClick={handleDelete}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
+        Remove
+      </Button> */}
+
+      <button onClick={handleDelete} className="teacher-button-remove">
+        <img src={removeIcon} title="Remove" />
+      </button>
+    </>
   );
 };
 

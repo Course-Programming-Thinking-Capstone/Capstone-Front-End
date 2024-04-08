@@ -29,8 +29,8 @@ export const SyllabusInformationComponent = () => {
         await dispatch(getSyllabusByIdAsync(id));
       } catch (error) {
         if (error.response) {
-          console.log(`Error response: ${error.response?.data?.Message}`);
-          setMessage(error.response?.data?.title || "Undefined.");
+          console.log(`Error response: ${error.response?.data?.message}`);
+          setMessage(error.response?.data?.message || "Undefined.");
         } else {
           console.log(`Error message abc: ${error.message}`);
           setMessage(error.message || "Undefined.");

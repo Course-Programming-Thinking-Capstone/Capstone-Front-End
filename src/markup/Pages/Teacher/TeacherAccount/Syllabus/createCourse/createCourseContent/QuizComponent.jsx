@@ -20,6 +20,9 @@ import {
   updateQuiz,
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
+import quizIcon from "../../../../../../../images/icon/quiz-icon.png";
+import removeIcon from "../../../../../../../images/icon/remove-icon.png";
+
 //Add quiz
 export const AddQuizComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
@@ -110,14 +113,12 @@ export const AddQuizComponent = ({ sectionId }) => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        size="sm"
-        onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-      >
-        Add quiz
-      </Button>
+      <button className="teacher-button" onClick={handleShow}>
+        <div className="d-flex justify-content-start align-items-center">
+          <img src={quizIcon} title="Quiz icon" />
+          <p className="mb-0 mx-2">Quiz</p>
+        </div>
+      </button>
 
       <Modal
         show={show}
@@ -546,14 +547,20 @@ export const RemoveQuizComponent = ({ sectionId, index }) => {
   };
 
   return (
-    <Button
-      variant="delete"
-      size="sm"
-      onClick={handleDelete}
-      style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-    >
-      Remove
-    </Button>
+    <>
+      {/* <Button
+        variant="delete"
+        size="sm"
+        onClick={handleDelete}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
+        Remove
+      </Button> */}
+
+      <button onClick={handleDelete} className="teacher-button-remove">
+        <img src={removeIcon} title="Remove" />
+      </button>
+    </>
   );
 };
 
