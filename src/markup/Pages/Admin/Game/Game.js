@@ -64,8 +64,8 @@ export default function Game() {
       if (value < 0) {
         value = 0;
       }
-      if (value > 100) {
-        value = 100;
+      if (value > 1000000) {
+        value = 1000000;
       }
       setCurrentLevelDetail({ ...currentLevelDetail, [name]: value });
     }
@@ -358,6 +358,9 @@ export default function Game() {
     if (active && over) {
       const updatedArray = arr.map((row) => {
         if (row.id === over.id) {
+          if (row.typeId === 0) {
+            setIsVStartExist(false);
+          }
           return {
             ...row,
             content: active.data.current.child,
@@ -367,7 +370,7 @@ export default function Game() {
         return row;
       });
 
-      if (active.data.current.typeId == 0) {
+      if (active.data.current.typeId === 0) {
         setIsVStartExist(true);
       }
 
