@@ -135,7 +135,7 @@ export default function Game() {
       let errorMessage = null;
       if (error.response) {
         console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        errorMessage = error.response?.data?.title || "Undefined.";
+        errorMessage = error.response?.data?.message || "Undefined.";
       } else {
         console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
         errorMessage = error.message || "Undefined.";
@@ -168,7 +168,7 @@ export default function Game() {
       let errorMessage = null;
       if (error.response) {
         console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        errorMessage = error.response?.data?.title || "Undefined.";
+        errorMessage = error.response?.data?.message || "Undefined.";
       } else {
         console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
         errorMessage = error.message || "Undefined.";
@@ -284,7 +284,7 @@ export default function Game() {
       let errorMessage = null;
       if (error.response) {
         console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        errorMessage = error.response?.data?.title || "Undefined.";
+        errorMessage = error.response?.data?.message || "Undefined.";
       } else {
         console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
         errorMessage = error.message || "Undefined.";
@@ -332,7 +332,7 @@ export default function Game() {
         let errorMessage = null;
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          errorMessage = error.response?.data?.title || "Undefined.";
+          errorMessage = error.response?.data?.message || "Undefined.";
         } else {
           console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
           errorMessage = error.message || "Undefined.";

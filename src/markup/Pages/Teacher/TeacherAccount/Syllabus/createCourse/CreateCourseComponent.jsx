@@ -79,7 +79,7 @@ const CreateCourseComponent = () => {
         console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 
         if (error.response) {
-          setMessage(error.response?.data?.title || "Undefined.");
+          setMessage(error.response?.data?.message || "Undefined.");
         } else {
           setMessage(error.message || "Undefined.");
         }
@@ -119,7 +119,7 @@ const CreateCourseComponent = () => {
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.response?.data?.title || "Undefined.");
+          setMessage(error.response?.data?.message || "Undefined.");
         } else {
           console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
           setMessage(error.message || "Undefined.");
