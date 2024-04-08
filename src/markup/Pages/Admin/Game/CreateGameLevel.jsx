@@ -5,6 +5,8 @@ import street from "../../../../images/icon/gameStreet.png";
 import rock from "../../../../images/icon/gameRock.png";
 import end from "../../../../images/icon/gameEnd.png";
 
+import arrowLeft from "../../../../images/icon/arrow-left.png";
+
 import {
   DndContext,
   MouseSensor,
@@ -88,7 +90,6 @@ export const CreateLevel = ({
   const handleBack = () => {
     setAddLevel(false);
     setViewLevelDetail(false);
-    handleReloadLevels(modeId);
   };
 
   const handleAddLevel = async () => {
@@ -130,7 +131,9 @@ export const CreateLevel = ({
         alert("Add success");
 
         //back
-        handleBack();
+        setAddLevel(false);
+        setViewLevelDetail(false);
+        handleReloadLevels(modeId);
       } catch (error) {
         let errorMessage = null;
         if (error.response) {
@@ -204,16 +207,11 @@ export const CreateLevel = ({
           <h5>Add level</h5>
         </div>
         <div>
-          <button
-            onClick={handleBack}
-            style={{
-              backgroundColor: "#7F7C7C",
-              border: "none",
-              borderRadius: "8px",
-              color: "white",
-            }}
-          >
-            Back
+          <button onClick={handleBack} className="admin-back">
+            <div className="d-flex jutify-content-between align-items-center">
+              <img src={arrowLeft} alt="Arrow Left Icon" />
+              <p className="mb-0 mx-2">Back</p>
+            </div>
           </button>
         </div>
       </div>
@@ -339,13 +337,13 @@ export const CreateLevel = ({
                     typeId={3}
                   />
                 </div>
-                <Button className="my-3" onClick={handleAddLevel}>
+                <button className="my-3 admin-save" onClick={handleAddLevel}>
                   {isSaveLoading === false ? (
                     <div>Save</div>
                   ) : (
                     <Spinner animation="border" size="sm" variant="warning" />
                   )}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

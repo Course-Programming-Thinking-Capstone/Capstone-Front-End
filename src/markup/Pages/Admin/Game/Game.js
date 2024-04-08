@@ -6,6 +6,9 @@ import functionGame from "../../../../images/icon/functionGame.png";
 import condition from "../../../../images/icon/conditionGame.png";
 import custom from "../../../../images/icon/customGame.png";
 
+import plusCircleIcon from "../../../../images/icon/plus_circle.png";
+import arrowLeft from "../../../../images/icon/arrow-left.png";
+
 import start from "../../../../images/icon/gameStart.png";
 import street from "../../../../images/icon/gameStreet.png";
 import rock from "../../../../images/icon/gameRock.png";
@@ -146,6 +149,8 @@ export default function Game() {
 
   const handleBackButtonClick = () => {
     setViewGameData(false);
+    setViewLevelDetail(false);
+    setAddLevel(false);
   };
 
   const handleAddLevelClick = () => {
@@ -427,21 +432,19 @@ export default function Game() {
         style={{ backgroundColor: "white", borderRadius: "8px" }}
       >
         <div className="d-flex justify-content-between">
-          <div>
+          <div className="mb-3">
             <h5>Level Detail</h5>
-            <p>Level ID: {currentLevelDetail.id}</p>
+            {/* <p>Level ID: {currentLevelDetail.id}</p> */}
           </div>
           <div>
             <button
               onClick={() => setViewLevelDetail(false)}
-              style={{
-                backgroundColor: "#7F7C7C",
-                border: "none",
-                borderRadius: "8px",
-                color: "white",
-              }}
+              className="admin-back"
             >
-              Back
+              <div className="d-flex jutify-content-between align-items-center">
+                <img src={arrowLeft} alt="Arrow Left Icon" />
+                <p className="mb-0 mx-2">Back</p>
+              </div>
             </button>
           </div>
         </div>
@@ -486,12 +489,7 @@ export default function Game() {
           </div>
           <div>
             <button
-              style={{
-                backgroundColor: "#EF7E54",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-              }}
+              className="add"
               onClick={() => handleRemoveLevel(currentLevelDetail.id)}
             >
               Delete level
@@ -567,13 +565,16 @@ export default function Game() {
                       typeId={3}
                     />
                   </div>
-                  <Button className="my-3" onClick={handleUpdateLevel}>
+                  <button
+                    className="my-3 admin-save"
+                    onClick={handleUpdateLevel}
+                  >
                     {isUpdateLoading === false ? (
-                      <div>Save</div>
+                      <>Save</>
                     ) : (
                       <Spinner animation="border" size="sm" variant="warning" />
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
@@ -604,22 +605,17 @@ export default function Game() {
                 <h5 className="mb">Game Data</h5>
                 <hr />
               </div>
-              <button
-                onClick={handleBackButtonClick}
-                style={{
-                  backgroundColor: "#7F7C7C",
-                  border: "none",
-                  borderRadius: "8px",
-                  color: "white",
-                }}
-              >
-                Back
+              <button onClick={handleBackButtonClick} className="admin-back">
+                <div className="d-flex jutify-content-between align-items-center">
+                  <img src={arrowLeft} alt="Arrow Left Icon" />
+                  <p className="mb-0 mx-2">Back</p>
+                </div>
               </button>
             </div>
           </div>
         ) : (
           <div className="header">
-            <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-start align-items-center">
               <div>
                 <h5 className="mb">Game Modes</h5>
                 <hr />
@@ -643,10 +639,13 @@ export default function Game() {
                 }}
               >
                 <div className="text-center" style={{ width: "50%" }}>
-                  <h5 className="mb-0"> MODE</h5>
+                  <h5 className="mb-0">
+                    {" "}
+                    {enhancedModes[modeId - 1]?.typeName} Mode
+                  </h5>
                 </div>
                 <div
-                  className="d-flex justify-content-around"
+                  className="d-flex justify-content-around align-items-center"
                   style={{
                     width: "50%",
                     backgroundColor: "#FF8A00",
@@ -658,14 +657,23 @@ export default function Game() {
                 </div>
               </div>
 
-              <Button onClick={handleAddLevelClick}>Add level</Button>
+              <button className="add" onClick={handleAddLevelClick}>
+                <div className="d-flex jutify-content-between align-items-center">
+                  <img
+                    className="mx-1"
+                    src={plusCircleIcon}
+                    alt="Plus Circle Icon"
+                  />
+                  <p className="mb-0 mx-1">Create level</p>
+                </div>
+              </button>
             </div>
             <div className="py-3 px-3" style={{}}>
               {gameLevels.length > 0 ? (
                 gameLevels.map((level, index) => (
                   <div
                     key={index}
-                    className="mt-3 py-3 px-4 d-flex justify-content-between"
+                    className="mt-3 py-3 px-4 d-flex justify-content-between align-items-center"
                     style={{ backgroundColor: "white", borderRadius: "8px" }}
                   >
                     <div>
@@ -674,12 +682,7 @@ export default function Game() {
                     <div>
                       <button
                         onClick={() => handleViewEditClick(level)}
-                        style={{
-                          backgroundColor: "#EF7E54",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "8px",
-                        }}
+                        className="add"
                       >
                         View/Edit
                       </button>

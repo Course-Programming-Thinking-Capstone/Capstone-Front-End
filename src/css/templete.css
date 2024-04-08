@@ -5223,3 +5223,58 @@ select:-internal-autofill-selected {
   color: white;
   background-color: #F69E4A;
 }
+
+button.add {
+  background-color: #EF7E54; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+button.add:hover {
+  background-color: #ee5c27;
+  cursor: pointer;
+}
+
+button.admin-back {
+  background-color: #7F7C7C; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+button.admin-back:hover {
+  background-color: #504f4f;
+  cursor: pointer;
+}
+
+button.admin-save {
+  background-color: #2A7FFF; 
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button.admin-save:hover {
+  background-color: #0951bd;
+  cursor: pointer;
+}
+
