@@ -1434,6 +1434,10 @@ textarea.form-control {
   height: 3px;
 }
 
+.moderating-lesson .selected-lesson {
+  color: #1A9CB7;/* Light grey color, you can choose any color you like */
+}
+
 .staff-notification .header i,
 .staff-moderating .header i,
 .staff-class-detail .header i,

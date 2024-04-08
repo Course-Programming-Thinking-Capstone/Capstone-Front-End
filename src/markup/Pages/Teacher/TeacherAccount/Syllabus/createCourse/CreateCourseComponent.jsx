@@ -224,108 +224,108 @@ const CreateCourseComponent = () => {
                   <span className="sub-title orange">*</span>
                 </div>
 
-                <div>
-                  {createCourse.sections.map((section, index) => (
-                    <Accordion key={index} defaultActiveKey="0" flush>
-                      <Accordion.Item eventKey={index}>
-                        <Accordion.Header>{section.name}</Accordion.Header>
-                        <Accordion.Body>
-                          {/* Content */}
-                          {section.lessons.map((lesson, index) =>
-                            lesson.type === "Video" ? (
-                              <VideoContent
-                                sectionId={section.id}
-                                key={index}
-                                lesson={lesson}
-                                index={index}
-                              />
-                            ) : (
-                              <DocumentContent
-                                sectionId={section.id}
-                                key={index}
-                                lesson={lesson}
-                                index={index}
-                              />
-                            )
-                          )}
-
-                          {section.quizzes.map((quiz, index) => (
-                            <QuizContent
-                              key={index}
+                <div style={{ overflowY: 'auto' }}>
+                {createCourse.sections.map((section, index) => (
+                  <Accordion key={index} defaultActiveKey="0" flush>
+                    <Accordion.Item eventKey={index}>
+                      <Accordion.Header>{section.name}</Accordion.Header>
+                      <Accordion.Body>
+                        {/* Content */}
+                        {section.lessons.map((lesson, index) =>
+                          lesson.type === "Video" ? (
+                            <VideoContent
                               sectionId={section.id}
-                              quiz={quiz}
+                              key={index}
+                              lesson={lesson}
                               index={index}
                             />
-                          ))}
+                          ) : (
+                            <DocumentContent
+                              sectionId={section.id}
+                              key={index}
+                              lesson={lesson}
+                              index={index}
+                            />
+                          )
+                        )}
 
-                          <Container>
-                            <Row>
-                              <Col md="4">
-                                <VideoComponent sectionId={section.id} />
-                              </Col>
-                              <Col md="4">
-                                <DocumentComponent sectionId={section.id} />
-                              </Col>
-                              <Col md="4">
-                                <AddQuizComponent sectionId={section.id} />
-                              </Col>
-                            </Row>
-                          </Container>
-                        </Accordion.Body>
-                      </Accordion.Item>
-                    </Accordion>
-                  ))}
-                </div>
+                        {section.quizzes.map((quiz, index) => (
+                          <QuizContent
+                            key={index}
+                            sectionId={section.id}
+                            quiz={quiz}
+                            index={index}
+                          />
+                        ))}
+
+                        <Container>
+                          <Row>
+                            <Col md="4">
+                              <VideoComponent sectionId={section.id} />
+                            </Col>
+                            <Col md="4">
+                              <DocumentComponent sectionId={section.id} />
+                            </Col>
+                            <Col md="4">
+                              <AddQuizComponent sectionId={section.id} />
+                            </Col>
+                          </Row>
+                        </Container>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                ))}
               </div>
-              <div className="mb-4">
-                <p className="blue fw-bold">Course picture</p>
-                <p className="mb-1">
-                  Max size <span className="orange">10Mb</span>. The required
-                  type image is <span className="orange">JPG, PNG</span>.
-                </p>
-                {/* <label htmlFor="fileInput" className="button">
+            </div>
+          <div className="mb-4">
+            <p className="blue fw-bold">Course picture</p>
+            <p className="mb-1">
+              Max size <span className="orange">10Mb</span>. The required
+              type image is <span className="orange">JPG, PNG</span>.
+            </p>
+            {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-                <input
-                  type="file"
-                  accept="image/jpeg, image/png"
-                  onChange={handleFileInputChange}
-                  id="fileInput"
-                />
-              </div>
-              <div>
-                <div className="d-flex">
-                  <input id="check" type="checkbox" />
-                  <label htmlFor="check">
-                    Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
-                    mực với đạo đức của một giáo viên
-                  </label>
-                </div>
+            <input
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={handleFileInputChange}
+              id="fileInput"
+            />
+          </div>
+          <div>
+            <div className="d-flex">
+              <input id="check" type="checkbox" />
+              <label htmlFor="check">
+                Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
+                mực với đạo đức của một giáo viên
+              </label>
+            </div>
 
-                <div className="d-flex justify-content-end">
-                  <Button
-                    variant="primary"
-                    className="mx-3 px-3 py-2"
-                    style={{ borderRadius: "5px" }}
-                    onClick={() => saveCourse("Save")}
-                  >
-                    SAVE DRAFT
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="px-3 py-2"
-                    style={{ borderRadius: "5px" }}
-                    onClick={() => saveCourse("Post")}
-                  >
-                    POST COURSE
-                  </Button>
-                </div>
-              </div>
-            </>
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="primary"
+                className="mx-3 px-3 py-2"
+                style={{ borderRadius: "5px" }}
+                onClick={() => saveCourse("Save")}
+              >
+                SAVE DRAFT
+              </Button>
+              <Button
+                variant="danger"
+                className="px-3 py-2"
+                style={{ borderRadius: "5px" }}
+                onClick={() => saveCourse("Post")}
+              >
+                POST COURSE
+              </Button>
+            </div>
+          </div>
+        </>
           )}
-        </div>
       </div>
     </div>
+    </div >
   );
 };
 

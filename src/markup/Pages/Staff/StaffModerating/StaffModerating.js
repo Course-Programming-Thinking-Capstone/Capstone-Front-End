@@ -6,66 +6,49 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import background from '../../../../images/background/adminStaffBackground.jpg';
 
-const ModeratingLesson = ({ onBack }) => {
-    const [selectedContent, setSelectedContent] = useState(null);
+const ModeratingLesson = ({ onBack, section }) => {
+    const [selectedLesson, setSelectedLesson] = useState(null);
 
-    const selectContent = (contentId) => {
-        setSelectedContent(contentId);
+    const handleSelectLesson = (lesson) => {
+        setSelectedLesson(lesson);
     };
 
-    const renderSelectedContent = () => {
-        switch (selectedContent) {
-            case 'video1':
-                return <div className='d-flex justify-content-center'>
-                    <iframe width="560" height="315"
-                        src="https://www.youtube.com/embed/O36r05htZXU?si=FO9qoMv1hUXum7CM"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                </div>;
-            case 'reading1':
-                return <div>
-                    <h5>What is programming?</h5>
-                    <p>Welcome to Business Analysis & Process Management Course. This is a project-based
-                        course which should take approximately 2 hours to finish. Before diving into the project,
-                        please take a look at the course objectives and structure</p>
-                    <div className="d-flex justify-content-center">
-                        <img width="560" height="315" src={simp} alt="" />
+    console.log('section: ', section);
+    function getIconBasedOnType(type) {
+        const iconMap = {
+            'Video': 'fa-solid fa-circle-play',
+            'Document': 'fa-solid fa-book-open',
+            'Quiz': 'fa-solid fa-pen-to-square',
+        };
+        return iconMap[type] || 'fa-solid fa-file';
+    }
+
+    const renderLessonContent = () => {
+        if (!selectedLesson) return <p>Select a lesson to see the content.</p>;
+
+        // Here you can customize how to display the content based on the selected lesson
+        return (
+            <div>
+                {selectedLesson.type === 'Video' && selectedLesson.resourceUrl && (
+                    <div>{selectedLesson.resourceUrl}</div>
+                )}
+                {selectedLesson.type === 'Document' && (
+                    <div>
+                        {/* Here you can render the document content, for example as a link or embedded object */}
+                        <p>{selectedLesson.content || "Document content goes here."}</p>
                     </div>
-                    <p>Welcome to Business Analysis & Process Management Course. This is a project-based
-                        course which should take approximately 2 hours to finish. Before diving into the project,
-                        please take a look at the course objectives and structure</p>
-                </div>;
-            case 'reading2':
-                return <div>
-                    <h5>What is programming?</h5>
-                    <p>Welcome to Business Analysis & Process Management Course. This is a project-based
-                        course which should take approximately 2 hours to finish. Before diving into the project,
-                        please take a look at the course objectives and structure</p>
-                    <div className="d-flex justify-content-center">
-                        <img width="560" height="315" src={simp} alt="" />
+                )}
+                {selectedLesson.type === 'Quiz' && (
+                    <div>
+                        <p>Quiz content goes here.</p>
                     </div>
-                    <p>Welcome to Business Analysis & Process Management Course. This is a project-based
-                        course which should take approximately 2 hours to finish. Before diving into the project,
-                        please take a look at the course objectives and structure</p>
-                </div>;
-            case 'video2':
-                return <div className='d-flex justify-content-center'>
-                    <iframe width="560" height="315"
-                        src="https://www.youtube.com/embed/O36r05htZXU?si=FO9qoMv1hUXum7CM"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                </div>;
-            case 'quiz':
-                return <p>Quiz: Test your tech knowledge!</p>;
-            default:
-                return <p>Select a topic to see more information.</p>;
-        }
+                )}
+            </div>
+        );
     };
 
     return (
-        <div className="moderating-lesson">
+        <div className="moderating-lesson mx-5" style={{ backgroundColor: 'white' }}>
             <div className="header">
                 <div className="d-flex justify-content-between">
                     <div className="d-flex justify-content-start">
@@ -81,63 +64,69 @@ const ModeratingLesson = ({ onBack }) => {
                 </div>
             </div>
             <div className='mt-3'>
-                <div className="d-flex justify-content-start ms-5" onClick={() => selectContent('video1')}>
-                    <i className="fa-solid fa-circle-play" />
-                    <div className='ms-3'>
-                        <p className='mb-0'>Welcome to technology</p>
-                        <span>Video - 1 min</span>
+                {section.lessons.map((lesson) => (
+                    <div className={`d-flex justify-content-start ms-5 mt-2 ${selectedLesson && selectedLesson.id === lesson.id ? 'selected-lesson' : ''}`} key={lesson.id} onClick={() => handleSelectLesson(lesson)}>
+                        <i style={{ fontSize: '19px', marginTop: '12px' }} className={getIconBasedOnType(lesson.type)} />
+                        <div className='ms-3'>
+                            <p className='mb-0'>{lesson.name}</p>
+                            <span>{lesson.type} - {lesson.duration} min</span>
+                        </div>
                     </div>
-                </div>
-                <div className="d-flex justify-content-start mt-3 ms-5" onClick={() => selectContent('reading1')}>
-                    <i className="fa-solid fa-book" />
-                    <div className='ms-3'>
-                        <p className="mb-0">Technology overview</p>
-                        <span>Reading - 2 min</span>
-                    </div>
-                </div>
-                <div className="d-flex justify-content-start mt-3 ms-5" onClick={() => selectContent('reading2')}>
-                    <i className="fa-solid fa-book" />
-                    <div className='ms-3'>
-                        <p className="mb-0">Technology overview</p>
-                        <span>Reading - 2 min</span>
-                    </div>
-                </div>
-                <div className="d-flex justify-content-start mt-3 ms-5" onClick={() => selectContent('video2')}>
-                    <i className="fa-solid fa-circle-play" />
-                    <div className='ms-3'>
-                        <p className="mb-0">Welcome to technology</p>
-                        <span>Video - 1 min</span>
-                    </div>
-                </div>
-                <div className="d-flex justify-content-start mt-3 ms-5" onClick={() => selectContent('quiz')}>
-                    <i className="fa-solid fa-pen-to-square" />
-                    <div className='ms-3'>
-                        <p className="mb-0">Graded Quiz: Test your tech knowledge!</p>
-                        <span>Quiz - 10 questions</span>
-                    </div>
-                </div>
+                ))}
             </div>
             <div className="render-lesson">
-                {renderSelectedContent()}
+                {renderLessonContent()}
             </div>
         </div>
     );
 }
 
-const ModeratingDetail = ({ onBack }) => {
+const ModeratingDetail = ({ onBack, courseId }) => {
     const [showLesson, setShowLesson] = useState(false);
     const [modalApproveShow, setApproveModalShow] = React.useState(false);
     const [modalApproveSetting, setApproveSetting] = React.useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const [courseType, setCourseType] = useState('');
     const [modalRefuseShow, setRefuseShow] = React.useState(false);
+    const [courseDetails, setCourseDetails] = useState(null);
+    const [selectedSection, setSelectedSection] = useState(null);
+    const [price, setPrice] = useState(0);
 
-    const handleViewLesson = () => {
-        setShowLesson(true);
+
+    useEffect(() => {
+        const fetchCourseDetails = async () => {
+            const accessToken = localStorage.getItem('accessToken'); // Or your method of getting the token
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${courseId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(' moderatingDetailData: ', data);
+                setCourseDetails(data); // Assuming the API returns the details directly
+            } catch (error) {
+                console.error("Failed to fetch course details", error);
+            }
+        };
+
+        if (courseId) {
+            fetchCourseDetails();
+        }
+    }, [courseId]);
+
+    const handleViewLesson = (section) => {
+        setSelectedSection(section); // Set the selected section
+        setShowLesson(true); // Show the ModeratingLesson component
     };
 
-    if (showLesson) {
-        return <ModeratingLesson onBack={() => setShowLesson(false)} />;
+    if (showLesson && selectedSection) {
+        return <ModeratingLesson onBack={() => setShowLesson(false)} section={selectedSection} />;
     }
 
     const handleApprove = () => {
@@ -150,6 +139,115 @@ const ModeratingDetail = ({ onBack }) => {
     };
 
     const handleCourseTypeSelect = (type) => setCourseType(type);
+
+    function getIconBasedOnType(type) {
+        const iconMap = {
+            'Video': 'fa-solid fa-circle-play',
+            'Document': 'fa-solid fa-book-open',
+            'Quiz': 'fa-solid fa-pen-to-square',
+        };
+        return iconMap[type] || 'fa-solid fa-file'; // default icon if type is not found
+    }
+
+    const approveCourse = async () => {
+        const isFree = courseType === 'free';
+        const isAdminSetup = selectedOption === 'option2';
+        const payload = {
+            isFree,
+            isAdminSetup,
+            price: isFree ? 0 : price, // Use the state variable price
+        };
+
+        console.log('payload: ', payload);
+        const accessToken = localStorage.getItem('accessToken'); // Or your method of getting the token
+
+        try {
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${courseId}/approve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            console.log('Approve response:');
+            // Handle the successful approval
+        } catch (error) {
+            console.error("Failed to approve course", error);
+            // Handle the error
+        }
+    };
+
+
+    const setupNowContent = (
+        <div style={{ padding: '15px', border: '1px solid #D4D4D4', marginTop: '20px' }}>
+            <p className='mb-0' style={{ color: '#1A9CB7' }}>Fee</p>
+            <div style={{ padding: '15px' }}>
+                <span style={{ fontSize: '14px' }}>Choose the type of course:</span>
+                <div
+                    onClick={() => handleCourseTypeSelect('free')}
+                    className="d-flex justify-content-start align-items-center"
+                    style={{
+                        cursor: 'pointer',
+                        margin: '10px 0',
+                        color: courseType === 'free' ? '#1A9CB7' : 'inherit', // Change text color if selected
+                    }}
+                >
+                    {courseType === 'free' ? <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> : <i className="fa-regular fa-circle"></i>}
+                    <p className='mb-0 ms-3'>Free course</p>
+                </div>
+                <div
+                    onClick={() => handleCourseTypeSelect('paid')}
+                    className="d-flex justify-content-start align-items-center"
+                    style={{
+                        cursor: 'pointer',
+                        color: courseType === 'paid' ? '#1A9CB7' : 'inherit', // Change text color if selected
+                    }}
+                >
+                    {courseType === 'paid' ? <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> : <i className="fa-regular fa-circle"></i>}
+                    <p className='mb-0 ms-3'>Paid</p>
+                </div>
+                {courseType === 'paid' && (
+                    <div className='px-5' style={{ marginTop: '10px' }}>
+                        <div className="d-flex justiy-content-start">
+                            <p className='mb-1' style={{ color: '#1A9CB7' }}>Price (VND)</p>
+                            <span style={{ color: '#FF8A00' }}>*</span>
+                        </div>
+                        <p className='mb-1'>The lowest price is 10.00</p>
+                        <input
+                            type="number"
+                            placeholder='Enter price'
+                            style={{ outline: 'none' }}
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            disabled={courseType !== 'paid'} // Disable input if courseType is not 'paid'
+                        />
+
+                    </div>
+                )}
+            </div>
+
+        </div>
+    );
+
+    const adminSetupContent = (
+        <div>
+            <p>Admin will contact you to set up the details.</p>
+        </div>
+    );
+
+    const renderSetupContent = () => {
+        if (selectedOption === 'option2') {
+            return adminSetupContent;
+        }
+        // Default to "set up now" content
+        return setupNowContent;
+    };
 
     return (
         <div className='moderating-detail' style={{ backgroundColor: 'white', height: '650px', overflow: 'scroll' }}>
@@ -210,50 +308,11 @@ const ModeratingDetail = ({ onBack }) => {
                         </div>
                     </div>
 
+                    {renderSetupContent()}
 
-                    <div style={{ padding: '15px', border: '1px solid #D4D4D4', marginTop: '20px' }}>
-                        <p className='mb-0' style={{ color: '#1A9CB7' }}>Fee</p>
-                        <div style={{ padding: '15px' }}>
-                            <span style={{ fontSize: '14px' }}>Choose the type of course:</span>
-                            <div
-                                onClick={() => handleCourseTypeSelect('free')}
-                                className="d-flex justify-content-start align-items-center"
-                                style={{
-                                    cursor: 'pointer',
-                                    margin: '10px 0',
-                                    color: courseType === 'free' ? '#1A9CB7' : 'inherit', // Change text color if selected
-                                }}
-                            >
-                                {courseType === 'free' ? <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> : <i className="fa-regular fa-circle"></i>}
-                                <p className='mb-0 ms-3'>Free course</p>
-                            </div>
-                            <div
-                                onClick={() => handleCourseTypeSelect('paid')}
-                                className="d-flex justify-content-start align-items-center"
-                                style={{
-                                    cursor: 'pointer',
-                                    color: courseType === 'paid' ? '#1A9CB7' : 'inherit', // Change text color if selected
-                                }}
-                            >
-                                {courseType === 'paid' ? <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> : <i className="fa-regular fa-circle"></i>}
-                                <p className='mb-0 ms-3'>Paid</p>
-                            </div>
-                            {courseType === 'paid' && (
-                                <div style={{ marginTop: '10px' }}>
-                                    <div className="d-flex justiy-content-start">
-                                        <p style={{ color: '#1A9CB7' }}>Price</p>
-                                        <span style={{ color: '#FF8A00' }}>*</span>
-                                    </div>
-                                    <p>The lowest price is 10.00</p>
-                                    <input type="number" placeholder='10' />
-                                </div>
-                            )}
-                        </div>
-
-                    </div>
-                    <div className="d-flex justify-content-end">
-                        <button onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} >Close</button>
-                        <button onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} >Approve</button>
+                    <div className="d-flex justify-content-end mt-3">
+                        <button className='me-3' onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} >Close</button>
+                        <button onClick={approveCourse} style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} >Moderation</button>
                     </div>
                 </Modal.Body>
             </Modal>
@@ -300,7 +359,7 @@ const ModeratingDetail = ({ onBack }) => {
 
                 <div>
                     <img src={simp} alt="" />
-                    <p className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>What is programming?</p>
+                    <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
                     <div className="d-flex justify-content-between" style={{ padding: '12px 50px' }}>
                         <div className="d-flex">
                             <i class="fa-solid fa-book"></i>
@@ -320,100 +379,35 @@ const ModeratingDetail = ({ onBack }) => {
                         </div>
                     </div>
                     <div>
-                        <p>This is a guided project for both beginners and professionals
-                            managing small to medium enterprises or working in the fields
-                            of business analysis & business process management. It provides
-                            you with the initial know-how of analyzing businesses......</p>
+                        <p>{courseDetails && courseDetails.description}</p>
                     </div>
                 </div>
+
                 <div className="accordion" id="accordionExample">
-                    <div className="accordion-item">
-                        <h2 className="accordion-header" id="headingOne">
-                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Lesson 1
-                            </button>
-                        </h2>
-                        <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                            <div className="accordion-body">
-                                <div className="d-flex justify-content-between mt-3">
-                                    <div className="d-flex justify-content-start">
-                                        <i className="fa-solid fa-circle-play" />
-                                        <div className='ms-3'>
-                                            <p className='mb-0'>Welcome to technology</p>
-                                            <span>Video - 1 min</span>
+                    {courseDetails && courseDetails.sections && courseDetails.sections.map((section, index) => (
+                        <div className="accordion-item" key={section.id}>
+                            <h2 className="accordion-header" id={`heading${index}`}>
+                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
+                                    {section.name}
+                                </button>
+                            </h2>
+                            <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
+                                <div className="accordion-body">
+                                    <div className="d-flex justify-content-end">
+                                        <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white' }}>View lesson</button>
+                                    </div>
+                                    {section.lessons.map((lesson, lessonIndex) => (
+                                        <div className="lesson-item" key={lesson.id}>
+                                            <div className='lesson-content d-flex justify-content-start ms-3'>
+                                                <i className={getIconBasedOnType(lesson.type)}></i>
+                                                <p className='ms-2'>{lesson.name}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <button onClick={handleViewLesson} style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '5px' }}>View lesson</button>
-                                    </div>
-                                </div>
-                                <div className="d-flex justify-content-start mt-3">
-                                    <i className="fa-solid fa-book" />
-                                    <div className='ms-3'>
-                                        <p className="mb-0">Technology overview</p>
-                                        <span>Reading - 2 min</span>
-                                    </div>
-                                </div>
-                                <div className="d-flex justify-content-start mt-3">
-                                    <i className="fa-solid fa-book" />
-                                    <div className='ms-3'>
-                                        <p className="mb-0">Technology overview</p>
-                                        <span>Reading - 2 min</span>
-                                    </div>
-                                </div>
-                                <div className="d-flex justify-content-start mt-3">
-                                    <i className="fa-solid fa-circle-play" />
-                                    <div className='ms-3'>
-                                        <p className="mb-0">Welcome to technology</p>
-                                        <span>Video - 1 min</span>
-                                    </div>
-                                </div>
-                                <div className="d-flex justify-content-start mt-3">
-                                    <i className="fa-solid fa-pen-to-square" />
-                                    <div className='ms-3'>
-                                        <p className="mb-0">Graded Quiz: Test your tech knowledge!</p>
-                                        <span>Quiz - 10 questions</span>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="accordion-item">
-                        <h2 className="accordion-header" id="headingTwo">
-                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Lesson 2
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                            <div className="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                    <div className="accordion-item">
-                        <h2 className="accordion-header" id="headingThree">
-                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Lesson 3
-                            </button>
-                        </h2>
-                        <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                            <div className="accordion-body">
-                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                    <div className="accordion-item">
-                        <h2 className="accordion-header" id="headingFour">
-                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                Lesson 4
-                            </button>
-                        </h2>
-                        <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                            <div className="accordion-body">
-                                <strong>This is the fourth item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
             </div>
@@ -423,9 +417,12 @@ const ModeratingDetail = ({ onBack }) => {
 }
 
 export default function StaffModerating() {
+    const [courses, setCourses] = useState([]);
     const [showDetail, setShowDetail] = useState(false);
+    const [selectedCourseId, setSelectedCourseId] = useState(null);
 
-    const handleViewDetail = () => {
+    const handleViewDetail = (courseId) => {
+        setSelectedCourseId(courseId);
         setShowDetail(true);
     };
 
@@ -433,12 +430,37 @@ export default function StaffModerating() {
         setShowDetail(false);
     };
 
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const accessToken = localStorage.getItem('accessToken');
+            try {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses?status=Pending&action=manage', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('data: ', data);
+                setCourses(data); // Assuming the response has the data directly
+            } catch (error) {
+                console.error("Failed to fetch courses", error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
     if (showDetail) {
-        return <ModeratingDetail onBack={handleBack} />;
+        return <ModeratingDetail courseId={selectedCourseId} onBack={handleBack} />;
     }
 
     return (
-        <div className='staff-moderating'>
+        <div className='staff-moderating mx-5' style={{ backgroundColor: 'white' }}>
             <div className="header">
                 <div className="d-flex justify-content-start">
                     <div>
@@ -448,27 +470,29 @@ export default function StaffModerating() {
                     <i class="fa-solid fa-bell"></i>
                 </div>
             </div>
-            <div className="item">
-                <div className="d-flex justify-content-between">
-                    <div className="left d-flex justify-content-start">
-                        <img src={demo} alt="" />
-                        <div style={{ marginLeft: '20px' }}>
-                            <div className='d-flex justify-content-start'>
-                                <p style={{ fontSize: '18px', fontWeight: 500 }}>What is programming </p>
-                                <span>|</span>
-                                <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span>
+            {Array.isArray(courses.results) && courses.results.map((course, index) => (
+                <div className="item" key={course.id || index}>
+                    <div className="d-flex justify-content-between">
+                        <div className="left d-flex justify-content-start">
+                            <img src={demo} alt="" />
+                            <div style={{ marginLeft: '20px' }}>
+                                <div className='d-flex justify-content-start'>
+                                    <p style={{ fontSize: '18px', fontWeight: 500 }}>{course.name} </p>
+                                    <span>|</span>
+                                    <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span>
+                                </div>
+                                <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p>
                             </div>
-                            <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p>
                         </div>
-                    </div>
-                    <div className='right'>
-                        <p><i class="fa-regular fa-clock"></i>  09-02-2024 at 9:30 AM</p>
-                        <div onClick={handleViewDetail} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
-                            <p >View Detail</p>
+                        <div className='right'>
+                            <p><i class="fa-regular fa-clock"></i>{new Date(course.createdDate).toLocaleString()}</p>
+                            <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
+                                <p >View Detail</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            ))}
         </div>
     );
 }
