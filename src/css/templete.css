@@ -5304,12 +5304,27 @@ button.admin-save:hover {
   padding: 10px;
 }
 
-.teacher-accordion .section-title button{
-  color: #EF7E54;
+/* .teacher-accordion .section-title button{
   font-weight: bold;
-}
+} */
 
 .teacher-accordion .lesson-title button{
   color: #EF7E54;
   font-weight: bold;
+}
+
+button.teacher-button {
+  background-color: white; 
+  border: 1px solid #FF8A00;
+  border-radius: 5px;
+  color: #FF8A00;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button.teacher-button:hover {
+  background-color: #f7cc9c; 
 }

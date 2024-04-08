@@ -8,6 +8,8 @@ import {
   updateDocument,
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
+import documentIcon from "../../../../../../../images/icon/document-icon.png";
+
 const DocumentComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
 
@@ -51,14 +53,21 @@ const DocumentComponent = ({ sectionId }) => {
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="primary"
         size="sm"
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "150px", height: "40px" }}
       >
         Add document
-      </Button>
+      </Button> */}
+
+      <button className="teacher-button" onClick={handleShow}>
+        <div className="d-flex justify-content-start align-items-center">
+          <img src={documentIcon} title="Document icon" />
+          <p className="mb-0 mx-2">Document</p>
+        </div>
+      </button>
 
       <Modal
         show={show}
@@ -67,7 +76,7 @@ const DocumentComponent = ({ sectionId }) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add document</Modal.Title>
+          <Modal.Title>Add Document</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik

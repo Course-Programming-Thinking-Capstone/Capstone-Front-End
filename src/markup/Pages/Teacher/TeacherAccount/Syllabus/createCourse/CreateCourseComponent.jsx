@@ -236,7 +236,7 @@ const CreateCourseComponent = () => {
                       className="teacher-accordion"
                     >
                       <Accordion.Item eventKey={index}>
-                        <Accordion.Header className="section-title">
+                        <Accordion.Header>
                           {section.name}
                         </Accordion.Header>
                         <Accordion.Body>
@@ -268,7 +268,7 @@ const CreateCourseComponent = () => {
                             />
                           ))}
 
-                          <Container>
+                          {/* <Container>
                             <Row>
                               <Col md="4">
                                 <VideoComponent sectionId={section.id} />
@@ -280,7 +280,13 @@ const CreateCourseComponent = () => {
                                 <AddQuizComponent sectionId={section.id} />
                               </Col>
                             </Row>
-                          </Container>
+                          </Container> */}
+
+                          <div className="d-flex justify-content-between align-items-center">
+                            <VideoComponent sectionId={section.id} />
+                            <DocumentComponent sectionId={section.id} />
+                            <AddQuizComponent sectionId={section.id} />
+                          </div>
                         </Accordion.Body>
                       </Accordion.Item>
                     </Accordion>
@@ -355,12 +361,18 @@ const VideoContent = ({ sectionId, lesson, index }) => {
           <Container>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Duration:</span> {lesson.duration} minute</p>
+                <p>
+                  <span className="blue fw-bold">Duration:</span>{" "}
+                  {lesson.duration} minute
+                </p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Url:</span> {lesson.resourceUrl}</p>
+                <p>
+                  <span className="blue fw-bold">Url:</span>{" "}
+                  {lesson.resourceUrl}
+                </p>
               </Col>
             </Row>
 
@@ -401,12 +413,18 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
           <Container>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Duration:</span> {lesson.duration} minute</p>
+                <p>
+                  <span className="blue fw-bold">Duration:</span>{" "}
+                  {lesson.duration} minute
+                </p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Content:</span> {lesson.content}</p>
+                <p>
+                  <span className="blue fw-bold">Content:</span>{" "}
+                  {lesson.content}
+                </p>
               </Col>
             </Row>
 
@@ -448,32 +466,45 @@ const QuizContent = ({ sectionId, quiz, index }) => {
           <Container>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Description:</span> {quiz.description}</p>
+                <p>
+                  <span className="blue fw-bold">Description:</span>{" "}
+                  {quiz.description}
+                </p>
               </Col>
             </Row>
             <Row className="mb-3">
               <Col>
-                <p><span className="blue fw-bold">Duration:</span> {quiz.duration} minute</p>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col>
-                <p><span className="blue fw-bold">Number of attempts:</span> {quiz.numberOfAttempt}</p>
+                <p>
+                  <span className="blue fw-bold">Duration:</span>{" "}
+                  {quiz.duration} minute
+                </p>
               </Col>
             </Row>
 
             <Row className="mb-3">
               <Col>
                 <p>
-                <span className="blue fw-bold">Random order:</span> {quiz.isOrderRandom === true ? "Yes" : "No"}
+                  <span className="blue fw-bold">Number of attempts:</span>{" "}
+                  {quiz.numberOfAttempt}
+                </p>
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <p>
+                  <span className="blue fw-bold">Random order:</span>{" "}
+                  {quiz.isOrderRandom === true ? "Yes" : "No"}
                 </p>
               </Col>
             </Row>
             {quiz.isOrderRandom && (
               <Row className="mb-3">
                 <Col>
-                  <p><span className="blue fw-bold">Number of questions:</span> {quiz.numberOfQuestion}</p>
+                  <p>
+                    <span className="blue fw-bold">Number of questions:</span>{" "}
+                    {quiz.numberOfQuestion}
+                  </p>
                 </Col>
               </Row>
             )}
@@ -481,7 +512,9 @@ const QuizContent = ({ sectionId, quiz, index }) => {
             {quiz.questions && (
               <Row className="mb-3">
                 <Col>
-                  <p><span className="blue fw-bold">Content</span></p>
+                  <p>
+                    <span className="blue fw-bold">Content</span>
+                  </p>
                   {quiz.questions.map((question, key) => (
                     <QuestionContent
                       sectionId={sectionId}
