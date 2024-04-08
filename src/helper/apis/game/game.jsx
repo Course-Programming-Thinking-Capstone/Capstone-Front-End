@@ -22,3 +22,14 @@ export const updateGameLevelApi = async ({ data }) => {
 
   return response.data;
 };
+
+export const addLevelApi = async ({ data }) => {
+  const response = await instance.post(`api/v1/games/game-level`, data);
+
+  return response.data;
+};
+
+export const removeLevelApi = async ({ id }) => {
+  const response = await instance.delete(`api/v1/games/game-level/${id}`);
+  return response.data;
+};

@@ -14,6 +14,7 @@ import {
   getGameModeApi,
   getLevelDetailByLevelIdApi,
   getLevelDetailByModeIdApi,
+  removeLevelApi,
   updateGameLevelApi,
 } from "../../../../helper/apis/game/game";
 import {
@@ -27,6 +28,7 @@ import {
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
+import { CreateLevel } from "./CreateGameLevel";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -34,12 +36,14 @@ export default function Game() {
   const [viewGameData, setViewGameData] = useState(false);
   const [gameLevels, setGameLevels] = useState([]);
   const [viewLevelDetail, setViewLevelDetail] = useState(false);
+  const [addLevel, setAddLevel] = useState(false);
   const [currentLevelDetail, setCurrentLevelDetail] = useState(null);
   const [message, setMessage] = useState(null);
   const [isVStartExist, setIsVStartExist] = useState(false);
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [arr, setArr] = useState([]);
+  const [modeId, setModeId] = useState();
 
   const handleLevelDetailInputNumberChange = (event) => {
     let value = parseInt(event.target.value);
@@ -124,6 +128,7 @@ export default function Game() {
     try {
       const levels = await getLevelDetailByModeIdApi({ modeId: modeId });
 
+      setModeId(modeId);
       setGameLevels(levels);
       setViewGameData(true);
     } catch (error) {
@@ -141,6 +146,35 @@ export default function Game() {
 
   const handleBackButtonClick = () => {
     setViewGameData(false);
+  };
+
+  const handleAddLevelClick = () => {
+    setViewLevelDetail(false);
+    setAddLevel(true);
+  };
+
+  const handleRemoveLevel = async (id) => {
+    try {
+      await removeLevelApi({ id: id });
+
+      setViewLevelDetail(false);
+      setAddLevel(false);
+
+      const levels = await getLevelDetailByModeIdApi({ modeId: modeId });
+
+      setGameLevels(levels);
+      setViewGameData(true);
+    } catch (error) {
+      let errorMessage = null;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.title || "Undefined.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Undefined.";
+      }
+      setMessage(errorMessage);
+    }
   };
 
   //get current level detail
@@ -458,6 +492,7 @@ export default function Game() {
                 border: "none",
                 borderRadius: "8px",
               }}
+              onClick={() => handleRemoveLevel(currentLevelDetail.id)}
             >
               Delete level
             </button>
@@ -548,6 +583,17 @@ export default function Game() {
     );
   }
 
+  if (addLevel) {
+    return (
+      <CreateLevel
+        modeId={modeId}
+        setAddLevel={setAddLevel}
+        setViewLevelDetail={setViewLevelDetail}
+        handleReloadLevels={handleGameModeClick}
+      />
+    );
+  }
+
   return (
     <div className="game-setting">
       <div className="game-setting-content">
@@ -585,30 +631,34 @@ export default function Game() {
 
         {viewGameData ? (
           <div>
-            <div
-              className="d-flex justify-content-start"
-              style={{
-                width: "30%",
-                border: "1px solid #EF7E54",
-                padding: "10px 15px",
-                borderRadius: "10px",
-                color: "white",
-              }}
-            >
-              <div className="text-center" style={{ width: "50%" }}>
-                <h5 className="mb-0"> MODE</h5>
-              </div>
+            <div className="d-flex justify-content-between align-items-center mt-3">
               <div
-                className="d-flex justify-content-around"
+                className="d-flex justify-content-start align-items-center"
                 style={{
-                  width: "50%",
-                  backgroundColor: "#FF8A00",
+                  width: "30%",
+                  border: "1px solid #EF7E54",
+                  padding: "10px 15px",
                   borderRadius: "10px",
+                  color: "white",
                 }}
               >
-                <p className="mb-0">Total level</p>
-                <span>{gameLevels.length}</span>
+                <div className="text-center" style={{ width: "50%" }}>
+                  <h5 className="mb-0"> MODE</h5>
+                </div>
+                <div
+                  className="d-flex justify-content-around"
+                  style={{
+                    width: "50%",
+                    backgroundColor: "#FF8A00",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <p className="mb-0">Total level</p>
+                  <span>{gameLevels.length}</span>
+                </div>
               </div>
+
+              <Button onClick={handleAddLevelClick}>Add level</Button>
             </div>
             <div className="py-3 px-3" style={{}}>
               {gameLevels.length > 0 ? (
