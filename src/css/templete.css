@@ -5328,3 +5328,13 @@ button.teacher-button {
 button.teacher-button:hover {
   background-color: #f7cc9c; 
 }
+
+button.teacher-button-remove {
+  border: none;
+  background-color: white; 
+  color: #FF8A00;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}

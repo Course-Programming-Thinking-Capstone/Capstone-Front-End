@@ -212,7 +212,7 @@ export const UpdateDocumentComponent = ({
         variant="primary"
         size="sm"
         onClick={handleShow}
-        style={{ borderRadius: "4px", width: "150px", height: "40px" }}
+        style={{ borderRadius: "4px", width: "150px", height: "40px", color: "white" }}
       >
         Update
       </Button>

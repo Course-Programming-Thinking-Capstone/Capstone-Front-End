@@ -21,6 +21,7 @@ import {
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
 import quizIcon from "../../../../../../../images/icon/quiz-icon.png";
+import removeIcon from "../../../../../../../images/icon/remove-icon.png";
 
 //Add quiz
 export const AddQuizComponent = ({ sectionId }) => {
@@ -546,14 +547,20 @@ export const RemoveQuizComponent = ({ sectionId, index }) => {
   };
 
   return (
-    <Button
-      variant="delete"
-      size="sm"
-      onClick={handleDelete}
-      style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-    >
-      Remove
-    </Button>
+    <>
+      {/* <Button
+        variant="delete"
+        size="sm"
+        onClick={handleDelete}
+        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+      >
+        Remove
+      </Button> */}
+
+      <button onClick={handleDelete} className="teacher-button-remove">
+        <img src={removeIcon} title="Remove" />
+      </button>
+    </>
   );
 };
 

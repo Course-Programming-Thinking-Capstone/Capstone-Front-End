@@ -236,9 +236,7 @@ const CreateCourseComponent = () => {
                       className="teacher-accordion"
                     >
                       <Accordion.Item eventKey={index}>
-                        <Accordion.Header>
-                          {section.name}
-                        </Accordion.Header>
+                        <Accordion.Header>{section.name}</Accordion.Header>
                         <Accordion.Body>
                           {/* Content */}
                           {section.lessons.map((lesson, index) =>
@@ -352,9 +350,13 @@ const VideoContent = ({ sectionId, lesson, index }) => {
     <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
       <Accordion.Item eventKey={index}>
         <Accordion.Header className="lesson-title">
-          <div className="d-flex justify-content-start align-items-center">
-            <img src={videoIcon} title="Video icon" />
-            <p className="mb-0 mx-2">{lesson.name}</p>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <div className="d-flex justify-content-start align-items-center">
+              <img src={videoIcon} title="Video icon" />
+              <p className="mb-0 mx-2">{lesson.name}</p>
+            </div>
+
+            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
           </div>
         </Accordion.Header>
         <Accordion.Body>
@@ -384,9 +386,10 @@ const VideoContent = ({ sectionId, lesson, index }) => {
                   video={lesson}
                 />
               </Col>
-              <Col md="6">
+
+              {/* <Col md="6">
                 <RemoveComponent sectionId={sectionId} lessonIndex={index} />
-              </Col>
+              </Col> */}
             </Row>
           </Container>
         </Accordion.Body>
@@ -404,9 +407,13 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
     >
       <Accordion.Item eventKey={index}>
         <Accordion.Header className="lesson-title">
-          <div className="d-flex justify-content-start align-items-center">
-            <img src={documentIcon} title="Document icon" />
-            <p className="mb-0 mx-2">{lesson.name}</p>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <div className="d-flex justify-content-start align-items-center">
+              <img src={documentIcon} title="Document icon" />
+              <p className="mb-0 mx-2">{lesson.name}</p>
+            </div>
+
+            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
           </div>
         </Accordion.Header>
         <Accordion.Body>
@@ -437,9 +444,9 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
                 />
               </Col>
 
-              <Col md="6">
+              {/* <Col md="6">
                 <RemoveComponent sectionId={sectionId} lessonIndex={index} />
-              </Col>
+              </Col> */}
             </Row>
           </Container>
         </Accordion.Body>
@@ -457,9 +464,12 @@ const QuizContent = ({ sectionId, quiz, index }) => {
     >
       <Accordion.Item eventKey={index}>
         <Accordion.Header className="lesson-title">
-          <div className="d-flex justify-content-start align-items-center">
-            <img src={quizIcon} title="Quiz icon" />
-            <p className="mb-0 mx-2">{quiz.title}</p>
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <div className="d-flex justify-content-start align-items-center">
+              <img src={quizIcon} title="Quiz icon" />
+              <p className="mb-0 mx-2">{quiz.title}</p>
+            </div>
+            <RemoveQuizComponent sectionId={sectionId} index={index} />
           </div>
         </Accordion.Header>
         <Accordion.Body>
@@ -542,9 +552,9 @@ const QuizContent = ({ sectionId, quiz, index }) => {
                 />
               </Col>
 
-              <Col md="6">
+              {/* <Col md="6">
                 <RemoveQuizComponent sectionId={sectionId} index={index} />
-              </Col>
+              </Col> */}
             </Row>
           </Container>
         </Accordion.Body>
