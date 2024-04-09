@@ -47,6 +47,7 @@ import Classes from './markup/Pages/Classes';
 import ClassesDetail from "./markup/Pages/ClassesDetail";
 import CoursePayment from "./markup/Pages/CoursePayment";
 import PaymentSuccess from "./markup/Pages/PaymentSuccess";
+import CoursesPlan from "./markup/Pages/CoursesPlan";
 
 // function App() {
 // 	return (
@@ -297,6 +298,15 @@ const App = () => {
               }
             />
             {/* Student pages */}
+            <Route
+              path="/courses-plan"
+              element={
+                <PrivateRoute
+                  page="courses-plan"
+                  component={<CoursesPlan/>}
+                />
+              }
+            />
 
             {/* Error pages  */}
             <Route path="/error-404" element={<Index1 />} />
