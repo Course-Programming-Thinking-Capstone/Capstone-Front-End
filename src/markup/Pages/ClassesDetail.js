@@ -69,7 +69,7 @@ export default function ClassesDetail() {
 												<div className="info">24 March 2017</div>
 											</li>
 											<li>
-												<div className="name"><i className="la la-calendar-check-o"></i>Years Old</div>
+												<div className="name"><i className="la la-calendar-check-o"></i>End Date</div>
 												<div className="info">6-8 Years</div>
 											</li>
 											<li>
@@ -77,7 +77,7 @@ export default function ClassesDetail() {
 												<div className="info">20-30 Kids</div>
 											</li>
 											<li>
-												<div className="name"><i className="la la-hourglass"></i>Carry Time</div>
+												<div className="name"><i className="la la-hourglass"></i>Slot Time</div>
 												<div className="info">5 Hours/6 Days</div>
 											</li>
 											<li>

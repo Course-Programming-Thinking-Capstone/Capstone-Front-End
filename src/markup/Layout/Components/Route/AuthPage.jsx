@@ -38,16 +38,16 @@ export const TeacherPages = [
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
-export const ParentPages = [];
+export const ParentPages = ["classes", "classes-details", "payment", "payment-success"];
 
 //Lưu đường dẫn các trang mà student được truy cập
 export const StudentPages = [];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {
-    AdminRole : "Admin",
-    ParentRole : "Parent",
-    StaffRole: "Staff",
-    TeacherRole: "Teacher",
-    StudentRole: "Student"
+  AdminRole: "Admin",
+  ParentRole: "Parent",
+  StaffRole: "Staff",
+  TeacherRole: "Teacher",
+  StudentRole: "Student"
 }

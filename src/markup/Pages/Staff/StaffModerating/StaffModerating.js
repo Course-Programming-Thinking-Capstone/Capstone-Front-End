@@ -63,6 +63,9 @@ const ModeratingLesson = ({ onBack, section }) => {
                     </div>
                 </div>
             </div>
+            <div>
+
+            </div>
             <div className='mt-3'>
                 {section.lessons.map((lesson) => (
                     <div className={`d-flex justify-content-start ms-5 mt-2 ${selectedLesson && selectedLesson.id === lesson.id ? 'selected-lesson' : ''}`} key={lesson.id} onClick={() => handleSelectLesson(lesson)}>
@@ -144,9 +147,8 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         const iconMap = {
             'Video': 'fa-solid fa-circle-play',
             'Document': 'fa-solid fa-book-open',
-            'Quiz': 'fa-solid fa-pen-to-square',
         };
-        return iconMap[type] || 'fa-solid fa-file'; // default icon if type is not found
+        return iconMap[type] || 'fa-solid fa-file';
     }
 
     const approveCourse = async () => {
@@ -360,21 +362,21 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 <div>
                     <img src={simp} alt="" />
                     <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
-                    <div className="d-flex justify-content-between" style={{ padding: '12px 50px' }}>
+                    <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
                         <div className="d-flex">
-                            <i class="fa-solid fa-book"></i>
+                            <i class="fa-solid fa-book mt-1"></i>
                             <p className='mb-0 ms-1'>4 lessons</p>
                         </div>
                         <div className="d-flex">
-                            <i class="fa-solid fa-circle-play"></i>
+                            <i class="fa-solid fa-circle-play mt-1"></i>
                             <p className='mb-0 ms-1'>4 videos</p>
                         </div>
                         <div className="d-flex">
-                            <i class="fa-solid fa-book-open"></i>
+                            <i class="fa-solid fa-book-open mt-1"></i>
                             <p className='mb-0 ms-1'>4 documents</p>
                         </div>
                         <div className="d-flex">
-                            <i class="fa-solid fa-pen-to-square"></i>
+                            <i class="fa-solid fa-pen-to-square mt-1"></i>
                             <p className='mb-0 ms-1'>4 quiz</p>
                         </div>
                     </div>
@@ -388,7 +390,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         <div className="accordion-item" key={section.id}>
                             <h2 className="accordion-header" id={`heading${index}`}>
                                 <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
-                                    {section.name}
+                                    <span>Section {section.order}:  </span>{section.name}
                                 </button>
                             </h2>
                             <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
@@ -408,6 +410,21 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div class="accordion mt-5" id="collapseQuiz">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOneHundred">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
+                                Quiz
+                            </button>
+                        </h2>
+                        <div id="collapseOneHundred" class="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
+                            <div class="accordion-body">
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -485,7 +502,10 @@ export default function StaffModerating() {
                             </div>
                         </div>
                         <div className='right'>
-                            <p><i class="fa-regular fa-clock"></i>{new Date(course.createdDate).toLocaleString()}</p>
+                            <div className="d-flex">
+                                <i class="fa-regular fa-clock mt-1"></i>
+                                <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p>
+                            </div>
                             <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
                                 <p >View Detail</p>
                             </div>

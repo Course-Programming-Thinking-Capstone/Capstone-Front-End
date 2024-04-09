@@ -43,6 +43,10 @@ import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDe
 import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
 import StaffModerating from "./markup/Pages/Staff/StaffModerating/StaffModerating";
+import Classes from './markup/Pages/Classes';
+import ClassesDetail from "./markup/Pages/ClassesDetail";
+import CoursePayment from "./markup/Pages/CoursePayment";
+import PaymentSuccess from "./markup/Pages/PaymentSuccess";
 
 // function App() {
 // 	return (
@@ -254,7 +258,44 @@ const App = () => {
             />
 
             {/* Parent pages  */}
+            <Route
+              path="/classes"
+              element={
+                <PrivateRoute
+                  page="classes"
+                  component={<Classes />}
+                />
+              }
+            />
 
+            <Route
+              path="/classes-details"
+              element={
+                <PrivateRoute
+                  page="classes-details"
+                  component={<ClassesDetail />}
+                />
+              }
+            />
+
+            <Route
+              path="/payment"
+              element={
+                <PrivateRoute
+                  page="payment"
+                  component={<CoursePayment />}
+                />
+              }
+            />
+            <Route
+              path="/payment-success"
+              element={
+                <PrivateRoute
+                  page="payment-success"
+                  component={<PaymentSuccess />}
+                />
+              }
+            />
             {/* Student pages */}
 
             {/* Error pages  */}

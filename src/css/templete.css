@@ -1485,6 +1485,7 @@ textarea.form-control {
   margin-top: 20px;
   background-color: white;
   border: 1px solid #ff8a00;
+  border-radius: 8px;
 }
 
 .moderating-detail-content {

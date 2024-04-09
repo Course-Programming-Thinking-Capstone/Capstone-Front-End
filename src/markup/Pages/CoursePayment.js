@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Layout/Header'
 import Footer from '../Layout/Footer'
@@ -19,7 +19,6 @@ export default function CoursePayment() {
     const [newChildName, setNewChildName] = useState('');
     const [newChildDOB, setNewChildDOB] = useState('');
     const [newChildGender, setNewChildGender] = useState('');
-    const [error, setError] = useState('');
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -72,7 +71,7 @@ export default function CoursePayment() {
             setLoading(true);
             const accessToken = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment/4', {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=1&classId=1', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -160,14 +159,23 @@ export default function CoursePayment() {
         }
     };
 
+    const CustomInput = forwardRef(({ value, onClick }, ref) => (
+        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '150px', height: '30px' }} >
+            <div>
+                {value}
+            </div>
+            <div>
+                <i className="fa-regular fa-calendar-days" />
+            </div>
+        </div>
+    ));
+
     const [selectedPayment, setSelectedPayment] = useState('');
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    const navigate = useNavigate();
 
     const BuyCourse = async () => {
         const orderDetails = {
@@ -229,7 +237,6 @@ export default function CoursePayment() {
 
     return (
         <div>
-
             <Header />
             <PageTitle motherMenu="Payment" activeMenu="Payment" />
             <div style={{
@@ -244,22 +251,21 @@ export default function CoursePayment() {
                         <Modal.Body>
                             <div style={{ padding: '10px 40px' }}>
 
-                                <p className='mb-0' style={{ width: '100%' }}>First and last name</p>
+                                <p className='blue mb-0' style={{ width: '100%' }}>First and last name</p>
                                 <input style={{ width: '100%', height: '50px', paddingLeft: '15px' }} type="text" placeholder='First and last name' value={newChildName}
                                     onChange={(e) => setNewChildName(e.target.value)} />
 
-                                <p className='mb-0' style={{ width: '90%', marginTop: '20px' }}>Date of birth</p>
-                                <div className="d-flex">
-                                    <DatePicker wrapperClassName="datePicker"
+                                <p className='blue mb-0' style={{ width: '90%', marginTop: '20px' }}>Date of birth</p>
+                                <div className="d-flex justify-content-center">
+                                    <DatePicker
                                         selected={newChildDOB}
                                         onChange={(date) => setNewChildDOB(date)}
-                                        maxDate={new Date()} />
-                                    <div style={{ width: '15%', textAlign: 'center', border: '1px solid #21212180', borderLeft: 'none', height: '50px' }}>
-                                        <i style={{ marginTop: '15px' }} class="fa-solid fa-calendar-days"></i>
-                                    </div>
+                                        enableTabLoop={false}
+                                        maxDate={new Date()}
+                                        customInput={<CustomInput />} />
                                 </div>
 
-                                <p className='mb-0' style={{ width: '100%', marginTop: '20px' }}>Gender</p>
+                                <p className='blue mb-0' style={{ width: '100%', marginTop: '20px' }}>Gender</p>
                                 <select style={{ width: '100%', height: '50px', paddingLeft: '15px' }} name="" id="" value={newChildGender}
                                     onChange={(e) => setNewChildGender(e.target.value)}>
                                     <option value="1">Male</option>
