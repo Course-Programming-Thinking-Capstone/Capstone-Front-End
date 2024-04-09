@@ -12,7 +12,7 @@ export const updateCourseApi = async ({ id, action, data }) => {
   return response.data;
 };
 
-export const updateCoursePictureApi = async ({id, file}) => {
+export const updateCoursePictureApi = async ({ id, file }) => {
   const formData = new FormData();
   formData.append("file", file);
 

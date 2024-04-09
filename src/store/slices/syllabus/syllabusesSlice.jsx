@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { filterSyllabusesAsync } from "../../thunkApis/syllabuses/syllabusesThunk";
+import {
+  filterSyllabusesAsync,
+  filterTeacherSyllabusesAsync,
+} from "../../thunkApis/syllabuses/syllabusesThunk";
 
 const initData = {
   totalPages: 0,
@@ -28,6 +31,19 @@ export const syllabusesSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(filterSyllabusesAsync.rejected, (state, action) => {
+        state.loading = "fail";
+        state.error = action.payload;
+      })
+      .addCase(filterTeacherSyllabusesAsync.pending, (state) => {
+        state.loading = "loading";
+        state.error = null;
+      })
+      .addCase(filterTeacherSyllabusesAsync.fulfilled, (state, action) => {
+        state.loading = "success";
+        state.error = null;
+        state.data = action.payload;
+      })
+      .addCase(filterTeacherSyllabusesAsync.rejected, (state, action) => {
         state.loading = "fail";
         state.error = action.payload;
       });

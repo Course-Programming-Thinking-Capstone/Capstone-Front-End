@@ -5321,10 +5321,11 @@ button.admin-save:hover {
   
   padding: 4px 8px;
   background-color: white;
-  height: 50px;
+  min-height: 45px;
   text-decoration: none;
   font-size: 14px;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .teacher-accordion .accordion-collapse {
