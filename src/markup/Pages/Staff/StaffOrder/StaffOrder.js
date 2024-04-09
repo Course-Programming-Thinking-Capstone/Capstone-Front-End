@@ -43,29 +43,35 @@ export default function StaffOrder() {
         fetchOrders();
     }, [selectedStatus, accessToken]);
     return (
-        <div className='staff-order mx-5'>
+        <div className='staff-order mx-5' style={{ borderRadius: '15px' }}>
             <div className="d-flex justify-content between">
                 <div className="staff-order-menu d-flex justify-content-start">
                     <div className={selectedStatus === 'Success' ? 'active' : ''} onClick={() => setSelectedStatus('Success')}>
-                        <p className='mb-1'>Success</p>
+                        <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }} className='mb-1'>Success</p>
                         <hr className='mt-0' />
                     </div>
-                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
-                        <p className='mb-1'>Pending</p>
+                    <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Pending</p>
                         <hr className='mt-0' />
                     </div>
-                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
-                        <p className='mb-1'>Refunded</p>
+                    <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Refunded</p>
                         <hr className='mt-0' />
                     </div>
-                    <div style={{ marginLeft: '15px' }} className={selectedStatus === 'RequestRefund' ? 'active' : ''} onClick={() => setSelectedStatus('RequestRefund')}>
-                        <p className='mb-1'>Request Refund</p>
+                    <div style={{ marginLeft: '25px' }} className={selectedStatus === 'RequestRefund' ? 'active' : ''} onClick={() => setSelectedStatus('RequestRefund')}>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Request Refund</p>
                         <hr className='mt-0' />
                     </div>
                 </div>
             </div>
             <div className="staff-order-content">
-                <input type="text" placeholder='Enter order id' />
+                <div className="d-flex justify-content-between">
+                    <div className='d-flex justify-content-start'>
+                        <div className='pt-1' style={{ fontWeight: 'bold', backgroundColor: '#FFA63D', borderRadius: '5px', color: 'white', height: '30px', width: '150px', textAlign: 'center', fontSize: '16px' }}>Enter order code</div>
+                        <input style={{ outline: 'none', borderRadius: '8px', border: '1px solid #FFA63D', width: '400px' }} className='ms-3' type="text" />
+                    </div>
+                    <div className='text-center pt-1' style={{ border: '1px solid #F25B58', borderRadius: '8px', color: '#F25B58', width: '120px', fontWeight: 'bold' }}> Orders</div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>

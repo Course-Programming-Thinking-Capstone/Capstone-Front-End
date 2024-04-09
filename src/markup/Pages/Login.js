@@ -15,17 +15,6 @@ export default function Login() {
 
     const navigateToRegister = () => navigate('/register');
 
-    const notifyLoginSuccess = () => toast.success('Login successful!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
-
     const notifyLoginFail = (message) => toast.error(message, {
         position: "top-right",
         autoClose: 5000,
@@ -75,7 +64,6 @@ export default function Login() {
             } else {
                 throw new Error("Missing role or accessToken in the response");
             }
-            notifyLoginSuccess();
             console.log('Login response:', response);
         } catch (error) {
             notifyLoginFail(error.message || "Login failed. Please try again.");

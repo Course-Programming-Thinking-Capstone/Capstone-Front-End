@@ -5,6 +5,8 @@ import background from "../../../../images/background/adminStaffBackground.jpg";
 import simp from "../../../../images/gallery/simp.jpg";
 import Modal from "react-bootstrap/Modal";
 import ReactPaginate from "react-paginate";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +41,7 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
         <div ref={dropdownRef} style={{ position: "relative" }}>
             <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                style={{ cursor: "pointer", padding: "10px", border: "1px solid #ccc" }}
+                style={{ cursor: "pointer", padding: "10px", border: "1px solid #FF8A00", borderRadius: '10px' }}
             >
                 {selectedOptionLabel || "Select an option"}
             </div>
@@ -53,8 +55,9 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
                         style={{
                             padding: "10px",
                             margin: "5px 0",
-                            width: "calc(100% - 20px)",
+                            width: "100%",
                             boxSizing: "border-box",
+                            border: "1px solid #909090", borderRadius: '10px', outline: 'none'
                         }}
                     />
                     <ul
@@ -66,7 +69,7 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
                             overflowY: "auto",
                             position: "absolute",
                             width: "100%",
-                            border: "1px solid #ccc",
+                            border: "1px solid #FF8A00", borderRadius: '10px',
                             backgroundColor: "#fff",
                             zIndex: 1000,
                         }}
@@ -93,11 +96,14 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
 export default function SyllabusAd() {
     const [showCreateSyllabus, setShowCreateSyllabus] = useState(false);
     const [courses, setCourses] = useState([]);
+    const [record, setRecord] = useState([]);
+
     const accessToken = localStorage.getItem("accessToken");
 
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 4;
     const pageCount = Math.ceil(courses.length / itemsPerPage);
+
 
     const handlePageClick = ({ selected: selectedPage }) => {
         setCurrentPage(selectedPage);
@@ -110,7 +116,7 @@ export default function SyllabusAd() {
         const fetchCourses = async () => {
             try {
                 const response = await fetch(
-                    "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Draft",
+                    "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Open",
                     {
                         method: "GET",
                         headers: {
@@ -129,6 +135,7 @@ export default function SyllabusAd() {
                 const data = await response.json();
                 setCourses(data.results || []);
                 console.log(courses);
+                setRecord(data.totalRecords);
             } catch (error) {
                 console.error("Error fetching courses:", error.message);
             }
@@ -150,6 +157,18 @@ export default function SyllabusAd() {
         const [activePassCondition, setActivePassCondition] = useState(null);
         const [activeCourseSlot, setActiveCourseSlot] = useState(null);
         const [activeSlotTime, setActiveSlotTime] = useState(null);
+
+        const notifyCreateFail = () => toast.error("Create syllabus failed", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeButton: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
 
         const handleSelect = (category, value) => {
             if (category === 'passCondition') {
@@ -218,8 +237,8 @@ export default function SyllabusAd() {
                 name: courseName,
                 target: courseTarget,
                 teacherId: selectedTeacherId,
-                totalSlot: activeCourseSlot,     
-                slotTime: activeSlotTime,        
+                totalSlot: activeCourseSlot,
+                slotTime: activeSlotTime,
                 minQuizScoreRatio: activePassCondition,
                 sections: sections.map((sectionName) => ({ name: sectionName })),
             };
@@ -248,6 +267,7 @@ export default function SyllabusAd() {
                 console.log("Course successfully created:", responseData);
                 // Optionally, clear the form or give user feedback
             } catch (errors) {
+                notifyCreateFail();
                 console.error("Failed to create course:", errors);
             }
         };
@@ -268,7 +288,7 @@ export default function SyllabusAd() {
                                 <button
                                     onClick={() => setShowCreateSyllabus(false)}
                                     style={{
-                                        backgroundColor: "#7F7C7C",
+                                        backgroundColor: "#1A9CB7",
                                         color: "white",
                                         border: "none",
                                         borderRadius: "10px",
@@ -284,16 +304,18 @@ export default function SyllabusAd() {
                             </div>
                         </div>
                     </div>
+
+                    <ToastContainer />
                     <div>
                         <div>
-                            <div className="d-flex justify-content-start">
+                            <div className="d-flex justify-content-start mt-2">
                                 <div className="d-flex justify-content-start">
                                     <p className="mb-0 blue">Course title</p>
                                     <span className="orange">*</span>
                                 </div>
                                 <input
                                     className="ms-3"
-                                    style={{ width: "400px" }}
+                                    style={{ width: "400px", outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }}
                                     type="text"
                                     placeholder="Course title"
                                     value={courseName}
@@ -309,7 +331,7 @@ export default function SyllabusAd() {
                                 name=""
                                 id=""
                                 rows="4"
-                                style={{ width: "100%" }}
+                                style={{ width: "100%", outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }}
                                 value={courseTarget}
                                 onChange={(e) => setCourseTarget(e.target.value)}
                             ></textarea>
@@ -340,6 +362,7 @@ export default function SyllabusAd() {
                                             width: "100%",
                                             borderRadius: "7px",
                                             outline: "none",
+                                            border: '1px solid #FF8A00'
                                         }}
                                     />
                                 </div>
@@ -360,7 +383,7 @@ export default function SyllabusAd() {
                                     </button>
                                     <button
                                         style={{
-                                            backgroundColor: "#ff8a00",
+                                            backgroundColor: "#E53E5C",
                                             color: "white",
                                             border: "none",
                                             borderRadius: "5px",
@@ -398,7 +421,14 @@ export default function SyllabusAd() {
                                 }}
                                 onClick={() => setModalShow(true)}
                             >
-                                <i className="fa-solid fa-circle-plus"></i>New section
+                                <div className="d-flex">
+
+                                    <i className="fa-solid fa-circle-plus mt-1"></i>
+                                    <span className="ms-2">
+
+                                        New section
+                                    </span>
+                                </div>
                             </button>
                         </div>
 
@@ -432,7 +462,7 @@ export default function SyllabusAd() {
                                             onClick={() => handleSelect('courseSlot', value)}
                                         >
                                             <i className={activeCourseSlot === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
-                                            <div>{value}%</div>
+                                            <div>{value}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -444,7 +474,7 @@ export default function SyllabusAd() {
                                             onClick={() => handleSelect('slotTime', value)}
                                         >
                                             <i className={activeSlotTime === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
-                                            <div>{value}%</div>
+                                            <div>{value}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -502,6 +532,8 @@ export default function SyllabusAd() {
                     </div>
                 </div>
 
+                <ToastContainer />
+
                 <div className="syllabus-content">
                     <div className="d-flex justify-content-between">
                         <div
@@ -526,7 +558,7 @@ export default function SyllabusAd() {
                                 }}
                             >
                                 <p className="mb-0">Total syllabus</p>
-                                <span></span>
+                                <span style={{fontSize:'16px'}}>{record}</span>
                             </div>
                         </div>
                         <div>

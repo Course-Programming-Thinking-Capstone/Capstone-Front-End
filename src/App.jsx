@@ -129,46 +129,26 @@ const App = () => {
             </Route>
 
             {/* Staff pages */}
-            <Route
-              path="/staff"
-              element={<PrivateRoute page="staff" component={<Staff />} />}
-            >
+            <Route path="/staff" element={<PrivateRoute page="staff" component={<Staff />} />}>
+
               <Route
                 path="staff-order"
-                element={
-                  <PrivateRoute
-                    page="staff/staff-order"
-                    component={<StaffOrder />}
-                  />
-                }
+                element={<PrivateRoute page="staff/staff-order" component={<StaffOrder />} />}
               />
 
               <Route
-                path="staff-order-detail"
-                element={
-                  <PrivateRoute
-                    page="staff/staff-order-detail"
-                    component={<StaffOrderDetail />}
-                  />
-                }
+                path="staff-order-detail/:orderId"
+                element={<PrivateRoute page="staff/staff-order-detail/:orderId" component={<StaffClassDetail />} />}
               />
+
               <Route
                 path="class"
-                element={
-                  <PrivateRoute
-                    page="staff/class"
-                    component={<StaffClassDetail />}
-                  />
-                }
+                element={<PrivateRoute page="staff/class" component={<StaffClassDetail />} />}
               />
+
               <Route
                 path="moderating"
-                element={
-                  <PrivateRoute
-                    page="staff/moderating"
-                    component={<StaffModerating />}
-                  />
-                }
+                element={<PrivateRoute page="staff/moderating" component={<StaffModerating />} />}
               />
             </Route>
 
