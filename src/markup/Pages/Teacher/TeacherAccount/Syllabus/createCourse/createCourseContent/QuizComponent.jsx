@@ -202,7 +202,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                     className="mb-3"
                   >
                     <Form.Label className="create-course-form-lable">
-                      Duration (minute)
+                      Test time (minute)
                     </Form.Label>
                     <Form.Control
                       type="number"
@@ -486,7 +486,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                     className="mb-3"
                   >
                     <Form.Label className="create-course-form-lable">
-                      Duration (minute)
+                      Test time (minute)
                     </Form.Label>
                     <Form.Control
                       type="number"

@@ -119,6 +119,11 @@ const CreateCourseComponent = () => {
         }
 
         alert("Update success");
+        if (action === "Save") {
+          setTimeout(() => {
+            navigate("/teacher/syllabuses");
+          }, 0);
+        }
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);

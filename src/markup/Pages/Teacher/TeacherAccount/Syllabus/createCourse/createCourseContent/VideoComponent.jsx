@@ -90,7 +90,7 @@ const VideoComponent = ({ sectionId }) => {
             onSubmit={handleSubmit}
             initialValues={{
               lessonName: "Video",
-              duration: 1,
+              duration: 10,
               resourceUrl: "https://www.youtube.com/",
             }}
           >

@@ -77,7 +77,7 @@ const DocumentComponent = ({ sectionId }) => {
             onSubmit={handleSubmit}
             initialValues={{
               lessonName: "Document",
-              duration: 1,
+              duration: 10,
               content: "Content",
             }}
           >
