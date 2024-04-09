@@ -1,0 +1,157 @@
+button.create-course-edit.important {
+  /* border: 1px solid #FF8A00;
+    border: 1px solid #FF8A00;
+    border-radius: 5px;
+    background-color: white; 
+    color: #FF8A00;
+    text-align: center;
+    text-decoration: none;
+    /* font-size: 14px; */
+  /* cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: normal;  */
+
+  /* border: 1px solid #FF8A00; */
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #ff8a00;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  margin: 0px 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+button.create-course-edit:hover {
+  background-color: #f7cc9c;
+  /* background-color: #ff8a00; */
+  /* color: white; */
+}
+
+button.create-course-edit img {
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+button.create-course-add-question {
+  border: none;
+  border-radius: 5px;
+  background-color: #f25b58;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  height: 40px;
+  padding: 4px 8px;
+  font-weight: normal;
+}
+
+button.create-course-add-question:hover {
+  background-color: #f54340;
+}
+
+input.create-course-input {
+  border: solid 1px #d4d4d4;
+  border-radius: 5px;
+  /* color: #7f7c7c; */
+}
+
+label.create-course-form-lable {
+  color: #f25b58;
+  font-weight: bold;
+}
+
+.create-course-form-lable {
+  color: #f25b58;
+  font-weight: bold;
+}
+
+.create-course-modal-content .modal-content {
+  border-radius: 10px;
+  border: 1px solid #faa287;
+}
+
+.create-course-modal-header.modal-header {
+  background-color: #faa287;
+  border-radius: 10px 10px 0px 0px;
+  display: block;
+}
+
+.create-course-modal-header.modal-header .modal-title {
+  text-align: center;
+}
+
+.create-course-modal-header.modal-header button.btn-close {
+  display: none;
+}
+
+.create-course-modal-body.modal-body {
+  background-color: #fbede1;
+}
+
+button.create-course-modal-remove {
+  border: none;
+  border-radius: 50%;
+  background-color: #fbede1;
+  color: #f54340;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+button.create-course-modal-remove:hover {
+  background-color: #faa287;
+}
+
+
+button.create-course-close {
+  border: none;
+  border-radius: 5px;
+  background-color: #f25b58;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  height: 35px;
+  padding: 8px 16px;
+  font-weight: normal;
+}
+
+button.create-course-close:hover {
+  background-color: #f54340;
+}
+
+button.create-course-save {
+  border: none;
+  border-radius: 5px;
+  background-color: #1A9CB7;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  height: 35px;
+  padding: 8px 16px;
+  font-weight: normal;
+}
+
+button.create-course-save:hover {
+  background-color: #147a8f;
+}

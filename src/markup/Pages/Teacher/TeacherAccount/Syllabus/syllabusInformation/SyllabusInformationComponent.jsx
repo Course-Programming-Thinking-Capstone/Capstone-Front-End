@@ -183,7 +183,7 @@ export const SyllabusInformationComponent = () => {
                 </Row>
               </Container>
               <div className="d-flex justify-content-end">
-                <Link to={`/teacher-account/syllabuses/create-course`}>
+                <Link to={`/teacher/syllabuses/create-course`}>
                   <Button
                     variant="danger"
                     className="px-3 py-2"

@@ -1,0 +1,15 @@
+.teacher-account .menu a.link-item {
+    padding: 5px 20px;
+    height: 42px;
+    border-radius: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #212121CC;
+  }
+  
+  .teacher-account .menu a.link-item:hover {
+    background-color: #f69e4a;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+  }

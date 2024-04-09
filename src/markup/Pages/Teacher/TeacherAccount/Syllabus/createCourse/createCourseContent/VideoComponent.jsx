@@ -12,6 +12,8 @@ import {
 import videoIcon from "../../../../../../../images/icon/video-icon.png";
 import removeIcon from "../../../../../../../images/icon/remove-icon.png";
 
+import "./../CreateCourse.css";
+
 const VideoComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
 
@@ -60,18 +62,14 @@ const VideoComponent = ({ sectionId }) => {
 
   return (
     <>
-      {/* <Button
-        variant="primary"
-        size="sm"
-        onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-      >
-        Add video
-      </Button> */}
-
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
-          <img src={videoIcon} title="Video icon" />
+          <img
+            src={videoIcon}
+            width={"22px"}
+            height={"auto"}
+            title="Video icon"
+          />
           <p className="mb-0 mx-2">Video</p>
         </div>
       </button>
@@ -81,25 +79,33 @@ const VideoComponent = ({ sectionId }) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Add video</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
             initialValues={{
               lessonName: "Video",
-              duration: 1,
+              duration: 10,
               resourceUrl: "https://www.youtube.com/",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form id="videoForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} md="12" controlId="validationLessonName">
-                    <Form.Label>Lesson name</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationLessonName"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Lesson name
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Lesson name"
@@ -107,14 +113,22 @@ const VideoComponent = ({ sectionId }) => {
                       value={values.lessonName}
                       onChange={handleChange}
                       isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
-                    <Form.Label>Duration</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationDuration"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -124,14 +138,22 @@ const VideoComponent = ({ sectionId }) => {
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationVideo">
-                    <Form.Label>Url</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationVideo"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Url
+                    </Form.Label>
                     <Form.Control
                       type="url"
                       placeholder="Video url"
@@ -139,6 +161,7 @@ const VideoComponent = ({ sectionId }) => {
                       value={values.resourceUrl}
                       onChange={handleChange}
                       isInvalid={touched.resourceUrl && !!errors.resourceUrl} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}
@@ -150,12 +173,17 @@ const VideoComponent = ({ sectionId }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="videoForm">
+          </button>
+
+          <button className="create-course-save" type="submit" form="videoForm">
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -217,25 +245,25 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        size="sm"
+      <button
+        className="create-course-edit important"
         onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+        title="Edit"
       >
-        Update
-      </Button>
+        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
+      </button>
 
       <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Update video</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -248,8 +276,15 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form id="videoForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} md="12" controlId="validationLessonName">
-                    <Form.Label>Lesson name</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationLessonName"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Lesson name
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Lesson name"
@@ -257,14 +292,22 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       value={values.lessonName}
                       onChange={handleChange}
                       isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
-                    <Form.Label>Duration</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationDuration"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -274,14 +317,22 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationVideo">
-                    <Form.Label>Url</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationVideo"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Url
+                    </Form.Label>
                     <Form.Control
                       type="url"
                       placeholder="Video url"
@@ -289,6 +340,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                       value={values.resourceUrl}
                       onChange={handleChange}
                       isInvalid={touched.resourceUrl && !!errors.resourceUrl} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.resourceUrl}
@@ -300,12 +352,17 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="videoForm">
+          </button>
+
+          <button className="create-course-save" type="submit" form="videoForm">
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -321,15 +378,6 @@ export const RemoveComponent = ({ sectionId, lessonIndex }) => {
 
   return (
     <>
-      {/* <Button
-        variant="delete"
-        size="sm"
-        onClick={handleDelete}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-      >
-        Remove
-      </Button> */}
-
       <button onClick={handleDelete} className="teacher-button-remove">
         <img src={removeIcon} title="Remove" />
       </button>
