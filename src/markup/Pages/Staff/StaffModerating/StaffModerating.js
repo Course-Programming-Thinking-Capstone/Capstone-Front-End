@@ -125,7 +125,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [modalRefuseShow, setRefuseShow] = React.useState(false);
     const [courseDetails, setCourseDetails] = useState(null);
     const [selectedSection, setSelectedSection] = useState(null);
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState(10);
     const [showQuiz, setShowQuiz] = useState(false);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
 
@@ -208,7 +208,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
 
         try {
             const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${courseId}/approve`, {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
@@ -266,11 +266,17 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         <p className='mb-1'>The lowest price is 10.00</p>
                         <input
                             type="number"
+                            min="10"
                             placeholder='Enter price'
                             style={{ outline: 'none' }}
                             value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            disabled={courseType !== 'paid'} // Disable input if courseType is not 'paid'
+                            onChange={(e) => {
+                                const newValue = e.target.value;
+                                if (newValue >= 10) {
+                                    setPrice(newValue);
+                                }
+                            }}
+                            disabled={courseType !== 'paid'}
                         />
 
                     </div>

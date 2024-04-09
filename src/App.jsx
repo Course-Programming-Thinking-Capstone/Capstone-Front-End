@@ -305,12 +305,13 @@ const App = () => {
             {/* Student pages */}
             <Route
               path="/courses-plan"
-              element={
-                <PrivateRoute
-                  page="courses-plan"
-                  component={<CoursesPlan/>}
-                />
-              }
+              element={<CoursesPlan />}
+            // element={
+            //   <PrivateRoute
+            //     page="courses-plan"
+            //     component={<CoursesPlan/>}
+            //   />
+            // }
             />
 
             {/* Test page */}
@@ -318,7 +319,7 @@ const App = () => {
 
             {/* Error pages  */}
             <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/not-found"/>} />
+            <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </div>
       </BrowserRouter>
