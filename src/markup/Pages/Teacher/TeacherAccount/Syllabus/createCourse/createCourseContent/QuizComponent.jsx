@@ -22,6 +22,7 @@ import {
 
 import quizIcon from "../../../../../../../images/icon/quiz-icon.png";
 import removeIcon from "../../../../../../../images/icon/remove-icon.png";
+import plusIcon from "../../../../../../../images/icon/plus_circle.png";
 
 //Add quiz
 export const AddQuizComponent = ({ sectionId }) => {
@@ -115,7 +116,12 @@ export const AddQuizComponent = ({ sectionId }) => {
     <>
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
-          <img src={quizIcon} width={"22px"} height={"auto"} title="Quiz icon" />
+          <img
+            src={quizIcon}
+            width={"22px"}
+            height={"auto"}
+            title="Quiz icon"
+          />
           <p className="mb-0 mx-2">Quiz</p>
         </div>
       </button>
@@ -373,18 +379,13 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
 
   return (
     <>
-      {/* <Button
-        variant="primary"
-        size="sm"
+      <button
+        className="create-course-edit important"
         onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+        title="Edit"
+        style={{ color: "#ff8a00" }}
       >
-        Update
-      </Button> */}
-
-      <button className="create-course-edit important" onClick={handleShow} title="Edit" >
         <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>{" "}
-        {/* <p className="mx-1 mb-0">Edit</p> */}
       </button>
 
       <Modal
@@ -575,7 +576,7 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
   //useState
   const [show, setShow] = useState(false);
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(1);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -651,25 +652,28 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        size="sm"
+      <button
+        className="create-course-add-question"
         onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
+        style={{ color: "white", fontWeight: "normal" }}
       >
-        Add Question
-      </Button>
+        <div className="d-flex justify-content-between align-items-center">
+          <img className="mx-1" src={plusIcon} title="Add question" />
+          <p className="mb-0 mx-1">Add Question</p>
+        </div>
+      </button>
 
       <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Add Question</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -689,7 +693,9 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                     className="mb-3"
                     controlId="validationTitle"
                   >
-                    <Form.Label>Title</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Question
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Question title"
@@ -697,6 +703,7 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                       value={values.title}
                       onChange={handleChange}
                       isInvalid={touched.title && !!errors.title}
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -704,82 +711,103 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                   </Form.Group>
                 </Row>
 
-                <p>Options</p>
+                <p className="create-course-form-lable">Options</p>
 
                 <formik.FieldArray name="options">
                   {({ push, remove }) => (
                     <>
                       {values.options.map((option, index) => (
                         <Row key={index} className="mb-3">
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionContent${index}`}
-                          >
-                            <Form.Control
-                              type="text"
-                              placeholder="Write option"
-                              name={`options[${index}].content`}
-                              value={option.content}
-                              onChange={handleChange}
-                              isInvalid={
-                                touched.options &&
-                                touched.options[index] &&
-                                !!errors.options &&
-                                !!errors.options[index]?.content
-                              }
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.options && errors.options[index]?.content}
-                            </Form.Control.Feedback>
-                          </Form.Group>
+                          <Col md="11">
+                            <Form.Group
+                              as={Col}
+                              md={12}
+                              controlId={`validationOptionContent${index}`}
+                              className="mb-3"
+                            >
+                              <Form.Control
+                                type="text"
+                                placeholder="Content"
+                                name={`options[${index}].content`}
+                                value={option.content}
+                                onChange={handleChange}
+                                isInvalid={
+                                  touched.options &&
+                                  touched.options[index] &&
+                                  !!errors.options &&
+                                  !!errors.options[index]?.content
+                                }
+                                className="create-course-input"
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors.options &&
+                                  errors.options[index]?.content}
+                              </Form.Control.Feedback>
+                            </Form.Group>
 
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionExplain${index}`}
-                          >
-                            <Form.Control
-                              type="text"
-                              placeholder="Explain"
-                              name={`options[${index}].answerExplain`}
-                              value={option.answerExplain}
-                              onChange={handleChange}
-                              isInvalid={
-                                touched.options &&
-                                touched.options[index] &&
-                                !!errors.options &&
-                                !!errors.options[index]?.answerExplain
-                              }
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.options &&
-                                errors.options[index]?.answerExplain}
-                            </Form.Control.Feedback>
-                          </Form.Group>
+                            <Form.Group
+                              as={Col}
+                              md={12}
+                              controlId={`validationOptionExplain${index}`}
+                              className="mb-3"
+                            >
+                              <Form.Control
+                                type="text"
+                                placeholder="Explain"
+                                name={`options[${index}].answerExplain`}
+                                value={option.answerExplain}
+                                onChange={handleChange}
+                                isInvalid={
+                                  touched.options &&
+                                  touched.options[index] &&
+                                  !!errors.options &&
+                                  !!errors.options[index]?.answerExplain
+                                }
+                                className="create-course-input"
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors.options &&
+                                  errors.options[index]?.answerExplain}
+                              </Form.Control.Feedback>
+                            </Form.Group>
 
-                          {/* isCorrect field */}
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionIsCorrect${index}`}
-                          >
-                            <Form.Check
-                              type="switch"
-                              id={`custom-switch-${index}`}
-                              label="Is correct answer?"
-                              checked={correctAnswerIndex === index}
-                              onChange={() => handleAnswerChange(index)}
-                            />
-                          </Form.Group>
+                            {/* isCorrect field */}
+                            <Form.Group
+                              as={Col}
+                              md={12}
+                              controlId={`validationOptionIsCorrect${index}`}
+                            >
+                              <Form.Check
+                                type="switch"
+                                id={`custom-switch-${index}`}
+                                label="Is correct answer?"
+                                checked={correctAnswerIndex === index}
+                                onChange={() => handleAnswerChange(index)}
+                                className="px-0"
+                              />
+                            </Form.Group>
+                          </Col>
 
-                          <Col md={2}>
-                            <Button
+                          <Col md={1} className="px-0">
+                            {/* <Button
                               variant="danger"
                               onClick={() => handleRemoveOption(remove, index)}
                             >
                               Remove
-                            </Button>
+                            </Button> */}
+
+                            <button
+                              onClick={() => handleRemoveOption(remove, index)}
+                              className="create-course-modal-remove"
+                              type="button"
+                              title="Remove"
+                            >
+                              {/* <img src={removeIcon} title="Remove" /> */}
+                              <i
+                                class="fa-solid fa-trash"
+                                style={{ fontSize: "18px" }}
+                              ></i>
+                            </button>
                           </Col>
                         </Row>
                       ))}
@@ -788,12 +816,23 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                         <div className="text-danger mb-3">{errors.options}</div>
                       )}
 
-                      <Button
-                        variant="primary"
-                        onClick={() => handleAddOption(push)}
-                      >
-                        Add Option
-                      </Button>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <button
+                          className="create-course-add-question"
+                          onClick={() => handleAddOption(push)}
+                          style={{ color: "white", fontWeight: "normal" }}
+                          type="button"
+                        >
+                          <div className="d-flex justify-content-between align-items-center">
+                            <img
+                              className="mx-1"
+                              src={plusIcon}
+                              title="Add option"
+                            />
+                            <p className="mb-0 mx-1">Add Option</p>
+                          </div>
+                        </button>
+                      </div>
                     </>
                   )}
                 </formik.FieldArray>
@@ -802,12 +841,21 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="questionForm">
+          </button>
+
+          <button
+            className="create-course-save"
+            type="submit"
+            form="questionForm"
+          >
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -921,14 +969,23 @@ export const UpdateQuestionComponent = ({
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="primary"
         size="sm"
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
         Update
-      </Button>
+      </Button> */}
+
+      <button
+        className="create-course-edit important"
+        onClick={handleShow}
+        title="Edit"
+        style={{ color: "#ff8a00" }}
+      >
+        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
+      </button>
 
       <Modal
         show={show}
@@ -1097,13 +1154,10 @@ export const RemoveQuestionComponent = ({
   };
 
   return (
-    <Button
-      variant="remove"
-      size="sm"
-      onClick={handleDelete}
-      style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-    >
-      Remove
-    </Button>
+    <>
+      <button onClick={handleDelete} className="teacher-button-remove">
+        <img src={removeIcon} title="Remove" />
+      </button>
+    </>
   );
 };

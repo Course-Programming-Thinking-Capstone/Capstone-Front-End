@@ -53,15 +53,6 @@ const DocumentComponent = ({ sectionId }) => {
 
   return (
     <>
-      {/* <Button
-        variant="primary"
-        size="sm"
-        onClick={handleShow}
-        style={{ borderRadius: "4px", width: "150px", height: "40px" }}
-      >
-        Add document
-      </Button> */}
-
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
           {/* <img src={documentIcon} title="Document icon" /> */}
@@ -75,11 +66,12 @@ const DocumentComponent = ({ sectionId }) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Add Document</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -92,8 +84,15 @@ const DocumentComponent = ({ sectionId }) => {
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form id="documentForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} md="12" controlId="validationLessonName">
-                    <Form.Label>Lesson name</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationLessonName"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Lesson name
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Lesson name"
@@ -101,14 +100,22 @@ const DocumentComponent = ({ sectionId }) => {
                       value={values.lessonName}
                       onChange={handleChange}
                       isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
-                    <Form.Label>Duration</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationDuration"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -118,21 +125,30 @@ const DocumentComponent = ({ sectionId }) => {
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationContent">
-                    <Form.Label>Content</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationContent"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Content
+                    </Form.Label>
                     <Form.Control
-                      type="url"
+                      type="text"
                       placeholder="Document content"
                       name="content"
                       value={values.content}
                       onChange={handleChange}
                       isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.content}
@@ -144,12 +160,21 @@ const DocumentComponent = ({ sectionId }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="documentForm">
+          </button>
+
+          <button
+            className="create-course-save"
+            type="submit"
+            form="documentForm"
+          >
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -213,6 +238,7 @@ export const UpdateDocumentComponent = ({
         className="create-course-edit important"
         onClick={handleShow}
         title="Edit"
+        style={{ color: "#ff8a00" }}
       >
         <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
       </button>
@@ -222,11 +248,12 @@ export const UpdateDocumentComponent = ({
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Update document</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -239,8 +266,15 @@ export const UpdateDocumentComponent = ({
             {({ handleSubmit, handleChange, values, touched, errors }) => (
               <Form id="documentForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} md="12" controlId="validationLessonName">
-                    <Form.Label>Lesson name</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationLessonName"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Lesson name
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Lesson name"
@@ -248,14 +282,22 @@ export const UpdateDocumentComponent = ({
                       value={values.lessonName}
                       onChange={handleChange}
                       isInvalid={touched.lessonName && !!errors.lessonName} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lessonName}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationDuration">
-                    <Form.Label>Duration</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationDuration"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -265,14 +307,22 @@ export const UpdateDocumentComponent = ({
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="12" controlId="validationContent">
-                    <Form.Label>Content</Form.Label>
+                  <Form.Group
+                    as={Col}
+                    md="12"
+                    controlId="validationContent"
+                    className="mb-3"
+                  >
+                    <Form.Label className="create-course-form-lable">
+                      Content
+                    </Form.Label>
                     <Form.Control
                       type="url"
                       placeholder="Document content"
@@ -280,6 +330,7 @@ export const UpdateDocumentComponent = ({
                       value={values.content}
                       onChange={handleChange}
                       isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.content}
@@ -291,12 +342,21 @@ export const UpdateDocumentComponent = ({
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="documentForm">
+          </button>
+
+          <button
+            className="create-course-save"
+            type="submit"
+            form="documentForm"
+          >
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
