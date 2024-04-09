@@ -131,11 +131,12 @@ export const AddQuizComponent = ({ sectionId }) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Add quiz</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -156,7 +157,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                     className="mb-3"
                     controlId="validationTitle"
                   >
-                    <Form.Label>Title</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Title
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Quiz title"
@@ -164,6 +167,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       value={values.title}
                       onChange={handleChange}
                       isInvalid={touched.title && !!errors.title} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -175,7 +179,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                     controlId="validationDescription"
                     className="mb-3"
                   >
-                    <Form.Label>Description</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Description
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Description"
@@ -183,6 +189,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       value={values.description}
                       onChange={handleChange}
                       isInvalid={touched.description && !!errors.description} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.description}
@@ -194,7 +201,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                     controlId="validationDuration"
                     className="mb-3"
                   >
-                    <Form.Label>Duration (minute)</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -204,6 +213,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={touched.duration && !!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -215,7 +225,9 @@ export const AddQuizComponent = ({ sectionId }) => {
                     controlId="validationNumberOfAttempt"
                     className="mb-3"
                   >
-                    <Form.Label>Number of attempts</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Number of attempts
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -226,7 +238,8 @@ export const AddQuizComponent = ({ sectionId }) => {
                       onChange={handleChange}
                       isInvalid={
                         touched.numberOfAttempt && !!errors.numberOfAttempt
-                      } // Set isInvalid based on validation errors
+                      }
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.numberOfAttempt}
@@ -249,8 +262,11 @@ export const AddQuizComponent = ({ sectionId }) => {
                       as={Col}
                       md={12}
                       controlId="validationNumberOfQuestion"
+                      className="my-3"
                     >
-                      <Form.Label>Number of questions</Form.Label>
+                      <Form.Label className="create-course-form-lable">
+                        Number of questions
+                      </Form.Label>
                       <Form.Control
                         type="number"
                         min={1}
@@ -262,6 +278,7 @@ export const AddQuizComponent = ({ sectionId }) => {
                         isInvalid={
                           touched.numberOfQuestion && !!errors.numberOfQuestion
                         } // Set isInvalid based on validation errors
+                        className="create-course-input"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.numberOfQuestion}
@@ -274,12 +291,17 @@ export const AddQuizComponent = ({ sectionId }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="videoForm">
+          </button>
+
+          <button className="create-course-save" type="submit" form="videoForm">
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -393,11 +415,12 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Update quiz information</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -418,7 +441,9 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                     className="mb-3"
                     controlId="validationTitle"
                   >
-                    <Form.Label>Title</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Title
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Quiz title"
@@ -426,6 +451,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       value={values.title}
                       onChange={handleChange}
                       isInvalid={!!errors.title} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -437,7 +463,9 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                     controlId="validationDescription"
                     className="mb-3"
                   >
-                    <Form.Label>Description</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Description
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Description"
@@ -445,6 +473,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       value={values.description}
                       onChange={handleChange}
                       isInvalid={!!errors.description} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.description}
@@ -456,7 +485,9 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                     controlId="validationDuration"
                     className="mb-3"
                   >
-                    <Form.Label>Duration (minute)</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Duration (minute)
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -466,6 +497,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       value={values.duration}
                       onChange={handleChange}
                       isInvalid={!!errors.duration} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.duration}
@@ -477,7 +509,9 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                     controlId="validationNumberOfAttempt"
                     className="mb-3"
                   >
-                    <Form.Label>Number of attempts</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Number of attempts
+                    </Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -487,6 +521,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       value={values.numberOfAttempt}
                       onChange={handleChange}
                       isInvalid={!!errors.numberOfAttempt} // Set isInvalid based on validation errors
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.numberOfAttempt}
@@ -509,8 +544,11 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       as={Col}
                       md={12}
                       controlId="validationNumberOfQuestion"
+                      className="mb-3"
                     >
-                      <Form.Label>Number of questions</Form.Label>
+                      <Form.Label className="create-course-form-lable">
+                        Number of questions
+                      </Form.Label>
                       <Form.Control
                         type="number"
                         min={1}
@@ -520,6 +558,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                         value={values.numberOfQuestion}
                         onChange={handleChange}
                         isInvalid={!!errors.numberOfQuestion} // Set isInvalid based on validation errors
+                        className="create-course-input"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.numberOfQuestion}
@@ -532,12 +571,17 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="videoForm">
+          </button>
+
+          <button className="create-course-save" type="submit" form="videoForm">
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
@@ -554,15 +598,6 @@ export const RemoveQuizComponent = ({ sectionId, index }) => {
 
   return (
     <>
-      {/* <Button
-        variant="delete"
-        size="sm"
-        onClick={handleDelete}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-      >
-        Remove
-      </Button> */}
-
       <button onClick={handleDelete} className="teacher-button-remove">
         <img src={removeIcon} title="Remove" />
       </button>
@@ -576,7 +611,7 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
   //useState
   const [show, setShow] = useState(false);
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(1);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -789,20 +824,12 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                           </Col>
 
                           <Col md={1} className="px-0">
-                            {/* <Button
-                              variant="danger"
-                              onClick={() => handleRemoveOption(remove, index)}
-                            >
-                              Remove
-                            </Button> */}
-
                             <button
                               onClick={() => handleRemoveOption(remove, index)}
                               className="create-course-modal-remove"
                               type="button"
                               title="Remove"
                             >
-                              {/* <img src={removeIcon} title="Remove" /> */}
                               <i
                                 class="fa-solid fa-trash"
                                 style={{ fontSize: "18px" }}
@@ -874,21 +901,12 @@ export const UpdateQuestionComponent = ({
   //useState
   const [show, setShow] = useState(false);
 
-  const getIsCorrectOptionkey = () => {
-    if (question !== undefined && Array.isArray(question.options)) {
-      question.options.map((option, key) => {
-        if (option.isCorrect === true) {
-          return key;
-        }
-      });
-    }
-    return 0;
-  };
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(
-    getIsCorrectOptionkey
-  );
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(-1);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setCorrectAnswerIndex(-1);
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
   const handleAnswerChange = (index) => {
     setCorrectAnswerIndex(index);
@@ -969,15 +987,6 @@ export const UpdateQuestionComponent = ({
 
   return (
     <>
-      {/* <Button
-        variant="primary"
-        size="sm"
-        onClick={handleShow}
-        style={{ borderRadius: "4px", width: "120px", height: "40px" }}
-      >
-        Update
-      </Button> */}
-
       <button
         className="create-course-edit important"
         onClick={handleShow}
@@ -992,11 +1001,12 @@ export const UpdateQuestionComponent = ({
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="create-course-modal-content"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="create-course-modal-header">
           <Modal.Title>Update Question</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="create-course-modal-body">
           <Formik
             validationSchema={schema}
             onSubmit={handleSubmit}
@@ -1014,7 +1024,9 @@ export const UpdateQuestionComponent = ({
                     className="mb-3"
                     controlId="validationTitle"
                   >
-                    <Form.Label>Title</Form.Label>
+                    <Form.Label className="create-course-form-lable">
+                      Title
+                    </Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Question title"
@@ -1022,6 +1034,7 @@ export const UpdateQuestionComponent = ({
                       value={values.title}
                       onChange={handleChange}
                       isInvalid={!!errors.title}
+                      className="create-course-input"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.title}
@@ -1034,87 +1047,119 @@ export const UpdateQuestionComponent = ({
                 <formik.FieldArray name="options">
                   {({ push, remove }) => (
                     <>
-                      {values.options.map((option, index) => (
-                        <Row key={index} className="mb-3">
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionContent${index}`}
-                          >
-                            <Form.Control
-                              type="text"
-                              placeholder="Write option"
-                              name={`options[${index}].content`}
-                              value={option.content}
-                              onChange={handleChange}
-                              isInvalid={
-                                !!errors.options &&
-                                !!errors.options[index]?.content
-                              }
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.options && errors.options[index]?.content}
-                            </Form.Control.Feedback>
-                          </Form.Group>
+                      {correctAnswerIndex !== undefined &&
+                        values.options.map((option, index) => (
+                          <Row key={index} className="mb-3">
+                            <Col md="11">
+                              <Form.Group
+                                as={Col}
+                                md={12}
+                                controlId={`validationOptionContent${index}`}
+                                className="mb-3"
+                              >
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Write option"
+                                  name={`options[${index}].content`}
+                                  value={option.content}
+                                  onChange={handleChange}
+                                  isInvalid={
+                                    !!errors.options &&
+                                    !!errors.options[index]?.content
+                                  }
+                                  className="create-course-input"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                  {errors.options &&
+                                    errors.options[index]?.content}
+                                </Form.Control.Feedback>
+                              </Form.Group>
 
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionExplain${index}`}
-                          >
-                            <Form.Control
-                              type="text"
-                              placeholder="Explain"
-                              name={`options[${index}].answerExplain`}
-                              value={option.answerExplain}
-                              onChange={handleChange}
-                              isInvalid={
-                                !!errors.options &&
-                                !!errors.options[index]?.answerExplain
-                              }
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.options &&
-                                errors.options[index]?.answerExplain}
-                            </Form.Control.Feedback>
-                          </Form.Group>
+                              <Form.Group
+                                as={Col}
+                                md={12}
+                                controlId={`validationOptionExplain${index}`}
+                                className="mb-3"
+                              >
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Explain"
+                                  name={`options[${index}].answerExplain`}
+                                  value={option.answerExplain}
+                                  onChange={handleChange}
+                                  isInvalid={
+                                    !!errors.options &&
+                                    !!errors.options[index]?.answerExplain
+                                  }
+                                  className="create-course-input"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                  {errors.options &&
+                                    errors.options[index]?.answerExplain}
+                                </Form.Control.Feedback>
+                              </Form.Group>
 
-                          {/* isCorrect field */}
-                          <Form.Group
-                            as={Col}
-                            md={12}
-                            controlId={`validationOptionIsCorrect${index}`}
-                          >
-                            <Form.Check
-                              type="switch"
-                              id={`custom-switch-${index}`}
-                              label="Is correct answer?"
-                              checked={correctAnswerIndex === index}
-                              onChange={() => handleAnswerChange(index)}
-                            />
-                          </Form.Group>
+                              {/* isCorrect field */}
+                              <Form.Group
+                                as={Col}
+                                md={12}
+                                controlId={`validationOptionIsCorrect${index}`}
+                                className="mb-3"
+                              >
+                                <Form.Check
+                                  type="switch"
+                                  id={`custom-switch-${index}`}
+                                  label="Is correct answer?"
+                                  checked={
+                                    correctAnswerIndex === -1
+                                      ? option.isCorrect === true
+                                      : correctAnswerIndex === index
+                                  }
+                                  onChange={() => handleAnswerChange(index)}
+                                  className="px-0"
+                                />
+                              </Form.Group>
+                            </Col>
 
-                          <Col md={2}>
-                            <Button
-                              variant="danger"
-                              onClick={() => handleRemoveOption(remove, index)}
-                            >
-                              Remove
-                            </Button>
-                          </Col>
-                        </Row>
-                      ))}
+                            <Col md={1} className="px-0">
+                              <button
+                                onClick={() =>
+                                  handleRemoveOption(remove, index)
+                                }
+                                className="create-course-modal-remove"
+                                type="button"
+                                title="Remove"
+                              >
+                                <i
+                                  class="fa-solid fa-trash"
+                                  style={{ fontSize: "18px" }}
+                                ></i>
+                              </button>
+                            </Col>
+                          </Row>
+                        ))}
 
                       {errors.options && !Array.isArray(errors.options) && (
                         <div className="text-danger mb-3">{errors.options}</div>
                       )}
 
-                      <Button
-                        variant="primary"
-                        onClick={() => handleAddOption(push)}
-                      >
-                        Add Option
-                      </Button>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <button
+                          className="create-course-add-question"
+                          onClick={() => handleAddOption(push)}
+                          style={{ color: "white", fontWeight: "normal" }}
+                          type="button"
+                        >
+                          <div className="d-flex justify-content-between align-items-center">
+                            <img
+                              className="mx-1"
+                              src={plusIcon}
+                              title="Add option"
+                            />
+                            <p className="mb-0 mx-1">Add Option</p>
+                          </div>
+                        </button>
+                      </div>
                     </>
                   )}
                 </formik.FieldArray>
@@ -1123,12 +1168,21 @@ export const UpdateQuestionComponent = ({
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button
+            className="create-course-close"
+            onClick={handleClose}
+            type="button"
+          >
             Close
-          </Button>
-          <Button variant="primary" type="submit" form="questionForm">
+          </button>
+
+          <button
+            className="create-course-save"
+            type="submit"
+            form="questionForm"
+          >
             Save
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
