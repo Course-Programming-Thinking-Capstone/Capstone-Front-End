@@ -115,7 +115,7 @@ export const AddQuizComponent = ({ sectionId }) => {
     <>
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
-          <img src={quizIcon} title="Quiz icon" />
+          <img src={quizIcon} width={"22px"} height={"auto"} title="Quiz icon" />
           <p className="mb-0 mx-2">Quiz</p>
         </div>
       </button>
