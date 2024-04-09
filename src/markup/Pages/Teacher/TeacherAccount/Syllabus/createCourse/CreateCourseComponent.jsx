@@ -468,47 +468,37 @@ const QuizContent = ({ sectionId, quiz, index }) => {
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Description:</span>{" "}
-                  {quiz.description}
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Description:</span>{" "}
               </Col>
+              <Col md="9">{quiz.description}</Col>
             </Row>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Duration:</span>{" "}
-                  {quiz.duration} minute
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Duration:</span>{" "}
               </Col>
+              <Col md="9">{quiz.duration} minute</Col>
             </Row>
 
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Number of attempts:</span>{" "}
-                  {quiz.numberOfAttempt}
-                </p>
+              <Col md="4">
+                <span className="blue fw-bold">Number of attempts:</span>{" "}
               </Col>
+              <Col md="8">{quiz.numberOfAttempt}</Col>
             </Row>
 
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Random order:</span>{" "}
-                  {quiz.isOrderRandom === true ? "Yes" : "No"}
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Random order:</span>{" "}
               </Col>
+              <Col md="9">{quiz.isOrderRandom === true ? "Yes" : "No"}</Col>
             </Row>
             {quiz.isOrderRandom && (
               <Row className="mb-3">
-                <Col>
-                  <p>
-                    <span className="blue fw-bold">Number of questions:</span>{" "}
-                    {quiz.numberOfQuestion}
-                  </p>
+                <Col md="3">
+                  <span className="blue fw-bold">Number of questions:</span>{" "}
                 </Col>
+                <Col md="9">{quiz.numberOfQuestion}</Col>
               </Row>
             )}
 
@@ -530,11 +520,9 @@ const QuizContent = ({ sectionId, quiz, index }) => {
               </Row>
             )}
 
-            <Row className="mb-3">
-              <Col md="6">
-                <AddQuestionComponent sectionId={sectionId} quizIndex={index} />
-              </Col>
-            </Row>
+            <div className="d-flex justify-content-center align-item center">
+              <AddQuestionComponent sectionId={sectionId} quizIndex={index} />
+            </div>
           </Container>
         </Accordion.Body>
       </Accordion.Item>
@@ -550,7 +538,25 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
       className="teacher-accordion lesson-title"
     >
       <Accordion.Item eventKey={questionIndex}>
-        <Accordion.Header>{question.title}</Accordion.Header>
+        <div className="d-flex justify-content-between align-items-center w-100">
+          <Accordion.Header className="lesson-title w-100">
+            {question.title}
+          </Accordion.Header>
+          <div className="d-flex justify-content-end align-items-center">
+            <UpdateQuestionComponent
+              sectionId={sectionId}
+              quizIndex={quizIndex}
+              questionIndex={questionIndex}
+              question={question}
+            />
+            <RemoveQuestionComponent
+              sectionId={sectionId}
+              quizIndex={quizIndex}
+              questionIndex={questionIndex}
+            />
+          </div>
+        </div>
+
         <Accordion.Body>
           <Container>
             {question.options &&
@@ -574,22 +580,6 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
                   )}
                 </Row>
               ))}
-
-            <Col md="6">
-              <UpdateQuestionComponent
-                sectionId={sectionId}
-                quizIndex={quizIndex}
-                questionIndex={questionIndex}
-                question={question}
-              />
-            </Col>
-            <Col md="6">
-              <RemoveQuestionComponent
-                sectionId={sectionId}
-                quizIndex={quizIndex}
-                questionIndex={questionIndex}
-              />
-            </Col>
           </Container>
         </Accordion.Body>
       </Accordion.Item>
