@@ -14,3 +14,6 @@ export const createCourseIdSelector = (state) =>
 //teacherActiveMenu selector
 export const teacherActiveMenuSelector = (state) =>
   state.menu.data.teacherActiveMenu;
+
+//component number
+export const componentNumberSelector = (state) => state.componentNumber.data;

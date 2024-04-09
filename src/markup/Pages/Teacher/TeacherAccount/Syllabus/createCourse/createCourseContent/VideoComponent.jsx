@@ -13,9 +13,13 @@ import videoIcon from "../../../../../../../images/icon/video-icon.png";
 import removeIcon from "../../../../../../../images/icon/remove-icon.png";
 
 import "./../CreateCourse.css";
+import { useSelector } from "react-redux";
+import { componentNumberSelector } from "../../../../../../../store/selector";
+import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
 
-const VideoComponent = ({ sectionId }) => {
+const VideoComponent = ({ sectionId, index }) => {
   const dispatch = useDispatch();
+  const componentNumber = useSelector(componentNumberSelector);
 
   const [show, setShow] = useState(false);
 
@@ -32,7 +36,20 @@ const VideoComponent = ({ sectionId }) => {
       resourceUrl: resourceUrl.trim(),
       type: "Video",
     };
+
+    const updatedComponentNumber = {
+      ...componentNumber[index],
+      videoNumber: componentNumber[index].videoNumber + 1,
+    };
+
     dispatch(addVideo({ sectionId: sectionId, video: video }));
+
+    dispatch(
+      changeComponentNumber({
+        index: index,
+        componentNumber: updatedComponentNumber,
+      })
+    );
     setShow(false);
   };
 
@@ -62,7 +79,11 @@ const VideoComponent = ({ sectionId }) => {
 
   return (
     <>
-      <button className="teacher-button" onClick={handleShow}>
+      <button
+        className="teacher-button"
+        onClick={handleShow}
+        disabled={componentNumber[index]?.videoNumber === 5}
+      >
         <div className="d-flex justify-content-start align-items-center">
           <img
             src={videoIcon}
@@ -70,7 +91,9 @@ const VideoComponent = ({ sectionId }) => {
             height={"auto"}
             title="Video icon"
           />
-          <p className="mb-0 mx-2">Video</p>
+          <p className="mb-0 mx-2">
+            Video ({componentNumber[index]?.videoNumber}/5)
+          </p>
         </div>
       </button>
 
@@ -369,11 +392,39 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
   );
 };
 
-export const RemoveComponent = ({ sectionId, lessonIndex }) => {
+export const RemoveComponent = ({
+  sectionId,
+  lessonIndex,
+  sectionIndex,
+  type,
+}) => {
   const dispatch = useDispatch();
+
+  const componentNumber = useSelector(componentNumberSelector);
 
   const handleDelete = () => {
     dispatch(removeLesson({ sectionId: sectionId, lessonIndex: lessonIndex }));
+
+    let updatedComponentNumber;
+
+    if (type === "Video") {
+      updatedComponentNumber = {
+        ...componentNumber[sectionIndex],
+        videoNumber: componentNumber[sectionIndex].videoNumber - 1,
+      };
+    } else if (type === "Document") {
+      updatedComponentNumber = {
+        ...componentNumber[sectionIndex],
+        documentNumber: componentNumber[sectionIndex].documentNumber - 1,
+      };
+    }
+
+    dispatch(
+      changeComponentNumber({
+        index: sectionIndex,
+        componentNumber: updatedComponentNumber,
+      })
+    );
   };
 
   return (

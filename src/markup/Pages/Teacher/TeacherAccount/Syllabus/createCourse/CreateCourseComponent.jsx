@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
+  componentNumberSelector,
   createCourseIdSelector,
   createCourseSelector,
 } from "../../../../../../store/selector";
@@ -42,10 +43,15 @@ import {
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
 import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
+import {
+  changeComponentNumber,
+  changeData,
+} from "../../../../../../store/slices/course/componentNumber";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
   const createCourse = useSelector(createCourseSelector);
+  const componentNumber = useSelector(componentNumberSelector);
 
   const navigate = useNavigate();
 
@@ -75,8 +81,35 @@ const CreateCourseComponent = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        await dispatch(getCourseByIdAsync(courseId, "manage"));
-        setDescriptionInput(createCourse.description);
+        const response = await dispatch(getCourseByIdAsync(courseId, "manage"));
+        setDescriptionInput(response.payload.description);
+
+        //init data for component number
+        const initSectionNumber = await response.payload.sections.map(
+          (section) => {
+            let videoNumber = 0;
+            let documentNumber = 0;
+            let quizNumber = 0;
+
+            section.lessons.forEach((lesson) => {
+              if (lesson.type === "Video") {
+                videoNumber++;
+              } else if (lesson.type === "Document") {
+                documentNumber++;
+              }
+            });
+
+            quizNumber = section.quizzes.length;
+
+            return {
+              videoNumber,
+              documentNumber,
+              quizNumber,
+            };
+          }
+        );
+
+        dispatch(changeData(initSectionNumber));
       } catch (error) {
         //log
         console.log(`Error: ${JSON.stringify(error, null, 2)}`);
@@ -244,43 +277,55 @@ const CreateCourseComponent = () => {
                         <Accordion.Header>{section.name}</Accordion.Header>
                         <Accordion.Body>
                           {/* Content */}
-                          {section.lessons.map((lesson, index) =>
+                          {section.lessons.map((lesson, lessonIndex) =>
                             lesson.type === "Video" ? (
                               <VideoContent
                                 sectionId={section.id}
-                                key={index}
+                                key={lessonIndex}
                                 lesson={lesson}
-                                index={index}
+                                index={lessonIndex}
+                                sectionIndex={index}
                               />
                             ) : (
                               <DocumentContent
                                 sectionId={section.id}
-                                key={index}
+                                key={lessonIndex}
                                 lesson={lesson}
-                                index={index}
+                                index={lessonIndex}
+                                sectionIndex={index}
                               />
                             )
                           )}
 
-                        {section.quizzes.map((quiz, index) => (
-                          <QuizContent
-                            key={index}
-                            sectionId={section.id}
-                            quiz={quiz}
-                            index={index}
-                          />
-                        ))}
+                          {section.quizzes.map((quiz, quizIndex) => (
+                            <QuizContent
+                              key={quizIndex}
+                              sectionId={section.id}
+                              quiz={quiz}
+                              index={quizIndex}
+                              sectionIndex={index}
+                            />
+                          ))}
 
                           <Container>
                             <Row>
                               <Col md="4">
-                                <VideoComponent sectionId={section.id} />
+                                <VideoComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                               <Col md="4">
-                                <DocumentComponent sectionId={section.id} />
+                                <DocumentComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                               <Col md="4">
-                                <AddQuizComponent sectionId={section.id} />
+                                <AddQuizComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                             </Row>
                           </Container>
@@ -299,52 +344,52 @@ const CreateCourseComponent = () => {
                 {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-            <input
-              type="file"
-              accept="image/jpeg, image/png"
-              onChange={handleFileInputChange}
-              id="fileInput"
-            />
-          </div>
-          <div>
-            <div className="d-flex">
-              <input id="check" type="checkbox" />
-              <label htmlFor="check">
-                Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
-                mực với đạo đức của một giáo viên
-              </label>
-            </div>
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                />
+              </div>
+              <div>
+                <div className="d-flex">
+                  <input id="check" type="checkbox" />
+                  <label htmlFor="check">
+                    Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
+                    mực với đạo đức của một giáo viên
+                  </label>
+                </div>
 
-            <div className="d-flex justify-content-end">
-              <Button
-                variant="primary"
-                className="mx-3 px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Save")}
-              >
-                SAVE DRAFT
-              </Button>
-              <Button
-                variant="danger"
-                className="px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Post")}
-              >
-                POST COURSE
-              </Button>
-            </div>
-          </div>
-        </>
+                <div className="d-flex justify-content-end">
+                  <Button
+                    variant="primary"
+                    className="mx-3 px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Save")}
+                  >
+                    SAVE DRAFT
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Post")}
+                  >
+                    POST COURSE
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
+        </div>
       </div>
     </div>
-    </div >
   );
 };
 
 export default CreateCourseComponent;
 
-const VideoContent = ({ sectionId, lesson, index }) => {
+const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
   return (
     <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
       <Accordion.Item eventKey={index}>
@@ -366,7 +411,12 @@ const VideoContent = ({ sectionId, lesson, index }) => {
               lessonIndex={index}
               video={lesson}
             />
-            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+            <RemoveComponent
+              sectionId={sectionId}
+              lessonIndex={index}
+              sectionIndex={sectionIndex}
+              type={"Video"}
+            />
           </div>
         </div>
 
@@ -395,7 +445,7 @@ const VideoContent = ({ sectionId, lesson, index }) => {
   );
 };
 
-const DocumentContent = ({ sectionId, lesson, index }) => {
+const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
   return (
     <Accordion
       defaultActiveKey="0"
@@ -416,7 +466,12 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
               lessonIndex={index}
               document={lesson}
             />
-            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+            <RemoveComponent
+              sectionId={sectionId}
+              lessonIndex={index}
+              sectionIndex={sectionIndex}
+              type={"Document"}
+            />
           </div>
         </div>
         <Accordion.Body>
@@ -440,7 +495,7 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
   );
 };
 
-const QuizContent = ({ sectionId, quiz, index }) => {
+const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
   return (
     <Accordion
       defaultActiveKey="0"
@@ -466,7 +521,11 @@ const QuizContent = ({ sectionId, quiz, index }) => {
               quizIndex={index}
               quiz={quiz}
             />
-            <RemoveQuizComponent sectionId={sectionId} index={index} />
+            <RemoveQuizComponent
+              sectionId={sectionId}
+              index={index}
+              sectionIndex={sectionIndex}
+            />
           </div>
         </div>
 
