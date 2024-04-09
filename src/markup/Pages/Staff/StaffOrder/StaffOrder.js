@@ -14,6 +14,21 @@ export default function StaffOrder() {
         navigate(`/staff/staff-order-detail/${orderId}`);
     };
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Success':
+                return '#1A9CB7'; 
+            case 'Pending':
+                return '#FF8A00'; 
+            case 'Refunded':
+                return '#2C44D8'; 
+            case 'RequestRefund':
+                return '#F11616'; 
+            default:
+                return '#6c757d'; 
+        }
+    };
+
     useEffect(() => {
         setLoading(true);
         const fetchOrders = async () => {
@@ -47,19 +62,19 @@ export default function StaffOrder() {
             <div className="d-flex justify-content between">
                 <div className="staff-order-menu d-flex justify-content-start">
                     <div className={selectedStatus === 'Success' ? 'active' : ''} onClick={() => setSelectedStatus('Success')}>
-                        <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }} className='mb-1'>Success</p>
+                        <p style={{ fontSize: '18px', fontWeight: 'bold' }} className='mb-1'>Success</p>
                         <hr className='mt-0' />
                     </div>
                     <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
-                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Pending</p>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight:'bold' }}>Pending</p>
                         <hr className='mt-0' />
                     </div>
                     <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
-                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Refunded</p>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold' }}>Refunded</p>
                         <hr className='mt-0' />
                     </div>
                     <div style={{ marginLeft: '25px' }} className={selectedStatus === 'RequestRefund' ? 'active' : ''} onClick={() => setSelectedStatus('RequestRefund')}>
-                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold', color: '#7F7C7C' }}>Request Refund</p>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold' }}>Request Refund</p>
                         <hr className='mt-0' />
                     </div>
                 </div>
@@ -107,7 +122,7 @@ export default function StaffOrder() {
                                                 <p className='mt-2 mb-0'>{order.totalPrice}</p>
                                             </td>
                                             <td className='text-center mt-2'>
-                                                <p className='mt-2 mb-0'>{order.orderStatus}</p>
+                                                <p style={{color: getStatusColor(order.orderStatus), fontWeight:'bold'}} className='mt-2 mb-0'>{order.orderStatus}</p>
                                             </td>
                                             <td className='text-center'>
                                                 <p className='mb-1'>Order code: {order.orderCode}</p>

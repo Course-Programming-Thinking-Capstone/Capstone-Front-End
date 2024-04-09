@@ -32,26 +32,28 @@ const SuccessOrder = ({ orderDetail }) => {
             </div>
             <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div className="d-flex justify-content-start">
-                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Order code </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.orderCode}</span>
                 </div>
                 <hr className='my-1' />
-                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
-                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
-                    <p className='mb-0'>{orderDetail.courseName}</p>
-                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                <div className='d-flex' style={{ fontSize: '16px' }}>
+                    <img className='ms-3' src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <div className='ms-4'>
+                        <p className='mb-2'>{orderDetail.courseName}</p>
+                        <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
+                    </div>
+                    <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
-                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
                     <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
-                    <img style={{ height: '50px', width: '50px' }} src={momo} />
-                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                    <img style={{ height: '55px', width: '55px' }} src={momo} />
+                    <p className='mt-3 ms-2'>Pay with momo e-wallet</p>
                 </div>
             </div>
             <div className="d-flex justify-content-between mt-3">
@@ -60,7 +62,7 @@ const SuccessOrder = ({ orderDetail }) => {
                     <div className=' px-4'>
                         {orderDetail.students.map((student) => (
                             <div key={student.studentId} className='d-flex justify-content-center'>
-                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
+                                <div className='text-center py-1 mt-3' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
                             </div>
                         ))}
                     </div>
@@ -68,7 +70,7 @@ const SuccessOrder = ({ orderDetail }) => {
                     <div className='mt-4'>
                         <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
                         <div className='d-flex justify-content-center'>
-                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                            <div className='text-center py-1 mt-3 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }}>{orderDetail.parentEmail}</div>
                         </div>
                     </div>
                 </div>
@@ -306,19 +308,7 @@ const PendingOrder = ({ orderDetail }) => {
                 throw new Error(`Order confirmation failed with status: ${response.status}`);
             }
 
-            toast.success('Order confirmed successfully', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-
-            // If you need to navigate the user away after confirmation or perform some state update, do it here.
-            // navigate('/some-path');
+            window.location.reload();
 
         } catch (error) {
             console.error('Error confirming order:', error);
@@ -387,26 +377,28 @@ const PendingOrder = ({ orderDetail }) => {
             </div>
             <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div className="d-flex justify-content-start">
-                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Order code </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.orderCode}</span>
                 </div>
                 <hr className='my-1' />
-                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
-                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
-                    <p className='mb-0'>{orderDetail.courseName}</p>
-                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                <div className='d-flex' style={{ fontSize: '16px' }}>
+                    <img className='ms-3' src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <div className='ms-4'>
+                        <p className='mb-2'>{orderDetail.courseName}</p>
+                        <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
+                    </div>
+                    <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
-                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
                     <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
-                    <img style={{ height: '50px', width: '50px' }} src={momo} />
-                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                    <img style={{ height: '55px', width: '55px' }} src={momo} />
+                    <p className='mt-3 ms-2'>Pay with momo e-wallet</p>
                 </div>
             </div>
             <div className="d-flex justify-content-between mt-3">
@@ -414,7 +406,7 @@ const PendingOrder = ({ orderDetail }) => {
                     <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Number of students selected: <span></span></p>
                     <div className='px-4'>
                         {orderDetail.students.map((student) => (
-                            <div key={student.studentId} className='d-flex justify-content-center align-items-center my-1'>
+                            <div key={student.studentId} className='d-flex justify-content-center align-items-center mt-3'>
                                 <div className='text-center py-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>
                                     {student.studentName}
                                 </div>
@@ -513,7 +505,7 @@ const PendingOrder = ({ orderDetail }) => {
                     <div className='mt-4'>
                         <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
                         <div className='d-flex justify-content-center'>
-                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                            <div className='text-center py-1 mt-3 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
                         </div>
                     </div>
                 </div>
@@ -589,31 +581,33 @@ const RefundedOrder = ({ orderDetail }) => {
                     <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
                 </div>
                 <div className='text-center' style={{ width: '100px', height: '35px' }}>
-                    <div className='pt-1' style={{ backgroundColor: '#2C44D8', borderRadius: '8px', color: 'white', width: '90px', height: '30px' }}>Request</div>
+                    <div className='pt-1' style={{ backgroundColor: '#2C44D8', borderRadius: '8px', color: 'white', width: '90px', height: '30px' }}>Refunded</div>
                 </div>
             </div>
             <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div className="d-flex justify-content-start">
-                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Order code </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.orderCode}</span>
                 </div>
                 <hr className='my-1' />
-                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
-                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
-                    <p className='mb-0'>{orderDetail.courseName}</p>
-                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                <div className='d-flex' style={{ fontSize: '16px' }}>
+                    <img className='ms-3' src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <div className='ms-4'>
+                        <p className='mb-2'>{orderDetail.courseName}</p>
+                        <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
+                    </div>
+                    <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
-                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
                     <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
-                    <img style={{ height: '50px', width: '50px' }} src={momo} />
-                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                    <img style={{ height: '55px', width: '55px' }} src={momo} />
+                    <p className='mt-3 ms-2'>Pay with momo e-wallet</p>
                 </div>
             </div>
             <div className="d-flex justify-content-between mt-3">
@@ -622,7 +616,7 @@ const RefundedOrder = ({ orderDetail }) => {
                     <div className=' px-4'>
                         {orderDetail.students.map((student) => (
                             <div key={student.studentId} className='d-flex justify-content-center'>
-                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
+                                <div className='text-center py-1 mt-3' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
                             </div>
                         ))}
                     </div>
@@ -630,7 +624,7 @@ const RefundedOrder = ({ orderDetail }) => {
                     <div className='mt-4'>
                         <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
                         <div className='d-flex justify-content-center'>
-                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                            <div className='text-center py-1 mt-3 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
                         </div>
                     </div>
                 </div>
@@ -715,8 +709,9 @@ const RequestOrder = ({ orderDetail }) => {
         const payload = {
             parentId: orderDetail.parentId,
             orderId: orderDetail.orderId,
-            reasonRefuse: null // as per API requirement for approval
+            reasonRefuse: "string"
         };
+        console.log('payload: ', payload);
 
         try {
             const response = await fetch(url, {
@@ -781,26 +776,28 @@ const RequestOrder = ({ orderDetail }) => {
             </div>
             <div className='mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div className="d-flex justify-content-start">
-                    <i style={{ fontSize: '22px' }} class="fa-solid fa-user orange mt-2"></i>
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Teacher: </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.parentName}</span>
+                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>Order code </p>
+                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: '18px' }}>{orderDetail.orderCode}</span>
                 </div>
                 <hr className='my-1' />
-                <div className='d-flex justify-content-around' style={{ fontSize: '16px' }}>
-                    <img src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
-                    <p className='mb-0'>{orderDetail.courseName}</p>
-                    <p>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange'>{orderDetail.totalPrice} đ</p>
+                <div className='d-flex' style={{ fontSize: '16px' }}>
+                    <img className='ms-3' src={orderDetail.pictureUrl} style={{ height: "80px", width: '80px' }} />
+                    <div className='ms-4'>
+                        <p className='mb-2'>{orderDetail.courseName}</p>
+                        <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
+                    </div>
+                    <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
-                    <p className='mb-1'>Order ID: <span>{orderDetail.orderId}</span></p>
+                    <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
                     <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
-                    <img style={{ height: '50px', width: '50px' }} src={momo} />
-                    <p className='mt-2 ms-2'>Pay with momo e-wallet</p>
+                    <img style={{ height: '55px', width: '55px' }} src={momo} />
+                    <p className='mt-3 ms-2'>Pay with momo e-wallet</p>
                 </div>
             </div>
             <div className="d-flex justify-content-between mt-3">
@@ -809,7 +806,7 @@ const RequestOrder = ({ orderDetail }) => {
                     <div className=' px-4'>
                         {orderDetail.students.map((student) => (
                             <div key={student.studentId} className='d-flex justify-content-center'>
-                                <div className='text-center py-1 my-1' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
+                                <div className='text-center py-1 mt-3' style={{ width: '50%', borderRadius: '8px', border: '1px solid #ff8a00' }}>{student.studentName}</div>
                             </div>
                         ))}
                     </div>
@@ -817,7 +814,7 @@ const RequestOrder = ({ orderDetail }) => {
                     <div className='mt-4'>
                         <p style={{ backgroundColor: '#ff8a00', color: 'white', fontSize: '17px', borderRadius: '8px 8px 0px 0px' }} className='mb-0 ps-3 py-1'>Student account will send to</p>
                         <div className='d-flex justify-content-center'>
-                            <div className='text-center py-1 my-1 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
+                            <div className='text-center py-1 mt-3 px-2' style={{ borderRadius: '8px', border: '1px solid #ff8a00' }} v>{orderDetail.parentEmail}</div>
                         </div>
                     </div>
                 </div>
@@ -854,21 +851,21 @@ const RequestOrder = ({ orderDetail }) => {
             <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter"
                 centered>
                 <Modal.Body>
-                    <p className='mb-1 blue' style={{ fontSize: '18px' }}>Reason cancel</p>
-                    <div className='ps-3'>
-                        <p>{cancellationReason.reason}</p>
+                    <p className='mb-1 blue' style={{ fontSize: '18px', fontWeight: 'bold' }}>Reason cancel</p>
+                    <div className='py-1 px-2' style={{ border: '1px solid #D4D4D4', borderRadius: '8px' }}>
+                        <p className='mb-0'>{cancellationReason.reason}</p>
                     </div>
 
-                    <p className='mb-1 mt-3' style={{ color: '#F11616', fontSize: '18px' }}>Reason for refuse the request</p>
-                    <div className='ps-3'>
+                    <p className='mb-1 mt-3' style={{ color: '#F11616', fontSize: '18px', fontWeight: 'bold' }}>Reason for refuse the request</p>
+                    <div>
 
                         <input value={refusalReason}
                             onChange={(e) => setRefusalReason(e.target.value)}
-                            style={{ borderColor: '#F11616', outline: 'none', borderRadius: '8px', color: '#F11616', paddingLeft: '5px', width: '300px' }} type="text" />
+                            style={{ border: '1px solid #F11616', outline: 'none', borderRadius: '8px', color: '#F11616', width: '100%', paddingLeft: '15px' }} type="text" />
                     </div>
 
                     <div className='d-flex justify-content-end mt-3'>
-                        <button onClick={handleClose} className='me-2' style={{ color: '#F15C58', backgroundColor: 'white', border: 'none', borderRadius: '8px', height: '30px' }}>Cancel</button>
+                        <button onClick={handleClose} className='me-2' style={{ color: '#F15C58', backgroundColor: 'white', border: '1px solid #D4D4D4', borderRadius: '8px', height: '30px' }}>Cancel</button>
                         <button onClick={handleRefusal} className='me-2' style={{ color: 'white', backgroundColor: '#7F7C7C', border: 'none', borderRadius: '8px', height: '30px' }}>Refuse</button>
                         <button onClick={handleApproval} style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }}>Approve</button>
                     </div>

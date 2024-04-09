@@ -138,7 +138,7 @@ const App = () => {
 
               <Route
                 path="staff-order-detail/:orderId"
-                element={<PrivateRoute page="staff/staff-order-detail" component={<StaffClassDetail />} />}
+                element={<PrivateRoute page="staff/staff-order-detail" component={<StaffOrderDetail />} />}
               />
 
               <Route
