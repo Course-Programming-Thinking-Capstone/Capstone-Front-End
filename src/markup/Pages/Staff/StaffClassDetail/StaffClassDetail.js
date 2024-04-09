@@ -26,7 +26,7 @@ export default function StaffClassDetail() {
         </div>
     ));
 
-    const CreateClass = ({ onBack, onNext, navigateToTeacherForm, navigateToStudentForm }) => {
+    const CreateClass = ({ onBack, onNext }) => {
         const accessToken = localStorage.getItem('accessToken');
         const [classCode, setClassCode] = useState('');
         const [openDay, setOpenDay] = useState('');
@@ -174,7 +174,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const CreateSchedule = ({ onBack, classData, setView, navigateToTeacherForm, navigateToStudentForm }) => {
+    const CreateSchedule = ({ onBack, classData, setView }) => {
         const [checkedDays, setCheckedDays] = useState({
             Monday: false,
             Tuesday: false,
