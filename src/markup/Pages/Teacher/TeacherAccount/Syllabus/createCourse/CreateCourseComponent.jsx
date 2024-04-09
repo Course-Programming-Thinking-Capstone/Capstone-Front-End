@@ -352,7 +352,12 @@ const VideoContent = ({ sectionId, lesson, index }) => {
         <Accordion.Header className="lesson-title">
           <div className="d-flex justify-content-between align-items-center w-100">
             <div className="d-flex justify-content-start align-items-center">
-              <img src={videoIcon} title="Video icon" />
+              <img
+                src={videoIcon}
+                width={"22px"}
+                height={"auto"}
+                title="Video icon"
+              />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
 
@@ -362,35 +367,29 @@ const VideoContent = ({ sectionId, lesson, index }) => {
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Duration:</span>{" "}
-                  {lesson.duration} minute
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Duration:</span>{" "}
               </Col>
+              <Col md="9">{lesson.duration} minute</Col>
             </Row>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Url:</span>{" "}
+              <Col md="3">
+                <span className="blue fw-bold">Url:</span>{" "}
+              </Col>
+              <Col md="9">
+                <a href={lesson.resourceUrl} target="blank">
                   {lesson.resourceUrl}
-                </p>
+                </a>
               </Col>
             </Row>
 
-            <Row className="mb-3">
-              <Col md="6">
-                <UpdateVideoComponent
-                  sectionId={sectionId}
-                  lessonIndex={index}
-                  video={lesson}
-                />
-              </Col>
-
-              {/* <Col md="6">
-                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
-              </Col> */}
-            </Row>
+            <div className="d-flex justify-content-end align-items-center">
+              <UpdateVideoComponent
+                sectionId={sectionId}
+                lessonIndex={index}
+                video={lesson}
+              />
+            </div>
           </Container>
         </Accordion.Body>
       </Accordion.Item>
@@ -419,35 +418,25 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
         <Accordion.Body>
           <Container>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Duration:</span>{" "}
-                  {lesson.duration} minute
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Duration:</span>{" "}
               </Col>
+              <Col md="9">{lesson.duration} minute</Col>
             </Row>
             <Row className="mb-3">
-              <Col>
-                <p>
-                  <span className="blue fw-bold">Content:</span>{" "}
-                  {lesson.content}
-                </p>
+              <Col md="3">
+                <span className="blue fw-bold">Content:</span>{" "}
               </Col>
+              <Col md="9">{lesson.content}</Col>
             </Row>
 
-            <Row className="mb-3">
-              <Col md="6">
-                <UpdateDocumentComponent
-                  sectionId={sectionId}
-                  lessonIndex={index}
-                  document={lesson}
-                />
-              </Col>
-
-              {/* <Col md="6">
-                <RemoveComponent sectionId={sectionId} lessonIndex={index} />
-              </Col> */}
-            </Row>
+            <div className="d-flex justify-content-end align-items-center">
+              <UpdateDocumentComponent
+                sectionId={sectionId}
+                lessonIndex={index}
+                document={lesson}
+              />
+            </div>
           </Container>
         </Accordion.Body>
       </Accordion.Item>
@@ -466,7 +455,12 @@ const QuizContent = ({ sectionId, quiz, index }) => {
         <Accordion.Header className="lesson-title">
           <div className="d-flex justify-content-between align-items-center w-100">
             <div className="d-flex justify-content-start align-items-center">
-              <img src={quizIcon} title="Quiz icon" />
+              <img
+                src={quizIcon}
+                width={"22px"}
+                height={"auto"}
+                title="Quiz icon"
+              />
               <p className="mb-0 mx-2">{quiz.title}</p>
             </div>
             <RemoveQuizComponent sectionId={sectionId} index={index} />

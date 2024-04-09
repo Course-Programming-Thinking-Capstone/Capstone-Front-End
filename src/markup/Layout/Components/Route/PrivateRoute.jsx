@@ -22,9 +22,6 @@ const PrivateRoute = ({ page, component: Component }) => {
     if (!user) {
       //Check case user have not logged in
       if (!PublicPages.includes(page) && !UnauthenticatedPages.includes(page)) {
-        
-        //log
-        console.log(`navigate to login, user null`)
         return <Navigate to="/login" state={{ from: location }} replace />;
       } else {
         return Component;

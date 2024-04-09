@@ -8,7 +8,7 @@ import {
   updateDocument,
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
-import documentIcon from "../../../../../../../images/icon/document-icon.png";
+import "./../CreateCourse.css";
 
 const DocumentComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
@@ -64,7 +64,8 @@ const DocumentComponent = ({ sectionId }) => {
 
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
-          <img src={documentIcon} title="Document icon" />
+          {/* <img src={documentIcon} title="Document icon" /> */}
+          <i className="fa-solid fa-book-open py-0"></i>
           <p className="mb-0 mx-2">Document</p>
         </div>
       </button>
@@ -208,14 +209,10 @@ export const UpdateDocumentComponent = ({
 
   return (
     <>
-      <Button
-        variant="primary"
-        size="sm"
-        onClick={handleShow}
-        style={{ borderRadius: "4px", width: "150px", height: "40px", color: "white" }}
-      >
-        Update
-      </Button>
+      <button className="create-course-edit important" onClick={handleShow}>
+        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
+        <p className="mx-1 mb-0">Edit</p>
+      </button>
 
       <Modal
         show={show}
