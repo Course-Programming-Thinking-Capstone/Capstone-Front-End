@@ -84,6 +84,38 @@ const ModeratingLesson = ({ onBack, section }) => {
     );
 }
 
+const ModeratingQuiz = ({ onBack, quiz }) => {
+    console.log('quiz: ', quiz);
+    return (
+        <div className="moderating-quiz">
+            <div>
+
+                <button onClick={onBack}>Back</button>
+                <h2>{quiz.title}</h2>
+            </div>
+            <div>
+                <p>set test time: <span>{quiz.duration}</span></p>
+                {quiz && quiz.questions.map((question, index) => (
+                    <div key={index}>
+                        <p>Question {question.order}: {question.title}</p>
+                        <div>
+                            {question.options.map((option, optionIndex) => (
+                                <div key={optionIndex} className='d-flex'>
+                                    <p>{option.content}</p>
+                                    {option.isCorrect && (
+                                        <span style={{ marginLeft: '10px', color: 'green' }}>Correct Answer</span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+
 const ModeratingDetail = ({ onBack, courseId }) => {
     const [showLesson, setShowLesson] = useState(false);
     const [modalApproveShow, setApproveModalShow] = React.useState(false);
@@ -94,6 +126,8 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [courseDetails, setCourseDetails] = useState(null);
     const [selectedSection, setSelectedSection] = useState(null);
     const [price, setPrice] = useState(0);
+    const [showQuiz, setShowQuiz] = useState(false);
+    const [selectedQuiz, setSelectedQuiz] = useState(null);
 
 
     useEffect(() => {
@@ -128,8 +162,17 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         setShowLesson(true); // Show the ModeratingLesson component
     };
 
+    const handleViewQuiz = (quiz) => {
+        setSelectedQuiz(quiz);
+        setShowQuiz(true);
+    };
+
     if (showLesson && selectedSection) {
         return <ModeratingLesson onBack={() => setShowLesson(false)} section={selectedSection} />;
+    }
+
+    if (showQuiz && selectedQuiz) {
+        return <ModeratingQuiz onBack={() => setShowQuiz(false)} quiz={selectedQuiz} />;
     }
 
     const handleApprove = () => {
@@ -421,7 +464,16 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         </h2>
                         <div id="collapseOneHundred" class="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
                             <div class="accordion-body">
-                                
+                                {courseDetails && courseDetails.sections && courseDetails.sections.map((section, sectionIndex) => (
+                                    <div className='ms-3' key={section.id}>
+                                        {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
+                                            <div key={quiz.id}>
+                                                <p>Section {sectionIndex + 1}: Quiz {quizIndex + 1}: {quiz.title}</p>
+                                                <button onClick={() => handleViewQuiz(quiz)} className="btn btn-primary">View Quiz</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
