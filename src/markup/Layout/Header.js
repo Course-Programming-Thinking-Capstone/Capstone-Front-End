@@ -29,8 +29,8 @@ const Header = () => {
         ],
         guest: [
             { maintitle: 'Home', to: '/' },
-            { maintitle: 'Course', to: '/classes' },
-            { maintitle: 'Teacher', to: '/teachers' },
+            // { maintitle: 'Course', to: '/classes' },
+            // { maintitle: 'Teacher', to: '/teachers' },
             { maintitle: 'Login', to: '/login' },
         ],
         Staff: [

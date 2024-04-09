@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import { teacherActiveMenuSelector } from "../../../../store/selector";
 import { Image } from "react-bootstrap";
 
+//css
+import "./TeacherAccount.css";
+
 export default function TeacherAccount({ child }) {
   //retrieve user information
   const user = JSON.parse(localStorage.getItem("user"));
@@ -17,12 +20,14 @@ export default function TeacherAccount({ child }) {
   const getMenuItemStyle = (menuItem) => {
     return menuItem === teacherActiveMenu
       ? { backgroundColor: "#F69E4A", color: "white" }
-      : { color: "#212121CC" }; // Example: light grey background for active menu
+      : {
+          /*color: "#212121CC"*/
+        }; // Example: light grey background for active menu
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/home");
   };
 
   return (
@@ -64,55 +69,55 @@ export default function TeacherAccount({ child }) {
               </div>
               <div className="menu-content">
                 <Link
-                  to="/teacher-account/notification"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/notification"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("notification")}
                 >
-                  <i className="fa-solid fa-bell"></i>
+                  <i className="fa-solid fa-bell py-0"></i>
                   <div className="mx-4">Notification</div>
                 </Link>
 
                 <Link
-                  to="/teacher-account/courses"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/courses"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("myCourses")}
                 >
                   <i
-                    className="fa-solid fa-book-open"
-                    style={{ width: "19px", height: "100%" }}
+                    className="fa-solid fa-book-open py-0"
+                    // style={{ width: "19px", height: "auto" }}
                   ></i>
                   <div className="mx-4">My courses</div>
                 </Link>
 
                 <Link
-                  to="/teacher-account/schedule"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/schedule"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("schedule")}
                 >
-                  <i className="fa-solid fa-calendar-days"></i>
+                  <i className="fa-solid fa-calendar-days py-0"></i>
                   <div className="mx-4">Schedule</div>
                 </Link>
 
                 <Link
-                  to="/teacher-account/classes"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/classes"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("classes")}
                 >
-                  <i className="fa-solid fa-user"></i>
+                  <i className="fa-solid fa-user py-0"></i>
                   <div className="mx-4">My class</div>
                 </Link>
 
                 <Link
-                  to="/teacher-account/syllabuses"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/syllabuses"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("syllabuses")}
                 >
-                  <i className="fa-solid fa-book"></i>
+                  <i className="fa-solid fa-book py-0"></i>
                   <div className="mx-4">Syllabus</div>
                 </Link>
 
                 {/* <Link
-                  to="/teacher-account/quizzes"
+                  to="/teacher/quizzes"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("quizzes")}
                 >
@@ -121,11 +126,11 @@ export default function TeacherAccount({ child }) {
                 </Link> */}
 
                 <Link
-                  to="/teacher-account/setting"
-                  className="item d-flex justify-content-start align-items-center"
+                  to="/teacher/setting"
+                  className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("setting")}
                 >
-                  <i className="fa-solid fa-gear"></i>
+                  <i className="fa-solid fa-gear py-0"></i>
                   <div className="mx-4">Setting</div>
                 </Link>
 
@@ -133,7 +138,10 @@ export default function TeacherAccount({ child }) {
                   className="item d-flex justify-content-start align-items-center"
                   onClick={handleLogout}
                 >
-                  <i className="fa-solid fa-right-from-bracket"></i>
+                  <i
+                    className="fa-solid fa-right-from-bracket py-0"
+                    style={{ width: "19px", height: "auto" }}
+                  ></i>
                   <div className="mx-4">Log out</div>
                 </div>
               </div>

@@ -115,7 +115,7 @@ const SyllabusComponent = () => {
                         </div>
                         <div>
                           <Link
-                            to={`/teacher-account/syllabuses/detail?id=${syllabus.id}`}
+                            to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
                             className="mt-3"
                             style={{
                               display: "inline-block",

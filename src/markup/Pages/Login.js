@@ -51,7 +51,7 @@ export default function Login() {
                         window.location.href = '/admin';
                         break;
                     case 'Teacher':
-                        window.location.href = '/teacher-account';
+                        window.location.href = '/teacher';
                         break;
                     case 'Staff':
                         window.location.href = '/staff';

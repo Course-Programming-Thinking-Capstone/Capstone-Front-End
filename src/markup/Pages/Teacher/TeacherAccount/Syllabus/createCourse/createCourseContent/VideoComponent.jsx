@@ -12,6 +12,8 @@ import {
 import videoIcon from "../../../../../../../images/icon/video-icon.png";
 import removeIcon from "../../../../../../../images/icon/remove-icon.png";
 
+import "./../CreateCourse.css";
+
 const VideoComponent = ({ sectionId }) => {
   const dispatch = useDispatch();
 
@@ -71,7 +73,12 @@ const VideoComponent = ({ sectionId }) => {
 
       <button className="teacher-button" onClick={handleShow}>
         <div className="d-flex justify-content-start align-items-center">
-          <img src={videoIcon} title="Video icon" />
+          <img
+            src={videoIcon}
+            width={"22px"}
+            height={"auto"}
+            title="Video icon"
+          />
           <p className="mb-0 mx-2">Video</p>
         </div>
       </button>
@@ -217,14 +224,19 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="primary"
         size="sm"
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
         Update
-      </Button>
+      </Button> */}
+
+      <button className="create-course-edit important" onClick={handleShow} title="Edit" >
+        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>{" "}
+        {/* <p className="mx-1 mb-0">Edit</p> */}
+      </button>
 
       <Modal
         show={show}

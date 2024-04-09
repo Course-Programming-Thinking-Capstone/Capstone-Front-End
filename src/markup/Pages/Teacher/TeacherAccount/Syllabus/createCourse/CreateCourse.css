@@ -1,0 +1,45 @@
+button.create-course-edit.important {
+  /* border: 1px solid #FF8A00;
+    border: 1px solid #FF8A00;
+    border-radius: 5px;
+    background-color: white; 
+    color: #FF8A00;
+    text-align: center;
+    text-decoration: none;
+    /* font-size: 14px; */
+  /* cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: normal;  */
+
+  /* border: 1px solid #FF8A00; */
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #FF8A00;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  margin: 0px 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+button.create-course-edit:hover {
+    background-color: #f7cc9c;
+  /* background-color: #ff8a00; */
+  /* color: white; */
+}
+
+button.create-course-edit img {
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}

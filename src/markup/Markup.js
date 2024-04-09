@@ -67,7 +67,7 @@ export default function Markup() {
 					<Route path='/classes-details' exact element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
-					<Route path='/error-404' exact element={<ErrorPage />} />
+					<Route path='/not-found' exact element={<ErrorPage />} />
 
 
 					<Route path='/schedule' exact element={<Schedule />} />
@@ -82,18 +82,18 @@ export default function Markup() {
 					<Route path='/account' exact element={<Account />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
-					<Route path='/teacher-account' exact element={<TeacherAccount />} />
+					<Route path='/teacher' exact element={<TeacherAccount />} />
 
 					{/* routed */}
-					<Route path='/teacher-account/schedule' exact element={<TeacherSchedule />} />
-					<Route path='/teacher-account/notification' exact element={<TeacherNotification />} />
-					<Route path='/teacher-account/courses' exact element={<TeacherCourse />} />
-					<Route path='/teacher-account/classes' exact element={<TeacherClasses />} />
-					<Route path='/teacher-account/syllabuses' exact element={<Syllabus />} />
-					<Route path='/teacher-account/syllabuses/detail' exact element={<SyllabusInformation />} />
-					<Route path='/teacher-account/syllabuses/create-course' exact element={<CreateCourseContent />} />
-					<Route path='/teacher-account/quizzes' exact element={<Quiz />} />
-					<Route path='/teacher-account/setting' exact element={<TeacherSetting />} />
+					<Route path='/teacher/schedule' exact element={<TeacherSchedule />} />
+					<Route path='/teacher/notification' exact element={<TeacherNotification />} />
+					<Route path='/teacher/courses' exact element={<TeacherCourse />} />
+					<Route path='/teacher/classes' exact element={<TeacherClasses />} />
+					<Route path='/teacher/syllabuses' exact element={<Syllabus />} />
+					<Route path='/teacher/syllabuses/detail' exact element={<SyllabusInformation />} />
+					<Route path='/teacher/syllabuses/create-course' exact element={<CreateCourseContent />} />
+					<Route path='/teacher/quizzes' exact element={<Quiz />} />
+					<Route path='/teacher/setting' exact element={<TeacherSetting />} />
 
 					<Route path='/staff' exact element={<Staff />} >
 						<Route path="staff-order" element={<StaffOrder />} />
