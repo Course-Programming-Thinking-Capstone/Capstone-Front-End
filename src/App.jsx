@@ -15,7 +15,7 @@ import "./plugins/bootstrap-select/bootstrap-select.min.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-modal-video/css/modal-video.min.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Index1 from "./markup/Pages/Index1";
 import PrivateRoute from "./markup/Layout/Components/Route/PrivateRoute";
 import Login from "./markup/Pages/Login";
@@ -42,6 +42,7 @@ import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
 import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
+import { NotFound } from "./markup/Pages/NotFound/NotFound";
 
 // function App() {
 // 	return (
@@ -60,7 +61,11 @@ const App = () => {
           <Routes>
             {/* Public page */}
             {/* Home page */}
-            <Route path="/" exact element={<Index1 />}></Route>
+            <Route path="/" element={<Navigate to="/home" />}></Route>
+            <Route
+              path="/home"
+              element={<PrivateRoute page="home" component={<Index1 />} />}
+            />
 
             {/* Unauthenticated pages */}
             {/* Login */}
@@ -165,99 +170,99 @@ const App = () => {
             {/* Teacher pages */}
 
             <Route
-              path="/teacher-account"
+              path="/teacher"
               element={
                 <PrivateRoute
-                  page="teacher-account"
+                  page="teacher"
                   component={<TeacherAccount />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/schedule"
+              path="teacher/schedule"
               element={
                 <PrivateRoute
-                  page="teacher-account/schedule"
+                  page="teacher/schedule"
                   component={<TeacherSchedule />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/notification"
+              path="teacher/notification"
               element={
                 <PrivateRoute
-                  page="teacher-account/notification"
+                  page="teacher/notification"
                   component={<TeacherNotification />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/courses"
+              path="teacher/courses"
               element={
                 <PrivateRoute
-                  page="teacher-account/courses"
+                  page="teacher/courses"
                   component={<TeacherCourse />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/classes"
+              path="teacher/classes"
               element={
                 <PrivateRoute
-                  page="teacher-account/classes"
+                  page="teacher/classes"
                   component={<TeacherClasses />}
                 />
               }
             />
 
             <Route
-              path="/teacher-account/syllabuses"
+              path="/teacher/syllabuses"
               element={
                 <PrivateRoute
-                  page="teacher-account/syllabuses"
+                  page="teacher/syllabuses"
                   component={<Syllabus />}
                 />
               }
             />
             <Route
-              path="teacher-account/syllabuses/detail"
+              path="teacher/syllabuses/detail"
               element={
                 <PrivateRoute
-                  page="teacher-account/syllabuses/detail"
+                  page="teacher/syllabuses/detail"
                   component={<SyllabusInformation />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/syllabuses/create-course"
+              path="teacher/syllabuses/create-course"
               element={
                 <PrivateRoute
-                  page="teacher-account/syllabuses/create-course"
+                  page="teacher/syllabuses/create-course"
                   component={<CreateCourseContent />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/quizzes"
+              path="teacher/quizzes"
               element={
                 <PrivateRoute
-                  page="teacher-account/quizzes"
+                  page="teacher/quizzes"
                   component={<Quiz />}
                 />
               }
             />
 
             <Route
-              path="teacher-account/setting"
+              path="teacher/setting"
               element={
                 <PrivateRoute
-                  page="teacher-account/setting"
+                  page="teacher/setting"
                   component={<TeacherSetting />}
                 />
               }
@@ -267,11 +272,12 @@ const App = () => {
 
             {/* Student pages */}
 
-            {/* Error pages  */}
-            <Route path="/error-404" element={<Index1 />} />
-
-            {/* Test pages */}
+            {/* Test page */}
             <Route path="/test" element={<DragAndDropComponent />} />
+
+            {/* Error pages  */}
+            <Route path="/not-found" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/not-found"/>} />
           </Routes>
         </div>
       </BrowserRouter>

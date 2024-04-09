@@ -22,7 +22,7 @@ export default function TeacherAccount({ child }) {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/home");
   };
 
   return (
@@ -64,7 +64,7 @@ export default function TeacherAccount({ child }) {
               </div>
               <div className="menu-content">
                 <Link
-                  to="/teacher-account/notification"
+                  to="/teacher/notification"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("notification")}
                 >
@@ -73,7 +73,7 @@ export default function TeacherAccount({ child }) {
                 </Link>
 
                 <Link
-                  to="/teacher-account/courses"
+                  to="/teacher/courses"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("myCourses")}
                 >
@@ -85,7 +85,7 @@ export default function TeacherAccount({ child }) {
                 </Link>
 
                 <Link
-                  to="/teacher-account/schedule"
+                  to="/teacher/schedule"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("schedule")}
                 >
@@ -94,7 +94,7 @@ export default function TeacherAccount({ child }) {
                 </Link>
 
                 <Link
-                  to="/teacher-account/classes"
+                  to="/teacher/classes"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("classes")}
                 >
@@ -103,7 +103,7 @@ export default function TeacherAccount({ child }) {
                 </Link>
 
                 <Link
-                  to="/teacher-account/syllabuses"
+                  to="/teacher/syllabuses"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("syllabuses")}
                 >
@@ -112,7 +112,7 @@ export default function TeacherAccount({ child }) {
                 </Link>
 
                 {/* <Link
-                  to="/teacher-account/quizzes"
+                  to="/teacher/quizzes"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("quizzes")}
                 >
@@ -121,7 +121,7 @@ export default function TeacherAccount({ child }) {
                 </Link> */}
 
                 <Link
-                  to="/teacher-account/setting"
+                  to="/teacher/setting"
                   className="item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("setting")}
                 >

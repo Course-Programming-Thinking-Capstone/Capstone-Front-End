@@ -19,7 +19,7 @@ export default function Admin() {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/home");
   };
 
   const renderContent = () => {
@@ -46,7 +46,7 @@ export default function Admin() {
   };
 
   const getItemClass = (itemName) => {
-    return `item d-flex justify-content-start ${
+    return `item d-flex justify-content-start align-items-center ${
       activeItem === itemName ? "active" : ""
     }`;
   };
@@ -115,9 +115,17 @@ export default function Admin() {
               <i className="fa-solid fa-book"></i>
               <span>Syllabus</span>
             </div>
-            <div className="item" onClick={handleLogout}>
+            {/* <div className="item" onClick={handleLogout}>
               <i className="fa-solid fa-book"></i>
               <span>Log out</span>
+            </div> */}
+
+            <div
+              className="item d-flex justify-content-start align-items-center"
+              onClick={handleLogout}
+            >
+              <i className="fa-solid fa-right-from-bracket"></i>
+              <div className="mx-4">Log out</div>
             </div>
           </div>
         </div>

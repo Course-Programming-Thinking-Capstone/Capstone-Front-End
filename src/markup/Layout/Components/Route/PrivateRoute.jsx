@@ -17,11 +17,14 @@ const PrivateRoute = ({ page, component: Component }) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!page) {
-    return <Navigate to="/error404" state={{ from: location }} replace />;
+    return <Navigate to="/not-found" state={{ from: location }} replace />;
   } else {
     if (!user) {
       //Check case user have not logged in
       if (!PublicPages.includes(page) && !UnauthenticatedPages.includes(page)) {
+        
+        //log
+        console.log(`navigate to login, user null`)
         return <Navigate to="/login" state={{ from: location }} replace />;
       } else {
         return Component;
@@ -29,7 +32,7 @@ const PrivateRoute = ({ page, component: Component }) => {
     } else {
       if (UnauthenticatedPages.includes(page)) {
         //navigate to home page
-        return <Navigate to="/" state={{ from: location }} replace />;
+        return <Navigate to="/home" state={{ from: location }} replace />;
       } else {
         switch (user.role) {
           case UserRole.AdminRole: {
@@ -39,9 +42,13 @@ const PrivateRoute = ({ page, component: Component }) => {
               !AdminPages.includes(page)
             ) {
               return (
-                <Navigate to="/error404" state={{ from: location }} replace />
+                <Navigate to="/not-found" state={{ from: location }} replace />
               );
             } else {
+              if (page === "home")
+                return (
+                  <Navigate to="/admin" state={{ from: location }} replace />
+                );
               return Component;
             }
           }
@@ -52,9 +59,17 @@ const PrivateRoute = ({ page, component: Component }) => {
               !TeacherPages.includes(page)
             ) {
               return (
-                <Navigate to="/error404" state={{ from: location }} replace />
+                <Navigate to="/not-found" state={{ from: location }} replace />
               );
             } else {
+              if (page === "home")
+                return (
+                  <Navigate
+                    to="/teacher"
+                    state={{ from: location }}
+                    replace
+                  />
+                );
               return Component;
             }
           }
@@ -66,9 +81,13 @@ const PrivateRoute = ({ page, component: Component }) => {
               !StaffPages.includes(page)
             ) {
               return (
-                <Navigate to="/error404" state={{ from: location }} replace />
+                <Navigate to="/not-found" state={{ from: location }} replace />
               );
             } else {
+              if (page === "home")
+                return (
+                  <Navigate to="/staff" state={{ from: location }} replace />
+                );
               return Component;
             }
           }
@@ -80,7 +99,7 @@ const PrivateRoute = ({ page, component: Component }) => {
               !ParentPages.includes(page)
             ) {
               return (
-                <Navigate to="/error404" state={{ from: location }} replace />
+                <Navigate to="/not-found" state={{ from: location }} replace />
               );
             } else {
               return Component;
@@ -94,7 +113,7 @@ const PrivateRoute = ({ page, component: Component }) => {
               !StudentPages.includes(page)
             ) {
               return (
-                <Navigate to="/error404" state={{ from: location }} replace />
+                <Navigate to="/not-found" state={{ from: location }} replace />
               );
             } else {
               return Component;
@@ -103,7 +122,7 @@ const PrivateRoute = ({ page, component: Component }) => {
 
           default:
             return (
-              <Navigate to="/error404" state={{ from: location }} replace />
+              <Navigate to="/not-found" state={{ from: location }} replace />
             );
         }
       }

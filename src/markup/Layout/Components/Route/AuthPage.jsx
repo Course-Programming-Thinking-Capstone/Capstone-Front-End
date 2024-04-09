@@ -9,13 +9,13 @@ export const UnauthenticatedPages = [
 
 //Lưu đường dẫn các trang public. Mọi người dùng đều có thể truy cập 
 //(cả đã đăng nhập và chưa đăng nhập)
-export const PublicPages = ["",];
+export const PublicPages = ["home"];
 
 //Lưu đường dẫn các trang chung cho user đã đăng nhập. VD trang xem thông tin account.
-export const CommonAuthenticatedPages = [""];
+export const CommonAuthenticatedPages = [];
 
 //Lưu đường dẫn các trang error
-export const ErrorPages = ["error-404"];
+export const ErrorPages = ["not-found"];
 
 //Lưu đường dẫn các trang mà admin được truy cập
 export const AdminPages = ["admin", "admin/game", "admin/game-data", "admin/syllabusad"];
@@ -25,16 +25,16 @@ export const StaffPages = ["staff", "staff/staff-order", "staff/staff-order-deta
 
 //Lưu đường dẫn các trang mà teacher được truy cập
 export const TeacherPages = [
-  "teacher-account",
-  "teacher-account/schedule",
-  "teacher-account/notification",
-  "teacher-account/courses",
-  "teacher-account/classes",
-  "teacher-account/syllabuses",
-  "teacher-account/syllabuses/detail",
-  "teacher-account/syllabuses/create-course",
-  "teacher-account/quizzes",
-  "teacher-account/setting",
+  "teacher",
+  "teacher/schedule",
+  "teacher/notification",
+  "teacher/courses",
+  "teacher/classes",
+  "teacher/syllabuses",
+  "teacher/syllabuses/detail",
+  "teacher/syllabuses/create-course",
+  "teacher/quizzes",
+  "teacher/setting",
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
