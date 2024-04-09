@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import simp from "./../../../../../images/gallery/simp.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
-import { filterSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
+import {
+  filterSyllabusesAsync,
+  filterTeacherSyllabusesAsync,
+} from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
@@ -34,7 +37,8 @@ const SyllabusComponent = () => {
         setIsLoading(true);
 
         await dispatch(
-          filterSyllabusesAsync({
+          filterTeacherSyllabusesAsync({
+            sortCreatedDate: "desc",
             name: query,
             page: page,
             size: 3,
