@@ -209,9 +209,12 @@ export const UpdateDocumentComponent = ({
 
   return (
     <>
-      <button className="create-course-edit important" onClick={handleShow}>
+      <button
+        className="create-course-edit important"
+        onClick={handleShow}
+        title="Edit"
+      >
         <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
-        <p className="mx-1 mb-0">Edit</p>
       </button>
 
       <Modal

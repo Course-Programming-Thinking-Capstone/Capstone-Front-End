@@ -373,14 +373,19 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="primary"
         size="sm"
         onClick={handleShow}
         style={{ borderRadius: "4px", width: "120px", height: "40px" }}
       >
         Update
-      </Button>
+      </Button> */}
+
+      <button className="create-course-edit important" onClick={handleShow} title="Edit" >
+        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>{" "}
+        {/* <p className="mx-1 mb-0">Edit</p> */}
+      </button>
 
       <Modal
         show={show}
