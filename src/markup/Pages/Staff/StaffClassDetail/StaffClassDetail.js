@@ -516,7 +516,7 @@ export default function StaffClassDetail() {
                                 <p className='mb-1'>{classDetails.students.length}</p>
                                 <p className='mb-1'>
                                     {classDetails.teacherName ? (
-                                        <p className='mb-1'>{classDetails.teacherName} / <button onClick={() => navigateToTeacherForm(classId)} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Edit</button></p>
+                                        <p className='mb-1'>{classDetails.teacherName} / <button onClick={handleAddTeacherClick} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Edit</button></p>
                                     ) : (
                                         <button onClick={handleAddTeacherClick} style={{ backgroundColor: '#1A9CB7', height: '25px', fontSize: '14px', border: 'none', borderRadius: '8px', color: 'white' }}>Add teacher</button>
                                     )}
