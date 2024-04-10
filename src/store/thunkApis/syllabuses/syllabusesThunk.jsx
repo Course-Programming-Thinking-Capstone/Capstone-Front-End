@@ -24,8 +24,6 @@ export const filterTeacherSyllabusesAsync = createAsyncThunk(
   async (filter, thunkAPI) => {
     try {
       const response = await filterTeacherSyllabus(filter);
-      //log
-      console.log(`Teacher course: ${JSON.stringify(response, null, 2)}`);
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

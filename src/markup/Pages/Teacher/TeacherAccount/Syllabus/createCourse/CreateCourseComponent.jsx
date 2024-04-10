@@ -7,7 +7,7 @@ import {
 import videoIcon from "../../../../../../images/icon/video-icon.png";
 import quizIcon from "../../../../../../images/icon/quiz-icon.png";
 import documentIcon from "../../../../../../images/icon/document-icon.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
 import {
@@ -56,13 +56,17 @@ const CreateCourseComponent = () => {
   const navigate = useNavigate();
 
   const courseId = useSelector(createCourseIdSelector);
-  console.log(`CourseId: ${courseId}`);
+  // console.log(`CourseId: ${courseId}`);\
+
+  //useRef
+  const checkConfirmRef = useRef(null);
 
   //use state
   const [message, setMessage] = useState(null);
   const [coursePictureFile, setCoursePictureFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescriptionInput] = useState(undefined);
+  const [confirm, setConfirm] = useState(false);
 
   const handleFileInputChange = (event) => {
     setCoursePictureFile(event.target.files[0]);
@@ -70,6 +74,10 @@ const CreateCourseComponent = () => {
 
   const handleDescriptionChange = (event) => {
     setDescriptionInput(event.target.value);
+  };
+
+  const handleConfirmChange = () => {
+    setConfirm(!confirm);
   };
 
   const goBack = () => {
@@ -136,6 +144,15 @@ const CreateCourseComponent = () => {
 
     const updateData = async () => {
       try {
+        if (action === "Post") {
+          if (confirm === false) {
+            checkConfirmRef.current.scrollIntoView({ behavior: "smooth" });
+            return;
+          }
+        }
+
+        setIsLoading(true);
+
         const updatedData = { ...createCourse, description };
 
         await updateCourseApi({
@@ -152,7 +169,7 @@ const CreateCourseComponent = () => {
         }
 
         alert("Update success");
-        if (action === "Save") {
+        if (action === "Post") {
           setTimeout(() => {
             navigate("/teacher/syllabuses");
           }, 0);
@@ -167,6 +184,7 @@ const CreateCourseComponent = () => {
         }
         alert(message);
       } finally {
+        setIsLoading(false);
       }
     };
     updateData();
@@ -181,7 +199,7 @@ const CreateCourseComponent = () => {
               <h5 className="mb">Create course</h5>
               <hr />
             </div>
-            <i class="fa-solid fa-book"></i>
+            <i className="fa-solid fa-book"></i>
           </div>
           <div>
             <Button
@@ -351,31 +369,44 @@ const CreateCourseComponent = () => {
                   id="fileInput"
                 />
               </div>
-              <div>
-                <div className="d-flex">
-                  <input id="check" type="checkbox" />
-                  <label htmlFor="check">
-                    Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
-                    mực với đạo đức của một giáo viên
+              <div className="mb-3" ref={checkConfirmRef}>
+                <p>
+                  <input
+                    id="checkConfirm"
+                    type="checkbox"
+                    className="d-none"
+                    checked={confirm}
+                    onChange={handleConfirmChange}
+                  />
+                  <label
+                    htmlFor="checkConfirm"
+                    style={{ cursor: "pointer", marginRight: "5px" }}
+                  >
+                    I will take responsibility if the course content does not
+                    meet the ethical standards of a teacher.
                   </label>
-                </div>
-
+                </p>
+              </div>
+              <div>
                 <div className="d-flex justify-content-end">
                   <Button
                     variant="primary"
                     className="mx-3 px-3 py-2"
                     style={{ borderRadius: "5px" }}
                     onClick={() => saveCourse("Save")}
+                    type="button"
                   >
-                    SAVE DRAFT
+                    Save Draft
                   </Button>
                   <Button
                     variant="danger"
                     className="px-3 py-2"
                     style={{ borderRadius: "5px" }}
                     onClick={() => saveCourse("Post")}
+                    type="button"
+                    disabled={confirm === false}
                   >
-                    POST COURSE
+                    Post Course
                   </Button>
                 </div>
               </div>
