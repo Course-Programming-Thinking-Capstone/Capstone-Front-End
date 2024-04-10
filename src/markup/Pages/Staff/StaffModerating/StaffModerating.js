@@ -87,23 +87,30 @@ const ModeratingLesson = ({ onBack, section }) => {
 const ModeratingQuiz = ({ onBack, quiz }) => {
     console.log('quiz: ', quiz);
     return (
-        <div className="moderating-quiz">
-            <div>
-
-                <button onClick={onBack}>Back</button>
-                <h2>{quiz.title}</h2>
+        <div className="moderating-quiz" style={{ backgroundColor: 'white', width: 1100, height: 650, marginLeft: 65, marginTop: 60, borderRadius: 30,overflowY:'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 30, paddingRight: 5, alignItems: 'center',marginTop:20 }}>
+                <p style={{fontWeight:'bolder',fontSize:20,height:0}}>Quiz Name: <span style={{fontWeight:'500',fontSize:18,marginLeft:5}}>{quiz.title}</span></p>
+                <button onClick={onBack} style={{ height: 30, width: 60,borderRadius:10,borderColor:"white",borderStyle:'solid',backgroundColor:'#1A9CB7',color:'white' }}>Back</button>
             </div>
+            <hr />
             <div>
-                <p>set test time: <span>{quiz.duration}</span></p>
+                <p style={{fontWeight:'bold',color:"#EF7E54",marginLeft:100}}>Test time <span style={{ borderWidth: 2, borderStyle: 'solid', padding: '10px 15px', borderColor: '#D4D4D4',borderRadius:10,marginLeft:30 }}>{quiz.duration}</span></p>
+                <p style={{fontWeight:'bold',color:"#EF7E54",marginLeft:100}}>Quiz Content</p>
                 {quiz && quiz.questions.map((question, index) => (
-                    <div key={index}>
-                        <p>Question {question.order}: {question.title}</p>
-                        <div>
+                    <div key={index} style={{ marginBottom: 20}}>
+                        <div style={{ borderRadius:'10px',backgroundColor: '#FBEDE1',width:900,marginLeft:100,height:450 }}>
+                            <div style={{ backgroundColor: '#F6D3C8',paddingLeft:35,fontWeight:'bold',borderTopLeftRadius:10,borderTopRightRadius:10,height:50,paddingTop:15 }}>{question.order} .</div>
+                            <p style={{ color: '#EF7E54', fontWeight: '600',paddingLeft:50,color:'#EF7E54',height:0,marginTop:5 }}>Question</p>
+                            <p style={{textAlign:'center',height:0}}>{question.title}</p>
+                            <div style={{width:800, marginLeft:50}}>
+                                <hr style={{height:3}}/>
+                            </div>
+                            <p style={{paddingLeft:50,color:'#EF7E54',fontWeight:'600',height:10}}>Answer</p>
                             {question.options.map((option, optionIndex) => (
-                                <div key={optionIndex} className='d-flex'>
-                                    <p>{option.content}</p>
+                                <div key={optionIndex} className='d-flex' style={{paddingLeft:50,borderWidth:2,borderColor:'red',borderStyle:'solid',width:800, marginLeft:50,marginBottom:15,borderRadius:10,backgroundColor:'white', alignItems:'center',height:50,display:'flex',flexDirection:'row',justifyContent:'space-between',paddingRight:10}} >
+                                    <p style={{height:0}}>{option.content}</p>
                                     {option.isCorrect && (
-                                        <span style={{ marginLeft: '10px', color: 'green' }}>Correct Answer</span>
+                                        <span style={{ marginLeft: '10px', color: 'green',borderStyle:'solid',borderColor:'white',borderRadius:30,paddingLeft:15,paddingRight:15,backgroundColor:'#F15C58',color:'white',fontWeight:'500',paddingTop:5,paddingBottom:5}}>Correct</span>
                                     )}
                                 </div>
                             ))}
@@ -304,18 +311,18 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         <div className='moderating-detail' style={{
             height: '680px',
             overflowX: 'hidden',
-            overflowY:'hidden',
+            overflowY: 'hidden',
             width: '1000px',
             backgroundColor: 'white',
-            borderRadius:30,
-            marginLeft:100
+            borderRadius: 30,
+            marginLeft: 100
         }}>
             <div style={{
                 backgroundColor: 'white',
                 height: '650px',
                 overflow: 'auto',
                 width: '920px',
-                paddingRight:70
+                paddingRight: 70
             }}>
                 <Modal
                     show={modalApproveShow}
@@ -404,7 +411,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                     </Modal.Body>
                 </Modal>
 
-                <div className="header" style={{marginBottom:10}}>
+                <div className="header" style={{ marginBottom: 10 }}>
                     <div className="d-flex justify-content-between">
                         <div className="d-flex justify-content-start">
                             <div>
@@ -414,9 +421,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-bell"></i>
                         </div>
                         <div className="d-flex justify-content-end">
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i class="fa-solid fa-chevron-left" style={{marginRight:5}}></i>Back</button>
-                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i class="fa-solid fa-x" style={{marginRight:5}}></i> Refuse</button>
-                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: 5,borderColor:'#FF8A00',borderStyle:'solid',borderWidth:2}}><i class="fa-solid fa-check" style={{marginRight:5}}></i>Approve</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i class="fa-solid fa-chevron-left" style={{ marginRight: 5 }}></i>Back</button>
+                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i class="fa-solid fa-x" style={{ marginRight: 5 }}></i> Refuse</button>
+                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: 5, borderColor: '#FF8A00', borderStyle: 'solid', borderWidth: 2 }}><i class="fa-solid fa-check" style={{ marginRight: 5 }}></i>Approve</button>
                         </div>
                     </div>
                 </div>
@@ -454,13 +461,13 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             <div className="accordion-item" key={section.id}>
                                 <h2 className="accordion-header" id={`heading${index}`}>
                                     <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
-                                        <span style={{fontWeight:'bold',marginRight:10}}>Section {section.order}:  </span>{section.name}
+                                        <span style={{ fontWeight: 'bold', marginRight: 10 }}>Section {section.order}:  </span>{section.name}
                                     </button>
                                 </h2>
                                 <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
                                     <div className="accordion-body">
-                                        <div className="d-flex justify-content-end" style={{alignItems:'center'}}>
-                                            <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white'}}>View lesson</button>
+                                        <div className="d-flex justify-content-end" style={{ alignItems: 'center' }}>
+                                            <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white' }}>View lesson</button>
                                         </div>
                                         {section.lessons.map((lesson, lessonIndex) => (
                                             <div className="lesson-item" key={lesson.id}>
@@ -476,7 +483,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         ))}
                     </div>
 
-                    <div class="accordion mt-5" id="collapseQuiz" style={{marginBottom:10}}>
+                    <div class="accordion mt-5" id="collapseQuiz" style={{ marginBottom: 10 }}>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOneHundred">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
@@ -488,9 +495,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                                     {courseDetails && courseDetails.sections && courseDetails.sections.map((section, sectionIndex) => (
                                         <div className='ms-3' key={section.id}>
                                             {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
-                                                <div key={quiz.id} style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                                                <div key={quiz.id} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                     <p>Section {sectionIndex + 1}: Quiz {quizIndex + 1}: {quiz.title}</p>
-                                                    <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white',height:23,width:93 }}>View Quiz</button>
+                                                    <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', height: 23, width: 93 }}>View Quiz</button>
                                                 </div>
                                             ))}
                                         </div>
@@ -550,7 +557,7 @@ export default function StaffModerating() {
     }
 
     return (
-        <div className='staff-moderating mx-5' style={{ backgroundColor: 'white',borderRadius:30 }}>
+        <div className='staff-moderating mx-5' style={{ backgroundColor: 'white', borderRadius: 30 }}>
             <div className="header">
                 <div className="d-flex justify-content-start">
                     <div>
