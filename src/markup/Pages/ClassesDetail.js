@@ -21,17 +21,6 @@ import gallery7 from './../../images/gallery/pic7.jpg';
 import gallery8 from './../../images/gallery/pic8.jpg';
 import gallery9 from './../../images/gallery/pic9.jpg';
 
-const galleryBlog = [
-	{ image: gallery1, },
-	{ image: gallery5, },
-	{ image: gallery7, },
-	{ image: gallery8, },
-	{ image: gallery2, },
-	{ image: gallery3, },
-	{ image: gallery4, },
-	{ image: gallery9, },
-];
-
 export default function ClassesDetail() {
 	const navigate = useNavigate();
 
@@ -59,48 +48,22 @@ export default function ClassesDetail() {
 												<p>Tôi phải tốt nghiệp sớm để kịp đi đám cưới nyc</p>
 											</div>
 										</div>
+										<button style={{ width: '50%', backgroundColor: '#EF7E54', textAlign: 'center', color: 'white', padding: '15px 0', border: 'none', borderRadius: '4px', marginTop: '15px', fontWeight: 'bold' }} onClick={BuyCourse}>
+											BUY NOW
+										</button>
 									</div>
 								</div>
 								<div className="col-lg-4 col-md-12 col-sm-12">
+									<h5 className='orange'>Select class for course</h5>
 									<div className="details-tbl widget">
-										<ul className="class-details">
-											<li>
-												<div className="name"><i className="la la-clock-o"></i>Start Date</div>
-												<div className="info">24 March 2017</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-calendar-check-o"></i>End Date</div>
-												<div className="info">6-8 Years</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-arrows"></i>Class Size</div>
-												<div className="info">20-30 Kids</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-hourglass"></i>Slot Time</div>
-												<div className="info">5 Hours/6 Days</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-history"></i>Coures Duration</div>
-												<div className="info">10-12 Month</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-clock-o"></i>Class Time</div>
-												<div className="info">9:30am-5:30pm</div>
-											</li>
-											<li>
-												<div className="name"><i class="fa-solid fa-video"></i>Google meet</div>
-												<div className="info rating">Link gg meet</div>
-											</li>
-											<li>
-												<div className="name"><i className="la la-user"></i>Teacher</div>
-												<div className="info">Dinh Van Thanh An</div>
-											</li>
+										<div className='ps-4 pt-2' style={{ border: '1px solid #7F7C7C', borderRadius:'8px' }}>
+											<p>Class: <span style={{ color: '#F15C58' }}>VNR202</span></p>
+											<p>Date start: <span style={{ fontWeight: 'bold' }}>2/2/2024 - 2/6/2024</span></p>
+											<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>Monday - Tuesday</span></p>
+											<p>Slot time: <span style={{ fontWeight: 'bold' }}>8:00 AM - 8:50 AM</span></p>
+											<p>Teacher: <span style={{ fontWeight: 'bold' }}>Nguyen Ngoc Lam</span></p>
+										</div>
 
-										</ul>
-										<button style={{ width: '100%', backgroundColor: '#ffa133', textAlign: 'center', color: 'white', padding: '15px 0', border: 'none', borderRadius: '4px', marginTop: '15px' }} onClick={BuyCourse}>
-											Buy now
-										</button>
 									</div>
 
 
