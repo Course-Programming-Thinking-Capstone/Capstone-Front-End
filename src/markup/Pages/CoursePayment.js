@@ -26,7 +26,12 @@ export default function CoursePayment() {
 
     const [loading, setLoading] = useState(false);
     const [courseDetails, setCourseDetails] = useState(null);
-
+    const formatPrice = (price) => {
+        if (typeof price !== 'number') {
+            return 'N/A';
+        }
+        return price.toLocaleString('vi-VN') + ' đ';
+    }
     const fetchChildrenData = async () => {
         setLoading(true);
         const accessToken = localStorage.getItem('accessToken');
@@ -71,7 +76,7 @@ export default function CoursePayment() {
             setLoading(true);
             const accessToken = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=1&classId=1', {
+                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=5&classId=16', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -160,12 +165,12 @@ export default function CoursePayment() {
     };
 
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
-        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '150px', height: '30px' }} >
+        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '367px', height: '50px', borderRadius: 8, alignItems: 'center', borderStyle: 'solid', borderColor: 'rgb(201, 201, 201)', borderWidth: 2 }} >
             <div>
                 {value}
             </div>
             <div>
-                <i className="fa-regular fa-calendar-days" />
+                <i className="fa-regular fa-calendar-days" style={{ paddingRight: 5 }} />
             </div>
         </div>
     ));
@@ -187,7 +192,6 @@ export default function CoursePayment() {
         };
 
         try {
-            // Initiating the order
             let response = await fetch('https://www.kidpro-production.somee.com/api/v1/orders', {
                 method: 'POST',
                 headers: {
@@ -234,6 +238,8 @@ export default function CoursePayment() {
             console.error('There was a problem with the process:', error.message);
         }
     };
+    const [isInputFocused, setInputFocused] = useState(false);
+    const [isInputFocused1, setInputFocused1] = useState(false);
 
     return (
         <div>
@@ -250,34 +256,75 @@ export default function CoursePayment() {
                         <h5 className='text-center' style={{ marginTop: '20px', color: '#FF8A00', fontSize: '24px' }}>Add new child information</h5>
                         <Modal.Body>
                             <div style={{ padding: '10px 40px' }}>
-
-                                <p className='blue mb-0' style={{ width: '100%' }}>First and last name</p>
-                                <input style={{ width: '100%', height: '50px', paddingLeft: '15px' }} type="text" placeholder='First and last name' value={newChildName}
-                                    onChange={(e) => setNewChildName(e.target.value)} />
-
-                                <p className='blue mb-0' style={{ width: '90%', marginTop: '20px' }}>Date of birth</p>
-                                <div className="d-flex justify-content-center">
+                                <p className='blue mb-0' style={{ width: '100%', paddingBottom: '10px' }}>First and last name</p>
+                                <div style={{
+                                    width: '100%',
+                                    height: '50px',
+                                    borderRadius: 8,
+                                    border: isInputFocused ? '2px solid orange' : '2px solid rgb(201, 201, 201)',
+                                }}>
+                                    <input
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            paddingLeft: '15px',
+                                            borderRadius: 8,
+                                            border: 'none',
+                                            outline: 'none'
+                                        }}
+                                        type="text"
+                                        placeholder='First and last name'
+                                        value={newChildName}
+                                        onChange={(e) => setNewChildName(e.target.value)}
+                                        onFocus={() => setInputFocused(true)}
+                                        onBlur={() => setInputFocused(false)}
+                                    />
+                                </div>
+                                <p className='blue mb-0' style={{ width: '90%', marginTop: '20px', paddingBottom: '10px' }}>Date of birth</p>
+                                <div>
                                     <DatePicker
                                         selected={newChildDOB}
                                         onChange={(date) => setNewChildDOB(date)}
                                         enableTabLoop={false}
                                         maxDate={new Date()}
-                                        customInput={<CustomInput />} />
+                                        customInput={<CustomInput />}
+                                    />
                                 </div>
 
-                                <p className='blue mb-0' style={{ width: '100%', marginTop: '20px' }}>Gender</p>
-                                <select style={{ width: '100%', height: '50px', paddingLeft: '15px' }} name="" id="" value={newChildGender}
-                                    onChange={(e) => setNewChildGender(e.target.value)}>
-                                    <option value="1">Male</option>
-                                    <option value="2">Female</option>
-                                </select>
+                                <p className='blue mb-0' style={{ width: '100%', marginTop: '20px', paddingBottom: '10px' }}>Gender</p>
+                                <div style={{
+                                    width: '100%',
+                                    height: '50px',
+                                    borderRadius: 8,
+                                    border: isInputFocused1 ? '2px solid orange' : '2px solid rgb(201, 201, 201)',
+                                }}>
+                                    <select
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            paddingLeft: '15px',
+                                            borderRadius: 8,
+                                            border: 'none',
+                                            outline: 'none',
+                                            backgroundColor: 'transparent',
+                                        }}
+                                        value={newChildGender}
+                                        onChange={(e) => setNewChildGender(e.target.value)}
+                                        onFocus={() => setInputFocused1(true)}
+                                        onBlur={() => setInputFocused1(false)}
+                                    >
+                                        <option value="1">Male</option>
+                                        <option value="2">Female</option>
+                                    </select>
+                                </div>
+
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={handleClose}>
                                 Cancel
                             </Button>
-                            <Button style={{ backgroundColor: '#FF8A00' }} onClick={handleSave} >
+                            <Button style={{ backgroundColor: '#FF8A00', borderRadius: 8 }} onClick={handleSave} >
                                 Save
                             </Button>
                         </Modal.Footer>
@@ -289,7 +336,7 @@ export default function CoursePayment() {
                                 <button onClick={handleShow} style={{ color: 'white', height: '25px', backgroundColor: '#1A9CB7', border: 'none', borderRadius: '5px' }}>Add</button>
                             </div>
                             <div className='payment'>
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
                                     {loading ? (
                                         <div className="d-flex justify-content-center">
                                             <div className="spinner-border text-primary" role="status">
@@ -301,7 +348,7 @@ export default function CoursePayment() {
                                             <div key={child.id || index} className='children radio-wrapper'
                                                 style={{
                                                     border: selectedChildren.includes(child.id) ? '2px solid #1A9CB7' : '2px solid transparent',
-                                                    cursor: 'pointer', padding: '5px 15px', marginTop: '15px'
+                                                    cursor: 'pointer', padding: '5px 15px', marginTop: '15px', width: '30%', marginRight: 7
                                                 }}
                                                 onClick={() => toggleChildSelection(child.id)}>
                                                 <div className="d-flex justify-content-start">
@@ -322,7 +369,7 @@ export default function CoursePayment() {
                                     <h5 className='mb-0'>Course information</h5>
                                 </div>
                                 <div className='payment'>
-                                    <p>Send the account via:</p>
+                                    <p style={{ paddingTop: 15 }}>Send the account via:</p>
                                     <div className="d-flex justify-content-center">
                                         <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid #1A9CB7', cursor: 'pointer', padding: '5px 20px', width: '45%' }}>
                                             <div className='text-center'>
@@ -340,19 +387,26 @@ export default function CoursePayment() {
                                             </div>
                                         ) : (
                                             courseDetails && (
-                                                <div className='d-flex justify-content-between'>
-                                                    <img className='img-responsive' style={{ width: '80px', height: '80px' }} src={courseDetails.picture || demo} alt="" />
-                                                    <div>
-                                                        <p style={{ marginBottom: 10, marginTop: 10 }}>Course's name</p>
-                                                        <p style={{ marginBottom: 10, marginTop: 10 }}>{courseDetails.courseName}</p>
+                                                <div style={{
+                                                    borderWidth: 2, borderColor: '#FF8A00', borderStyle: 'solid', paddingLeft: 20, paddingRight: 10, alignItems: 'center', borderRadius: 10, display: 'flex', flexDirection: 'row',
+                                                    width: 500, marginLeft: 20,
+                                                }}>
+                                                    <div style={{ display: 'flex', flexDirection: 'row', justifyItems: 'center' }}>
+                                                        <img className='img-responsive' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
+                                                        <div style={{ marginTop: 5 }}>
+                                                            <p style={{ marginBottom: 10, fontWeight: 'inherit' }}>What is programming?</p>
+                                                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                                                                <p style={{ fontWeight: 'inherit' }}>Class: </p>
+                                                                <p style={{ marginBottom: 10, color: '#E53E5C', fontWeight: 'bolder', marginLeft: 5, marginTop: 10 }}>{courseDetails.courseName}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p style={{ marginBottom: 10, marginTop: 10 }}>Teacher</p>
-                                                        <p>{courseDetails.teacherName}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p style={{ marginBottom: 10, marginTop: 10 }}>Price</p>
-                                                        <p style={{ color: '#FF8A00' }}>{courseDetails.price.toLocaleString()} đ</p>
+                                                    <div style={{ marginLeft: 110, marginTop: 20 }}>
+                                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            <p style={{ fontWeight: 'inherit' }}>Teacher: </p>
+                                                            <p style={{ fontWeight: 'inherit' }}> {courseDetails.teacherName}</p>
+                                                        </div>
+                                                        <p style={{ color: '#FF8A00', paddingBottom: 20, fontWeight: 'bolder' }}>{formatPrice(courseDetails.price)}</p>
                                                     </div>
                                                 </div>
                                             )
@@ -388,7 +442,7 @@ export default function CoursePayment() {
                                                 <img style={{ height: '40px', width: '40px' }} src={zalopay} alt="" />
                                                 <p style={{ marginBottom: '12px' }}>09123123123</p>
                                             </div>
-                                            <p className='mb-0'>Momo E-Wallet</p>
+                                            <p className='mb-0'>Zalo E-Wallet</p>
                                         </div>
                                         {selectedPayment === 'zalopay' ?
                                             <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> :
@@ -398,7 +452,7 @@ export default function CoursePayment() {
                                 <div>
                                     <h5>Voucher</h5>
                                     <div className="d-flex justify-content-between" style={{ padding: '10px 35px' }}>
-                                        <input type="text" placeholder='Enter discount code' style={{ height: '48px', fontSize: '16px', width: '67%', paddingLeft: '15px', outline: 'none' }} />
+                                        <input type="text" placeholder='Enter discount code' style={{ height: '48px', fontSize: '16px', width: '67%', paddingLeft: '15px', outline: 'none', borderRadius: 10, borderColor: 'rgb(201, 201, 201)', borderStyle: 'solid' }} />
                                         <button style={{ height: '48px', color: 'white', backgroundColor: '#1A9CB7', border: 'none', borderRadius: '8px', width: '30%' }}>APPLY</button>
                                     </div>
                                 </div>
@@ -414,11 +468,11 @@ export default function CoursePayment() {
                                             </div>
                                             <div className='d-flex justify-content-between'>
                                                 <p>Price</p>
-                                                <p>{courseDetails.price.toLocaleString()} đ</p>
+                                                <p>{formatPrice(courseDetails.price)}</p>
                                             </div>
                                             <div className='d-flex justify-content-between'>
                                                 <p>Quantity</p>
-                                                <p>{selectedChildren.length}</p>
+                                                <p>x {selectedChildren.length}</p>
                                             </div>
                                             <div className='d-flex justify-content-between'>
                                                 <p>Discount</p>
