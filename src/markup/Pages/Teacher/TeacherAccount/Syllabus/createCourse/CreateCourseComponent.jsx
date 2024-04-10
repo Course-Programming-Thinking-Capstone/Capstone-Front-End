@@ -42,9 +42,7 @@ import {
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
 import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
-import {
-  changeData,
-} from "../../../../../../store/slices/course/componentNumber";
+import { changeData } from "../../../../../../store/slices/course/componentNumber";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -351,7 +349,18 @@ const CreateCourseComponent = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <p className="blue fw-bold">Course picture</p>
+                <div className="mb-3">
+                  <p className="blue fw-bold mb-1">Course picture</p>
+                  {createCourse.pictureUrl && (
+                    <a
+                      href={createCourse.pictureUrl}
+                      title="Course picture"
+                      target="_blank"
+                    >
+                      Click to view picture
+                    </a>
+                  )}
+                </div>
                 <p className="mb-1">
                   Max size <span className="orange">10Mb</span>. The required
                   type image is <span className="orange">JPG, PNG</span>.
@@ -485,7 +494,11 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
         <div className="d-flex justify-content-between align-items-center w-100">
           <Accordion.Header className="lesson-title w-100">
             <div className="d-flex justify-content-start align-items-center">
-              <img src={documentIcon} title="Document icon" alt="Document icon" />
+              <img
+                src={documentIcon}
+                title="Document icon"
+                alt="Document icon"
+              />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
           </Accordion.Header>
@@ -512,10 +525,13 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
               <Col md="9">{lesson.duration} minute</Col>
             </Row>
             <Row className="mb-3">
-              <Col md="3">
+              <Col md="12">
                 <span className="blue fw-bold">Content:</span>{" "}
               </Col>
-              <Col md="9">{lesson.content}</Col>
+              {/* <Col md="9">{lesson.content}</Col> */}
+              <Col md="12" className="mt-3 mx-3 create-course-section-content">
+                <div dangerouslySetInnerHTML={{ __html: lesson.content }} />
+              </Col>
             </Row>
           </Container>
         </Accordion.Body>

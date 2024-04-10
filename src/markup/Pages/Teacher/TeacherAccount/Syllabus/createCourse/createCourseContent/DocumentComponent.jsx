@@ -1,7 +1,7 @@
-import { Modal, Col, Form,  Row } from "react-bootstrap";
+import { Modal, Col, Form, Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   addDocument,
@@ -12,24 +12,79 @@ import "./../CreateCourse.css";
 import { useSelector } from "react-redux";
 import { componentNumberSelector } from "../../../../../../../store/selector";
 import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
+import ReactQuill from "react-quill";
 
 const DocumentComponent = ({ sectionId, index }) => {
   const dispatch = useDispatch();
   const componentNumber = useSelector(componentNumberSelector);
 
+  //useState
   const [show, setShow] = useState(false);
+  const [quillDocument, setQuillDocument] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  //edit text
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
+
+      [{ font: [] }],
+      [{ size: [] }],
+      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+      [
+        { align: "" },
+        { align: "center" },
+        { align: "right" },
+        { align: "justify" },
+      ],
+
+      ["bold", "italic", "underline", "strike"], // toggled buttons
+      // ["blockquote", "code-block"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { script: "sub" },
+        { script: "super" },
+      ],
+      ["link", "image", "video"],
+
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "color",
+    "background",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "script",
+    "bullet",
+    "link",
+    "image",
+    "video",
+    "align",
+  ];
+
+  //edit text
+
   //handle submit
   const handleSubmit = (values) => {
-    const { lessonName, duration, content } = values;
+    const { lessonName, duration } = values;
 
     const document = {
       name: lessonName.trim(),
       duration: duration,
-      content: content.trim(),
+      // content: content.trim(),
+      content: quillDocument,
       type: "Document",
     };
 
@@ -102,7 +157,7 @@ const DocumentComponent = ({ sectionId, index }) => {
             initialValues={{
               lessonName: "Document",
               duration: 10,
-              content: "Content",
+              // content: "Content",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -156,7 +211,7 @@ const DocumentComponent = ({ sectionId, index }) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group
+                  {/* <Form.Group
                     as={Col}
                     md="12"
                     controlId="validationContent"
@@ -177,7 +232,24 @@ const DocumentComponent = ({ sectionId, index }) => {
                     <Form.Control.Feedback type="invalid">
                       {errors.content}
                     </Form.Control.Feedback>
-                  </Form.Group>
+
+                  </Form.Group> */}
+
+                  <Col md="12">
+                    <Form.Label className="create-course-form-lable">
+                      Content
+                    </Form.Label>
+                    <div className="react-quill-container react-quill">
+                      <ReactQuill
+                        theme="snow"
+                        value={quillDocument}
+                        onChange={(value) => setQuillDocument(value)}
+                        modules={modules}
+                        formats={formats}
+                        style={{ whiteSpace: "pre-wrap" }}
+                      />
+                    </div>
+                  </Col>
                 </Row>
               </Form>
             )}
@@ -213,9 +285,61 @@ export const UpdateDocumentComponent = ({
   const dispatch = useDispatch();
 
   const [show, setShow] = useState(false);
+  const [quillDocument, setQuillDocument] = useState(document.content);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  //edit text
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, false] }], // custom button values
+
+      [{ font: [] }],
+      [{ size: [] }],
+      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+      [
+        { align: "" },
+        { align: "center" },
+        { align: "right" },
+        { align: "justify" },
+      ],
+
+      ["bold", "italic", "underline", "strike"], // toggled buttons
+      // ["blockquote", "code-block"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { script: "sub" },
+        { script: "super" },
+      ],
+      ["link", "image", "video"],
+
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "color",
+    "background",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "script",
+    "bullet",
+    "link",
+    "image",
+    "video",
+    "align",
+  ];
+
+  //edit text
 
   //handle submit
   const handleSubmit = (values) => {
@@ -224,7 +348,7 @@ export const UpdateDocumentComponent = ({
     const updateData = {
       name: lessonName.trim(),
       duration: duration,
-      content: content.trim(),
+      content: quillDocument,
       type: "Document",
     };
     dispatch(
@@ -338,7 +462,7 @@ export const UpdateDocumentComponent = ({
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group
+                  {/* <Form.Group
                     as={Col}
                     md="12"
                     controlId="validationContent"
@@ -359,7 +483,23 @@ export const UpdateDocumentComponent = ({
                     <Form.Control.Feedback type="invalid">
                       {errors.content}
                     </Form.Control.Feedback>
-                  </Form.Group>
+                  </Form.Group> */}
+
+                  <Col md="12">
+                    <Form.Label className="create-course-form-lable">
+                      Content
+                    </Form.Label>
+                    <div className="react-quill-container react-quill">
+                      <ReactQuill
+                        theme="snow"
+                        value={quillDocument}
+                        onChange={(value) => setQuillDocument(value)}
+                        modules={modules}
+                        formats={formats}
+                        style={{ whiteSpace: "pre-wrap" }}
+                      />
+                    </div>
+                  </Col>
                 </Row>
               </Form>
             )}

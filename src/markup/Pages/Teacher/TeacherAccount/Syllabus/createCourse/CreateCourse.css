@@ -121,7 +121,6 @@ button.create-course-modal-remove:hover {
   background-color: #faa287;
 }
 
-
 button.create-course-close {
   border: none;
   border-radius: 5px;
@@ -142,7 +141,7 @@ button.create-course-close:hover {
 button.create-course-save {
   border: none;
   border-radius: 5px;
-  background-color: #1A9CB7;
+  background-color: #1a9cb7;
   color: white;
   text-align: center;
   text-decoration: none;
@@ -154,4 +153,30 @@ button.create-course-save {
 
 button.create-course-save:hover {
   background-color: #147a8f;
+}
+
+.create-course-modal-content .modal-dialog {
+  width: 80%;
+}
+
+.create-course-modal-content .react-quill-container {
+  background-color: white;
+}
+/* .create-course-modal-content .react-quill .ql-editor {
+  min-height: 40vh;
+  width: 100%;
+  overflow: auto;
+} */
+
+@media (min-width: 576px) {
+  .create-course-modal-content .modal-dialog {
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+}
+
+.create-course-section-content {
+  border-radius: 5px;
+  border: 1px solid grey;
+  padding: 5px;
 }
