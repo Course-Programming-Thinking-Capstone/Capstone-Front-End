@@ -419,6 +419,10 @@ export default function StaffClassDetail() {
             navigateToView('addTeacher', classId);
         };
 
+        const handleAddStudentClick = () => {
+            navigateToView('addStudent', classId);
+        };
+
         // Calculate the students to be displayed on the current page
         const currentStudents = classDetails?.students.slice(
             currentPage * studentsPerPage,
@@ -453,9 +457,13 @@ export default function StaffClassDetail() {
         }, [classId, accessToken]); // Fetch class details when classId changes
 
         if (loading) {
-            return <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>;
+            return (
+                <div className='d-flex justify-content-center align-items-center' style={{ height: '100vh' }}>
+                    <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+                        <span style={{ fontSize: '200px' }} className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            )
         }
 
         if (!classDetails) {
@@ -559,14 +567,14 @@ export default function StaffClassDetail() {
                                 <p className='mb-1'>Slot {classDetails.slotNumber} ({classDetails.startSlot} - {classDetails.endSlot})</p>
                                 <p className='mb-1'>{classDetails.totalSlot}</p>
                                 <button onClick={() => handleOpenNewTab(classDetails.roomUrl)}>Open Discord Link</button>
-                                
+
                             </div>
                         </div>
                     </div>
                     <div className='px-4'>
                         <div className="d-flex justify-content-between">
                             <p className='blue'>LIST STUDENT</p>
-                            <button onClick={() => navigateToStudentForm(classId)} style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px', height: '35px' }}>Add student</button>
+                            <button onClick={handleAddStudentClick} style={{ backgroundColor: '#FFA63D', color: 'white', border: 'none', borderRadius: '8px', height: '35px' }}>Add student</button>
 
                         </div>
                         <div class="table-responsive">
@@ -719,17 +727,34 @@ export default function StaffClassDetail() {
                 });
 
                 if (!response.ok) {
-                    // If the response is not 2xx, throw an error
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const addTeacher = await response.json();
                 console.log('Success:', addTeacher);
-                alert('Teacher added successfully to the class.');
+                toast.success('Add to teacher to class successfully', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
 
             } catch (error) {
                 console.error('Failed to add teacher to class:', error);
-                alert('Failed to add teacher to class.');
+                toast.error("Add to teacher to class failed", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             } finally {
                 setIsLoading(false); // Stop loading indicator
             }
@@ -745,21 +770,29 @@ export default function StaffClassDetail() {
                         <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('classContent', classId)}>Back</button>
                     </div>
                 </div>
+                <ToastContainer />
                 <div className='p-3'>
 
-                    <div className="d-flex">
-                        <p style={{ color: '#F11616' }}>Current class</p>
-                        <p className='ms-3'>{currentClass.studyDay?.join(', ')}</p>
+                    <div className='p-1' style={{ backgroundColor: '#FBEDE1', width: '60%', borderRadius: '10px' }}>
+                        <div className="d-flex">
+                            <p style={{ color: '#F11616', fontWeight: 'bold' }}>Current class</p>
+                            <div className='ms-5'>
+                                {currentClass.studyDay?.map((day, index) => (
+                                    <span key={index} style={{ marginRight: '50px' }}>{day}</span>
+                                ))}
+                            </div>
+                        </div>
+
+
+                        <div className="d-flex" style={{ marginLeft: '145px' }}>
+                            <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
+                        </div>
                     </div>
 
-                    <div className="d-flex ms-5">
-                        <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
-                    </div>
-                    <div></div>
 
                     <div>
-                        <p className='blue mb-1'>Teacher</p>
-                        <select name="teacher" id="teacher-select" disabled={isLoading} onChange={handleTeacherSelection}>
+                        <p className='blue mb-1' style={{ fontWeight: 'bold' }}>Teacher</p>
+                        <select name="teacher" id="teacher-select" disabled={isLoading} onChange={handleTeacherSelection} style={{ border: '1px solid #FF8A00', outline: 'none', borderRadius: '5px', height: '30px', width: '300px' }}>
                             <option value="">Please choose the teacher</option>
                             {isLoading ? (
                                 <option disabled>Loading teachers...</option>
@@ -773,8 +806,8 @@ export default function StaffClassDetail() {
                         </select>
                     </div>
                     <div>
-                        <p className='blue mb-1 mt-3'>His/her classes</p>
-                        <div className='p-3'>
+                        <p className='blue mb-1 mt-3' style={{ fontWeight: 'bold' }}>His/her classes</p>
+                        <div className='pt-3' style={{ border: '1px solid #FF8A00', borderRadius: '8px', paddingLeft: '60px' }}>
                             {isTeacherLoading ? (
                                 <p>Loading teacher schedules...</p>
                             ) : selectedTeacherId && selectedTeacherSchedules.length === 0 ? (
@@ -783,13 +816,15 @@ export default function StaffClassDetail() {
                                 <div>
                                     <div className="d-flex">
                                         <div>
-                                            <p className='blue'>Class code</p>
+                                            <p style={{ fontWeight: 'bold', color: '#F25B58' }}>Class code</p>
                                         </div>
-                                        <div>
+                                        <div className='ms-5'>
                                             <select name="scheduleSelect"
                                                 id="schedule-select"
                                                 onChange={(e) => setSelectedScheduleIndex(e.target.value)}
-                                                value={selectedScheduleIndex}>
+                                                value={selectedScheduleIndex}
+                                                style={{ border: '1px solid #FF8A00', outline: 'none', borderRadius: '5px', width: '150px' }}
+                                            >
                                                 {selectedTeacherSchedules.map((schedule, index) => (
                                                     <option key={index} value={index}>
                                                         {schedule.className}
@@ -801,24 +836,52 @@ export default function StaffClassDetail() {
                                     {selectedScheduleIndex !== null && selectedTeacherSchedules[selectedScheduleIndex] && (
                                         <div>
                                             <div className="d-flex">
-                                                <p className='blue'>Study day :</p>
-                                                <p>{selectedTeacherSchedules[selectedScheduleIndex].studyDays?.join(', ')}</p>
+                                                <p className='blue' style={{ fontWeight: 'bold' }}>Study day :</p>
+                                                <div style={{ marginLeft: '50px' }}>
+                                                    {selectedTeacherSchedules[selectedScheduleIndex].studyDays?.map((day, index) => (
+                                                        <span key={index} style={{ marginRight: '50px' }}>{day}</span>
+                                                    ))}
+                                                </div>
                                             </div>
 
+
                                             <div className="d-flex">
-                                                <p className='blue'>Slot:</p>
-                                                <p>{selectedTeacherSchedules[selectedScheduleIndex].slot} ({selectedTeacherSchedules[selectedScheduleIndex].open} - {selectedTeacherSchedules[selectedScheduleIndex].close})</p>
+                                                <p className='blue' style={{ fontWeight: 'bold' }}>Slot:</p>
+                                                <p style={{ marginLeft: '100px' }}>Slot  {selectedTeacherSchedules[selectedScheduleIndex].slot} ({selectedTeacherSchedules[selectedScheduleIndex].open} - {selectedTeacherSchedules[selectedScheduleIndex].close})</p>
                                             </div>
                                         </div>
                                     )}
-
-
                                 </div>
                             )}
                         </div>
                     </div>
-                    <div className="d-flex justify-content-end">
-                        <button style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', width: '150px', height: '35px' }} onClick={addTeacherToClass}>Add teacher</button>
+                    <div className="d-flex justify-content-end mt-4">
+                        <button
+                            style={{
+                                backgroundColor: '#F15C58',
+                                border: 'none',
+                                borderRadius: '8px',
+                                color: 'white',
+                                width: '150px',
+                                height: '35px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            onClick={addTeacherToClass}
+                            disabled={isLoading} // Disable the button when isLoading is true
+                        >
+                            {isLoading ? (
+                                <>
+                                    <div className="spinner-border text-light" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                </>
+                            ) : (
+                                'Add teacher'
+                            )}
+                        </button>
+
                     </div>
                 </div>
             </div>
