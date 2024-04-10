@@ -247,16 +247,12 @@ export default function StaffClassDetail() {
         const handleCreateSchedule = async () => {
             const checkedDaysArray = getCheckedDays();
             const days = checkedDaysArray.length > 0 ? checkedDaysArray : ["NoDay"];
-            console.log('days: ', days);
-            console.log('classData.classId: ', classData.classId);
-            console.log('selectedSlotId: ', selectedSlotId);
-            console.log('classData.slotDuration: ', classData.slotDuration);
 
             const data = {
                 days: days,
-                classId: classData.classId,
+                classId: createdClassDetails.classId,
                 slot: selectedSlotId,
-                slotTime: classData.slotDuration,
+                slotTime: createdClassDetails.slotDuration,
             };
 
             try {
@@ -274,16 +270,26 @@ export default function StaffClassDetail() {
                     throw new Error(errorData.message || 'Failed to create schedule');
                 }
 
-                // Handle response data if necessary
                 const responseData = await response.json();
-                console.log(responseData);
-                setCreatedClassId(classData.classId);
-                setScheduleCreated(true);
-                onNext(responseData);
+                console.log('responseData: ', responseData);
+
+                setSelectedClassId(responseData.classId);
+                setView('classContent');
+
             } catch (error) {
-                alert(`Error: ${error.message}`);
+                toast.error(error.message, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }
         };
+
 
         return (
             <div className='staff-create-class mx-5'>
@@ -373,7 +379,7 @@ export default function StaffClassDetail() {
                                 <div className='p-5'>
                                     <div className="d-flex">
                                         <p className='blue'>Slot duration</p>
-                                        <span className='ms-5'>{ createdClassDetails && createdClassDetails.slotDuration} minutes/slot</span>
+                                        <span className='ms-5'>{createdClassDetails && createdClassDetails.slotDuration} minutes/slot</span>
                                     </div>
                                     <p className='blue'>Study day</p>
                                     <div className="study-day">
@@ -467,6 +473,10 @@ export default function StaffClassDetail() {
             };
         };
 
+        const handleOpenNewTab = (url) => {
+            window.open(url, '_blank');
+        };
+
 
 
         return (
@@ -548,7 +558,8 @@ export default function StaffClassDetail() {
                                 </div>
                                 <p className='mb-1'>Slot {classDetails.slotNumber} ({classDetails.startSlot} - {classDetails.endSlot})</p>
                                 <p className='mb-1'>{classDetails.totalSlot}</p>
-                                <p className='mb-1'>{classDetails.roomUrl}</p>
+                                <button onClick={() => handleOpenNewTab(classDetails.roomUrl)}>Open Discord Link</button>
+                                
                             </div>
                         </div>
                     </div>
