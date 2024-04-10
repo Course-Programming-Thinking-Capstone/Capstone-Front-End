@@ -301,192 +301,207 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     };
 
     return (
-        <div className='moderating-detail' style={{ backgroundColor: 'white', height: '650px', overflow: 'scroll' }}>
-            <Modal
-                show={modalApproveShow}
-                onHide={() => setApproveModalShow(false)}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Body>
-                    <div className="text-center">
-                        <h4>The course meets the standards and is approved to be posted to the system</h4>
-                    </div>
-                    <div className="d-flex justify-content-around">
-                        <button style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setApproveModalShow(false)}>Close</button>
-                        <button style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} onClick={handleApprove}>Approve</button>
-                    </div>
-                </Modal.Body>
-            </Modal>
-
-            <Modal
-                show={modalApproveSetting}
-                size='lg'
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Body style={{ padding: '20px 40px' }}>
-                    <div className='d-flex justify-content-between'>
-                        <div
-                            onClick={() => handleOptionSelect('option1')}
-                            className='d-flex justify-content-around'
-                            style={{
-                                cursor: 'pointer',
-                                padding: '15px 20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                width: '35%',
-                                borderRadius: '10px',
-                                border: selectedOption === 'option1' ? '2px solid #1A9CB7' : 'none'
-                            }}>
-                            {selectedOption === 'option1' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
-                            <p className='mb-0' style={{ marginLeft: '5px' }}>Set up now</p>
+        <div className='moderating-detail' style={{
+            height: '680px',
+            overflowX: 'hidden',
+            overflowY:'hidden',
+            width: '1000px',
+            backgroundColor: 'white',
+            borderRadius:30,
+            marginLeft:100
+        }}>
+            <div style={{
+                backgroundColor: 'white',
+                height: '650px',
+                overflow: 'auto',
+                width: '920px',
+                paddingRight:70
+            }}>
+                <Modal
+                    show={modalApproveShow}
+                    onHide={() => setApproveModalShow(false)}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Body>
+                        <div className="text-center">
+                            <h4>The course meets the standards and is approved to be posted to the system</h4>
                         </div>
-                        <div
-                            onClick={() => handleOptionSelect('option2')}
-                            className='d-flex justify-content-around'
-                            style={{
-                                cursor: 'pointer',
-                                padding: '15px 20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                width: '35%',
-                                borderRadius: '10px',
-                                border: selectedOption === 'option2' ? '2px solid #1A9CB7' : 'none'
-                            }}>
-                            {selectedOption === 'option2' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
-                            <p className='mb-0' style={{ marginLeft: '5px' }}>Admin set up</p>
+                        <div className="d-flex justify-content-around">
+                            <button style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setApproveModalShow(false)}>Close</button>
+                            <button style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} onClick={handleApprove}>Approve</button>
                         </div>
-                    </div>
+                    </Modal.Body>
+                </Modal>
 
-                    {renderSetupContent()}
-
-                    <div className="d-flex justify-content-end mt-3">
-                        <button className='me-3' onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} >Close</button>
-                        <button onClick={approveCourse} style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} >Moderation</button>
-                    </div>
-                </Modal.Body>
-            </Modal>
-
-            <Modal
-                show={modalRefuseShow}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Body>
-                    <div >
-                        <p style={{ color: '#1A9CB7' }}>Reason refuse course</p>
-                        <textarea name="" id="" rows="4" style={{ width: '100%', }} placeholder='Write reason'></textarea>
-                    </div>
-                    <div className="d-flex">
-                        <p className='mb-0 mt-2' style={{ color: '#1A9CB7' }}>Send to teacher: </p>
-                        <span style={{ border: '1px solid #FF8A00', color: '#FF8A00', margin: '5px 10px', padding: '5px 10px', borderRadius: '10px' }}>Nguyễn Ngọc Lâm</span>
-                    </div>
-                    <div className="d-flex justify-content-end mt-3">
-                        <button className='mx-2' style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setRefuseShow(false)}>Cancel</button>
-                        <button style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setRefuseShow(false)}>Send</button>
-                    </div>
-                </Modal.Body>
-            </Modal>
-
-            <div className="header">
-                <div className="d-flex justify-content-between">
-                    <div className="d-flex justify-content-start">
-                        <div>
-                            <h5 className='mb'>MODERATING</h5>
-                            <hr />
+                <Modal
+                    show={modalApproveSetting}
+                    size='lg'
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Body style={{ padding: '20px 40px' }}>
+                        <div className='d-flex justify-content-between'>
+                            <div
+                                onClick={() => handleOptionSelect('option1')}
+                                className='d-flex justify-content-around'
+                                style={{
+                                    cursor: 'pointer',
+                                    padding: '15px 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    width: '35%',
+                                    borderRadius: '10px',
+                                    border: selectedOption === 'option1' ? '2px solid #1A9CB7' : 'none'
+                                }}>
+                                {selectedOption === 'option1' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
+                                <p className='mb-0' style={{ marginLeft: '5px' }}>Set up now</p>
+                            </div>
+                            <div
+                                onClick={() => handleOptionSelect('option2')}
+                                className='d-flex justify-content-around'
+                                style={{
+                                    cursor: 'pointer',
+                                    padding: '15px 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    width: '35%',
+                                    borderRadius: '10px',
+                                    border: selectedOption === 'option2' ? '2px solid #1A9CB7' : 'none'
+                                }}>
+                                {selectedOption === 'option2' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
+                                <p className='mb-0' style={{ marginLeft: '5px' }}>Admin set up</p>
+                            </div>
                         </div>
-                        <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-bell"></i>
-                    </div>
-                    <div className="d-flex justify-content-end">
-                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i class="fa-solid fa-chevron-left"></i>Back</button>
-                        <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i class="fa-solid fa-x"></i> Refuse</button>
-                        <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', border: 'none', borderRadius: '5px' }}><i class="fa-solid fa-check"></i>Approve</button>
+
+                        {renderSetupContent()}
+
+                        <div className="d-flex justify-content-end mt-3">
+                            <button className='me-3' onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} >Close</button>
+                            <button onClick={approveCourse} style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} >Moderation</button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal
+                    show={modalRefuseShow}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Body>
+                        <div >
+                            <p style={{ color: '#1A9CB7' }}>Reason refuse course</p>
+                            <textarea name="" id="" rows="4" style={{ width: '100%', }} placeholder='Write reason'></textarea>
+                        </div>
+                        <div className="d-flex">
+                            <p className='mb-0 mt-2' style={{ color: '#1A9CB7' }}>Send to teacher: </p>
+                            <span style={{ border: '1px solid #FF8A00', color: '#FF8A00', margin: '5px 10px', padding: '5px 10px', borderRadius: '10px' }}>Nguyễn Ngọc Lâm</span>
+                        </div>
+                        <div className="d-flex justify-content-end mt-3">
+                            <button className='mx-2' style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setRefuseShow(false)}>Cancel</button>
+                            <button style={{ height: '35px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '10px', border: 'none' }} onClick={() => setRefuseShow(false)}>Send</button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <div className="header" style={{marginBottom:10}}>
+                    <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-start">
+                            <div>
+                                <h5 className='mb'>Course Detail</h5>
+                                <hr />
+                            </div>
+                            <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-bell"></i>
+                        </div>
+                        <div className="d-flex justify-content-end">
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i class="fa-solid fa-chevron-left" style={{marginRight:5}}></i>Back</button>
+                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i class="fa-solid fa-x" style={{marginRight:5}}></i> Refuse</button>
+                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: 5,borderColor:'#FF8A00',borderStyle:'solid',borderWidth:2}}><i class="fa-solid fa-check" style={{marginRight:5}}></i>Approve</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="moderating-detail-content">
+                <div className="moderating-detail-content">
 
-                <div>
-                    <img src={simp} alt="" />
-                    <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
-                    <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
-                        <div className="d-flex">
-                            <i class="fa-solid fa-book mt-1"></i>
-                            <p className='mb-0 ms-1'>4 lessons</p>
-                        </div>
-                        <div className="d-flex">
-                            <i class="fa-solid fa-circle-play mt-1"></i>
-                            <p className='mb-0 ms-1'>4 videos</p>
-                        </div>
-                        <div className="d-flex">
-                            <i class="fa-solid fa-book-open mt-1"></i>
-                            <p className='mb-0 ms-1'>4 documents</p>
-                        </div>
-                        <div className="d-flex">
-                            <i class="fa-solid fa-pen-to-square mt-1"></i>
-                            <p className='mb-0 ms-1'>4 quiz</p>
-                        </div>
-                    </div>
                     <div>
-                        <p>{courseDetails && courseDetails.description}</p>
+                        <img src={simp} alt="" />
+                        <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
+                        <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
+                            <div className="d-flex">
+                                <i class="fa-solid fa-book mt-1"></i>
+                                <p className='mb-0 ms-1'>4 lessons</p>
+                            </div>
+                            <div className="d-flex">
+                                <i class="fa-solid fa-circle-play mt-1"></i>
+                                <p className='mb-0 ms-1'>4 videos</p>
+                            </div>
+                            <div className="d-flex">
+                                <i class="fa-solid fa-book-open mt-1"></i>
+                                <p className='mb-0 ms-1'>4 documents</p>
+                            </div>
+                            <div className="d-flex">
+                                <i class="fa-solid fa-pen-to-square mt-1"></i>
+                                <p className='mb-0 ms-1'>4 quiz</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p>{courseDetails && courseDetails.description}</p>
+                        </div>
                     </div>
-                </div>
 
-                <div className="accordion" id="accordionExample">
-                    {courseDetails && courseDetails.sections && courseDetails.sections.map((section, index) => (
-                        <div className="accordion-item" key={section.id}>
-                            <h2 className="accordion-header" id={`heading${index}`}>
-                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
-                                    <span>Section {section.order}:  </span>{section.name}
+                    <div className="accordion" id="accordionExample">
+                        {courseDetails && courseDetails.sections && courseDetails.sections.map((section, index) => (
+                            <div className="accordion-item" key={section.id}>
+                                <h2 className="accordion-header" id={`heading${index}`}>
+                                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
+                                        <span style={{fontWeight:'bold',marginRight:10}}>Section {section.order}:  </span>{section.name}
+                                    </button>
+                                </h2>
+                                <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
+                                    <div className="accordion-body">
+                                        <div className="d-flex justify-content-end" style={{alignItems:'center'}}>
+                                            <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white'}}>View lesson</button>
+                                        </div>
+                                        {section.lessons.map((lesson, lessonIndex) => (
+                                            <div className="lesson-item" key={lesson.id}>
+                                                <div className='lesson-content d-flex justify-content-start ms-3'>
+                                                    <i className={getIconBasedOnType(lesson.type)}></i>
+                                                    <p className='ms-2'>{lesson.name}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div class="accordion mt-5" id="collapseQuiz" style={{marginBottom:10}}>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOneHundred">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
+                                    Quiz
                                 </button>
                             </h2>
-                            <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
-                                <div className="accordion-body">
-                                    <div className="d-flex justify-content-end">
-                                        <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white' }}>View lesson</button>
-                                    </div>
-                                    {section.lessons.map((lesson, lessonIndex) => (
-                                        <div className="lesson-item" key={lesson.id}>
-                                            <div className='lesson-content d-flex justify-content-start ms-3'>
-                                                <i className={getIconBasedOnType(lesson.type)}></i>
-                                                <p className='ms-2'>{lesson.name}</p>
-                                            </div>
+                            <div id="collapseOneHundred" class="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
+                                <div class="accordion-body">
+                                    {courseDetails && courseDetails.sections && courseDetails.sections.map((section, sectionIndex) => (
+                                        <div className='ms-3' key={section.id}>
+                                            {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
+                                                <div key={quiz.id} style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                                                    <p>Section {sectionIndex + 1}: Quiz {quizIndex + 1}: {quiz.title}</p>
+                                                    <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white',height:23,width:93 }}>View Quiz</button>
+                                                </div>
+                                            ))}
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                <div class="accordion mt-5" id="collapseQuiz">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOneHundred">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
-                                Quiz
-                            </button>
-                        </h2>
-                        <div id="collapseOneHundred" class="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
-                            <div class="accordion-body">
-                                {courseDetails && courseDetails.sections && courseDetails.sections.map((section, sectionIndex) => (
-                                    <div className='ms-3' key={section.id}>
-                                        {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
-                                            <div key={quiz.id}>
-                                                <p>Section {sectionIndex + 1}: Quiz {quizIndex + 1}: {quiz.title}</p>
-                                                <button onClick={() => handleViewQuiz(quiz)} className="btn btn-primary">View Quiz</button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                     </div>
+
                 </div>
-
             </div>
-
         </div>
     );
 }
@@ -535,7 +550,7 @@ export default function StaffModerating() {
     }
 
     return (
-        <div className='staff-moderating mx-5' style={{ backgroundColor: 'white' }}>
+        <div className='staff-moderating mx-5' style={{ backgroundColor: 'white',borderRadius:30 }}>
             <div className="header">
                 <div className="d-flex justify-content-start">
                     <div>
