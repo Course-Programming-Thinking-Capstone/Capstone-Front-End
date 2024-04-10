@@ -62,7 +62,7 @@ const PrivateRoute = ({ page, component: Component }) => {
               if (page === "home")
                 return (
                   <Navigate
-                    to="/teacher"
+                    to="/teacher/syllabuses"
                     state={{ from: location }}
                     replace
                   />

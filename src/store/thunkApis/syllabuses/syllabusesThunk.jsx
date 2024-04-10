@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   filterSyllabus,
+  filterTeacherSyllabus,
   getSyllabusById,
 } from "../../../helper/apis/syllabus/syllabus";
 
@@ -10,12 +11,19 @@ export const filterSyllabusesAsync = createAsyncThunk(
   async (filter, thunkAPI) => {
     try {
       const response = await filterSyllabus(filter);
-      //log
-      console.log(
-        `Fetch data in filterSyllabusesAsync: ${
-          (JSON.stringify(response), null, 2)
-        }`
-      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// filter teacher syllabus list
+export const filterTeacherSyllabusesAsync = createAsyncThunk(
+  "syllabuses/teacher",
+  async (filter, thunkAPI) => {
+    try {
+      const response = await filterTeacherSyllabus(filter);
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

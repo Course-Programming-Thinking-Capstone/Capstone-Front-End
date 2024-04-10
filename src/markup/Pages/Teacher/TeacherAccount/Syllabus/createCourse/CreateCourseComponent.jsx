@@ -6,7 +6,7 @@ import {
 import videoIcon from "../../../../../../images/icon/video-icon.png";
 import quizIcon from "../../../../../../images/icon/quiz-icon.png";
 import documentIcon from "../../../../../../images/icon/document-icon.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/courseThunk";
 import { useNavigate } from "react-router-dom";
 import {
@@ -42,6 +42,9 @@ import {
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
 import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
+import {
+  changeData,
+} from "../../../../../../store/slices/course/componentNumber";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -50,13 +53,17 @@ const CreateCourseComponent = () => {
   const navigate = useNavigate();
 
   const courseId = useSelector(createCourseIdSelector);
-  console.log(`CourseId: ${courseId}`);
+  // console.log(`CourseId: ${courseId}`);\
+
+  //useRef
+  const checkConfirmRef = useRef(null);
 
   //use state
   const [message, setMessage] = useState(null);
   const [coursePictureFile, setCoursePictureFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescriptionInput] = useState(undefined);
+  const [confirm, setConfirm] = useState(false);
 
   const handleFileInputChange = (event) => {
     setCoursePictureFile(event.target.files[0]);
@@ -64,6 +71,10 @@ const CreateCourseComponent = () => {
 
   const handleDescriptionChange = (event) => {
     setDescriptionInput(event.target.value);
+  };
+
+  const handleConfirmChange = () => {
+    setConfirm(!confirm);
   };
 
   const goBack = () => {
@@ -75,8 +86,35 @@ const CreateCourseComponent = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        await dispatch(getCourseByIdAsync(courseId, "manage"));
-        setDescriptionInput(createCourse.description);
+        const response = await dispatch(getCourseByIdAsync(courseId, "manage"));
+        setDescriptionInput(response.payload.description);
+
+        //init data for component number
+        const initSectionNumber = await response.payload.sections.map(
+          (section) => {
+            let videoNumber = 0;
+            let documentNumber = 0;
+            let quizNumber = 0;
+
+            section.lessons.forEach((lesson) => {
+              if (lesson.type === "Video") {
+                videoNumber++;
+              } else if (lesson.type === "Document") {
+                documentNumber++;
+              }
+            });
+
+            quizNumber = section.quizzes.length;
+
+            return {
+              videoNumber,
+              documentNumber,
+              quizNumber,
+            };
+          }
+        );
+
+        dispatch(changeData(initSectionNumber));
       } catch (error) {
         //log
         console.log(`Error: ${JSON.stringify(error, null, 2)}`);
@@ -103,6 +141,15 @@ const CreateCourseComponent = () => {
 
     const updateData = async () => {
       try {
+        if (action === "Post") {
+          if (confirm === false) {
+            checkConfirmRef.current.scrollIntoView({ behavior: "smooth" });
+            return;
+          }
+        }
+
+        setIsLoading(true);
+
         const updatedData = { ...createCourse, description };
 
         await updateCourseApi({
@@ -119,7 +166,7 @@ const CreateCourseComponent = () => {
         }
 
         alert("Update success");
-        if (action === "Save") {
+        if (action === "Post") {
           setTimeout(() => {
             navigate("/teacher/syllabuses");
           }, 0);
@@ -134,6 +181,7 @@ const CreateCourseComponent = () => {
         }
         alert(message);
       } finally {
+        setIsLoading(false);
       }
     };
     updateData();
@@ -148,7 +196,7 @@ const CreateCourseComponent = () => {
               <h5 className="mb">Create course</h5>
               <hr />
             </div>
-            <i class="fa-solid fa-book"></i>
+            <i className="fa-solid fa-book"></i>
           </div>
           <div>
             <Button
@@ -244,43 +292,55 @@ const CreateCourseComponent = () => {
                         <Accordion.Header>{section.name}</Accordion.Header>
                         <Accordion.Body>
                           {/* Content */}
-                          {section.lessons.map((lesson, index) =>
+                          {section.lessons.map((lesson, lessonIndex) =>
                             lesson.type === "Video" ? (
                               <VideoContent
                                 sectionId={section.id}
-                                key={index}
+                                key={lessonIndex}
                                 lesson={lesson}
-                                index={index}
+                                index={lessonIndex}
+                                sectionIndex={index}
                               />
                             ) : (
                               <DocumentContent
                                 sectionId={section.id}
-                                key={index}
+                                key={lessonIndex}
                                 lesson={lesson}
-                                index={index}
+                                index={lessonIndex}
+                                sectionIndex={index}
                               />
                             )
                           )}
 
-                        {section.quizzes.map((quiz, index) => (
-                          <QuizContent
-                            key={index}
-                            sectionId={section.id}
-                            quiz={quiz}
-                            index={index}
-                          />
-                        ))}
+                          {section.quizzes.map((quiz, quizIndex) => (
+                            <QuizContent
+                              key={quizIndex}
+                              sectionId={section.id}
+                              quiz={quiz}
+                              index={quizIndex}
+                              sectionIndex={index}
+                            />
+                          ))}
 
                           <Container>
                             <Row>
                               <Col md="4">
-                                <VideoComponent sectionId={section.id} />
+                                <VideoComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                               <Col md="4">
-                                <DocumentComponent sectionId={section.id} />
+                                <DocumentComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                               <Col md="4">
-                                <AddQuizComponent sectionId={section.id} />
+                                <AddQuizComponent
+                                  sectionId={section.id}
+                                  index={index}
+                                />
                               </Col>
                             </Row>
                           </Container>
@@ -299,52 +359,65 @@ const CreateCourseComponent = () => {
                 {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-            <input
-              type="file"
-              accept="image/jpeg, image/png"
-              onChange={handleFileInputChange}
-              id="fileInput"
-            />
-          </div>
-          <div>
-            <div className="d-flex">
-              <input id="check" type="checkbox" />
-              <label htmlFor="check">
-                Tôi sẽ chịu trách nhiệm nếu nội dung khóa học không chuẩn
-                mực với đạo đức của một giáo viên
-              </label>
-            </div>
-
-            <div className="d-flex justify-content-end">
-              <Button
-                variant="primary"
-                className="mx-3 px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Save")}
-              >
-                SAVE DRAFT
-              </Button>
-              <Button
-                variant="danger"
-                className="px-3 py-2"
-                style={{ borderRadius: "5px" }}
-                onClick={() => saveCourse("Post")}
-              >
-                POST COURSE
-              </Button>
-            </div>
-          </div>
-        </>
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                />
+              </div>
+              <div className="mb-3" ref={checkConfirmRef}>
+                <p>
+                  <input
+                    id="checkConfirm"
+                    type="checkbox"
+                    className="d-none"
+                    checked={confirm}
+                    onChange={handleConfirmChange}
+                  />
+                  <label
+                    htmlFor="checkConfirm"
+                    style={{ cursor: "pointer", marginRight: "5px" }}
+                  >
+                    I will take responsibility if the course content does not
+                    meet the ethical standards of a teacher.
+                  </label>
+                </p>
+              </div>
+              <div>
+                <div className="d-flex justify-content-end">
+                  <Button
+                    variant="primary"
+                    className="mx-3 px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Save")}
+                    type="button"
+                  >
+                    Save Draft
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="px-3 py-2"
+                    style={{ borderRadius: "5px" }}
+                    onClick={() => saveCourse("Post")}
+                    type="button"
+                    disabled={confirm === false}
+                  >
+                    Post Course
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
+        </div>
       </div>
     </div>
-    </div >
   );
 };
 
 export default CreateCourseComponent;
 
-const VideoContent = ({ sectionId, lesson, index }) => {
+const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
   return (
     <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
       <Accordion.Item eventKey={index}>
@@ -356,6 +429,7 @@ const VideoContent = ({ sectionId, lesson, index }) => {
                 width={"22px"}
                 height={"auto"}
                 title="Video icon"
+                alt="Video icon"
               />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
@@ -366,7 +440,12 @@ const VideoContent = ({ sectionId, lesson, index }) => {
               lessonIndex={index}
               video={lesson}
             />
-            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+            <RemoveComponent
+              sectionId={sectionId}
+              lessonIndex={index}
+              sectionIndex={sectionIndex}
+              type={"Video"}
+            />
           </div>
         </div>
 
@@ -380,11 +459,11 @@ const VideoContent = ({ sectionId, lesson, index }) => {
             </Row>
             <Row className="mb-3">
               <Col md="3">
-                <span className="blue fw-bold">Url:</span>{" "}
+                <span className="blue fw-bold">Video:</span>{" "}
               </Col>
               <Col md="9">
                 <a href={lesson.resourceUrl} target="blank">
-                  {lesson.resourceUrl}
+                  Click to view Video
                 </a>
               </Col>
             </Row>
@@ -395,7 +474,7 @@ const VideoContent = ({ sectionId, lesson, index }) => {
   );
 };
 
-const DocumentContent = ({ sectionId, lesson, index }) => {
+const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
   return (
     <Accordion
       defaultActiveKey="0"
@@ -406,7 +485,7 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
         <div className="d-flex justify-content-between align-items-center w-100">
           <Accordion.Header className="lesson-title w-100">
             <div className="d-flex justify-content-start align-items-center">
-              <img src={documentIcon} title="Document icon" />
+              <img src={documentIcon} title="Document icon" alt="Document icon" />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
           </Accordion.Header>
@@ -416,7 +495,12 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
               lessonIndex={index}
               document={lesson}
             />
-            <RemoveComponent sectionId={sectionId} lessonIndex={index} />
+            <RemoveComponent
+              sectionId={sectionId}
+              lessonIndex={index}
+              sectionIndex={sectionIndex}
+              type={"Document"}
+            />
           </div>
         </div>
         <Accordion.Body>
@@ -440,7 +524,7 @@ const DocumentContent = ({ sectionId, lesson, index }) => {
   );
 };
 
-const QuizContent = ({ sectionId, quiz, index }) => {
+const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
   return (
     <Accordion
       defaultActiveKey="0"
@@ -456,6 +540,7 @@ const QuizContent = ({ sectionId, quiz, index }) => {
                 width={"22px"}
                 height={"auto"}
                 title="Quiz icon"
+                alt="Quiz icon"
               />
               <p className="mb-0 mx-2">{quiz.title}</p>
             </div>
@@ -466,7 +551,11 @@ const QuizContent = ({ sectionId, quiz, index }) => {
               quizIndex={index}
               quiz={quiz}
             />
-            <RemoveQuizComponent sectionId={sectionId} index={index} />
+            <RemoveQuizComponent
+              sectionId={sectionId}
+              index={index}
+              sectionIndex={sectionIndex}
+            />
           </div>
         </div>
 

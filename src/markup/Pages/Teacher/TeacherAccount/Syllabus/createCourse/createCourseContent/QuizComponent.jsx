@@ -1,15 +1,7 @@
-import {
-  Button,
-  Modal,
-  Col,
-  Form,
-  InputGroup,
-  Row,
-  FormCheck,
-} from "react-bootstrap";
+import { Modal, Col, Form, Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   addQuestion,
@@ -23,10 +15,15 @@ import {
 import quizIcon from "../../../../../../../images/icon/quiz-icon.png";
 import removeIcon from "../../../../../../../images/icon/remove-icon.png";
 import plusIcon from "../../../../../../../images/icon/plus_circle.png";
+import { useSelector } from "react-redux";
+import { componentNumberSelector } from "../../../../../../../store/selector";
+import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
 
 //Add quiz
-export const AddQuizComponent = ({ sectionId }) => {
+export const AddQuizComponent = ({ sectionId, index }) => {
   const dispatch = useDispatch();
+
+  const componentNumber = useSelector(componentNumberSelector);
 
   //useState
   const [show, setShow] = useState(false);
@@ -76,7 +73,19 @@ export const AddQuizComponent = ({ sectionId }) => {
       if (quiz.numberOfQuestion === undefined) quiz.numberOfQuestion = 100;
     }
 
+    const updatedComponentNumber = {
+      ...componentNumber[index],
+      quizNumber: componentNumber[index].quizNumber + 1,
+    };
+
     dispatch(addQuiz({ sectionId, quiz }));
+
+    dispatch(
+      changeComponentNumber({
+        index: index,
+        componentNumber: updatedComponentNumber,
+      })
+    );
     setShow(false);
   };
 
@@ -114,15 +123,23 @@ export const AddQuizComponent = ({ sectionId }) => {
 
   return (
     <>
-      <button className="teacher-button" onClick={handleShow}>
+      <button
+        className="teacher-button"
+        onClick={handleShow}
+        disabled={componentNumber[index]?.quizNumber === 2}
+        title="Add quiz"
+      >
         <div className="d-flex justify-content-start align-items-center">
           <img
             src={quizIcon}
             width={"22px"}
             height={"auto"}
+            alt="Quiz icon"
             title="Quiz icon"
           />
-          <p className="mb-0 mx-2">Quiz</p>
+          <p className="mb-0 mx-2">
+            Quiz ({componentNumber[index]?.quizNumber ?? 0}/2)
+          </p>
         </div>
       </button>
 
@@ -589,17 +606,31 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
 };
 
 //remove quiz
-export const RemoveQuizComponent = ({ sectionId, index }) => {
+export const RemoveQuizComponent = ({ sectionId, index, sectionIndex }) => {
   const dispatch = useDispatch();
 
+  const componentNumber = useSelector(componentNumberSelector);
+
   const handleDelete = () => {
+    const updatedComponentNumber = {
+      ...componentNumber[sectionIndex],
+      quizNumber: componentNumber[sectionIndex].quizNumber - 1,
+    };
+
     dispatch(removeQuiz({ sectionId: sectionId, index: index }));
+
+    dispatch(
+      changeComponentNumber({
+        index: sectionIndex,
+        componentNumber: updatedComponentNumber,
+      })
+    );
   };
 
   return (
     <>
       <button onClick={handleDelete} className="teacher-button-remove">
-        <img src={removeIcon} title="Remove" />
+        <img src={removeIcon} title="Remove" alt="Remove icon" />
       </button>
     </>
   );
@@ -624,6 +655,13 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
   };
 
   const handleRemoveOption = (remove, index) => {
+    if (index <= correctAnswerIndex) {
+      let updateIndex = correctAnswerIndex - 1;
+      if (updateIndex < 0) {
+        updateIndex = 0;
+      }
+      setCorrectAnswerIndex(updateIndex);
+    }
     remove(index);
   };
 
@@ -693,7 +731,12 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
         style={{ color: "white", fontWeight: "normal" }}
       >
         <div className="d-flex justify-content-between align-items-center">
-          <img className="mx-1" src={plusIcon} title="Add question" />
+          <img
+            className="mx-1"
+            src={plusIcon}
+            title="Add question"
+            alt="Plus icon"
+          />
           <p className="mb-0 mx-1">Add Question</p>
         </div>
       </button>
@@ -855,6 +898,7 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
                               className="mx-1"
                               src={plusIcon}
                               title="Add option"
+                              alt="Plus icon"
                             />
                             <p className="mb-0 mx-1">Add Option</p>
                           </div>
@@ -917,6 +961,13 @@ export const UpdateQuestionComponent = ({
   };
 
   const handleRemoveOption = (remove, index) => {
+    if (index <= correctAnswerIndex) {
+      let updateIndex = correctAnswerIndex - 1;
+      if (updateIndex < 0) {
+        updateIndex = 0;
+      }
+      setCorrectAnswerIndex(updateIndex);
+    }
     remove(index);
   };
 
@@ -1155,6 +1206,7 @@ export const UpdateQuestionComponent = ({
                               className="mx-1"
                               src={plusIcon}
                               title="Add option"
+                              alt="Plus icon"
                             />
                             <p className="mb-0 mx-1">Add Option</p>
                           </div>
@@ -1210,7 +1262,7 @@ export const RemoveQuestionComponent = ({
   return (
     <>
       <button onClick={handleDelete} className="teacher-button-remove">
-        <img src={removeIcon} title="Remove" />
+        <img src={removeIcon} title="Remove" alt="Remove icon" />
       </button>
     </>
   );

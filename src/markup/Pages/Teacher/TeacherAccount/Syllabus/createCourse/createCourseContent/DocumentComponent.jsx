@@ -1,4 +1,4 @@
-import { Button, Modal, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Modal, Col, Form,  Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
@@ -9,9 +9,13 @@ import {
 } from "../../../../../../../store/slices/course/createCourseSlice";
 
 import "./../CreateCourse.css";
+import { useSelector } from "react-redux";
+import { componentNumberSelector } from "../../../../../../../store/selector";
+import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
 
-const DocumentComponent = ({ sectionId }) => {
+const DocumentComponent = ({ sectionId, index }) => {
   const dispatch = useDispatch();
+  const componentNumber = useSelector(componentNumberSelector);
 
   const [show, setShow] = useState(false);
 
@@ -28,7 +32,20 @@ const DocumentComponent = ({ sectionId }) => {
       content: content.trim(),
       type: "Document",
     };
+
+    const updatedComponentNumber = {
+      ...componentNumber[index],
+      documentNumber: componentNumber[index].documentNumber + 1,
+    };
+
     dispatch(addDocument({ sectionId: sectionId, document: document }));
+
+    dispatch(
+      changeComponentNumber({
+        index: index,
+        componentNumber: updatedComponentNumber,
+      })
+    );
     setShow(false);
   };
 
@@ -53,11 +70,18 @@ const DocumentComponent = ({ sectionId }) => {
 
   return (
     <>
-      <button className="teacher-button" onClick={handleShow}>
+      <button
+        className="teacher-button"
+        onClick={handleShow}
+        disabled={componentNumber[index]?.documentNumber === 3}
+        title="Add document"
+      >
         <div className="d-flex justify-content-start align-items-center">
           {/* <img src={documentIcon} title="Document icon" /> */}
           <i className="fa-solid fa-book-open py-0"></i>
-          <p className="mb-0 mx-2">Document</p>
+          <p className="mb-0 mx-2">
+            Document ({componentNumber[index]?.documentNumber}/3)
+          </p>
         </div>
       </button>
 
