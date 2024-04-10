@@ -43,12 +43,13 @@ import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDe
 import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
 import StaffModerating from "./markup/Pages/Staff/StaffModerating/StaffModerating";
-import Classes from './markup/Pages/Classes';
+import Classes from "./markup/Pages/Classes";
 import ClassesDetail from "./markup/Pages/ClassesDetail";
 import CoursePayment from "./markup/Pages/CoursePayment";
 import PaymentSuccess from "./markup/Pages/PaymentSuccess";
 import CoursesPlan from "./markup/Pages/CoursesPlan";
 import { NotFound } from "./markup/Pages/NotFound/NotFound";
+import { EditText } from "./markup/Pages/TestPage/EditText";
 
 // function App() {
 // 	return (
@@ -139,26 +140,48 @@ const App = () => {
             </Route>
 
             {/* Staff pages */}
-            <Route path="/staff" element={<PrivateRoute page="staff" component={<Staff />} />}>
-
+            <Route
+              path="/staff"
+              element={<PrivateRoute page="staff" component={<Staff />} />}
+            >
               <Route
                 path="staff-order"
-                element={<PrivateRoute page="staff/staff-order" component={<StaffOrder />} />}
+                element={
+                  <PrivateRoute
+                    page="staff/staff-order"
+                    component={<StaffOrder />}
+                  />
+                }
               />
 
               <Route
                 path="staff-order-detail/:orderId"
-                element={<PrivateRoute page="staff/staff-order-detail" component={<StaffOrderDetail />} />}
+                element={
+                  <PrivateRoute
+                    page="staff/staff-order-detail"
+                    component={<StaffOrderDetail />}
+                  />
+                }
               />
 
               <Route
                 path="class"
-                element={<PrivateRoute page="staff/class" component={<StaffClassDetail />} />}
+                element={
+                  <PrivateRoute
+                    page="staff/class"
+                    component={<StaffClassDetail />}
+                  />
+                }
               />
 
               <Route
                 path="moderating"
-                element={<PrivateRoute page="staff/moderating" component={<StaffModerating />} />}
+                element={
+                  <PrivateRoute
+                    page="staff/moderating"
+                    component={<StaffModerating />}
+                  />
+                }
               />
             </Route>
 
@@ -167,10 +190,7 @@ const App = () => {
             <Route
               path="/teacher"
               element={
-                <PrivateRoute
-                  page="teacher"
-                  component={<TeacherAccount />}
-                />
+                <PrivateRoute page="teacher" component={<TeacherAccount />} />
               }
             />
 
@@ -246,10 +266,7 @@ const App = () => {
             <Route
               path="teacher/quizzes"
               element={
-                <PrivateRoute
-                  page="teacher/quizzes"
-                  component={<Quiz />}
-                />
+                <PrivateRoute page="teacher/quizzes" component={<Quiz />} />
               }
             />
 
@@ -266,12 +283,7 @@ const App = () => {
             {/* Parent pages  */}
             <Route
               path="/classes"
-              element={
-                <PrivateRoute
-                  page="classes"
-                  component={<Classes />}
-                />
-              }
+              element={<PrivateRoute page="classes" component={<Classes />} />}
             />
 
             <Route
@@ -287,10 +299,7 @@ const App = () => {
             <Route
               path="/payment"
               element={
-                <PrivateRoute
-                  page="payment"
-                  component={<CoursePayment />}
-                />
+                <PrivateRoute page="payment" component={<CoursePayment />} />
               }
             />
             <Route
@@ -315,11 +324,11 @@ const App = () => {
             />
 
             {/* Test page */}
-            <Route path="/test" element={<DragAndDropComponent />} />
+            <Route path="/test" element={<EditText />} />
 
             {/* Error pages  */}
             <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            <Route path="*" element={<Navigate to="/not-found"  />} />
           </Routes>
         </div>
       </BrowserRouter>

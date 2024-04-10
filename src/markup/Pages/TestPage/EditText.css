@@ -1,0 +1,29 @@
+.editText-container {
+  width: 70%;
+  height: 80vh;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.editText-editor,
+.editText-preview {
+  border: 1px solid black;
+  padding: 10px;
+  min-height: 70vh;
+}
+
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}
+
+.editText-editor .ql-editor {
+    height: 60vh;
+}
