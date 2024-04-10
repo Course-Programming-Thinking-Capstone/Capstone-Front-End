@@ -9,7 +9,6 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [reEnteredPassword, setReEnteredPassword] = useState('');
     const [email, setEmail] = useState('');
-
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [emailError, setEmailError] = useState('');

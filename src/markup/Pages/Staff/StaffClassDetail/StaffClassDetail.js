@@ -2,7 +2,8 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactPaginate from 'react-paginate';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function StaffClassDetail() {
     const [view, setView] = useState('detail');
@@ -16,9 +17,9 @@ export default function StaffClassDetail() {
     const [classIdForForm, setClassIdForForm] = useState(null);
 
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
-        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid black', width: '150px', height: '30px' }} >
+        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid #F69E4A', width: '150px', height: '30px' }} >
             <div>
-                {value}
+                {formatDate(value)}
             </div>
             <div>
                 <i className="fa-regular fa-calendar-days" />
@@ -34,6 +35,18 @@ export default function StaffClassDetail() {
         const today = new Date().toISOString().split('T')[0];
         const [courses, setCourses] = useState([]);
         const [selectedCourseId, setSelectedCourseId] = useState('');
+        const [scheduleCreated, setScheduleCreated] = useState(false);
+        const [classDetails, setClassDetails] = useState(null);
+        const [isScheduleSectionEnabled, setIsScheduleSectionEnabled] = useState(false);
+        const [createdClassDetails, setCreatedClassDetails] = useState(null);
+        const [createdClassId, setCreatedClassId] = useState(null); const [checkedDays, setCheckedDays] = useState({
+            Monday: false,
+            Tuesday: false,
+            Wednesday: false,
+            Thursday: false,
+            Friday: false,
+            Saturday: false,
+        });
 
         useEffect(() => {
             const fetchCourses = async () => {
@@ -62,7 +75,6 @@ export default function StaffClassDetail() {
             fetchCourses();
         }, [accessToken]); // accessToken is a dependency here
 
-
         const formatBirthday = (date) => {
             const d = new Date(date);
             let month = '' + (d.getMonth() + 1),
@@ -80,7 +92,16 @@ export default function StaffClassDetail() {
         const handleCreateClass = async () => {
             // Ensure all fields are filled out (basic validation)
             if (!classCode || !openDay || !closeDay) {
-                alert('Please fill out all fields');
+                toast.error('Please fill out all fields', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 return;
             }
 
@@ -91,6 +112,7 @@ export default function StaffClassDetail() {
                 courseId: selectedCourseId
             };
 
+            console.log('data: ', data);
             try {
                 const response = await fetch('https://www.kidpro-production.somee.com/api/v1/classes', {
                     method: 'POST',
@@ -102,91 +124,37 @@ export default function StaffClassDetail() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to create class');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to create class');
                 }
                 const responseData = await response.json();
-                console.log('responseData: ', responseData);
+                console.log('createClass: ', responseData);
 
-                // If the API call was successful, proceed to the next component
-                onNext(responseData);
+                setIsScheduleSectionEnabled(true);
+                setCreatedClassDetails(responseData);
+                toast.success('Create class successfully', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             } catch (error) {
-                alert(error.message);
+                toast.error(error.message, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }
         };
-
-        return (
-            <div className='staff-create-class mx-5'>
-                <div className="header">
-                    <div className="d-flex justify-content-between">
-                        <div className="d-flex justify-content-start">
-                            <div>
-                                <h5 className='mb'>Class detail</h5>
-                                <hr />
-                            </div>
-                            <i class="fa-solid fa-bell"></i>
-                        </div>
-                        <div>
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
-                        </div>
-                    </div>
-                </div>
-                <div className='mt-3'>
-                    <p className='mb-2' style={{ color: '#F69E4A' }}>Create class</p>
-                    <div className='p-5'>
-                        <p className='blue mb-1'>Class's code</p>
-                        <input type="text" placeholder="Type class's code. Ex: VNR202" value={classCode} onChange={e => setClassCode(e.target.value)} style={{ width: '300px' }} />
-
-                        <p className='blue mb-1 mt-4'>Select course</p>
-                        <select value={selectedCourseId} onChange={(e) => setSelectedCourseId(e.target.value)}>
-                            {courses.map(course => (
-                                <option key={course.id} value={course.id}>{course.name}</option>
-                            ))}
-                        </select>
-
-
-                        <p className='blue mb-1 mt-4'>Duration start class</p>
-                        <div className='d-flex justify-content-center'>
-                            <div className="d-flex">
-                                <DatePicker
-                                    selected={openDay}
-                                    onChange={(date) => setOpenDay(date)}
-                                    minDate={today}
-                                    enableTabLoop={false}
-                                    customInput={<CustomInput />} />
-
-                            </div>
-                            <i style={{ fontSize: '18px' }} class="fa-solid fa-arrow-right mx-3 mt-1"></i>
-                            <div className="d-flex">
-                                <DatePicker
-                                    selected={closeDay}
-                                    onChange={(date) => setCloseDay(date)}
-                                    minDate={openDay || today}
-                                    enableTabLoop={false}
-                                    customInput={<CustomInput />} />
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-end'>
-                            <button className='mt-4' style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateClass}>Create class</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    const CreateSchedule = ({ onBack, classData, setView }) => {
-        const [checkedDays, setCheckedDays] = useState({
-            Monday: false,
-            Tuesday: false,
-            Wednesday: false,
-            Thursday: false,
-            Friday: false,
-            Saturday: false,
-        });
-        const [scheduleCreated, setScheduleCreated] = useState(false);
-        const [classDetails, setClassDetails] = useState(null);
-        const accessToken = localStorage.getItem('accessToken');
-        const [createdClassId, setCreatedClassId] = useState(null);
 
         const toggleDay = (day) => {
             setCheckedDays(prevState => ({
@@ -196,15 +164,12 @@ export default function StaffClassDetail() {
         };
 
         const getCheckedDays = () => {
-            // This function could be used to get the days that are checked
-            // For instance, before making a POST request
             return Object.entries(checkedDays).filter(([day, isChecked]) => isChecked).map(([day]) => day);
         };
 
         const firstRowDays = Object.entries(checkedDays).slice(0, 3);
         const secondRowDays = Object.entries(checkedDays).slice(3);
 
-        const [roomUrl, setRoomUrl] = useState('');
         const [selectedSlotId, setSelectedSlotId] = useState(null);
 
         const renderRow = (days) => (
@@ -227,13 +192,12 @@ export default function StaffClassDetail() {
             return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         };
 
-        const SlotTimeSelection = () => {
-            const slotDuration = Number(classData.slotDuration);
-            if (isNaN(slotDuration)) {
-                // If slotTime is not a valid number, log an error and return early
-                console.error('slotTime is not a valid number:', classData.slotTime);
-                return <p>Error: Slot time is invalid.</p>;
+        const SlotTimeSelection = ({ classDetails }) => {
+            if (!classDetails) {
+                return <p>Loading or not available...</p>;
             }
+
+            const slotDuration = Number(classDetails.slotDuration);
 
             const slots = [
                 { id: 1, start: '8:00' },
@@ -277,11 +241,11 @@ export default function StaffClassDetail() {
         if (!classData) {
             return <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
-            </div>; // Or some other placeholder content
+            </div>;
         }
 
         const handleCreateSchedule = async () => {
-            const checkedDaysArray = getCheckedDays(); // This gets the list of checked days
+            const checkedDaysArray = getCheckedDays();
             const days = checkedDaysArray.length > 0 ? checkedDaysArray : ["NoDay"];
             console.log('days: ', days);
             console.log('classData.classId: ', classData.classId);
@@ -315,22 +279,20 @@ export default function StaffClassDetail() {
                 console.log(responseData);
                 setCreatedClassId(classData.classId);
                 setScheduleCreated(true);
+                onNext(responseData);
             } catch (error) {
                 alert(`Error: ${error.message}`);
             }
         };
 
-        if (scheduleCreated && createdClassId) {
-            return <ClassContent classId={createdClassId} setView={setView} />;
-        }
-
         return (
-            <div className='staff-schedule mx-5'>
+            <div className='staff-create-class mx-5'>
+                <ToastContainer />
                 <div className="header">
                     <div className="d-flex justify-content-between">
                         <div className="d-flex justify-content-start">
                             <div>
-                                <h5 className='mb'>Create schedule</h5>
+                                <h5 className='mb'>Class detail</h5>
                                 <hr />
                             </div>
                             <i class="fa-solid fa-bell"></i>
@@ -340,28 +302,96 @@ export default function StaffClassDetail() {
                         </div>
                     </div>
                 </div>
-                <div className='mt-3'>
-                    <p className='mb-2' style={{ color: '#F69E4A' }}>Create schedule</p>
-                    <div className='p-5'>
-                        <div className="d-flex">
-                            <p className='blue'>Slot duration</p>
-                            <span className='ms-5'>{classData.slotDuration} minutes/slot</span>
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Create class
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div className='p-5'>
+                                    <p className='blue mb-1'>Class's code</p>
+                                    <input className='ms-3'
+                                        type="text"
+                                        placeholder="Type class's code. Ex: VNR202"
+                                        value={classCode} onChange={e => setClassCode(e.target.value)}
+                                        style={{ width: '300px', height: '35px', outline: 'none', border: '1px solid #F69E4A', borderRadius: '8px' }} />
+
+
+                                    <p className='blue mb-1 mt-4'>Select course</p>
+                                    <select className='ms-3' style={{ width: '300px', height: '35px', outline: 'none', border: '1px solid #F69E4A', borderRadius: '8px' }}
+                                        value={selectedCourseId} onChange={(e) => setSelectedCourseId(e.target.value)}>
+                                        {courses.map(course => (
+                                            <option key={course.id} value={course.id}>{course.name}</option>
+                                        ))}
+                                    </select>
+
+
+                                    <p className='blue mb-1 mt-4'>Duration start class</p>
+                                    <div className='d-flex justify-content-center'>
+                                        <div className="d-flex">
+                                            <p className='mt-1 me-2'>Start</p>
+                                            <DatePicker
+                                                selected={openDay}
+                                                onChange={(date) => setOpenDay(date)}
+                                                minDate={today}
+                                                enableTabLoop={false}
+                                                customInput={<CustomInput />} />
+
+                                        </div>
+                                        <i style={{ fontSize: '18px' }} class="fa-solid fa-arrow-right mx-3 mt-2"></i>
+                                        <div className="d-flex">
+                                            <p className='mt-1 me-2'>End</p>
+                                            <DatePicker
+                                                selected={closeDay}
+                                                onChange={(date) => setCloseDay(date)}
+                                                minDate={openDay || today}
+                                                enableTabLoop={false}
+                                                customInput={<CustomInput />} />
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-end'>
+                                        <button className='mt-4' style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateClass}>Create class</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p className='blue'>Study day</p>
-                        <div className="study-day">
-                            {renderRow(firstRowDays)}
-                            {renderRow(secondRowDays)}
-                        </div>
-                        <p className='blue'>Slot time</p>
-                        <div>
-                            <SlotTimeSelection />
-                        </div>
-                        <div className="d-flex justify-content-end">
-                            <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateSchedule}>Create schedule</button>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button className="accordion-button collapsed" type="button"
+                                data-bs-toggle={isScheduleSectionEnabled ? "collapse" : ""}
+                                data-bs-target="#collapseTwo" aria-expanded="false"
+                                aria-controls="collapseTwo" disabled={!isScheduleSectionEnabled}>
+                                Create schedule
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div className='p-5'>
+                                    <div className="d-flex">
+                                        <p className='blue'>Slot duration</p>
+                                        <span className='ms-5'>{ createdClassDetails && createdClassDetails.slotDuration} minutes/slot</span>
+                                    </div>
+                                    <p className='blue'>Study day</p>
+                                    <div className="study-day">
+                                        {renderRow(firstRowDays)}
+                                        {renderRow(secondRowDays)}
+                                    </div>
+                                    <p className='blue'>Slot time</p>
+                                    <div>
+                                        {createdClassDetails && <SlotTimeSelection classDetails={createdClassDetails} />}
+                                    </div>
+                                    <div className="d-flex justify-content-end">
+                                        <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateSchedule}>Create schedule</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         )
     }
@@ -570,7 +600,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const TeacherForm = ({ onBack}) => {
+    const TeacherForm = ({ onBack }) => {
         const accessToken = localStorage.getItem('accessToken');
         const [teachers, setTeachers] = useState([]);
         const [currentClass, setCurrentClass] = useState([]);
@@ -1080,18 +1110,6 @@ export default function StaffClassDetail() {
         setView('classContent');
     };
 
-    const navigateToTeacherForm = (classId) => {
-        setClassIdForTeacherForm(classId);
-        setView('addTeacher');
-        console.log(classId);
-    };
-
-    const navigateToStudentForm = (classId) => {
-        setClassIdForStudentForm(classId);
-        setView('addStudent');
-    };
-
-    // Adjust the navigateToView function to handle classId for navigation
     const navigateToView = (viewName, classId = null) => {
         if (classId) {
             setClassIdForForm(classId);
@@ -1133,25 +1151,27 @@ export default function StaffClassDetail() {
         setCurrentPage(data.selected + 1);
     };
 
-    const formatDate = (dateString) => {
-        const [year, month, day] = dateString.split('/');
-        return `${day}/${month}/${year}`;
+    const formatDate = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        let day = '' + d.getDate(),
+            month = '' + (d.getMonth() + 1),
+            year = d.getFullYear();
+
+        if (day.length < 2)
+            day = '0' + day;
+        if (month.length < 2)
+            month = '0' + month;
+
+        return [day, month, year].join('/');
     };
+
 
     const renderView = () => {
         switch (view) {
             case 'createClass':
                 return <CreateClass
-
-                    onBack={() => setView('detail')}
-                    onNext={(data) => {
-                        setClassData(data); // This sets the state with the data from CreateClass
-                        setView('createSchedule'); // This changes the view to createSchedule
-                    }} />;
-            case 'createSchedule':
-                return <CreateSchedule
-
-                    onBack={() => setView('createClass')} classData={classData} setView={setView} />;
+                    onBack={() => setView('detail')} />;
             case 'addTeacher':
                 return <TeacherForm classId={classIdForTeacherForm} onBack={() => setView('classContent')} />;
             case 'addStudent':
