@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  componentNumberSelector,
   createCourseIdSelector,
   createCourseSelector,
 } from "../../../../../../store/selector";
@@ -44,14 +43,12 @@ import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
 import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
 import {
-  changeComponentNumber,
   changeData,
 } from "../../../../../../store/slices/course/componentNumber";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
   const createCourse = useSelector(createCourseSelector);
-  const componentNumber = useSelector(componentNumberSelector);
 
   const navigate = useNavigate();
 
@@ -432,6 +429,7 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
                 width={"22px"}
                 height={"auto"}
                 title="Video icon"
+                alt="Video icon"
               />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
@@ -461,11 +459,11 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
             </Row>
             <Row className="mb-3">
               <Col md="3">
-                <span className="blue fw-bold">Url:</span>{" "}
+                <span className="blue fw-bold">Video:</span>{" "}
               </Col>
               <Col md="9">
                 <a href={lesson.resourceUrl} target="blank">
-                  {lesson.resourceUrl}
+                  Click to view Video
                 </a>
               </Col>
             </Row>
@@ -487,7 +485,7 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
         <div className="d-flex justify-content-between align-items-center w-100">
           <Accordion.Header className="lesson-title w-100">
             <div className="d-flex justify-content-start align-items-center">
-              <img src={documentIcon} title="Document icon" />
+              <img src={documentIcon} title="Document icon" alt="Document icon" />
               <p className="mb-0 mx-2">{lesson.name}</p>
             </div>
           </Accordion.Header>
@@ -542,6 +540,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
                 width={"22px"}
                 height={"auto"}
                 title="Quiz icon"
+                alt="Quiz icon"
               />
               <p className="mb-0 mx-2">{quiz.title}</p>
             </div>

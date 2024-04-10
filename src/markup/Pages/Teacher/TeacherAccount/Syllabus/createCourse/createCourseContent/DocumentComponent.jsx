@@ -1,4 +1,4 @@
-import { Button, Modal, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Modal, Col, Form,  Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
@@ -74,6 +74,7 @@ const DocumentComponent = ({ sectionId, index }) => {
         className="teacher-button"
         onClick={handleShow}
         disabled={componentNumber[index]?.documentNumber === 3}
+        title="Add document"
       >
         <div className="d-flex justify-content-start align-items-center">
           {/* <img src={documentIcon} title="Document icon" /> */}

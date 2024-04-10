@@ -1,4 +1,4 @@
-import { Button, Modal, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Modal, Col, Form, Row } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
@@ -89,7 +89,8 @@ const VideoComponent = ({ sectionId, index }) => {
             src={videoIcon}
             width={"22px"}
             height={"auto"}
-            title="Video icon"
+            title="Add video" 
+            alt="Video icon"
           />
           <p className="mb-0 mx-2">
             Video ({componentNumber[index]?.videoNumber}/5)
@@ -430,7 +431,7 @@ export const RemoveComponent = ({
   return (
     <>
       <button onClick={handleDelete} className="teacher-button-remove">
-        <img src={removeIcon} title="Remove" />
+        <img src={removeIcon} title="Remove" alt="Remove icon"/>
       </button>
     </>
   );
