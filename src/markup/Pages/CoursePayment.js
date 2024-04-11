@@ -35,76 +35,44 @@ export default function CoursePayment() {
         return price.toLocaleString('vi-VN') + ' đ';
     }
 
+    const fetchChildrenData = async () => {
+        setLoading(true);
+        try {
+            if (!classId) {
+                console.error('classId is not available');
+                return;
+            }
+
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setChildren(data.map(child => ({
+                id: child.id,
+                name: child.fullName,
+                dateOfBirth: child.dateOfBirth,
+                gender: child.gender
+            })));
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
-        const fetchChildrenData = async () => {
-            setLoading(true);
-            try {
-                if (!classId) {
-                    console.error('classId is not available');
-                    return;
-                }
-
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                setChildren(data.map(child => ({
-                    id: child.id,
-                    name: child.fullName,
-                    dateOfBirth: child.dateOfBirth,
-                    gender: child.gender
-                })));
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchChildrenData();
-    }, [classId]);
-
-    useEffect(() => {
-        const fetchParentEmail = async () => {
-            setLoading(true);
-            try {
-
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/parents/contact`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                setParentEmail(data.email);
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchParentEmail();
-    }, [classId]);
-
-
-    useEffect(() => {
-        console.log(children);
-    }, [children]);
+    }, [classId, accessToken]);
 
     useEffect(() => {
         const fetchCurrentCourse = async () => {
@@ -140,6 +108,35 @@ export default function CoursePayment() {
         fetchCurrentCourse();
     }, [courseId, classId]); // Add courseId and classId as dependencies to re-fetch if they change
 
+    useEffect(() => {
+        const fetchCurrentEmail = async () => {
+
+            setLoading(true);
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/parents/contact`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('curentEmail: ', data.email);
+                setParentEmail(data.email);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCurrentEmail();
+    }, [courseId, classId]);
 
     const handleSave = async () => {
         const formatBirthday = (date) => {

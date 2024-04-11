@@ -119,6 +119,12 @@ const PendingOrder = ({ orderDetail }) => {
     const [accountCreationResponse, setAccountCreationResponse] = useState(null);
     const [note, setNote] = useState('');
 
+    const [creatingAccountLoading, setCreatingAccountLoading] = useState(false);
+    const [requestingEmailLoading, setRequestingEmailLoading] = useState(false);
+    const [sendingEmailLoading, setSendingEmailLoading] = useState(false);
+    const [confirmingOrderLoading, setConfirmingOrderLoading] = useState(false);
+
+
     const handleBackClick = () => {
         navigate(-1);
     };
@@ -139,6 +145,7 @@ const PendingOrder = ({ orderDetail }) => {
     };
 
     const requestEmailForStudent = async (parentId, studentName) => {
+        setRequestingEmailLoading(true);
         const url = `https://www.kidpro-production.somee.com/api/v1/staffs/parent/request-email?parentId=${parentId}&studentName=${encodeURIComponent(studentName)}`;
         try {
             const response = await fetch(url, {
@@ -181,16 +188,35 @@ const PendingOrder = ({ orderDetail }) => {
                 progress: undefined,
                 theme: "light",
             });
+        } finally {
+            setRequestingEmailLoading(false); // End loading
         }
     };
 
     const createStudentAccount = async () => {
+        if (!username || !password) {
+            toast.warn('Please fill in username and password', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return; // Stop the function execution here
+        }
+
+        setCreatingAccountLoading(true);
+
         const url = `https://www.kidpro-production.somee.com/api/v1/staffs/student`;
         const payload = {
             studendId: currentStudentId,
             userName: username,
             password: password,
-            orderId: orderDetail.orderId
+            orderId: orderDetail.orderId,
+            classId: orderDetail.classId
         };
 
         try {
@@ -207,7 +233,6 @@ const PendingOrder = ({ orderDetail }) => {
                 throw new Error('Account creation failed with status: ' + response.status);
             }
 
-            // Here you could clear the username and password from state if needed
             setUsername('');
             setPassword('');
 
@@ -244,10 +269,13 @@ const PendingOrder = ({ orderDetail }) => {
                 progress: undefined,
                 theme: "light",
             });
+        } finally {
+            setCreatingAccountLoading(false); // End loading
         }
     };
 
     const handleSendEmail = async () => {
+        setSendingEmailLoading(true)
         const url = `https://www.kidpro-production.somee.com/api/v1/staffs/parent/send-email`;
         const payload = {
             studentName: accountCreationResponse.studentName,
@@ -289,10 +317,13 @@ const PendingOrder = ({ orderDetail }) => {
                 progress: undefined,
                 theme: "light",
             });
+        } finally {
+            setSendingEmailLoading(false);
         }
     };
 
     const handleOrderConfirmation = async () => {
+        setConfirmingOrderLoading(true);
         const url = `https://www.kidpro-production.somee.com/api/v1/orders/confirm/${orderDetail.orderId}`;
 
         try {
@@ -322,6 +353,8 @@ const PendingOrder = ({ orderDetail }) => {
                 progress: undefined,
                 theme: "light",
             });
+        } finally {
+            setConfirmingOrderLoading(false);
         }
     };
 
@@ -428,15 +461,23 @@ const PendingOrder = ({ orderDetail }) => {
                                         <h4 className='orange mb-1'>Student's information</h4>
                                         <div className='px-3'>
                                             <p className='mb-1 blue'>Student's name</p>
-                                            <div className='ps-2' style={{ backgroundColor: '#D4D4D4' }}>{currentStudentDetail.fullName}</div>
+                                            <div className='ps-2 py-2' style={{ backgroundColor: '#D4D4D4', borderRadius: '8px' }}>{currentStudentDetail.fullName}</div>
                                             <p className='mb-1 blue'>Date of birth</p>
-                                            <div className='ps-2' style={{ backgroundColor: '#D4D4D4' }}>{currentStudentDetail.dateOfBirth}</div>
+                                            <div className='ps-2 py-2' style={{ backgroundColor: '#D4D4D4', borderRadius: '8px' }}>{currentStudentDetail.dateOfBirth}</div>
                                             <p className='mb-1 blue'>Email</p>
                                             <div>{currentStudentDetail.email ?
                                                 (
                                                     <div style={{ backgroundColor: '#D4D4D4' }}>{currentStudentDetail.email}</div>
                                                 ) : (
-                                                    <button onClick={() => requestEmailForStudent(orderDetail.parentId, currentStudentDetail.fullName)} style={{ backgroundColor: '#FF8A00', border: 'none', borderRadius: '8px', color: 'white', height: '35px', width: '200px' }}>Request to create email</button>
+                                                    <button onClick={() => requestEmailForStudent(orderDetail.parentId, currentStudentDetail.fullName)} style={{ backgroundColor: '#FF8A00', border: 'none', borderRadius: '8px', color: 'white', height: '35px', width: '200px' }}>
+                                                        {requestingEmailLoading ? (
+                                                            <div className="spinner-border text-light" role="status">
+                                                                <span className="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        ) : (
+                                                            "Request to create email"
+                                                        )}
+                                                    </button>
                                                 )
                                             }</div>
                                         </div>
@@ -444,14 +485,24 @@ const PendingOrder = ({ orderDetail }) => {
                                         <h4 className='orange mb-1 mt-2'>Create account</h4>
                                         <div className='px-3'>
                                             <p className='mb-1 blue'>Username</p>
-                                            <input style={{ outline: 'none' }} type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
+                                            <input className='ps-1 py-1' style={{ outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }} type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
                                             <p className='mb-1 blue'>Password</p>
-                                            <input style={{ outline: 'none' }} type="text" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                                            <input className='ps-1 py-1' style={{ outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }} type="text" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
                                         </div>
 
                                         <div className="d-flex justify-content-end">
-                                            <button className='me-3' style={{ backgroundColor: 'white', color: '#F15C58', border: 'none', borderRadius: '8px' }} onClick={handleClose}>Cancel</button>
-                                            <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={createStudentAccount}>Create</button>
+                                            <button className='me-3' style={{ backgroundColor: 'white', color: '#F15C58', border: 'none', borderRadius: '8px', height: '30px', width: '100px' }} onClick={handleClose}>Cancel</button>
+
+                                            <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '30px', width: '100px' }} onClick={createStudentAccount}>
+                                                {creatingAccountLoading ? (
+                                                    <div className="spinner-border text-light" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </div>
+                                                ) : (
+                                                    "Create"
+                                                )}
+                                            </button>
+
                                         </div>
                                     </div>
                                 )}
@@ -466,19 +517,19 @@ const PendingOrder = ({ orderDetail }) => {
                                         <div className='ps-3'>
                                             <div className="d-flex justify-content-start">
                                                 <p>Student's name: </p>
-                                                <p>{accountCreationResponse.studentName}</p>
+                                                <p className='ms-3'>{accountCreationResponse.studentName}</p>
                                             </div>
                                             <div className="d-flex justify-content-start">
                                                 <p>Date of birth: </p>
-                                                <p>{accountCreationResponse.birthday}</p>
+                                                <p className='ms-3'>{accountCreationResponse.birthday}</p>
                                             </div>
                                             <div className="d-flex justify-content-start">
                                                 <p>Username: </p>
-                                                <p style={{ color: '#E53E5C' }}>{accountCreationResponse.account}</p>
+                                                <p className='ms-3' style={{ color: '#E53E5C' }}>{accountCreationResponse.account}</p>
                                             </div>
                                             <div className="d-flex justify-content-start">
                                                 <p>Password: </p>
-                                                <p style={{ color: '#E53E5C' }}>{accountCreationResponse.password}</p>
+                                                <p className='ms-3' style={{ color: '#E53E5C' }}>{accountCreationResponse.password}</p>
                                             </div>
                                             <div>
                                                 <p>Note: </p>
@@ -486,15 +537,23 @@ const PendingOrder = ({ orderDetail }) => {
                                                     value={note}
                                                     onChange={(e) => setNote(e.target.value)}
                                                     rows="3"
-                                                    style={{ width: '100%' }}></textarea>
+                                                    style={{ width: '100%', outline: 'none', border: '1px solid #FF8A00' }}></textarea>
                                             </div>
                                         </div>
                                         <div className="d-flex">
                                             <p className='mb-1 blue'>Send to email account: </p>
-                                            <span style={{ color: '#FF8A00', border: '1px solid #FF8A00', borderRadius: '8px' }}>{accountCreationResponse.email}</span>
+                                            <span className='ms-3 px-2 py-2' style={{ color: '#FF8A00', border: '1px solid #FF8A00', borderRadius: '8px' }}>{accountCreationResponse.email}</span>
                                         </div>
                                         <div className="d-flex justify-content-end">
-                                            <button onClick={handleSendEmail} style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px' }}>Send</button>
+                                            <button className='mt-3' onClick={handleSendEmail} style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '30px', width: '100px' }}>
+                                                {sendingEmailLoading ? (
+                                                    <div className="spinner-border text-light" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </div>
+                                                ) : (
+                                                    "Send"
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -552,7 +611,13 @@ const PendingOrder = ({ orderDetail }) => {
                     disabled={!isChecked}
                     onClick={handleOrderConfirmation}
                 >
-                    Order confirmation
+                    {confirmingOrderLoading ? (
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    ) : (
+                        "Order confirmation"
+                    )}
                 </button>
             </div>
         </div >
@@ -900,7 +965,7 @@ export default function StaffOrderDetail() {
                 }
 
                 const data = await response.json();
-                console.log('data: ', data);
+                console.log('Classdata: ', data);
                 setOrderDetail(data);
             } catch (err) {
                 setError(err.message);
