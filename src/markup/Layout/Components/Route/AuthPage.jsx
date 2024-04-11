@@ -9,7 +9,7 @@ export const UnauthenticatedPages = [
 
 //Lưu đường dẫn các trang public. Mọi người dùng đều có thể truy cập 
 //(cả đã đăng nhập và chưa đăng nhập)
-export const PublicPages = ["home", "classes", "classes-details", "courses-plan"];
+export const PublicPages = ["home", "classes", "classes-details"];
 
 //Lưu đường dẫn các trang chung cho user đã đăng nhập. VD trang xem thông tin account.
 export const CommonAuthenticatedPages = [];
@@ -41,7 +41,7 @@ export const TeacherPages = [
 export const ParentPages = ["classes", "classes-detail", "payment", "payment-success"];
 
 //Lưu đường dẫn các trang mà student được truy cập
-export const StudentPages = [];
+export const StudentPages = ["courses-plan"];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {

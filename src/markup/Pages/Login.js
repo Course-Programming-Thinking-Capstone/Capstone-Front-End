@@ -38,7 +38,7 @@ export default function Login() {
     const loginData = isEmail ? { email: email, password: password } : { account: email, password: password };
     try {
       const apiUrl = isEmail
-        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login"
+        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login/email"
         : "https://www.kidpro-production.somee.com/api/v1/authentication/login/account";
 
       const response = await fetch(apiUrl, {
@@ -47,53 +47,50 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(loginData),
-      }).then(res => res.json());
-      
-      if (response.accessToken && response.role) {
-        localStorage.setItem("accessToken", response.accessToken);
+      });
 
-        //store user information
-        const user = {
-          role: response.role,
-          fullName: response.fullName,
-          pictureUrl: response.pictureUrl,
-          email: response.email,
-          id: response.id,
-        };
-
-        localStorage.setItem("user", JSON.stringify(user));
-
-        switch (response.role) {
-          case "Admin":
-            window.location.href = "/admin";
-            break;
-          case "Teacher":
-            window.location.href = "/teacher";
-            break;
-          case "Staff":
-            window.location.href = "/staff";
-            break;
-          case "Student":
-            window.location.href = "/courses-plan";
-            break;
-          // Add more cases as needed for different roles
-          default:
-            window.location.href = "/";
-            break;
-        }
-      } else {
-        throw new Error("Missing role or accessToken in the response");
+      // Check if the response was successful
+      if (!response.ok) {
+        const errorText = await response.text(); // Try to read text instead of JSON
+        throw new Error(errorText || "Something went wrong");
       }
+
+      const responseData = await response.json();
+      console.log('responseData: ', responseData);
+      const user = {
+        role: responseData.role,
+        fullName: responseData.fullName,
+        avatarUrl: responseData.avatarUrl,
+        email: responseData.email,
+        gender: responseData.gender,
+        point: responseData.point,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+
+      localStorage.setItem("accessToken", responseData.accessToken);
+
+      switch (responseData.role) {
+        case "Admin":
+          navigate("/admin")
+          break;
+        case "Teacher":
+          navigate("/teacher")
+          break;
+        case "Staff":
+          navigate("/staff")
+          break;
+        case "Student":
+          navigate("/courses-plan")
+          break;
+        default:
+
+          break;
+      }
+
     } catch (error) {
-      if (error.response) {
-        console.log(`Error response: ${error.response?.data?.message}`);
-        notifyLoginFail(
-          error.response?.data?.message || "Login failed. Please try again."
-        );
-      } else {
-        console.log(`Error message abc: ${error.message}`);
-        notifyLoginFail(error.message || "Login failed. Please try again.");
-      }
+      console.error(`Error: ${error.message}`);
+      notifyLoginFail(error.message);
     }
   };
 

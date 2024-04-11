@@ -314,13 +314,12 @@ const App = () => {
             {/* Student pages */}
             <Route
               path="/courses-plan"
-              element={<CoursesPlan />}
-            // element={
-            //   <PrivateRoute
-            //     page="courses-plan"
-            //     component={<CoursesPlan/>}
-            //   />
-            // }
+              element={
+                <PrivateRoute
+                  page="courses-plan"
+                  component={<CoursesPlan />}
+                />
+              }
             />
 
             {/* Test page */}
