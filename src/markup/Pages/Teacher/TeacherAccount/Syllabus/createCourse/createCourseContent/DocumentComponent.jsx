@@ -21,6 +21,7 @@ const DocumentComponent = ({ sectionId, index }) => {
   //useState
   const [show, setShow] = useState(false);
   const [quillDocument, setQuillDocument] = useState("");
+  const [documentError, setDocumentError] = useState(undefined);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -76,8 +77,21 @@ const DocumentComponent = ({ sectionId, index }) => {
 
   //edit text
 
+  const handleQuillDocumentChange = (value) => {
+    if (value !== undefined && value.trim() !== "") {
+      setDocumentError(undefined);
+    }
+
+    setQuillDocument(value);
+  };
+
   //handle submit
   const handleSubmit = (values) => {
+    if (quillDocument === undefined || quillDocument.trim() === "") {
+      setDocumentError("Document content is required.");
+      return;
+    }
+
     const { lessonName, duration } = values;
 
     const addData = {
@@ -218,12 +232,15 @@ const DocumentComponent = ({ sectionId, index }) => {
                       <ReactQuill
                         theme="snow"
                         value={quillDocument}
-                        onChange={(value) => setQuillDocument(value)}
+                        onChange={handleQuillDocumentChange}
                         modules={modules}
                         formats={formats}
                         style={{ whiteSpace: "pre-wrap" }}
                       />
                     </div>
+                    {documentError && (
+                      <p className="text-danger">{documentError}</p>
+                    )}
                   </Col>
                 </Row>
               </Form>
@@ -261,11 +278,20 @@ export const UpdateDocumentComponent = ({
 
   const [show, setShow] = useState(false);
   const [quillDocument, setQuillDocument] = useState(document.content);
+  const [documentError, setDocumentError] = useState(undefined);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   //edit text
+
+  const handleQuillDocumentChange = (value) => {
+    if (value !== undefined && value.trim() !== "") {
+      setDocumentError(undefined);
+    }
+
+    setQuillDocument(value);
+  };
 
   const modules = {
     toolbar: [
@@ -318,6 +344,10 @@ export const UpdateDocumentComponent = ({
 
   //handle submit
   const handleSubmit = (values) => {
+    if (quillDocument === undefined || quillDocument.trim() === "") {
+      setDocumentError("Document content is required.");
+      return;
+    }
     const { lessonName, duration } = values;
 
     const updateData = {
@@ -451,6 +481,9 @@ export const UpdateDocumentComponent = ({
                         style={{ whiteSpace: "pre-wrap" }}
                       />
                     </div>
+                    {documentError && (
+                      <p className="text-danger">{documentError}</p>
+                    )}
                   </Col>
                 </Row>
               </Form>
