@@ -35,41 +35,43 @@ export default function CoursePayment() {
         return price.toLocaleString('vi-VN') + ' đ';
     }
 
+    const fetchChildrenData = async () => {
+        setLoading(true);
+        try {
+            if (!classId) {
+                console.error('classId is not available');
+                return;
+            }
+
+            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setChildren(data.map(child => ({
+                id: child.id,
+                name: child.fullName,
+                dateOfBirth: child.dateOfBirth,
+                gender: child.gender
+            })));
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
-        const fetchChildrenData = async () => {
-            setLoading(true);
-            try {
-                if (!classId) {
-                    console.error('classId is not available');
-                    return;
-                }
-
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                setChildren(data.map(child => ({
-                    id: child.id,
-                    name: child.fullName,
-                    dateOfBirth: child.dateOfBirth,
-                    gender: child.gender
-                })));
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        
         fetchChildrenData();
     }, [classId]);
 
