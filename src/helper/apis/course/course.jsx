@@ -61,3 +61,15 @@ export const getCourseById = async ({ id, action }) => {
 
   return response.data;
 };
+
+export const uploadVideoToDrive = async ({ sectionId, file }) => {
+  const formData = new FormData();
+  formData.append("videoFile", file);
+
+  const response = await instance.post(`api/v1/drives/${sectionId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};

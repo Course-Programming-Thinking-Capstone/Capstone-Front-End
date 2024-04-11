@@ -987,6 +987,11 @@
   border-radius: 5px;
 }
 
+.syllabus {
+  overflow: auto;
+  height: 90vh;
+}
+
 .teacher-notification .header h5,
 .teacher-course .header h5,
 .teacher-classes .header h5,

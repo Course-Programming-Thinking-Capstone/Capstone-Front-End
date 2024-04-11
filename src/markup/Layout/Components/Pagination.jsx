@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Pagination } from "react-bootstrap";
+import { Pagination } from "react-bootstrap";
 
 export const CustomPagination = ({ page, totalPage, setPage }) => {
   const pageItems = [];
@@ -17,7 +17,7 @@ export const CustomPagination = ({ page, totalPage, setPage }) => {
   }
 
   return (
-    <Pagination className="d-flex justify-content-center align-items-center">
+    <Pagination className="d-flex justify-content-center align-items-center custom-pagination">
       <Pagination.Prev
         disabled={page === 1 ? true : false}
         onClick={() => setPage(page - 1)}

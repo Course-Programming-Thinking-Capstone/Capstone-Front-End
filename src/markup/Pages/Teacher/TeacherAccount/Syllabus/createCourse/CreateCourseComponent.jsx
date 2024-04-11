@@ -148,6 +148,14 @@ const CreateCourseComponent = () => {
 
         setIsLoading(true);
 
+        //upload course picture
+        if (coursePictureFile != null) {
+          const pictureUrl = await updateCoursePictureApi({
+            id: createCourse.id,
+            file: coursePictureFile,
+          });
+        }
+
         const updatedData = { ...createCourse, description };
 
         await updateCourseApi({
@@ -155,13 +163,6 @@ const CreateCourseComponent = () => {
           action: action,
           data: updatedData,
         });
-
-        if (coursePictureFile != null) {
-          const pictureUrl = await updateCoursePictureApi({
-            id: createCourse.id,
-            file: coursePictureFile,
-          });
-        }
 
         alert("Update success");
         if (action === "Post") {
