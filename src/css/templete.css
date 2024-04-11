@@ -5334,6 +5334,11 @@ button.admin-save:hover {
   padding: 10px;
 }
 
+.selected-class {
+  border: 1px solid #FF8A00;
+  border-radius: 8px;
+}
+
 /* .teacher-accordion .section-title button{
   font-weight: bold;
 } */

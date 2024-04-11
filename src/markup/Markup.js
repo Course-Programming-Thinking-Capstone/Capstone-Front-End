@@ -64,7 +64,7 @@ export default function Markup() {
 					<Route path='/verify-confirm' exact element={<VerifyEmailConfirm />} />
 
 					<Route path='/classes' exact element={<Classes />} />
-					<Route path='/classes-details' exact element={<ClassesDetail />} />
+					<Route path='/classes-detail/:id' element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
 					<Route path='/not-found' exact element={<ErrorPage />} />

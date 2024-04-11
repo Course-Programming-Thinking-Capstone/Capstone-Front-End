@@ -11,72 +11,41 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation } from 'react-router-dom';
 
 export default function CoursePayment() {
-
     const [selectedChildren, setSelectedChildren] = useState([]);
-
     const [newChildName, setNewChildName] = useState('');
     const [newChildDOB, setNewChildDOB] = useState('');
     const [newChildGender, setNewChildGender] = useState('');
-
     const accessToken = localStorage.getItem('accessToken');
-
     const [children, setChildren] = useState([]);
-
     const [loading, setLoading] = useState(false);
     const [courseDetails, setCourseDetails] = useState(null);
+    const [parentEmail, setParentEmail] = useState(null);
+    const location = useLocation();
+    const { courseId, classId } = location.state || {};
+    const [isOrderProcessing, setIsOrderProcessing] = useState(false);
+
+
     const formatPrice = (price) => {
         if (typeof price !== 'number') {
             return 'N/A';
         }
         return price.toLocaleString('vi-VN') + ' đ';
     }
-    const fetchChildrenData = async () => {
-        setLoading(true);
-        const accessToken = localStorage.getItem('accessToken');
-        try {
-            const response = await fetch('https://www.kidpro-production.somee.com/api/v1/students', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log(data);
-            setChildren(data.map(child => ({
-                id: child.id,
-                name: child.fullName,
-                dateOfBirth: child.dateOfBirth,
-                gender: child.gender
-            })));
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        fetchChildrenData();
-    }, []);
-
-    useEffect(() => {
-        console.log(children);
-    }, [children]);
-
-    useEffect(() => {
-        const fetchCurrentCourse = async () => {
+        const fetchChildrenData = async () => {
             setLoading(true);
-            const accessToken = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=5&classId=16', {
+                if (!classId) {
+                    console.error('classId is not available');
+                    return;
+                }
+
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -89,8 +58,78 @@ export default function CoursePayment() {
                 }
 
                 const data = await response.json();
+                setChildren(data.map(child => ({
+                    id: child.id,
+                    name: child.fullName,
+                    dateOfBirth: child.dateOfBirth,
+                    gender: child.gender
+                })));
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchChildrenData();
+    }, [classId]);
+
+    useEffect(() => {
+        const fetchParentEmail = async () => {
+            setLoading(true);
+            try {
+
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/parents/contact`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setParentEmail(data.email);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchParentEmail();
+    }, [classId]);
+
+
+    useEffect(() => {
+        console.log(children);
+    }, [children]);
+
+    useEffect(() => {
+        const fetchCurrentCourse = async () => {
+            if (!courseId || !classId) {
+                console.error('Missing courseId or classId');
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=${courseId}&classId=${classId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('curentCourse: ', data);
                 setCourseDetails(data);
-                console.log(courseDetails);
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
             } finally {
@@ -99,7 +138,8 @@ export default function CoursePayment() {
         };
 
         fetchCurrentCourse();
-    }, []);
+    }, [courseId, classId]); // Add courseId and classId as dependencies to re-fetch if they change
+
 
     const handleSave = async () => {
         const formatBirthday = (date) => {
@@ -183,9 +223,11 @@ export default function CoursePayment() {
     const handleShow = () => setShow(true);
 
     const BuyCourse = async () => {
+        setIsOrderProcessing(true);
         const orderDetails = {
             studentId: selectedChildren,
             courseId: courseDetails ? courseDetails.courseId : null,
+            classId: classId,
             voucherId: 0,
             paymentType: 2,
             quantity: selectedChildren.length
@@ -219,7 +261,6 @@ export default function CoursePayment() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
                 },
-                // This assumes your API does not require the orderId in the body since it's already in the URL
                 body: JSON.stringify({}),
             });
 
@@ -236,6 +277,7 @@ export default function CoursePayment() {
 
         } catch (error) {
             console.error('There was a problem with the process:', error.message);
+            setIsOrderProcessing(false);
         }
     };
     const [isInputFocused, setInputFocused] = useState(false);
@@ -374,7 +416,7 @@ export default function CoursePayment() {
                                         <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid #1A9CB7', cursor: 'pointer', padding: '5px 20px', width: '45%' }}>
                                             <div className='text-center'>
                                                 <p className='mb'>Email</p>
-                                                <p className='mb-0' style={{ color: '#FF8A00' }}>anvip321@gmail.com</p>
+                                                <p className='mb-0' style={{ color: '#FF8A00' }}>{parentEmail}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -389,25 +431,25 @@ export default function CoursePayment() {
                                             courseDetails && (
                                                 <div style={{
                                                     borderWidth: 2, borderColor: '#FF8A00', borderStyle: 'solid', paddingLeft: 20, paddingRight: 10, alignItems: 'center', borderRadius: 10, display: 'flex', flexDirection: 'row',
-                                                    width: 500, marginLeft: 20,
+
                                                 }}>
-                                                    <div style={{ display: 'flex', flexDirection: 'row', justifyItems: 'center' }}>
-                                                        <img className='img-responsive' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
-                                                        <div style={{ marginTop: 5 }}>
-                                                            <p style={{ marginBottom: 10, fontWeight: 'inherit' }}>What is programming?</p>
-                                                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+                                                    <div className='d-flex'>
+                                                        <img className='img-responsive mt-2' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
+                                                        <div>
+                                                            <p className='mt-2'>{courseDetails.courseName}</p>
+                                                            <div className='d-flex'>
                                                                 <p style={{ fontWeight: 'inherit' }}>Class: </p>
-                                                                <p style={{ marginBottom: 10, color: '#E53E5C', fontWeight: 'bolder', marginLeft: 5, marginTop: 10 }}>{courseDetails.courseName}</p>
+                                                                <p style={{ color: '#E53E5C' }}>{courseDetails.classCode}</p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div style={{ marginLeft: 110, marginTop: 20 }}>
-                                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                            <p style={{ fontWeight: 'inherit' }}>Teacher: </p>
-                                                            <p style={{ fontWeight: 'inherit' }}> {courseDetails.teacherName}</p>
+                                                        <div >
+                                                            <div>
+                                                                <p className='mt-2' style={{ fontWeight: 'inherit' }}> {courseDetails.teacherName}</p>
+                                                            </div>
+                                                            <p style={{ color: '#FF8A00', fontWeight: 'bold' }}>{formatPrice(courseDetails.price)}</p>
                                                         </div>
-                                                        <p style={{ color: '#FF8A00', paddingBottom: 20, fontWeight: 'bolder' }}>{formatPrice(courseDetails.price)}</p>
                                                     </div>
+
                                                 </div>
                                             )
                                         )}
@@ -487,10 +529,16 @@ export default function CoursePayment() {
                                                 {selectedChildren.length === 0 ? (
                                                     <button disabled style={{ width: '100%', backgroundColor: 'gray', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>ORDER</button>
                                                 ) : (
-                                                    <button onClick={BuyCourse} style={{ width: '100%', backgroundColor: '#FF8A00', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>ORDER</button>
+                                                    <button onClick={BuyCourse} disabled={isOrderProcessing} style={{ width: '100%', backgroundColor: '#FF8A00', borderRadius: '8px', color: 'white', border: 'none', height: '48px' }}>
+                                                        {isOrderProcessing ? (
+                                                            <div className="spinner-border text-light" role="status">
+                                                                <span className="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        ) : "ORDER"}
+                                                    </button>
                                                 )}
-
                                             </div>
+
                                         </div>
                                     </div>
                                 ) : (

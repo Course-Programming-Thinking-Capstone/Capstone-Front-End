@@ -287,10 +287,10 @@ const App = () => {
             />
 
             <Route
-              path="/classes-details"
+              path="/classes-detail/:id"
               element={
                 <PrivateRoute
-                  page="classes-details"
+                  page="classes-detail"
                   component={<ClassesDetail />}
                 />
               }
@@ -328,7 +328,7 @@ const App = () => {
 
             {/* Error pages  */}
             <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/not-found"  />} />
+            <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </div>
       </BrowserRouter>
