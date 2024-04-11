@@ -262,7 +262,7 @@ export const AddQuizComponent = ({ sectionId, index }) => {
                       {errors.numberOfAttempt}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Col md={12}>
+                  {/* <Col md={12}>
                     <Form.Check
                       // md= {12} // prettier-ignore
                       type="switch"
@@ -272,9 +272,9 @@ export const AddQuizComponent = ({ sectionId, index }) => {
                       checked={isOrderRandom}
                       onChange={() => handleToggleRandom()}
                     />
-                  </Col>
+                  </Col> */}
 
-                  {isOrderRandom && (
+                  {/* {isOrderRandom && (
                     <Form.Group
                       as={Col}
                       md={12}
@@ -301,7 +301,7 @@ export const AddQuizComponent = ({ sectionId, index }) => {
                         {errors.numberOfQuestion}
                       </Form.Control.Feedback>
                     </Form.Group>
-                  )}
+                  )} */}
                 </Row>
               </Form>
             )}
@@ -544,7 +544,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       {errors.numberOfAttempt}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Col md={12}>
+                  {/* <Col md={12}>
                     <Form.Check
                       // md= {12} // prettier-ignore
                       type="switch"
@@ -554,9 +554,9 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                       checked={isOrderRandom}
                       onChange={() => handleToggleRandom()}
                     />
-                  </Col>
+                  </Col> */}
 
-                  {isOrderRandom && (
+                  {/* {isOrderRandom && (
                     <Form.Group
                       as={Col}
                       md={12}
@@ -581,7 +581,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
                         {errors.numberOfQuestion}
                       </Form.Control.Feedback>
                     </Form.Group>
-                  )}
+                  )} */}
                 </Row>
               </Form>
             )}
@@ -718,8 +718,8 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
           isCorrect: yup.bool(),
         })
       )
-      .min(1, "Question must have at least one option.")
-      .max(10, "Too many option"),
+      .min(2, "Question must have at least two options.")
+      .max(4, "Question must not exceed four options."),
   });
   //form validation
 
@@ -759,6 +759,7 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
               title: "Question",
               options: [
                 { content: "Option 1", answerExplain: "", isCorrect: false },
+                { content: "Option 2", answerExplain: "", isCorrect: false },
               ],
             }}
           >
