@@ -1,0 +1,52 @@
+.custom-spinner {
+  font-size: 1rem;
+}
+
+.syllabus-content-search {
+  border: 1px solid #988e8e66;
+  border-radius: 5px;
+  padding: 2px 8px;
+  width: 70%;
+  margin: auto;
+}
+
+input.syllabus-content-search-input {
+  border: none;
+  outline: none;
+  height: 30px;
+  padding-left: 10px;
+  width: 70%;
+}
+
+button.syllabus-content-search-button {
+  border: none;
+  background-color: white;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+ul.pagination.custom-pagination {
+  margin-bottom: 0px;
+}
+
+.syllabus-content-item {
+  border-radius: 5px;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+}
+
+.syllabus-content-item img.syllabus-content-item-image {
+  height: 60px;
+  width: 60px;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+}

@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import simp from "./../../../../../images/gallery/simp.jpg";
+import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
-import {
-  filterSyllabusesAsync,
-  filterTeacherSyllabusesAsync,
-} from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
+import { filterTeacherSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
   formatDateV1,
 } from "../../../../../helper/utils/DateUtil";
-import {
-  CustomPagination,
-  PaginationCustom,
-} from "../../../../Layout/Components/Pagination";
+import { CustomPagination } from "../../../../Layout/Components/Pagination";
+
+//css
+import "./SyllabusComponent.css";
 
 const SyllabusComponent = () => {
   //useDispath
@@ -30,6 +28,37 @@ const SyllabusComponent = () => {
   const syllabuses = useSelector(syllabusesSelector);
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = async () => {
+    try {
+      setIsLoading(true);
+
+      setPage(1);
+
+      await dispatch(
+        filterTeacherSyllabusesAsync({
+          sortCreatedDate: "desc",
+          name: query,
+          page: 1,
+          size: 4,
+        })
+      );
+    } catch (error) {
+      if (error.response) {
+        console.log(`Error response: ${error.response?.data?.message}`);
+        setMessage(error.response?.data?.message || "Undefined.");
+      } else {
+        console.log(`Error message abc: ${error.message}`);
+        setMessage(error.message || "Undefined.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // fetch syllabuses list
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +70,7 @@ const SyllabusComponent = () => {
             sortCreatedDate: "desc",
             name: query,
             page: page,
-            size: 3,
+            size: 4,
           })
         );
       } catch (error) {
@@ -57,7 +86,7 @@ const SyllabusComponent = () => {
       }
     };
     fetchData();
-  }, [dispatch, page, query]);
+  }, [dispatch, page]);
 
   const renderComponent = () => {
     return (
@@ -73,54 +102,62 @@ const SyllabusComponent = () => {
         </div>
         <div className="syllabus-content">
           <div>
-            <div className="search d-flex justify-content-center">
-              <input type="text" placeholder="Search course" />
-              <div
-                className="text-center"
-                style={{
-                  height: "30px",
-                  border: "1px solid #988E8E66",
-                  borderLeft: "none",
-                  width: "5%",
-                  paddingTop: "5px",
-                  borderRadius: "0 10px 10px 0",
-                }}
+            <div className="d-flex justify-content-between align-items-center mt-3 syllabus-content-search mb-3">
+              <input
+                type="text"
+                placeholder="Search course"
+                className="syllabus-content-search-input"
+                name={query}
+                onChange={handleQueryChange}
+              />
+              <button
+                type="button"
+                className="syllabus-content-search-button"
+                onClick={handleSearchSubmit}
               >
                 <i className="fa-solid fa-magnifying-glass"></i>
-              </div>
+              </button>
             </div>
 
-            <div className="px-3 pb-3" style={{ minHeight: "60vh" }}>
-              <div style={{ height: "50vh" }}>
+            <div
+              className="px-4 pb-3"
+              style={{ minHeight: "60vh", overflow: "auto" }}
+            >
+              <div style={{ minHeight: "50vh" }}>
                 {isLoading ? (
-                  // <div className="d-flex justify-content-center">
-                  //   <div className="spinner-border text-primary" role="status">
-                  //     <span className="visually-hidden">Loading...</span>
-                  //   </div>
-                  // </div>
                   <div className="d-flex justify-content-center py-5">
-                    <Spinner animation="border" variant="success" />
+                    <Spinner
+                      animation="border"
+                      variant="success"
+                      className="custom-spinner"
+                    />
                   </div>
                 ) : (
                   syllabuses.results.map((syllabus, index) => (
-                    <div key={index} className="syllabus-item">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex justify-content-start">
-                          <img className="img-responsive" src={simp} alt="" />
+                    <div key={index} className="syllabus-content-item mt-2">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex justify-content-start align-items-center">
+                          <img
+                            className="img-responsive syllabus-content-item-image"
+                            src={syllabusPicture}
+                            alt="Syllabus picture"
+                            title="Syllabus picture"
+                          />
                           <div className="ms-3">
-                            <p className="mb-1 mt-2">{syllabus.name}</p>
-                            <p className="mb-1 title blue">
+                            <p className="my-1">{syllabus.name}</p>
+                            <p className="mb-1 ">
                               Create date:{" "}
-                              {formatDateV1(
-                                convertUtcToLocalTime(syllabus.createdDate)
-                              )}
+                              <span className="title blue">
+                                {formatDateV1(
+                                  convertUtcToLocalTime(syllabus.createdDate)
+                                )}
+                              </span>
                             </p>
                           </div>
                         </div>
                         <div>
                           <Link
                             to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
-                            className="mt-3"
                             style={{
                               display: "inline-block",
                               width: "100px",
@@ -146,7 +183,9 @@ const SyllabusComponent = () => {
               <CustomPagination
                 page={page}
                 setPage={setPage}
-                totalPage={syllabuses.totalPages}
+                totalPage={
+                  syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
+                }
               />
             </div>
           </div>

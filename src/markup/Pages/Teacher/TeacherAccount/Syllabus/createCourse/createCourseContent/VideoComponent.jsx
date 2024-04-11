@@ -83,6 +83,7 @@ const VideoComponent = ({ sectionId, index }) => {
         className="teacher-button"
         onClick={handleShow}
         disabled={componentNumber[index]?.videoNumber === 5}
+        title="Add video"
       >
         <div className="d-flex justify-content-start align-items-center">
           <img
