@@ -27,7 +27,6 @@ export default function CoursePayment() {
     const { courseId, classId } = location.state || {};
     const [isOrderProcessing, setIsOrderProcessing] = useState(false);
 
-
     const formatPrice = (price) => {
         if (typeof price !== 'number') {
             return 'N/A';
@@ -68,7 +67,6 @@ export default function CoursePayment() {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         fetchChildrenData();

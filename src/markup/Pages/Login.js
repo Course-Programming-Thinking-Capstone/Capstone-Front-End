@@ -32,10 +32,23 @@ export default function Login() {
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     if (!isFormValid()) return;
-    try {
-      const loginData = { email: email, password: password };
 
-      const response = await loginApi(loginData);
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    const loginData = isEmail ? { email: email, password: password } : { account: email, password: password };
+    try {
+      const apiUrl = isEmail
+        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login"
+        : "https://www.kidpro-production.somee.com/api/v1/authentication/login/account";
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      }).then(res => res.json());
+      
       if (response.accessToken && response.role) {
         localStorage.setItem("accessToken", response.accessToken);
 
@@ -60,6 +73,9 @@ export default function Login() {
           case "Staff":
             window.location.href = "/staff";
             break;
+          case "Student":
+            window.location.href = "/courses-plan";
+            break;
           // Add more cases as needed for different roles
           default:
             window.location.href = "/";
@@ -69,8 +85,6 @@ export default function Login() {
         throw new Error("Missing role or accessToken in the response");
       }
     } catch (error) {
-      // notifyLoginFail(error.message || "Login failed. Please try again.");
-
       if (error.response) {
         console.log(`Error response: ${error.response?.data?.message}`);
         notifyLoginFail(
@@ -88,10 +102,6 @@ export default function Login() {
     setEmailError("");
     setPasswordError("");
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Please enter a valid email address.");
-      isValid = false;
-    }
     if (password.length < 4) {
       setPasswordError("Password must be at least 4 characters long.");
       isValid = false;
@@ -120,7 +130,7 @@ export default function Login() {
         <form onSubmit={handleLoginSubmit}>
           <div className="form-group">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="email"
               placeholder="Enter email"
