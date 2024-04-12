@@ -1,5 +1,5 @@
 import { Modal, Col, Form, Row } from "react-bootstrap";
-import * as formik from "formik";
+import { FieldArray, Formik, useFormikContext } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -18,6 +18,24 @@ import plusIcon from "../../../../../../../images/icon/plus_circle.png";
 import { useSelector } from "react-redux";
 import { componentNumberSelector } from "../../../../../../../store/selector";
 import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
+
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
 
 //Add quiz
 export const AddQuizComponent = ({ sectionId, index }) => {
@@ -90,7 +108,7 @@ export const AddQuizComponent = ({ sectionId, index }) => {
   };
 
   //form validation
-  const { Formik } = formik;
+  // const { Formik } = formik;
 
   const schema = yup.object().shape({
     title: yup
@@ -384,7 +402,7 @@ export const UpdateQuizComponent = ({ sectionId, quizIndex, quiz }) => {
   };
 
   //form validation
-  const { Formik } = formik;
+  // const { Formik } = formik;
 
   const schema = yup.object().shape({
     title: yup
@@ -650,8 +668,13 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
     setCorrectAnswerIndex(index);
   };
 
-  const handleAddOption = (push) => {
-    push({ content: "Option", answerExplain: "", isCorrect: false });
+  const handleAddOption = (push, values) => {
+    push({
+      id: values.options.length + 1,
+      content: "Option",
+      answerExplain: "",
+      isCorrect: false,
+    });
   };
 
   const handleRemoveOption = (remove, index) => {
@@ -671,6 +694,12 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
     console.log(`Section id in addQuestionComponent is missing.`);
   }
 
+  //Dnd
+
+  //sensor
+  const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+  //Dnd
+
   //handle submit
   const handleSubmit = (values) => {
     const { title, options } = values;
@@ -679,7 +708,13 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
     const question = {
       title: title,
-      options: options,
+      options: options.map((option) => {
+        return {
+          content: option.content,
+          answerExplain: option.answerExplain,
+          isCorrect: option.isCorrect,
+        };
+      }),
     };
 
     dispatch(
@@ -692,9 +727,6 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
     setShow(false);
   };
-
-  //form validation
-  const { Formik } = formik;
 
   const schema = yup.object().shape({
     title: yup
@@ -758,12 +790,29 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
             initialValues={{
               title: "Question",
               options: [
-                { content: "Option 1", answerExplain: "", isCorrect: false },
-                { content: "Option 2", answerExplain: "", isCorrect: false },
+                {
+                  id: 1,
+                  content: "Option 1",
+                  answerExplain: "",
+                  isCorrect: false,
+                },
+                {
+                  id: 2,
+                  content: "Option 2",
+                  answerExplain: "",
+                  isCorrect: false,
+                },
               ],
             }}
           >
-            {({ handleSubmit, handleChange, values, touched, errors }) => (
+            {({
+              handleSubmit,
+              handleChange,
+              values,
+              touched,
+              errors,
+              setFieldValue,
+            }) => (
               <Form id="questionForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group
@@ -792,122 +841,112 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
 
                 <p className="create-course-form-lable">Options</p>
 
-                <formik.FieldArray name="options">
-                  {({ push, remove }) => (
-                    <>
-                      {values.options.map((option, index) => (
-                        <Row key={index} className="mb-3">
-                          <Col md="11">
-                            <Form.Group
-                              as={Col}
-                              md={12}
-                              controlId={`validationOptionContent${index}`}
-                              className="mb-3"
-                            >
-                              <Form.Control
-                                type="text"
-                                placeholder="Content"
-                                name={`options[${index}].content`}
-                                value={option.content}
-                                onChange={handleChange}
-                                isInvalid={
-                                  touched.options &&
-                                  touched.options[index] &&
-                                  !!errors.options &&
-                                  !!errors.options[index]?.content
-                                }
-                                className="create-course-input"
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {errors.options &&
-                                  errors.options[index]?.content}
-                              </Form.Control.Feedback>
-                            </Form.Group>
+                <FieldArray name="options">
+                  {({ push, remove }) => {
+                    //set options array
+                    const updateOptions = (updatedOptions) => {
+                      setFieldValue("options", updatedOptions);
+                    };
 
-                            <Form.Group
-                              as={Col}
-                              md={12}
-                              controlId={`validationOptionExplain${index}`}
-                              className="mb-3"
-                            >
-                              <Form.Control
-                                type="text"
-                                placeholder="Explain"
-                                name={`options[${index}].answerExplain`}
-                                value={option.answerExplain}
-                                onChange={handleChange}
-                                isInvalid={
-                                  touched.options &&
-                                  touched.options[index] &&
-                                  !!errors.options &&
-                                  !!errors.options[index]?.answerExplain
-                                }
-                                className="create-course-input"
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {errors.options &&
-                                  errors.options[index]?.answerExplain}
-                              </Form.Control.Feedback>
-                            </Form.Group>
+                    //handle drag end
+                    const getQuestionItemIndex = (id) => {
+                      return values.options.findIndex(
+                        (option) => option.id === id
+                      );
+                    };
 
-                            {/* isCorrect field */}
-                            <Form.Group
-                              as={Col}
-                              md={12}
-                              controlId={`validationOptionIsCorrect${index}`}
-                            >
-                              <Form.Check
-                                type="switch"
-                                id={`custom-switch-${index}`}
-                                label="Is correct answer?"
-                                checked={correctAnswerIndex === index}
-                                onChange={() => handleAnswerChange(index)}
-                                className="px-0"
-                              />
-                            </Form.Group>
-                          </Col>
+                    const handelDragEnd = (event) => {
+                      const { active, over } = event;
 
-                          <Col md={1} className="px-0">
-                            <button
-                              onClick={() => handleRemoveOption(remove, index)}
-                              className="create-course-modal-remove"
-                              type="button"
-                              title="Remove"
-                            >
-                              <i
-                                class="fa-solid fa-trash"
-                                style={{ fontSize: "18px" }}
-                              ></i>
-                            </button>
-                          </Col>
-                        </Row>
-                      ))}
+                      if (active.id === over.id) return;
 
-                      {errors.options && !Array.isArray(errors.options) && (
-                        <div className="text-danger mb-3">{errors.options}</div>
-                      )}
+                      const originalPos = getQuestionItemIndex(active.id);
+                      const newPos = getQuestionItemIndex(over.id);
 
-                      <div className="d-flex justify-content-center align-items-center">
-                        <button
-                          className="create-course-add-question"
-                          onClick={() => handleAddOption(push)}
-                          style={{ color: "white", fontWeight: "normal" }}
-                          type="button"
+                      if (originalPos === correctAnswerIndex) {
+                        setCorrectAnswerIndex(newPos);
+                        handleAnswerChange(newPos);
+                      } else if (newPos === correctAnswerIndex) {
+                        setCorrectAnswerIndex(originalPos);
+                        handleAnswerChange(originalPos);
+                      } else if (
+                        originalPos > correctAnswerIndex &&
+                        newPos < correctAnswerIndex
+                      ) {
+                        setCorrectAnswerIndex(correctAnswerIndex + 1);
+                      } else if (
+                        originalPos < correctAnswerIndex &&
+                        newPos > correctAnswerIndex
+                      ) {
+                        setCorrectAnswerIndex(correctAnswerIndex - 1);
+                      }
+
+                      const updatedOptions = arrayMove(
+                        values.options,
+                        originalPos,
+                        newPos
+                      );
+                      updateOptions(updatedOptions);
+                    };
+
+                    return (
+                      // Dnd here
+
+                      <>
+                        <DndContext
+                          collisionDetection={closestCorners}
+                          sensors={sensor}
+                          onDragEnd={handelDragEnd}
                         >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <img
-                              className="mx-1"
-                              src={plusIcon}
-                              title="Add option"
-                              alt="Plus icon"
-                            />
-                            <p className="mb-0 mx-1">Add Option</p>
+                          <SortableContext
+                            items={values.options}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            {values.options.map((option, index) => (
+                              <QuestionItem
+                                key={index}
+                                index={index}
+                                option={option}
+                                handleChange={handleChange}
+                                touched={touched}
+                                errors={errors}
+                                correctAnswerIndex={correctAnswerIndex}
+                                handleAnswerChange={handleAnswerChange}
+                                handleRemoveOption={handleRemoveOption}
+                                remove={remove}
+                              />
+                            ))}
+                          </SortableContext>
+                        </DndContext>
+
+                        {errors.options && !Array.isArray(errors.options) && (
+                          <div className="text-danger mb-3">
+                            {errors.options}
                           </div>
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </formik.FieldArray>
+                        )}
+
+                        <div className="d-flex justify-content-center align-items-center">
+                          <button
+                            className="create-course-add-question"
+                            onClick={() => handleAddOption(push, values)}
+                            style={{ color: "white", fontWeight: "normal" }}
+                            type="button"
+                          >
+                            <div className="d-flex justify-content-between align-items-center">
+                              <img
+                                className="mx-1"
+                                src={plusIcon}
+                                title="Add option"
+                                alt="Plus icon"
+                              />
+                              <p className="mb-0 mx-1">Add Option</p>
+                            </div>
+                          </button>
+                        </div>
+                      </>
+                    );
+                  }}
+                </FieldArray>
               </Form>
             )}
           </Formik>
@@ -934,6 +973,139 @@ export const AddQuestionComponent = ({ sectionId, quizIndex }) => {
   );
 };
 
+//question item component
+const QuestionItem = ({
+  index,
+  option,
+  handleChange,
+  touched,
+  errors,
+  correctAnswerIndex,
+  handleAnswerChange,
+  handleRemoveOption,
+  remove,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: option.id });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+  };
+
+  const handleButtonMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleButtonMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <Row
+      /*key={index}*/ ref={setNodeRef}
+      style={style}
+      // {...attributes}
+      // {...listeners}
+      className="mb-3"
+    >
+      <Col md="10">
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionContent${index}`}
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Content"
+            name={`options[${index}].content`}
+            value={option.content}
+            onChange={handleChange}
+            isInvalid={
+              touched.options &&
+              touched.options[index] &&
+              !!errors.options &&
+              !!errors.options[index]?.content
+            }
+            className="create-course-input"
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.options && errors.options[index]?.content}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionExplain${index}`}
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Explain"
+            name={`options[${index}].answerExplain`}
+            value={option.answerExplain}
+            onChange={handleChange}
+            isInvalid={
+              touched.options &&
+              touched.options[index] &&
+              !!errors.options &&
+              !!errors.options[index]?.answerExplain
+            }
+            className="create-course-input"
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.options && errors.options[index]?.answerExplain}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        {/* isCorrect field */}
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionIsCorrect${index}`}
+        >
+          <Form.Check
+            type="switch"
+            id={`custom-switch-${index}`}
+            label="Is correct answer?"
+            checked={correctAnswerIndex === index}
+            onChange={() => handleAnswerChange(index)}
+            className="px-0"
+          />
+        </Form.Group>
+      </Col>
+
+      <Col md={1} className="px-0">
+        <button
+          onClick={() => handleRemoveOption(remove, index)}
+          className="create-course-modal-drag"
+          type="button"
+          title="Remove"
+        >
+          <i class="fa-solid fa-trash" style={{ fontSize: "18px" }}></i>
+        </button>
+      </Col>
+
+      <Col md={1} className="px-0">
+        <div
+          onMouseDown={handleButtonMouseDown}
+          onMouseUp={handleButtonMouseUp}
+          className="create-course-modal-drag"
+          disabled
+          title="Drag"
+          {...attributes}
+          {...listeners}
+        >
+          <i className="fa-regular fa-hand" style={{ fontSize: "18px" }}></i>
+        </div>
+      </Col>
+    </Row>
+  );
+};
+
 //update question
 export const UpdateQuestionComponent = ({
   sectionId,
@@ -945,7 +1117,6 @@ export const UpdateQuestionComponent = ({
 
   //useState
   const [show, setShow] = useState(false);
-
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(-1);
 
   const handleClose = () => {
@@ -957,8 +1128,13 @@ export const UpdateQuestionComponent = ({
     setCorrectAnswerIndex(index);
   };
 
-  const handleAddOption = (push) => {
-    push({ content: "Option", answerExplain: "", isCorrect: false });
+  const handleAddOption = (push, values) => {
+    push({
+      id: values.options.length + 1,
+      content: "Option",
+      answerExplain: "",
+      isCorrect: false,
+    });
   };
 
   const handleRemoveOption = (remove, index) => {
@@ -978,10 +1154,17 @@ export const UpdateQuestionComponent = ({
     console.log(`Section id in addQuestionComponent is missing.`);
   }
 
+  //Dnd
+
+  //sensor
+  const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+  //Dnd
+
   //handle submit
   const handleSubmit = (values) => {
     const { title, options } = values;
 
+    //need to modify here
     const updatedOptions = options.map((option, index) => {
       if (index === correctAnswerIndex) {
         return { ...option, isCorrect: true };
@@ -1008,7 +1191,7 @@ export const UpdateQuestionComponent = ({
   };
 
   //form validation
-  const { Formik } = formik;
+  // const { Formik } = formik;
 
   const schema = yup.object().shape({
     title: yup
@@ -1032,8 +1215,8 @@ export const UpdateQuestionComponent = ({
           isCorrect: yup.bool(),
         })
       )
-      .min(1, "Question must have at least one option.")
-      .max(10, "Too many option"),
+      .min(2, "Question must have at least two options.")
+      .max(4, "Question must not exceed four options."),
   });
   //form validation
 
@@ -1064,10 +1247,24 @@ export const UpdateQuestionComponent = ({
             onSubmit={handleSubmit}
             initialValues={{
               title: question.title,
-              options: question.options,
+              options: question.options.map((option, index) => {
+                return {
+                  id: index + 1,
+                  content: option.content,
+                  answerExplain: option.answerExplain,
+                  isCorrect: option.isCorrect,
+                };
+              }),
             }}
           >
-            {({ handleSubmit, handleChange, values, touched, errors }) => (
+            {({
+              handleSubmit,
+              handleChange,
+              values,
+              touched,
+              errors,
+              setFieldValue,
+            }) => (
               <Form id="questionForm" noValidate onSubmit={handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group
@@ -1096,126 +1293,202 @@ export const UpdateQuestionComponent = ({
 
                 <p>Options</p>
 
-                <formik.FieldArray name="options">
-                  {({ push, remove }) => (
-                    <>
-                      {correctAnswerIndex !== undefined &&
-                        values.options.map((option, index) => (
-                          <Row key={index} className="mb-3">
-                            <Col md="11">
-                              <Form.Group
-                                as={Col}
-                                md={12}
-                                controlId={`validationOptionContent${index}`}
-                                className="mb-3"
-                              >
-                                <Form.Control
-                                  type="text"
-                                  placeholder="Write option"
-                                  name={`options[${index}].content`}
-                                  value={option.content}
-                                  onChange={handleChange}
-                                  isInvalid={
-                                    !!errors.options &&
-                                    !!errors.options[index]?.content
-                                  }
-                                  className="create-course-input"
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                  {errors.options &&
-                                    errors.options[index]?.content}
-                                </Form.Control.Feedback>
-                              </Form.Group>
+                <FieldArray name="options">
+                  {({ push, remove }) => {
+                    //set options array
+                    const updateOptions = (updatedOptions) => {
+                      setFieldValue("options", updatedOptions);
+                    };
 
-                              <Form.Group
-                                as={Col}
-                                md={12}
-                                controlId={`validationOptionExplain${index}`}
-                                className="mb-3"
-                              >
-                                <Form.Control
-                                  type="text"
-                                  placeholder="Explain"
-                                  name={`options[${index}].answerExplain`}
-                                  value={option.answerExplain}
-                                  onChange={handleChange}
-                                  isInvalid={
-                                    !!errors.options &&
-                                    !!errors.options[index]?.answerExplain
-                                  }
-                                  className="create-course-input"
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                  {errors.options &&
-                                    errors.options[index]?.answerExplain}
-                                </Form.Control.Feedback>
-                              </Form.Group>
+                    //handle drag end
+                    const getQuestionItemIndex = (id) => {
+                      return values.options.findIndex(
+                        (option) => option.id === id
+                      );
+                    };
 
-                              {/* isCorrect field */}
-                              <Form.Group
-                                as={Col}
-                                md={12}
-                                controlId={`validationOptionIsCorrect${index}`}
-                                className="mb-3"
-                              >
-                                <Form.Check
-                                  type="switch"
-                                  id={`custom-switch-${index}`}
-                                  label="Is correct answer?"
-                                  checked={
-                                    correctAnswerIndex === -1
-                                      ? option.isCorrect === true
-                                      : correctAnswerIndex === index
-                                  }
-                                  onChange={() => handleAnswerChange(index)}
-                                  className="px-0"
-                                />
-                              </Form.Group>
-                            </Col>
+                    const handelDragEnd = (event) => {
+                      const { active, over } = event;
 
-                            <Col md={1} className="px-0">
-                              <button
-                                onClick={() =>
-                                  handleRemoveOption(remove, index)
-                                }
-                                className="create-course-modal-remove"
-                                type="button"
-                                title="Remove"
-                              >
-                                <i
-                                  class="fa-solid fa-trash"
-                                  style={{ fontSize: "18px" }}
-                                ></i>
-                              </button>
-                            </Col>
-                          </Row>
-                        ))}
+                      if (active.id === over.id) return;
 
-                      {errors.options && !Array.isArray(errors.options) && (
-                        <div className="text-danger mb-3">{errors.options}</div>
-                      )}
+                      const originalPos = getQuestionItemIndex(active.id);
+                      const newPos = getQuestionItemIndex(over.id);
 
-                      <div className="d-flex justify-content-center align-items-center">
-                        <button
-                          className="create-course-add-question"
-                          onClick={() => handleAddOption(push)}
-                          style={{ color: "white", fontWeight: "normal" }}
-                          type="button"
+                      if (originalPos === correctAnswerIndex) {
+                        setCorrectAnswerIndex(newPos);
+                        handleAnswerChange(newPos);
+                      } else if (newPos === correctAnswerIndex) {
+                        setCorrectAnswerIndex(originalPos);
+                        handleAnswerChange(originalPos);
+                      } else if (
+                        originalPos > correctAnswerIndex &&
+                        newPos < correctAnswerIndex
+                      ) {
+                        setCorrectAnswerIndex(correctAnswerIndex + 1);
+                      } else if (
+                        originalPos < correctAnswerIndex &&
+                        newPos > correctAnswerIndex
+                      ) {
+                        setCorrectAnswerIndex(correctAnswerIndex - 1);
+                      }
+
+                      const updatedOptions = arrayMove(
+                        values.options,
+                        originalPos,
+                        newPos
+                      );
+                      updateOptions(updatedOptions);
+                    };
+
+                    return (
+                      // Dnd here
+                      <>
+                        <DndContext
+                          collisionDetection={closestCorners}
+                          sensors={sensor}
+                          onDragEnd={handelDragEnd}
                         >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <img
-                              className="mx-1"
-                              src={plusIcon}
-                              title="Add option"
-                              alt="Plus icon"
-                            />
-                            <p className="mb-0 mx-1">Add Option</p>
+                          <SortableContext
+                            items={values.options}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            {correctAnswerIndex !== undefined &&
+                              values.options.map((option, index) => (
+                                // <Row key={index} className="mb-3">
+                                //   <Col md="11">
+                                //     <Form.Group
+                                //       as={Col}
+                                //       md={12}
+                                //       controlId={`validationOptionContent${index}`}
+                                //       className="mb-3"
+                                //     >
+                                //       <Form.Control
+                                //         type="text"
+                                //         placeholder="Write option"
+                                //         name={`options[${index}].content`}
+                                //         value={option.content}
+                                //         onChange={handleChange}
+                                //         isInvalid={
+                                //           !!errors.options &&
+                                //           !!errors.options[index]?.content
+                                //         }
+                                //         className="create-course-input"
+                                //       />
+                                //       <Form.Control.Feedback type="invalid">
+                                //         {errors.options &&
+                                //           errors.options[index]?.content}
+                                //       </Form.Control.Feedback>
+                                //     </Form.Group>
+
+                                //     <Form.Group
+                                //       as={Col}
+                                //       md={12}
+                                //       controlId={`validationOptionExplain${index}`}
+                                //       className="mb-3"
+                                //     >
+                                //       <Form.Control
+                                //         type="text"
+                                //         placeholder="Explain"
+                                //         name={`options[${index}].answerExplain`}
+                                //         value={option.answerExplain}
+                                //         onChange={handleChange}
+                                //         isInvalid={
+                                //           !!errors.options &&
+                                //           !!errors.options[index]?.answerExplain
+                                //         }
+                                //         className="create-course-input"
+                                //       />
+                                //       <Form.Control.Feedback type="invalid">
+                                //         {errors.options &&
+                                //           errors.options[index]?.answerExplain}
+                                //       </Form.Control.Feedback>
+                                //     </Form.Group>
+
+                                //     {/* isCorrect field */}
+                                //     <Form.Group
+                                //       as={Col}
+                                //       md={12}
+                                //       controlId={`validationOptionIsCorrect${index}`}
+                                //       className="mb-3"
+                                //     >
+                                //       <Form.Check
+                                //         type="switch"
+                                //         id={`custom-switch-${index}`}
+                                //         label="Is correct answer?"
+                                //         checked={
+                                //           correctAnswerIndex === -1
+                                //             ? option.isCorrect === true
+                                //             : correctAnswerIndex === index
+                                //         }
+                                //         onChange={() =>
+                                //           handleAnswerChange(index)
+                                //         }
+                                //         className="px-0"
+                                //       />
+                                //     </Form.Group>
+                                //   </Col>
+
+                                //   <Col md={1} className="px-0">
+                                //     <button
+                                //       onClick={() =>
+                                //         handleRemoveOption(remove, index)
+                                //       }
+                                //       className="create-course-modal-remove"
+                                //       type="button"
+                                //       title="Remove"
+                                //     >
+                                //       <i
+                                //         class="fa-solid fa-trash"
+                                //         style={{ fontSize: "18px" }}
+                                //       ></i>
+                                //     </button>
+                                //   </Col>
+                                // </Row>
+                                <QuestionUpdateItem
+                                  key={index}
+                                  index={index}
+                                  option={option}
+                                  handleChange={handleChange}
+                                  touched={touched}
+                                  errors={errors}
+                                  correctAnswerIndex={correctAnswerIndex}
+                                  handleAnswerChange={handleAnswerChange}
+                                  handleRemoveOption={handleRemoveOption}
+                                  remove={remove}
+                                />
+                              ))}
+                          </SortableContext>
+                        </DndContext>
+
+                        {errors.options && !Array.isArray(errors.options) && (
+                          <div className="text-danger mb-3">
+                            {errors.options}
                           </div>
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </formik.FieldArray>
+                        )}
+
+                        <div className="d-flex justify-content-center align-items-center">
+                          <button
+                            className="create-course-add-question"
+                            onClick={() => handleAddOption(push, values)}
+                            style={{ color: "white", fontWeight: "normal" }}
+                            type="button"
+                          >
+                            <div className="d-flex justify-content-between align-items-center">
+                              <img
+                                className="mx-1"
+                                src={plusIcon}
+                                title="Add option"
+                                alt="Plus icon"
+                              />
+                              <p className="mb-0 mx-1">Add Option</p>
+                            </div>
+                          </button>
+                        </div>
+                      </>
+                    );
+                  }}
+                </FieldArray>
               </Form>
             )}
           </Formik>
@@ -1239,6 +1512,143 @@ export const UpdateQuestionComponent = ({
         </Modal.Footer>
       </Modal>
     </>
+  );
+};
+
+//question item component
+const QuestionUpdateItem = ({
+  index,
+  option,
+  handleChange,
+  touched,
+  errors,
+  correctAnswerIndex,
+  handleAnswerChange,
+  handleRemoveOption,
+  remove,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: option.id });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+  };
+
+  const handleButtonMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleButtonMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <Row
+      /*key={index}*/ ref={setNodeRef}
+      style={style}
+      // {...attributes}
+      // {...listeners}
+      className="mb-3"
+    >
+      <Col md="10">
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionContent${index}`}
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Content"
+            name={`options[${index}].content`}
+            value={option.content}
+            onChange={handleChange}
+            isInvalid={
+              touched.options &&
+              touched.options[index] &&
+              !!errors.options &&
+              !!errors.options[index]?.content
+            }
+            className="create-course-input"
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.options && errors.options[index]?.content}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionExplain${index}`}
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            placeholder="Explain"
+            name={`options[${index}].answerExplain`}
+            value={option.answerExplain}
+            onChange={handleChange}
+            isInvalid={
+              touched.options &&
+              touched.options[index] &&
+              !!errors.options &&
+              !!errors.options[index]?.answerExplain
+            }
+            className="create-course-input"
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.options && errors.options[index]?.answerExplain}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        {/* isCorrect field */}
+        <Form.Group
+          as={Col}
+          md={12}
+          controlId={`validationOptionIsCorrect${index}`}
+        >
+          <Form.Check
+            type="switch"
+            id={`custom-switch-${index}`}
+            label="Is correct answer?"
+            checked={
+              correctAnswerIndex === -1
+                ? option.isCorrect === true
+                : correctAnswerIndex === index
+            }
+            onChange={() => handleAnswerChange(index)}
+            className="px-0"
+          />
+        </Form.Group>
+      </Col>
+
+      <Col md={1} className="px-0">
+        <button
+          onClick={() => handleRemoveOption(remove, index)}
+          className="create-course-modal-drag"
+          type="button"
+          title="Remove"
+        >
+          <i class="fa-solid fa-trash" style={{ fontSize: "18px" }}></i>
+        </button>
+      </Col>
+
+      <Col md={1} className="px-0">
+        <div
+          onMouseDown={handleButtonMouseDown}
+          onMouseUp={handleButtonMouseUp}
+          className="create-course-modal-drag"
+          disabled
+          title="Drag"
+          {...attributes}
+          {...listeners}
+        >
+          <i className="fa-regular fa-hand" style={{ fontSize: "18px" }}></i>
+        </div>
+      </Col>
+    </Row>
   );
 };
 

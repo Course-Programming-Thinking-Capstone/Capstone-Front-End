@@ -324,7 +324,7 @@ const App = () => {
             />
 
             {/* Test page */}
-            <Route path="/test" element={<EditText />} />
+            <Route path="/test" element={<DragAndDropComponent />} />
 
             {/* Error pages  */}
             <Route path="/not-found" element={<NotFound />} />

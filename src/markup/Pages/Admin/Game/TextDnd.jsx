@@ -7,7 +7,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { Draggable } from "./TestDnd/Draggable";
+import { Draggable, DraggableTest } from "./TestDnd/Draggable";
 import { Droppable, DroppableTest } from "./TestDnd/Droppable";
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
@@ -101,16 +101,16 @@ export const DragAndDropComponent = () => {
           </Col>
           <Col md={4}>
             <div className="mb-2">
-              <Draggable id={1} title="Drag me 1" />
+              <DraggableTest id={1} title="Drag me 1" />
             </div>
             <div className="mb-2">
-              <Draggable id={2} title="Drag me 2" />
+              <DraggableTest id={2} title="Drag me 2" />
             </div>
             <div className="mb-2">
-              <Draggable id={3} title="Drag me 3" />
+              <DraggableTest id={3} title="Drag me 3" />
             </div>
             <div className="mb-2">
-              <Draggable id={4} title="Drag me 4" />
+              <DraggableTest id={4} title="Drag me 4" />
             </div>
           </Col>
         </Row>

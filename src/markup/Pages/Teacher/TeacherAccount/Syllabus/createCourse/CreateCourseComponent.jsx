@@ -100,7 +100,7 @@ const CreateCourseComponent = () => {
               } else if (lesson.type === "Document") {
                 documentNumber++;
               }
-            });
+            }); 
 
             quizNumber = section.quizzes.length;
 
@@ -327,6 +327,7 @@ const CreateCourseComponent = () => {
                                 <VideoComponent
                                   sectionId={section.id}
                                   index={index}
+                                  lessonIndex={section.lessons.length}
                                 />
                               </Col>
                               <Col md="4">

@@ -18,7 +18,7 @@ import { componentNumberSelector } from "../../../../../../../store/selector";
 import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
 import { uploadVideoToDrive } from "../../../../../../../helper/apis/course/course";
 
-const VideoComponent = ({ sectionId, index }) => {
+const VideoComponent = ({ sectionId, index, lessonIndex }) => {
   const dispatch = useDispatch();
   const componentNumber = useSelector(componentNumberSelector);
 
@@ -66,6 +66,9 @@ const VideoComponent = ({ sectionId, index }) => {
     try {
       setIsLoading(true);
 
+      //log
+      console.log(`Lesson index when upload video: ${lessonIndex}`);
+
       if (!videoFile) {
         setFileMessage("File is empty.");
         return;
@@ -73,6 +76,7 @@ const VideoComponent = ({ sectionId, index }) => {
 
       const resourceUrl = await uploadVideoToDrive({
         sectionId: sectionId,
+        index: lessonIndex,
         file: videoFile,
       });
 
@@ -307,6 +311,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
       if (videoFile) {
         updateResourceUrl = await uploadVideoToDrive({
           sectionId: sectionId,
+          index: lessonIndex,
           file: videoFile,
         });
 

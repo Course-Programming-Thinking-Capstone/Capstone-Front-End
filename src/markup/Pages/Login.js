@@ -38,7 +38,7 @@ export default function Login() {
     const loginData = isEmail ? { email: email, password: password } : { account: email, password: password };
     try {
       const apiUrl = isEmail
-        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login"
+        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login/email"
         : "https://www.kidpro-production.somee.com/api/v1/authentication/login/account";
 
       const response = await fetch(apiUrl, {
