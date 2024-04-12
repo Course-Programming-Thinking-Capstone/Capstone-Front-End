@@ -5,644 +5,795 @@ import background from "../../../../images/background/adminStaffBackground.jpg";
 import simp from "../../../../images/gallery/simp.jpg";
 import Modal from "react-bootstrap/Modal";
 import ReactPaginate from "react-paginate";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+//dnd kit
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
+//css
+import "./SyllabusAd.css";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filteredOptions, setFilteredOptions] = useState(options);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-    useEffect(() => {
-        const filtered = options.filter((option) =>
-            option.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredOptions(filtered);
-    }, [searchTerm, options]);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsDropdownOpen(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [dropdownRef]);
-
-    // Find the selected option's label
-    const selectedOptionLabel =
-        options.find((option) => option.id === selectedValue)?.fullName || "";
-
-    return (
-        <div ref={dropdownRef} style={{ position: "relative" }}>
-            <div
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                style={{ cursor: "pointer", padding: "10px", border: "1px solid #FF8A00", borderRadius: '10px' }}
-            >
-                {selectedOptionLabel || "Select an option"}
-            </div>
-            {isDropdownOpen && (
-                <>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{
-                            padding: "10px",
-                            margin: "5px 0",
-                            width: "100%",
-                            boxSizing: "border-box",
-                            border: "1px solid #909090", borderRadius: '10px', outline: 'none'
-                        }}
-                    />
-                    <ul
-                        style={{
-                            listStyleType: "none",
-                            margin: 0,
-                            padding: 0,
-                            maxHeight: "200px",
-                            overflowY: "auto",
-                            position: "absolute",
-                            width: "100%",
-                            border: "1px solid #FF8A00", borderRadius: '10px',
-                            backgroundColor: "#fff",
-                            zIndex: 1000,
-                        }}
-                    >
-                        {filteredOptions.map((option) => (
-                            <li
-                                key={option.id}
-                                onClick={() => {
-                                    onChange(option.id);
-                                    setIsDropdownOpen(false);
-                                }}
-                                style={{ padding: "10px", cursor: "pointer" }}
-                            >
-                                {option.fullName}
-                            </li>
-                        ))}
-                    </ul>
-                </>
-            )}
-        </div>
+  useEffect(() => {
+    const filtered = options.filter((option) =>
+      option.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    setFilteredOptions(filtered);
+  }, [searchTerm, options]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dropdownRef]);
+
+  // Find the selected option's label
+  const selectedOptionLabel =
+    options.find((option) => option.id === selectedValue)?.fullName || "";
+
+  return (
+    <div ref={dropdownRef} style={{ position: "relative" }}>
+      <div
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        style={{
+          cursor: "pointer",
+          padding: "10px",
+          border: "1px solid #FF8A00",
+          borderRadius: "10px",
+        }}
+      >
+        {selectedOptionLabel || "Select an option"}
+      </div>
+      {isDropdownOpen && (
+        <>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: "10px",
+              margin: "5px 0",
+              width: "100%",
+              boxSizing: "border-box",
+              border: "1px solid #909090",
+              borderRadius: "10px",
+              outline: "none",
+            }}
+          />
+          <ul
+            style={{
+              listStyleType: "none",
+              margin: 0,
+              padding: 0,
+              maxHeight: "200px",
+              overflowY: "auto",
+              position: "absolute",
+              width: "100%",
+              border: "1px solid #FF8A00",
+              borderRadius: "10px",
+              backgroundColor: "#fff",
+              zIndex: 1000,
+            }}
+          >
+            {filteredOptions.map((option) => (
+              <li
+                key={option.id}
+                onClick={() => {
+                  onChange(option.id);
+                  setIsDropdownOpen(false);
+                }}
+                style={{ padding: "10px", cursor: "pointer" }}
+              >
+                {option.fullName}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default function SyllabusAd() {
-    const [showCreateSyllabus, setShowCreateSyllabus] = useState(false);
-    const [courses, setCourses] = useState([]);
-    const [record, setRecord] = useState([]);
+  const [showCreateSyllabus, setShowCreateSyllabus] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [record, setRecord] = useState([]);
 
-    const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 4;
-    const pageCount = Math.ceil(courses.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
+  const pageCount = Math.ceil(courses.length / itemsPerPage);
 
+  const handlePageClick = ({ selected: selectedPage }) => {
+    setCurrentPage(selectedPage);
+  };
 
-    const handlePageClick = ({ selected: selectedPage }) => {
-        setCurrentPage(selectedPage);
+  const offset = currentPage * itemsPerPage;
+  const currentPageData = courses.slice(offset, offset + itemsPerPage);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch(
+          "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Open",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          // Handle response errors
+          const error = await response.json();
+          throw new Error(error.message || "Failed to fetch courses");
+        }
+
+        const data = await response.json();
+        setCourses(data.results || []);
+        console.log(courses);
+        setRecord(data.totalRecords);
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+      }
     };
 
-    const offset = currentPage * itemsPerPage;
-    const currentPageData = courses.slice(offset, offset + itemsPerPage);
+    fetchCourses();
+  }, [accessToken]);
+
+  const CreateSyllabus = () => {
+    const [teachers, setTeachers] = useState([]);
+    const [modalShow, setModalShow] = React.useState(false);
+
+    //sortable list
+    const [sections, setSections] = useState([]);
+    const [newSectionName, setNewSectionName] = useState("");
+
+    const [courseName, setCourseName] = useState("");
+    const [courseTarget, setCourseTarget] = useState("");
+    const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+
+    const [activePassCondition, setActivePassCondition] = useState(null);
+    const [activeCourseSlot, setActiveCourseSlot] = useState(null);
+    const [activeSlotTime, setActiveSlotTime] = useState(null);
+
+    const notifyCreateFail = () =>
+      toast.error("Create syllabus failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+    const handleSelect = (category, value) => {
+      if (category === "passCondition") {
+        setActivePassCondition(value);
+      } else if (category === "courseSlot") {
+        setActiveCourseSlot(value);
+      } else if (category === "slotTime") {
+        setActiveSlotTime(value);
+      }
+    };
+
+    const handleAddSection = () => {
+      if (newSectionName.trim() !== "") {
+        setSections([...sections, newSectionName.trim()]);
+        setNewSectionName("");
+        setModalShow(false);
+      }
+    };
+
+    const handleRemoveSection = (indexToRemove) => {
+      setSections(sections.filter((_, index) => index !== indexToRemove));
+    };
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await fetch(
-                    "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Open",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    }
-                );
-
-                if (!response.ok) {
-                    // Handle response errors
-                    const error = await response.json();
-                    throw new Error(error.message || "Failed to fetch courses");
-                }
-
-                const data = await response.json();
-                setCourses(data.results || []);
-                console.log(courses);
-                setRecord(data.totalRecords);
-            } catch (error) {
-                console.error("Error fetching courses:", error.message);
+      const fetchTeachers = async () => {
+        try {
+          const response = await fetch(
+            "https://www.kidpro-production.somee.com/api/v1/users/admin/account?role=Teacher&page=1&size=100",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
-        };
+          );
+          if (!response.ok) {
+            const errorResponse = await response.json(); // Parsing the error response
+            console.error("Failed to create course:", errorResponse);
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const text = await response.text();
+          if (!text) {
+            console.error("Response body is empty");
+            return;
+          }
+          // Now parse the text as JSON since the body has been read as text
+          const data = JSON.parse(text);
+          if (!data.results) {
+            console.error("No results found");
+            return;
+          }
+          const teachersData = data.results.filter(
+            (item) => item.role === "Teacher"
+          );
+          setTeachers(teachersData);
+        } catch (error) {
+          console.error("Failed to fetch teachers:", error);
+        }
+      };
+      fetchTeachers();
+    }, []);
 
-        fetchCourses();
-    }, [accessToken]);
+    const handleSaveChanges = async () => {
+      const courseData = {
+        name: courseName,
+        target: courseTarget,
+        teacherId: selectedTeacherId,
+        totalSlot: activeCourseSlot,
+        slotTime: activeSlotTime,
+        minQuizScoreRatio: activePassCondition,
+        sections: sections.map((sectionName) => ({ name: sectionName })),
+      };
 
-    const CreateSyllabus = () => {
-        const [teachers, setTeachers] = useState([]);
-        const [modalShow, setModalShow] = React.useState(false);
-        const [sections, setSections] = useState([]);
-        const [newSectionName, setNewSectionName] = useState("");
-
-        const [courseName, setCourseName] = useState("");
-        const [courseTarget, setCourseTarget] = useState("");
-        const [selectedTeacherId, setSelectedTeacherId] = useState(null);
-
-        const [activePassCondition, setActivePassCondition] = useState(null);
-        const [activeCourseSlot, setActiveCourseSlot] = useState(null);
-        const [activeSlotTime, setActiveSlotTime] = useState(null);
-
-        const notifyCreateFail = () => toast.error("Create syllabus failed", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeButton: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-
-        const handleSelect = (category, value) => {
-            if (category === 'passCondition') {
-                setActivePassCondition(value);
-            } else if (category === 'courseSlot') {
-                setActiveCourseSlot(value);
-            } else if (category === 'slotTime') {
-                setActiveSlotTime(value);
-            }
-        };
-
-        const handleAddSection = () => {
-            if (newSectionName.trim() !== "") {
-                setSections([...sections, newSectionName.trim()]);
-                setNewSectionName("");
-                setModalShow(false);
-            }
-        };
-
-        const handleRemoveSection = (indexToRemove) => {
-            setSections(sections.filter((_, index) => index !== indexToRemove));
-        };
-
-        useEffect(() => {
-            const fetchTeachers = async () => {
-                try {
-                    const response = await fetch(
-                        "https://www.kidpro-production.somee.com/api/v1/users/admin/account?role=Teacher&page=1&size=100",
-                        {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${accessToken}`,
-                            },
-                        }
-                    );
-                    if (!response.ok) {
-                        const errorResponse = await response.json(); // Parsing the error response
-                        console.error("Failed to create course:", errorResponse);
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const text = await response.text();
-                    if (!text) {
-                        console.error("Response body is empty");
-                        return;
-                    }
-                    // Now parse the text as JSON since the body has been read as text
-                    const data = JSON.parse(text);
-                    if (!data.results) {
-                        console.error("No results found");
-                        return;
-                    }
-                    const teachersData = data.results.filter(
-                        (item) => item.role === "Teacher"
-                    );
-                    setTeachers(teachersData);
-                } catch (error) {
-                    console.error("Failed to fetch teachers:", error);
-                }
-            };
-            fetchTeachers();
-        }, []);
-
-        const handleSaveChanges = async () => {
-            const courseData = {
-                name: courseName,
-                target: courseTarget,
-                teacherId: selectedTeacherId,
-                totalSlot: activeCourseSlot,
-                slotTime: activeSlotTime,
-                minQuizScoreRatio: activePassCondition,
-                sections: sections.map((sectionName) => ({ name: sectionName })),
-            };
-
-            try {
-                const response = await fetch(
-                    "https://www.kidpro-production.somee.com/api/v1/syllabuses",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                        body: JSON.stringify(courseData),
-                    }
-                );
-
-                if (!response.ok) {
-                    const errorResponse = await response.json(); // Parsing the error response
-                    console.error("Failed to create course:", errorResponse);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Handle a successful response
-                const responseData = await response.json();
-                console.log("Course successfully created:", responseData);
-                // Optionally, clear the form or give user feedback
-            } catch (errors) {
-                notifyCreateFail();
-                console.error("Failed to create course:", errors);
-            }
-        };
-
-        return (
-            <div style={{ padding: "20px 80px" }}>
-                <div className="create-syllabus">
-                    <div className="header">
-                        <div className="d-flex justify-content-between">
-                            <div className="d-flex justify-content-start">
-                                <div>
-                                    <h5 className="mb">CREATE SYLLABUS</h5>
-                                    <hr />
-                                </div>
-                                <i className="fa-solid fa-book"></i>
-                            </div>
-                            <div>
-                                <button
-                                    onClick={() => setShowCreateSyllabus(false)}
-                                    style={{
-                                        backgroundColor: "#1A9CB7",
-                                        color: "white",
-                                        border: "none",
-                                        borderRadius: "10px",
-                                        padding: "5px 10px",
-                                    }}
-                                >
-                                    <i
-                                        style={{ color: "white" }}
-                                        className="fa-solid fa-chevron-left"
-                                    ></i>{" "}
-                                    Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <ToastContainer />
-                    <div>
-                        <div>
-                            <div className="d-flex justify-content-start mt-2">
-                                <div className="d-flex justify-content-start">
-                                    <p className="mb-0 blue">Course title</p>
-                                    <span className="orange">*</span>
-                                </div>
-                                <input
-                                    className="ms-3"
-                                    style={{ width: "400px", outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }}
-                                    type="text"
-                                    placeholder="Course title"
-                                    value={courseName}
-                                    onChange={(e) => setCourseName(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="d-flex justify-content-start">
-                                <p className="mb-0 blue">Course target</p>
-                                <span className="orange">*</span>
-                            </div>
-                            <textarea
-                                name=""
-                                id=""
-                                rows="4"
-                                style={{ width: "100%", outline: 'none', border: '1px solid #FF8A00', borderRadius: '8px' }}
-                                value={courseTarget}
-                                onChange={(e) => setCourseTarget(e.target.value)}
-                            ></textarea>
-                        </div>
-
-                        <div className="d-flex justify-content-start">
-                            <p className="mb-0 blue">Section</p>
-                            <span className="orange">*</span>
-                        </div>
-
-                        <Modal
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered
-                            show={modalShow}
-                        >
-                            <Modal.Body>
-                                <div className="text-center">
-                                    <h5 style={{ color: "#ff8a00" }}>Add new section</h5>
-                                </div>
-                                <div className="mt-4">
-                                    <p className="mb-0">Section's name</p>
-                                    <input
-                                        value={newSectionName}
-                                        onChange={(e) => setNewSectionName(e.target.value)}
-                                        type="text"
-                                        placeholder="Write section's name"
-                                        style={{
-                                            width: "100%",
-                                            borderRadius: "7px",
-                                            outline: "none",
-                                            border: '1px solid #FF8A00'
-                                        }}
-                                    />
-                                </div>
-                                <div className="d-flex justify-content-end mt-4">
-                                    <button
-                                        style={{
-                                            backgroundColor: "#1a9cb7",
-                                            color: "white",
-                                            border: "none",
-                                            borderRadius: "5px",
-                                            height: "35px",
-                                            width: "100px",
-                                        }}
-                                        className="mx-4"
-                                        onClick={() => setModalShow(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        style={{
-                                            backgroundColor: "#E53E5C",
-                                            color: "white",
-                                            border: "none",
-                                            borderRadius: "5px",
-                                            height: "35px",
-                                            width: "100px",
-                                        }}
-                                        onClick={handleAddSection}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                            </Modal.Body>
-                        </Modal>
-                        <div className="render-section">
-                            {sections.map((section, index) => (
-                                <div
-                                    className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
-                                    key={index}
-                                    style={{ border: "1px solid #D4D4D4" }}
-                                >
-                                    <p className="mb-0">{section}</p>
-                                    <i onClick={() => handleRemoveSection(index)}
-                                        style={{ cursor: "pointer" }} class="fa-solid fa-trash-can"></i>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="d-flex justify-content-center mt-4">
-                            <button
-                                style={{
-                                    backgroundColor: "#E53E5C",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "10px",
-                                    height: "35px",
-                                }}
-                                onClick={() => setModalShow(true)}
-                            >
-                                <div className="d-flex">
-
-                                    <i className="fa-solid fa-circle-plus mt-1"></i>
-                                    <span className="ms-2">
-
-                                        New section
-                                    </span>
-                                </div>
-                            </button>
-                        </div>
-
-                        <div className="point d-flex">
-                            <div>
-                                <p className="blue mb-1">Pass condition</p>
-                                <p className="ms-5">Quiz score higher</p>
-                                <p className="blue mb-1">Course slot</p>
-                                <p className="ms-5">Total number of slot</p>
-                                <p className="blue mb-1">Slot time</p>
-                                <p className="ms-5">Minutes</p>
-                            </div>
-                            <div className="ms-5">
-                                <div className="d-flex" style={{ marginTop: '30px' }}>
-                                    {[60, 70, 80, 90].map((value) => (
-                                        <div
-                                            key={value}
-                                            className="item d-flex"
-                                            onClick={() => handleSelect('passCondition', value)}
-                                        >
-                                            <i className={activePassCondition === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
-                                            <div>{value}%</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="d-flex" style={{ marginTop: '60px' }}>
-                                    {[25, 30, 35, 40].map((value) => (
-                                        <div
-                                            key={value}
-                                            className="item d-flex"
-                                            onClick={() => handleSelect('courseSlot', value)}
-                                        >
-                                            <i className={activeCourseSlot === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
-                                            <div>{value}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="d-flex" style={{ marginTop: '55px' }}>
-                                    {[20, 30, 45, 50].map((value) => (
-                                        <div
-                                            key={value}
-                                            className="item d-flex"
-                                            onClick={() => handleSelect('slotTime', value)}
-                                        >
-                                            <i className={activeSlotTime === value ? "fa-solid fa-circle" : "fa-regular fa-circle"}></i>
-                                            <div>{value}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="d-flex justify-content-start">
-                                <p className="mb-0 blue">Teacher</p>
-                                <span className="orange">*</span>
-                            </div>
-                            <SearchableDropdown
-                                options={teachers}
-                                selectedValue={selectedTeacherId}
-                                onChange={(id) => setSelectedTeacherId(id)}
-                            />
-                        </div>
-
-                        <div className="d-flex justify-content-end mt-4">
-                            <button
-                                style={{
-                                    backgroundColor: "#FD8569",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "7px",
-                                    height: "35px",
-                                    width: "150px",
-                                }}
-                                onClick={handleSaveChanges}
-                            >
-                                SAVE CHANGES
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      try {
+        const response = await fetch(
+          "https://www.kidpro-production.somee.com/api/v1/syllabuses",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(courseData),
+          }
         );
+
+        if (!response.ok) {
+          const errorResponse = await response.json(); // Parsing the error response
+          console.error("Failed to create course:", errorResponse);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Handle a successful response
+        const responseData = await response.json();
+        console.log("Course successfully created:", responseData);
+        // Optionally, clear the form or give user feedback
+      } catch (errors) {
+        notifyCreateFail();
+        console.error("Failed to create course:", errors);
+      }
     };
 
-    // Conditional rendering based on showCreateSyllabus
-    if (showCreateSyllabus) {
-        return <CreateSyllabus />;
-    }
+    //dnd part
+
+    //sensor
+    const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+
+    const handleDragEnd = (event) => {
+      const { active, over } = event;
+
+      if (active.id === over.id) {
+        return;
+      }
+
+      const originalPos = active.id;
+      const newPos = over.id;
+
+      const updateSections = arrayMove(sections, originalPos, newPos);
+      setSections(updateSections);
+    };
+
+    //dnd part
 
     return (
-        <div className="admin-syllabus">
-            <div className="syllabus">
-                <div className="header">
-                    <div className="d-flex justify-content-start">
-                        <div>
-                            <h5 className="mb">SYLLABUS</h5>
-                            <hr />
-                        </div>
-                        <i className="fa-solid fa-book"></i>
-                    </div>
+      <div style={{ padding: "20px 80px" }}>
+        <div className="create-syllabus">
+          <div className="header">
+            <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-start">
+                <div>
+                  <h5 className="mb">CREATE SYLLABUS</h5>
+                  <hr />
                 </div>
-
-                <ToastContainer />
-
-                <div className="syllabus-content">
-                    <div className="d-flex justify-content-between">
-                        <div
-                            className="d-flex justify-content-start"
-                            style={{
-                                width: "30%",
-                                border: "1px solid #EF7E54",
-                                padding: "10px 15px",
-                                borderRadius: "10px",
-                                color: "white",
-                            }}
-                        >
-                            <div className="text-center" style={{ width: "50%" }}>
-                                <h5 className="mb-0">SYLLABUS LIST</h5>
-                            </div>
-                            <div
-                                className="d-flex justify-content-around"
-                                style={{
-                                    width: "50%",
-                                    backgroundColor: "#FF8A00",
-                                    borderRadius: "10px",
-                                }}
-                            >
-                                <p className="mb-0">Total syllabus</p>
-                                <span style={{fontSize:'16px'}}>{record}</span>
-                            </div>
-                        </div>
-                        <div>
-                            <button
-                                onClick={() => setShowCreateSyllabus(true)}
-                                style={{
-                                    backgroundColor: "#EF7E54",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "10px",
-                                    padding: "5px 10px",
-                                }}
-                            >
-                                <i className="fa-solid fa-circle-plus"></i> Create syllabus
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="search d-flex justify-content-center">
-                            <input type="text" placeholder="Search course" />
-                            <div
-                                className="text-center"
-                                style={{
-                                    height: "30px",
-                                    border: "1px solid #988E8E66",
-                                    borderLeft: "none",
-                                    width: "5%",
-                                    paddingTop: "5px",
-                                    borderRadius: "0 10px 10px 0",
-                                }}
-                            >
-                                <i className="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                        </div>
-
-                        <div className="px-3">
-                            {currentPageData.map((course, index) => (
-                                <div key={index} className="syllabus-item">
-                                    <div className="d-flex justify-content-between">
-                                        <div className="d-flex justify-content-start">
-                                            <img className="img-responsive" src={simp} alt="" />
-                                            <div className="ms-3">
-                                                <p className="mb-1 mt-2">{course.name}</p>
-                                                <p className="mb-1 title blue">
-                                                    Create date: {course.createdDate}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button
-                                                className="mt-3"
-                                                style={{
-                                                    width: "100px",
-                                                    backgroundColor: "#EF7E54",
-                                                    border: "none",
-                                                    borderRadius: "10px",
-                                                    color: "white",
-                                                }}
-                                            >
-                                                Edit
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="d-flex justify-content-center">
-                            <ReactPaginate
-                                previousLabel={"← Previous"}
-                                nextLabel={"Next →"}
-                                pageCount={pageCount}
-                                onPageChange={handlePageClick}
-                                containerClassName={"pagination"}
-                                previousLinkClassName={"pagination__link"}
-                                nextLinkClassName={"pagination__link"}
-                                disabledClassName={"pagination__link--disabled"}
-                                activeClassName={"pagination__link--active"}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <i className="fa-solid fa-book"></i>
+              </div>
+              <div>
+                <button
+                  onClick={() => setShowCreateSyllabus(false)}
+                  style={{
+                    backgroundColor: "#1A9CB7",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  <i
+                    style={{ color: "white" }}
+                    className="fa-solid fa-chevron-left"
+                  ></i>{" "}
+                  Back
+                </button>
+              </div>
             </div>
+          </div>
+
+          <ToastContainer />
+          <div>
+            <div>
+              <div className="d-flex justify-content-start mt-2">
+                <div className="d-flex justify-content-start">
+                  <p className="mb-0 blue">Course title</p>
+                  <span className="orange">*</span>
+                </div>
+                <input
+                  className="ms-3"
+                  style={{
+                    width: "400px",
+                    outline: "none",
+                    border: "1px solid #FF8A00",
+                    borderRadius: "8px",
+                  }}
+                  type="text"
+                  placeholder="Course title"
+                  value={courseName}
+                  onChange={(e) => setCourseName(e.target.value)}
+                />
+              </div>
+
+              <div className="d-flex justify-content-start">
+                <p className="mb-0 blue">Course target</p>
+                <span className="orange">*</span>
+              </div>
+              <textarea
+                name=""
+                id=""
+                rows="4"
+                style={{
+                  width: "100%",
+                  outline: "none",
+                  border: "1px solid #FF8A00",
+                  borderRadius: "8px",
+                }}
+                value={courseTarget}
+                onChange={(e) => setCourseTarget(e.target.value)}
+              ></textarea>
+            </div>
+
+            <div className="d-flex justify-content-start">
+              <p className="mb-0 blue">Section</p>
+              <span className="orange">*</span>
+            </div>
+
+            <Modal
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              show={modalShow}
+            >
+              <Modal.Body>
+                <div className="text-center">
+                  <h5 style={{ color: "#ff8a00" }}>Add new section</h5>
+                </div>
+                <div className="mt-4">
+                  <p className="mb-0">Section's name</p>
+                  <input
+                    value={newSectionName}
+                    onChange={(e) => setNewSectionName(e.target.value)}
+                    type="text"
+                    placeholder="Write section's name"
+                    style={{
+                      width: "100%",
+                      borderRadius: "7px",
+                      outline: "none",
+                      border: "1px solid #FF8A00",
+                    }}
+                  />
+                </div>
+                <div className="d-flex justify-content-end mt-4">
+                  <button
+                    style={{
+                      backgroundColor: "#1a9cb7",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      height: "35px",
+                      width: "100px",
+                    }}
+                    className="mx-4"
+                    onClick={() => setModalShow(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    style={{
+                      backgroundColor: "#E53E5C",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      height: "35px",
+                      width: "100px",
+                    }}
+                    onClick={handleAddSection}
+                  >
+                    Add
+                  </button>
+                </div>
+              </Modal.Body>
+            </Modal>
+            <div className="render-section">
+              {/* Dnd content */}
+              <DndContext
+                collisionDetection={closestCenter}
+                sensors={sensor}
+                onDragEnd={(event) => handleDragEnd(event)}
+              >
+                <SortableContext
+                  items={sections}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {sections.map((section, index) => (
+                    //   <div
+                    //     className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
+                    //     key={index}
+                    //     style={{ border: "1px solid #D4D4D4" }}
+                    //   >
+                    //     <p className="mb-0">{section}</p>
+                    //     <i
+                    //       onClick={() => handleRemoveSection(index)}
+                    //       style={{ cursor: "pointer" }}
+                    //       class="fa-solid fa-trash-can"
+                    //     ></i>
+                    //   </div>
+
+                    <SectionComponent
+                      index={index}
+                      handleRemoveSection={handleRemoveSection}
+                      section={section}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+
+              {/* Dnd content */}
+            </div>
+            <div className="d-flex justify-content-center mt-4">
+              <button
+                style={{
+                  backgroundColor: "#E53E5C",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  height: "35px",
+                }}
+                onClick={() => setModalShow(true)}
+              >
+                <div className="d-flex">
+                  <i className="fa-solid fa-circle-plus mt-1"></i>
+                  <span className="ms-2">New section</span>
+                </div>
+              </button>
+            </div>
+
+            <div className="point d-flex">
+              <div>
+                <p className="blue mb-1">Pass condition</p>
+                <p className="ms-5">Quiz score higher</p>
+                <p className="blue mb-1">Course slot</p>
+                <p className="ms-5">Total number of slot</p>
+                <p className="blue mb-1">Slot time</p>
+                <p className="ms-5">Minutes</p>
+              </div>
+              <div className="ms-5">
+                <div className="d-flex" style={{ marginTop: "30px" }}>
+                  {[60, 70, 80, 90].map((value) => (
+                    <div
+                      key={value}
+                      className="item d-flex"
+                      onClick={() => handleSelect("passCondition", value)}
+                    >
+                      <i
+                        className={
+                          activePassCondition === value
+                            ? "fa-solid fa-circle"
+                            : "fa-regular fa-circle"
+                        }
+                      ></i>
+                      <div>{value}%</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="d-flex" style={{ marginTop: "60px" }}>
+                  {[25, 30, 35, 40].map((value) => (
+                    <div
+                      key={value}
+                      className="item d-flex"
+                      onClick={() => handleSelect("courseSlot", value)}
+                    >
+                      <i
+                        className={
+                          activeCourseSlot === value
+                            ? "fa-solid fa-circle"
+                            : "fa-regular fa-circle"
+                        }
+                      ></i>
+                      <div>{value}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="d-flex" style={{ marginTop: "55px" }}>
+                  {[20, 30, 45, 50].map((value) => (
+                    <div
+                      key={value}
+                      className="item d-flex"
+                      onClick={() => handleSelect("slotTime", value)}
+                    >
+                      <i
+                        className={
+                          activeSlotTime === value
+                            ? "fa-solid fa-circle"
+                            : "fa-regular fa-circle"
+                        }
+                      ></i>
+                      <div>{value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="d-flex justify-content-start">
+                <p className="mb-0 blue">Teacher</p>
+                <span className="orange">*</span>
+              </div>
+              <SearchableDropdown
+                options={teachers}
+                selectedValue={selectedTeacherId}
+                onChange={(id) => setSelectedTeacherId(id)}
+              />
+            </div>
+
+            <div className="d-flex justify-content-end mt-4">
+              <button
+                style={{
+                  backgroundColor: "#FD8569",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "7px",
+                  height: "35px",
+                  width: "150px",
+                }}
+                onClick={handleSaveChanges}
+              >
+                SAVE CHANGES
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
     );
+  };
+
+  // Conditional rendering based on showCreateSyllabus
+  if (showCreateSyllabus) {
+    return <CreateSyllabus />;
+  }
+
+  return (
+    <div className="admin-syllabus">
+      <div className="syllabus">
+        <div className="header">
+          <div className="d-flex justify-content-start">
+            <div>
+              <h5 className="mb">SYLLABUS</h5>
+              <hr />
+            </div>
+            <i className="fa-solid fa-book"></i>
+          </div>
+        </div>
+
+        <ToastContainer />
+
+        <div className="syllabus-content">
+          <div className="d-flex justify-content-between">
+            <div
+              className="d-flex justify-content-start"
+              style={{
+                width: "30%",
+                border: "1px solid #EF7E54",
+                padding: "10px 15px",
+                borderRadius: "10px",
+                color: "white",
+              }}
+            >
+              <div className="text-center" style={{ width: "50%" }}>
+                <h5 className="mb-0">SYLLABUS LIST</h5>
+              </div>
+              <div
+                className="d-flex justify-content-around"
+                style={{
+                  width: "50%",
+                  backgroundColor: "#FF8A00",
+                  borderRadius: "10px",
+                }}
+              >
+                <p className="mb-0">Total syllabus</p>
+                <span style={{ fontSize: "16px" }}>{record}</span>
+              </div>
+            </div>
+            <div>
+              <button
+                onClick={() => setShowCreateSyllabus(true)}
+                style={{
+                  backgroundColor: "#EF7E54",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "5px 10px",
+                }}
+              >
+                <i className="fa-solid fa-circle-plus"></i> Create syllabus
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div className="search d-flex justify-content-center">
+              <input type="text" placeholder="Search course" />
+              <div
+                className="text-center"
+                style={{
+                  height: "30px",
+                  border: "1px solid #988E8E66",
+                  borderLeft: "none",
+                  width: "5%",
+                  paddingTop: "5px",
+                  borderRadius: "0 10px 10px 0",
+                }}
+              >
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </div>
+            </div>
+
+            <div className="px-3">
+              {currentPageData.map((course, index) => (
+                <div key={index} className="syllabus-item">
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-start">
+                      <img className="img-responsive" src={simp} alt="" />
+                      <div className="ms-3">
+                        <p className="mb-1 mt-2">{course.name}</p>
+                        <p className="mb-1 title blue">
+                          Create date: {course.createdDate}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        className="mt-3"
+                        style={{
+                          width: "100px",
+                          backgroundColor: "#EF7E54",
+                          border: "none",
+                          borderRadius: "10px",
+                          color: "white",
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="d-flex justify-content-center">
+              <ReactPaginate
+                previousLabel={"← Previous"}
+                nextLabel={"Next →"}
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                previousLinkClassName={"pagination__link"}
+                nextLinkClassName={"pagination__link"}
+                disabledClassName={"pagination__link--disabled"}
+                activeClassName={"pagination__link--active"}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const SectionComponent = ({ index, handleRemoveSection, section }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    border: "1px solid #D4D4D4",
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
+
+  return (
+    <div
+      className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between align-items-center"
+      //   key={index}
+
+      ref={setNodeRef}
+      style={style}
+    >
+      <p className="mb-0">{section}</p>
+
+      <div className="d-flex justify-content-between align-items-center">
+        <i
+          onClick={() => handleRemoveSection(index)}
+          style={{ cursor: "pointer", fontSize: "18px" }}
+          class="fa-solid fa-trash-can mx-3"
+        ></i>
+
+        <div
+          //   className="create-course-drag mx- 2"
+          className="mx-2"
+          disabled
+          title="Drag"
+          {...attributes}
+          {...listeners}
+          style={{ cursor: "pointer" }}
+        >
+          <i className="fa-regular fa-hand" style={{ fontSize: "18px" }}></i>
+        </div>
+      </div>
+    </div>
+  );
 };
