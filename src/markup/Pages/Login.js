@@ -74,11 +74,14 @@ export default function Login() {
         case "Admin":
           navigate("/admin")
           break;
-        case "Teacher":
-          navigate("/teacher")
-          break;
         case "Staff":
           navigate("/staff")
+          break;
+        case "Parent":
+          navigate("/home")
+          break;
+        case "Teacher":
+          navigate("/teacher")
           break;
         case "Student":
           navigate("/courses-plan")
