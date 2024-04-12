@@ -43,7 +43,7 @@ export default function Order() {
                 }
 
                 const data = await response.json();
-                setOrders(data); // Assuming the API returns an array of orders
+                setOrders(data.order); // Assuming the API returns an array of orders
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
             } finally {

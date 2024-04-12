@@ -53,6 +53,7 @@ import { EditText } from "./markup/Pages/TestPage/EditText";
 import ErrorPage from "./markup/Pages/ErrorPage";
 import StudentHome from "./markup/Pages/StudentHome";
 import CourseStudy from "./markup/Pages/CourseStudy";
+import Order from "./markup/Pages/Order";
 
 // function App() {
 // 	return (
@@ -295,6 +296,16 @@ const App = () => {
                 <PrivateRoute
                   page="classes-detail"
                   component={<ClassesDetail />}
+                />
+              }
+            />
+
+            <Route
+              path="/order"
+              element={
+                <PrivateRoute
+                  page="order"
+                  component={<Order />}
                 />
               }
             />

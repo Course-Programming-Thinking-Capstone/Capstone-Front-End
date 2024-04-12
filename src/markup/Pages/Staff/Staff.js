@@ -108,7 +108,7 @@ export default function Staff() {
                         </div>
                         <div className="item d-flex justify-content-start" onClick={handleLogout}>
                             <i class="fa-solid fa-right-from-bracket"></i>
-                            Log out
+                            <span>Log out</span>
                         </div>
                     </div>
                 </div>
