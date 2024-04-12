@@ -1,10 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import teacher from './../../images/team/teacher.png';
 import Footer from '../Layout/Footer';
 import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 
 export default function CoursesPlan() {
+    const { classId } = useParams(); // This should correctly get classId from the URL
+    console.log("Class ID:", classId); // Retrieves the classId from the URL
+    const accessToken = localStorage.getItem('accessToken');
+    const [courseDetails, setCourseDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCourseDetails = async () => {
+            if (!classId) {
+                console.error('Class ID is undefined!');
+                return; // Stop the function if classId is undefined
+            }
+    
+            const url = `https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`;
+            console.log('Fetching from:', url); // Log the URL to debug
+    
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (!response.ok) {
+                    const errorText = await response.text(); // Getting error message from response
+                    throw new Error(errorText);
+                }
+    
+                const data = await response.json();
+                console.log('Fetched data:', data); // Check the fetched data
+                setCourseDetails(data);
+            } catch (error) {
+                console.error('Error fetching course details:', error.message);
+            }
+        };
+    
+        fetchCourseDetails();
+    }, [classId, accessToken]);
+     // Include accessToken in dependencies if it can change
+    
+
     const CollapsibleQuestion = ({ id, title, children }) => {
         // State to track if the collapsible content is visible
         const [isOpen, setIsOpen] = useState(false);

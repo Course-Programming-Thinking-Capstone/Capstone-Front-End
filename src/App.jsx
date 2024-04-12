@@ -51,6 +51,7 @@ import CoursesPlan from "./markup/Pages/CoursesPlan";
 import { NotFound } from "./markup/Pages/NotFound/NotFound";
 import { EditText } from "./markup/Pages/TestPage/EditText";
 import ErrorPage from "./markup/Pages/ErrorPage";
+import StudentHome from "./markup/Pages/StudentHome";
 
 // function App() {
 // 	return (
@@ -313,8 +314,18 @@ const App = () => {
               }
             />
             {/* Student pages */}
+
             <Route
-              path="/courses-plan"
+              path="/student-home"
+              element={
+                <PrivateRoute
+                  page="student-home"
+                  component={<StudentHome />}
+                />
+              }
+            />
+            <Route
+              path="/courses-plan/:classId"
               element={
                 <PrivateRoute
                   page="courses-plan"

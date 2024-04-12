@@ -84,7 +84,7 @@ export default function Login() {
           navigate("/teacher")
           break;
         case "Student":
-          navigate("/courses-plan")
+          navigate("/student-home")
           break;
         default:
 

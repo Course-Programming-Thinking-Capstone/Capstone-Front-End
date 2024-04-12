@@ -41,7 +41,7 @@ export const TeacherPages = [
 export const ParentPages = ["classes", "classes-detail", "payment", "payment-success"];
 
 //Lưu đường dẫn các trang mà student được truy cập
-export const StudentPages = ["courses-plan"];
+export const StudentPages = ["student-home", "courses-plan"];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {
