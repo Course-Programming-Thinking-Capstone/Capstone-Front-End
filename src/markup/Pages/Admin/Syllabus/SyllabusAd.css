@@ -1,21 +1,56 @@
 .syllabus-ad-drag {
-    display: block;
-    border: none;
-    border-radius: 50%;
-    background-color: white;
-    color: #ff8a00;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    width: 35px;
-    height: 35px;
-    padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: normal;
-  }
-  
-  .syllabus-ad-drag:hover {
-    background-color: #f7cc9c;
-  }
+  display: block;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #ff8a00;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.syllabus-ad-drag:hover {
+  background-color: #f7cc9c;
+}
+
+.syllabus-ad-admin-syllabus-container {
+  padding-top: 5vh !important;
+  padding-bottom: 5vh !important;
+}
+
+.syllabus-ad-admin-syllabus {
+  padding: 20px 40px;
+  background-color: #fbede1;
+  height: 90vh;
+  margin: auto;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.syllabus-ad-admin-syllabus .header h5 {
+  font-size: 22px;
+}
+
+.syllabus-ad-admin-syllabus .header hr {
+  width: 50%;
+  color: #ff8a00;
+  margin: 0;
+  height: 3px;
+}
+
+.syllabus-ad-admin-syllabus .header i {
+  color: #ff8a00;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.syllabus-ad-content {
+  min-height: 340px;
+}
