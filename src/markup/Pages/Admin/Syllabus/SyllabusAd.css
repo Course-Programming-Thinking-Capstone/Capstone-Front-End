@@ -54,3 +54,69 @@
 .syllabus-ad-content {
   min-height: 340px;
 }
+
+input.syllabus-ad-create-syllabus-input,
+textarea.syllabus-ad-create-syllabus-input {
+  padding: 4px 8px;
+  width: 400px;
+  outline: none;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+}
+
+/* .syllabus-ad-create-syllabus-modal {
+  max-width: 500px !important;
+  margin: auto;
+} */
+
+.syllabus-ad-create-syllabus-form-lable {
+  color: #f25b58;
+  font-weight: bold;
+}
+
+.syllabus-ad-create-syllabus-section {
+  background-color: white;
+  border-radius: 5px;
+}
+
+.syllabus-ad-create-syllabus-section-remove {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #f54340;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.syllabus-ad-create-syllabus-section-remove:hover {
+  background-color: #faa287;
+}
+
+.syllabus-ad-create-syllabus-button {
+  display: block;
+  border: none;
+  border-radius: 5px;
+  background-color: #f25b58;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.syllabus-ad-create-syllabus-button:hover {
+  background-color: #f14542;
+}

@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import background from "../../../../images/background/adminStaffBackground.jpg";
-import simp from "../../../../images/gallery/simp.jpg";
 import syllabusPicture from "../../../../images/gallery/syllabus_image.jpg";
 import Modal from "react-bootstrap/Modal";
-import ReactPaginate from "react-paginate";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +10,6 @@ import {
   MouseSensor,
   TouchSensor,
   closestCenter,
-  closestCorners,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -35,8 +29,13 @@ import {
   formatDateV1,
 } from "../../../../helper/utils/DateUtil";
 import { CustomPagination } from "../../../Layout/Components/Pagination";
-import { filterSyllabus } from "../../../../helper/apis/syllabus/syllabus";
+import {
+  createSyllabus,
+  filterSyllabus,
+} from "../../../../helper/apis/syllabus/syllabus";
 import { Spinner } from "react-bootstrap";
+import instance from "../../../../helper/apis/baseApi/baseApi";
+import { useNavigate } from "react-router-dom";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -136,11 +135,13 @@ export default function SyllabusAd() {
   const [courses, setCourses] = useState([]);
   const [record, setRecord] = useState([]);
   const [isSyllabusLoading, setIsSyllabusLoading] = useState(false);
+  const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
   const [syllabusPage, setSyllabusPage] = useState(1);
   const [totalSyllabusPage, setTotalSyllabusPage] = useState(0);
   const [syllabusQuery, setSyllabusQuery] = useState("");
 
-  const accessToken = localStorage.getItem("accessToken");
+  //useNavigate
+  const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
@@ -153,6 +154,19 @@ export default function SyllabusAd() {
   //notification
   const notifyApiFail = (message) =>
     toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -267,6 +281,19 @@ export default function SyllabusAd() {
         theme: "colored",
       });
 
+    const notifyCreateSuccess = (message) =>
+      toast.info(message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
     const handleSelect = (category, value) => {
       if (category === "passCondition") {
         setActivePassCondition(value);
@@ -292,80 +319,85 @@ export default function SyllabusAd() {
     useEffect(() => {
       const fetchTeachers = async () => {
         try {
-          const response = await fetch(
-            "https://www.kidpro-production.somee.com/api/v1/users/admin/account?role=Teacher&page=1&size=100",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
+          // const response = await fetch(
+          //   "https://www.kidpro-production.somee.com/api/v1/users/admin/account?role=Teacher&page=1&size=100",
+          //   {
+          //     method: "GET",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //       Authorization: `Bearer ${accessToken}`,
+          //     },
+          //   }
+          // );
+
+          const response = await instance.get(
+            `api/v1/users/admin/account?role=Teacher&page=1&size=100`
           );
-          if (!response.ok) {
-            const errorResponse = await response.json(); // Parsing the error response
-            console.error("Failed to create course:", errorResponse);
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const text = await response.text();
-          if (!text) {
-            console.error("Response body is empty");
-            return;
-          }
-          // Now parse the text as JSON since the body has been read as text
-          const data = JSON.parse(text);
-          if (!data.results) {
-            console.error("No results found");
-            return;
-          }
+
+          const data = response.data;
+
           const teachersData = data.results.filter(
             (item) => item.role === "Teacher"
           );
           setTeachers(teachersData);
         } catch (error) {
-          console.error("Failed to fetch teachers:", error);
+          if (error.response) {
+            const message =
+              error.response?.data?.message ||
+              "Something wrong when fetch teacher list.";
+            console.log(`Error response: ${error.response?.data?.message}`);
+            notifyApiFail(message);
+          } else {
+            const message =
+              error.message || "Something wrong when fetch teacher list.";
+            console.log(`Error message: ${error.message}`);
+            notifyApiFail(message);
+          }
         }
       };
       fetchTeachers();
     }, []);
 
     const handleSaveChanges = async () => {
-      const courseData = {
-        name: courseName,
-        target: courseTarget,
-        teacherId: selectedTeacherId,
-        totalSlot: activeCourseSlot,
-        slotTime: activeSlotTime,
-        minQuizScoreRatio: activePassCondition,
-        sections: sections.map((sectionName) => ({ name: sectionName })),
-      };
-
       try {
-        const response = await fetch(
-          "https://www.kidpro-production.somee.com/api/v1/syllabuses",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify(courseData),
-          }
-        );
+        setIsSyllabusCreating(true);
 
-        if (!response.ok) {
-          const errorResponse = await response.json(); // Parsing the error response
-          console.error("Failed to create course:", errorResponse);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const courseData = {
+          name: courseName,
+          target: courseTarget,
+          teacherId: selectedTeacherId,
+          totalSlot: activeCourseSlot,
+          slotTime: activeSlotTime,
+          minQuizScoreRatio: activePassCondition,
+          sections: sections.map((sectionName) => ({ name: sectionName })),
+        };
+
+        const response = await createSyllabus(courseData);
 
         // Handle a successful response
-        const responseData = await response.json();
-        console.log("Course successfully created:", responseData);
+        // const responseData = await response.json();
+        // console.log("Course successfully created:", responseData);
         // Optionally, clear the form or give user feedback
-      } catch (errors) {
-        notifyCreateFail();
-        console.error("Failed to create course:", errors);
+
+        notifyApiSucess("Create syllabus success.");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        if (error.response) {
+          const message =
+            error.response?.data?.message ||
+            "Something wrong when create syllabuses.";
+          console.log(`Error response: ${error.response?.data?.message}`);
+          notifyApiFail(message);
+        } else {
+          const message =
+            error.message || "Something wrong when create syllabuses.";
+          console.log(`Error message: ${error.message}`);
+          notifyApiFail(message);
+        }
+      } finally {
+        setIsSyllabusCreating(false);
       }
     };
 
@@ -391,13 +423,13 @@ export default function SyllabusAd() {
     //dnd part
 
     return (
-      <div style={{ padding: "20px 80px" }}>
-        <div className="create-syllabus">
+      <div className="syllabus-ad-admin-syllabus-container admin-syllabus">
+        <div className="create-syllabus my-0">
           <div className="header">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex justify-content-start align-items-center">
                 <div>
-                  <h5 className="mb">CREATE SYLLABUS</h5>
+                  <h5 className="mb">Create Syllabus</h5>
                   <hr />
                 </div>
                 <i className="fa-solid fa-book"></i>
@@ -405,275 +437,268 @@ export default function SyllabusAd() {
               <div>
                 <button
                   onClick={() => setShowCreateSyllabus(false)}
-                  style={{
-                    backgroundColor: "#1A9CB7",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "5px 10px",
-                  }}
+                  className="syllabus-ad-create-syllabus-button"
+                  disabled = {isSyllabusCreating}
                 >
                   <i
-                    style={{ color: "white" }}
-                    className="fa-solid fa-chevron-left"
+                    style={{ color: "white", fontSize: "16px" }}
+                    className="fa-solid fa-chevron-left mx-1"
                   ></i>{" "}
-                  Back
+                  <div className="mx-1">Back</div>
                 </button>
               </div>
             </div>
           </div>
+          <hr />
 
           <ToastContainer />
-          <div>
+
+          {isSyllabusCreating ? (
+            <div className="d-flex justify-content-center py-5">
+              <Spinner
+                animation="border"
+                variant="success"
+                className="custom-spinner"
+              />
+            </div>
+          ) : (
             <div>
-              <div className="d-flex justify-content-start mt-2">
-                <div className="d-flex justify-content-start">
-                  <p className="mb-0 blue">Course title</p>
+              <div>
+                <div className="d-flex justify-content-start fw-bold my-3">
+                  <p className="mb-0 blue ">Course title</p>
                   <span className="orange">*</span>
                 </div>
                 <input
-                  className="ms-3"
-                  style={{
-                    width: "400px",
-                    outline: "none",
-                    border: "1px solid #FF8A00",
-                    borderRadius: "8px",
-                  }}
+                  className="syllabus-ad-create-syllabus-input mb-3 w-100"
                   type="text"
-                  placeholder="Course title"
+                  placeholder="Title"
                   value={courseName}
                   onChange={(e) => setCourseName(e.target.value)}
                 />
+
+                <div className="d-flex justify-content-start fw-bold mb-3">
+                  <p className="mb-0 blue">Course target</p>
+                  <span className="orange">*</span>
+                </div>
+                <textarea
+                  className="mb-3 syllabus-ad-create-syllabus-input w-100"
+                  name=""
+                  id=""
+                  rows="4"
+                  // style={{
+                  //   width: "100%",
+                  //   outline: "none",
+                  //   border: "1px solid #FF8A00",
+                  //   borderRadius: "8px",
+                  // }}
+                  value={courseTarget}
+                  onChange={(e) => setCourseTarget(e.target.value)}
+                ></textarea>
               </div>
 
-              <div className="d-flex justify-content-start">
-                <p className="mb-0 blue">Course target</p>
+              <div className="d-flex justify-content-start fw-bold mb-3">
+                <p className="mb-0 blue">Sections</p>
                 <span className="orange">*</span>
               </div>
-              <textarea
-                name=""
-                id=""
-                rows="4"
-                style={{
-                  width: "100%",
-                  outline: "none",
-                  border: "1px solid #FF8A00",
-                  borderRadius: "8px",
-                }}
-                value={courseTarget}
-                onChange={(e) => setCourseTarget(e.target.value)}
-              ></textarea>
-            </div>
 
-            <div className="d-flex justify-content-start">
-              <p className="mb-0 blue">Section</p>
-              <span className="orange">*</span>
-            </div>
-
-            <Modal
-              aria-labelledby="contained-modal-title-vcenter"
-              centered
-              show={modalShow}
-            >
-              <Modal.Body>
+              <Modal
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                show={modalShow}
+                className="create-course-modal-content syllabus-ad-create-syllabus-modal"
+              >
+                {/* <Modal.Header>
                 <div className="text-center">
                   <h5 style={{ color: "#ff8a00" }}>Add new section</h5>
                 </div>
-                <div className="mt-4">
-                  <p className="mb-0">Section's name</p>
-                  <input
-                    value={newSectionName}
-                    onChange={(e) => setNewSectionName(e.target.value)}
-                    type="text"
-                    placeholder="Write section's name"
-                    style={{
-                      width: "100%",
-                      borderRadius: "7px",
-                      outline: "none",
-                      border: "1px solid #FF8A00",
-                    }}
-                  />
-                </div>
-                <div className="d-flex justify-content-end mt-4">
-                  <button
-                    style={{
-                      backgroundColor: "#1a9cb7",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "5px",
-                      height: "35px",
-                      width: "100px",
-                    }}
-                    className="mx-4"
-                    onClick={() => setModalShow(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    style={{
-                      backgroundColor: "#E53E5C",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "5px",
-                      height: "35px",
-                      width: "100px",
-                    }}
-                    onClick={handleAddSection}
-                  >
-                    Add
-                  </button>
-                </div>
-              </Modal.Body>
-            </Modal>
-            <div className="render-section">
-              {/* Dnd content */}
-              <DndContext
-                collisionDetection={closestCenter}
-                sensors={sensor}
-                onDragEnd={(event) => handleDragEnd(event)}
-              >
-                <SortableContext
-                  items={sections}
-                  strategy={verticalListSortingStrategy}
+              </Modal.Header> */}
+                <Modal.Header
+                  closeButton
+                  className="create-course-modal-header"
                 >
-                  {sections.map((section, index) => (
-                    //   <div
-                    //     className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
-                    //     key={index}
-                    //     style={{ border: "1px solid #D4D4D4" }}
-                    //   >
-                    //     <p className="mb-0">{section}</p>
-                    //     <i
-                    //       onClick={() => handleRemoveSection(index)}
-                    //       style={{ cursor: "pointer" }}
-                    //       class="fa-solid fa-trash-can"
-                    //     ></i>
-                    //   </div>
-
-                    <SectionComponent
-                      index={index}
-                      handleRemoveSection={handleRemoveSection}
-                      section={section}
+                  <Modal.Title>Add section</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="">
+                    <p className="mb-0 syllabus-ad-create-syllabus-form-lable mb-3">
+                      Section's name
+                    </p>
+                    <input
+                      value={newSectionName}
+                      onChange={(e) => setNewSectionName(e.target.value)}
+                      type="text"
+                      placeholder="Section's name"
+                      className="syllabus-ad-create-syllabus-input w-100 mb-3"
                     />
-                  ))}
-                </SortableContext>
-              </DndContext>
+                  </div>
+                  <div className="d-flex justify-content-end mt-4">
+                    <button
+                      style={{
+                        backgroundColor: "#1a9cb7",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        height: "35px",
+                        width: "100px",
+                      }}
+                      className="mx-4"
+                      onClick={() => setModalShow(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      style={{
+                        backgroundColor: "#E53E5C",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        height: "35px",
+                        width: "100px",
+                      }}
+                      onClick={handleAddSection}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </Modal.Body>
+              </Modal>
+              <div className="render-section mb-3">
+                {/* Dnd content */}
+                <DndContext
+                  collisionDetection={closestCenter}
+                  sensors={sensor}
+                  onDragEnd={(event) => handleDragEnd(event)}
+                >
+                  <SortableContext
+                    items={sections}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {sections.map((section, index) => (
+                      //   <div
+                      //     className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
+                      //     key={index}
+                      //     style={{ border: "1px solid #D4D4D4" }}
+                      //   >
+                      //     <p className="mb-0">{section}</p>
+                      //     <i
+                      //       onClick={() => handleRemoveSection(index)}
+                      //       style={{ cursor: "pointer" }}
+                      //       class="fa-solid fa-trash-can"
+                      //     ></i>
+                      //   </div>
 
-              {/* Dnd content */}
-            </div>
-            <div className="d-flex justify-content-center mt-4">
-              <button
-                style={{
-                  backgroundColor: "#E53E5C",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "10px",
-                  height: "35px",
-                }}
-                onClick={() => setModalShow(true)}
-              >
-                <div className="d-flex">
-                  <i className="fa-solid fa-circle-plus mt-1"></i>
-                  <span className="ms-2">New section</span>
+                      <SectionComponent
+                        index={index}
+                        handleRemoveSection={handleRemoveSection}
+                        section={section}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
+
+                {/* Dnd content */}
+              </div>
+              <div className="d-flex justify-content-center align-items-center mb-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <button
+                    className="syllabus-ad-create-syllabus-button"
+                    onClick={() => setModalShow(true)}
+                  >
+                    <i className="fa-solid fa-circle-plus mx-1"></i>
+                    <span className="mx-1">Add section</span>
+                  </button>
                 </div>
-              </button>
-            </div>
+              </div>
 
-            <div className="point d-flex">
+              <div className="point d-flex">
+                <div>
+                  <p className="blue mb-1 fw-bold">Pass condition</p>
+                  <p className="ms-5 ">Quiz score higher</p>
+                  <p className="blue mb-1 fw-bold">Course slot</p>
+                  <p className="ms-5 ">Total number of slot</p>
+                  <p className="blue mb-1 fw-bold">Slot time</p>
+                  <p className="ms-5">Minutes</p>
+                </div>
+                <div className="ms-5">
+                  <div className="d-flex" style={{ marginTop: "30px" }}>
+                    {[60, 70, 80, 90].map((value) => (
+                      <div
+                        key={value}
+                        className="item d-flex"
+                        onClick={() => handleSelect("passCondition", value)}
+                      >
+                        <i
+                          className={
+                            activePassCondition === value
+                              ? "fa-solid fa-circle"
+                              : "fa-regular fa-circle"
+                          }
+                        ></i>
+                        <div>{value}%</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex" style={{ marginTop: "60px" }}>
+                    {[25, 30, 35, 40].map((value) => (
+                      <div
+                        key={value}
+                        className="item d-flex"
+                        onClick={() => handleSelect("courseSlot", value)}
+                      >
+                        <i
+                          className={
+                            activeCourseSlot === value
+                              ? "fa-solid fa-circle"
+                              : "fa-regular fa-circle"
+                          }
+                        ></i>
+                        <div>{value}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="d-flex" style={{ marginTop: "55px" }}>
+                    {[20, 30, 45, 50].map((value) => (
+                      <div
+                        key={value}
+                        className="item d-flex"
+                        onClick={() => handleSelect("slotTime", value)}
+                      >
+                        <i
+                          className={
+                            activeSlotTime === value
+                              ? "fa-solid fa-circle"
+                              : "fa-regular fa-circle"
+                          }
+                        ></i>
+                        <div>{value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
               <div>
-                <p className="blue mb-1">Pass condition</p>
-                <p className="ms-5">Quiz score higher</p>
-                <p className="blue mb-1">Course slot</p>
-                <p className="ms-5">Total number of slot</p>
-                <p className="blue mb-1">Slot time</p>
-                <p className="ms-5">Minutes</p>
+                <div className="d-flex justify-content-start fw-bold mb-3">
+                  <p className="mb-0 blue">Teacher</p>
+                  <span className="orange">*</span>
+                </div>
+                <SearchableDropdown
+                  options={teachers}
+                  selectedValue={selectedTeacherId}
+                  onChange={(id) => setSelectedTeacherId(id)}
+                />
               </div>
-              <div className="ms-5">
-                <div className="d-flex" style={{ marginTop: "30px" }}>
-                  {[60, 70, 80, 90].map((value) => (
-                    <div
-                      key={value}
-                      className="item d-flex"
-                      onClick={() => handleSelect("passCondition", value)}
-                    >
-                      <i
-                        className={
-                          activePassCondition === value
-                            ? "fa-solid fa-circle"
-                            : "fa-regular fa-circle"
-                        }
-                      ></i>
-                      <div>{value}%</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="d-flex" style={{ marginTop: "60px" }}>
-                  {[25, 30, 35, 40].map((value) => (
-                    <div
-                      key={value}
-                      className="item d-flex"
-                      onClick={() => handleSelect("courseSlot", value)}
-                    >
-                      <i
-                        className={
-                          activeCourseSlot === value
-                            ? "fa-solid fa-circle"
-                            : "fa-regular fa-circle"
-                        }
-                      ></i>
-                      <div>{value}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="d-flex" style={{ marginTop: "55px" }}>
-                  {[20, 30, 45, 50].map((value) => (
-                    <div
-                      key={value}
-                      className="item d-flex"
-                      onClick={() => handleSelect("slotTime", value)}
-                    >
-                      <i
-                        className={
-                          activeSlotTime === value
-                            ? "fa-solid fa-circle"
-                            : "fa-regular fa-circle"
-                        }
-                      ></i>
-                      <div>{value}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            <div>
-              <div className="d-flex justify-content-start">
-                <p className="mb-0 blue">Teacher</p>
-                <span className="orange">*</span>
+              <div className="d-flex justify-content-end mt-4">
+                <button
+                  className="syllabus-ad-create-syllabus-button"
+                  onClick={handleSaveChanges}
+                >
+                  Post course
+                </button>
               </div>
-              <SearchableDropdown
-                options={teachers}
-                selectedValue={selectedTeacherId}
-                onChange={(id) => setSelectedTeacherId(id)}
-              />
             </div>
-
-            <div className="d-flex justify-content-end mt-4">
-              <button
-                style={{
-                  backgroundColor: "#FD8569",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "7px",
-                  height: "35px",
-                  width: "150px",
-                }}
-                onClick={handleSaveChanges}
-              >
-                SAVE CHANGES
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     );
@@ -729,14 +754,7 @@ export default function SyllabusAd() {
             <div>
               <button
                 onClick={() => setShowCreateSyllabus(true)}
-                className="d-flex justify-cotent-between align-items-center"
-                style={{
-                  backgroundColor: "#EF7E54",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "10px",
-                  padding: "8px 16px",
-                }}
+                className="syllabus-ad-create-syllabus-button"
               >
                 <i className="fa-solid fa-circle-plus mx-1"></i>{" "}
                 <div className="mx-1">Create</div>
@@ -864,7 +882,7 @@ const SectionComponent = ({ index, handleRemoveSection, section }) => {
 
   return (
     <div
-      className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between align-items-center"
+      className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between align-items-center syllabus-ad-create-syllabus-section"
       //   key={index}
 
       ref={setNodeRef}
@@ -873,15 +891,20 @@ const SectionComponent = ({ index, handleRemoveSection, section }) => {
       <p className="mb-0">{section}</p>
 
       <div className="d-flex justify-content-between align-items-center">
-        <i
-          onClick={() => handleRemoveSection(index)}
-          style={{ cursor: "pointer", fontSize: "18px" }}
-          class="fa-solid fa-trash-can mx-3"
-        ></i>
+        <div
+          className="syllabus-ad-create-syllabus-section-remove"
+          title="Remove"
+        >
+          <i
+            onClick={() => handleRemoveSection(index)}
+            style={{ fontSize: "18px" }}
+            class="fa-solid fa-trash-can mx-3"
+          ></i>
+        </div>
 
         <div
-          //   className="create-course-drag mx- 2"
-          className="mx-2"
+          className="create-course-drag mx-2"
+          // className="mx-2"
           disabled
           title="Drag"
           {...attributes}
