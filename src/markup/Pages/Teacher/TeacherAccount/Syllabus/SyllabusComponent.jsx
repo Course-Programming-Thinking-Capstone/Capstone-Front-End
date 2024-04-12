@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import simp from "./../../../../../images/gallery/simp.jpg";
 import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
@@ -160,14 +159,13 @@ const SyllabusComponent = () => {
                             to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
                             style={{
                               display: "inline-block",
-                              width: "100px",
                               backgroundColor: "#EF7E54",
                               border: "none",
                               borderRadius: "10px",
                               color: "white",
                               textDecoration: "none",
                               textAlign: "center",
-                              lineHeight: "36px",
+                              padding: "6px 30px",
                             }}
                           >
                             View

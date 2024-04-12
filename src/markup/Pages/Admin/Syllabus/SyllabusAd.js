@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import background from "../../../../images/background/adminStaffBackground.jpg";
 import simp from "../../../../images/gallery/simp.jpg";
+import syllabusPicture from "../../../../images/gallery/syllabus_image.jpg";
 import Modal from "react-bootstrap/Modal";
 import ReactPaginate from "react-paginate";
 import { toast, ToastContainer } from "react-toastify";
@@ -29,6 +30,13 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 //css
 import "./SyllabusAd.css";
+import {
+  convertUtcToLocalTime,
+  formatDateV1,
+} from "../../../../helper/utils/DateUtil";
+import { CustomPagination } from "../../../Layout/Components/Pagination";
+import { filterSyllabus } from "../../../../helper/apis/syllabus/syllabus";
+import { Spinner } from "react-bootstrap";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -127,6 +135,10 @@ export default function SyllabusAd() {
   const [showCreateSyllabus, setShowCreateSyllabus] = useState(false);
   const [courses, setCourses] = useState([]);
   const [record, setRecord] = useState([]);
+  const [isSyllabusLoading, setIsSyllabusLoading] = useState(false);
+  const [syllabusPage, setSyllabusPage] = useState(1);
+  const [totalSyllabusPage, setTotalSyllabusPage] = useState(0);
+  const [syllabusQuery, setSyllabusQuery] = useState("");
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -138,40 +150,93 @@ export default function SyllabusAd() {
     setCurrentPage(selectedPage);
   };
 
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const offset = currentPage * itemsPerPage;
   const currentPageData = courses.slice(offset, offset + itemsPerPage);
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://www.kidpro-production.somee.com/api/v1/syllabuses?status=Open",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          // Handle response errors
-          const error = await response.json();
-          throw new Error(error.message || "Failed to fetch courses");
-        }
-
-        const data = await response.json();
+        setIsSyllabusLoading(true);
+        const data = await filterSyllabus({
+          name: syllabusQuery,
+          sortCreatedDate: "desc",
+          status: "Open",
+          page: syllabusPage,
+          size: 4,
+        });
         setCourses(data.results || []);
-        console.log(courses);
         setRecord(data.totalRecords);
+        setTotalSyllabusPage(data.totalPages);
       } catch (error) {
-        console.error("Error fetching courses:", error.message);
+        if (error.response) {
+          const message =
+            error.response?.data?.message ||
+            "Something wrong when fetching syllabuses.";
+          console.log(`Error response: ${error.response?.data?.message}`);
+          notifyApiFail(message);
+        } else {
+          const message =
+            error.message || "Something wrong when fetching syllabuses.";
+          console.log(`Error message: ${error.message}`);
+          notifyApiFail(message);
+        }
+      } finally {
+        setIsSyllabusLoading(false);
       }
     };
 
-    fetchCourses();
-  }, [accessToken]);
+    fetchData();
+  }, [syllabusPage]);
+
+  const handleSearchSyllabusSubmit = async () => {
+    if (syllabusPage === 1) {
+      try {
+        setIsSyllabusLoading(true);
+
+        const data = await filterSyllabus({
+          name: syllabusQuery,
+          sortCreatedDate: "desc",
+          status: "Open",
+          page: syllabusPage,
+          size: 4,
+        });
+        setCourses(data.results || []);
+        setRecord(data.totalRecords);
+        setTotalSyllabusPage(data.totalPages);
+      } catch (error) {
+        if (error.response) {
+          const message =
+            error.response?.data?.message ||
+            "Something wrong when fetching syllabuses.";
+          console.log(`Error response: ${error.response?.data?.message}`);
+          notifyApiFail(message);
+        } else {
+          const message =
+            error.message || "Something wrong when fetching syllabuses.";
+          console.log(`Error message: ${error.message}`);
+          notifyApiFail(message);
+        }
+      } finally {
+        setIsSyllabusLoading(false);
+      }
+    } else {
+      setSyllabusPage(1);
+    }
+  };
 
   const CreateSyllabus = () => {
     const [teachers, setTeachers] = useState([]);
@@ -620,12 +685,12 @@ export default function SyllabusAd() {
   }
 
   return (
-    <div className="admin-syllabus">
-      <div className="syllabus">
+    <div className="admin-syllabus syllabus-ad-admin-syllabus-container">
+      <div className="syllabus-ad-admin-syllabus">
         <div className="header">
-          <div className="d-flex justify-content-start">
+          <div className="d-flex justify-content-start align-items-center mb-3 ">
             <div>
-              <h5 className="mb">SYLLABUS</h5>
+              <h5 className="my-0">Syllabus</h5>
               <hr />
             </div>
             <i className="fa-solid fa-book"></i>
@@ -635,99 +700,125 @@ export default function SyllabusAd() {
         <ToastContainer />
 
         <div className="syllabus-content">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between align-items-center mx-3 mt-2">
             <div
-              className="d-flex justify-content-start"
-              style={{
-                width: "30%",
-                border: "1px solid #EF7E54",
-                padding: "10px 15px",
-                borderRadius: "10px",
-                color: "white",
-              }}
+              className="d-flex justify-content-start align-items-center"
+              // style={{
+              //   width: "30%",
+              //   border: "1px solid #EF7E54",
+              //   padding: "10px 15px",
+              //   borderRadius: "10px",
+              //   color: "white",
+              // }}
             >
-              <div className="text-center" style={{ width: "50%" }}>
+              {/* <div className="text-center" style={{ width: "50%" }}>
                 <h5 className="mb-0">SYLLABUS LIST</h5>
-              </div>
+              </div> */}
               <div
                 className="d-flex justify-content-around"
                 style={{
-                  width: "50%",
                   backgroundColor: "#FF8A00",
                   borderRadius: "10px",
+                  padding: "5px 10px",
+                  color: "white",
                 }}
               >
-                <p className="mb-0">Total syllabus</p>
-                <span style={{ fontSize: "16px" }}>{record}</span>
+                <p className="mb-0">Total results: {record}</p>
               </div>
             </div>
             <div>
               <button
                 onClick={() => setShowCreateSyllabus(true)}
+                className="d-flex justify-cotent-between align-items-center"
                 style={{
                   backgroundColor: "#EF7E54",
                   color: "white",
                   border: "none",
                   borderRadius: "10px",
-                  padding: "5px 10px",
+                  padding: "8px 16px",
                 }}
               >
-                <i className="fa-solid fa-circle-plus"></i> Create syllabus
+                <i className="fa-solid fa-circle-plus mx-1"></i>{" "}
+                <div className="mx-1">Create</div>
               </button>
             </div>
           </div>
 
           <div>
-            <div className="search d-flex justify-content-center">
-              <input type="text" placeholder="Search course" />
-              <div
-                className="text-center"
-                style={{
-                  height: "30px",
-                  border: "1px solid #988E8E66",
-                  borderLeft: "none",
-                  width: "5%",
-                  paddingTop: "5px",
-                  borderRadius: "0 10px 10px 0",
-                }}
+            <div className="d-flex justify-content-between align-items-center mt-3 syllabus-content-search mb-3">
+              <input
+                type="text"
+                name={syllabusQuery}
+                onChange={(event) => setSyllabusQuery(event.target.value)}
+                placeholder="Search course"
+                className="syllabus-content-search-input"
+              />
+              <button
+                type="button"
+                className="syllabus-content-search-button"
+                onClick={handleSearchSyllabusSubmit}
               >
                 <i className="fa-solid fa-magnifying-glass"></i>
-              </div>
+              </button>
             </div>
 
-            <div className="px-3">
-              {currentPageData.map((course, index) => (
-                <div key={index} className="syllabus-item">
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex justify-content-start">
-                      <img className="img-responsive" src={simp} alt="" />
-                      <div className="ms-3">
-                        <p className="mb-1 mt-2">{course.name}</p>
-                        <p className="mb-1 title blue">
-                          Create date: {course.createdDate}
-                        </p>
+            <div className="px-3 syllabus-ad-content">
+              {isSyllabusLoading ? (
+                <div className="d-flex justify-content-center py-5">
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    className="custom-spinner"
+                  />
+                </div>
+              ) : (
+                currentPageData.map((course, index) => (
+                  <div key={index} className="syllabus-content-item mt-2">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex justify-content-start align-items-center">
+                        <img
+                          className="img-responsive syllabus-content-item-image"
+                          src={syllabusPicture}
+                          alt="Syllabus picture"
+                          title="Syllabus picture"
+                        />
+                        <div className="ms-3">
+                          <p className="my-1">{course.name}</p>
+                          <p className="mb-1 ">
+                            Create date:{" "}
+                            <span className="title blue">
+                              {formatDateV1(
+                                convertUtcToLocalTime(course.createdDate)
+                              )}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <button
+                          // className="mt-3"
+                          style={{
+                            display: "inline-block",
+                            backgroundColor: "#EF7E54",
+                            border: "none",
+                            borderRadius: "10px",
+                            color: "white",
+                            textDecoration: "none",
+                            textAlign: "center",
+                            padding: "6px 30px",
+                          }}
+                        >
+                          Edit
+                        </button>
                       </div>
                     </div>
-                    <div>
-                      <button
-                        className="mt-3"
-                        style={{
-                          width: "100px",
-                          backgroundColor: "#EF7E54",
-                          border: "none",
-                          borderRadius: "10px",
-                          color: "white",
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
-            <div className="d-flex justify-content-center">
+            {/* <div className="d-flex justify-content-center mt-3">
               <ReactPaginate
                 previousLabel={"← Previous"}
                 nextLabel={"Next →"}
@@ -739,7 +830,13 @@ export default function SyllabusAd() {
                 disabledClassName={"pagination__link--disabled"}
                 activeClassName={"pagination__link--active"}
               />
-            </div>
+            </div> */}
+
+            <CustomPagination
+              page={syllabusPage}
+              setPage={setSyllabusPage}
+              totalPage={totalSyllabusPage <= 0 ? 1 : totalSyllabusPage}
+            />
           </div>
         </div>
       </div>
