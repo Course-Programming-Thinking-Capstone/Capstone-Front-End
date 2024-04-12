@@ -1029,6 +1029,7 @@ const QuestionItem = ({
               !!errors.options &&
               !!errors.options[index]?.content
             }
+            autoComplete="off"
             className="create-course-input"
           />
           <Form.Control.Feedback type="invalid">
@@ -1054,6 +1055,7 @@ const QuestionItem = ({
               !!errors.options &&
               !!errors.options[index]?.answerExplain
             }
+            autoComplete="off"
             className="create-course-input"
           />
           <Form.Control.Feedback type="invalid">
@@ -1167,9 +1169,17 @@ export const UpdateQuestionComponent = ({
     //need to modify here
     const updatedOptions = options.map((option, index) => {
       if (index === correctAnswerIndex) {
-        return { ...option, isCorrect: true };
+        return {
+          content: option.content,
+          answerExplain: option.answerExplain,
+          isCorrect: true,
+        };
       } else {
-        return { ...option, isCorrect: false };
+        return {
+          content: option.content,
+          answerExplain: option.answerExplain,
+          isCorrect: false,
+        };
       }
     });
 
@@ -1189,9 +1199,6 @@ export const UpdateQuestionComponent = ({
 
     setShow(false);
   };
-
-  //form validation
-  // const { Formik } = formik;
 
   const schema = yup.object().shape({
     title: yup
@@ -1355,96 +1362,6 @@ export const UpdateQuestionComponent = ({
                           >
                             {correctAnswerIndex !== undefined &&
                               values.options.map((option, index) => (
-                                // <Row key={index} className="mb-3">
-                                //   <Col md="11">
-                                //     <Form.Group
-                                //       as={Col}
-                                //       md={12}
-                                //       controlId={`validationOptionContent${index}`}
-                                //       className="mb-3"
-                                //     >
-                                //       <Form.Control
-                                //         type="text"
-                                //         placeholder="Write option"
-                                //         name={`options[${index}].content`}
-                                //         value={option.content}
-                                //         onChange={handleChange}
-                                //         isInvalid={
-                                //           !!errors.options &&
-                                //           !!errors.options[index]?.content
-                                //         }
-                                //         className="create-course-input"
-                                //       />
-                                //       <Form.Control.Feedback type="invalid">
-                                //         {errors.options &&
-                                //           errors.options[index]?.content}
-                                //       </Form.Control.Feedback>
-                                //     </Form.Group>
-
-                                //     <Form.Group
-                                //       as={Col}
-                                //       md={12}
-                                //       controlId={`validationOptionExplain${index}`}
-                                //       className="mb-3"
-                                //     >
-                                //       <Form.Control
-                                //         type="text"
-                                //         placeholder="Explain"
-                                //         name={`options[${index}].answerExplain`}
-                                //         value={option.answerExplain}
-                                //         onChange={handleChange}
-                                //         isInvalid={
-                                //           !!errors.options &&
-                                //           !!errors.options[index]?.answerExplain
-                                //         }
-                                //         className="create-course-input"
-                                //       />
-                                //       <Form.Control.Feedback type="invalid">
-                                //         {errors.options &&
-                                //           errors.options[index]?.answerExplain}
-                                //       </Form.Control.Feedback>
-                                //     </Form.Group>
-
-                                //     {/* isCorrect field */}
-                                //     <Form.Group
-                                //       as={Col}
-                                //       md={12}
-                                //       controlId={`validationOptionIsCorrect${index}`}
-                                //       className="mb-3"
-                                //     >
-                                //       <Form.Check
-                                //         type="switch"
-                                //         id={`custom-switch-${index}`}
-                                //         label="Is correct answer?"
-                                //         checked={
-                                //           correctAnswerIndex === -1
-                                //             ? option.isCorrect === true
-                                //             : correctAnswerIndex === index
-                                //         }
-                                //         onChange={() =>
-                                //           handleAnswerChange(index)
-                                //         }
-                                //         className="px-0"
-                                //       />
-                                //     </Form.Group>
-                                //   </Col>
-
-                                //   <Col md={1} className="px-0">
-                                //     <button
-                                //       onClick={() =>
-                                //         handleRemoveOption(remove, index)
-                                //       }
-                                //       className="create-course-modal-remove"
-                                //       type="button"
-                                //       title="Remove"
-                                //     >
-                                //       <i
-                                //         class="fa-solid fa-trash"
-                                //         style={{ fontSize: "18px" }}
-                                //       ></i>
-                                //     </button>
-                                //   </Col>
-                                // </Row>
                                 <QuestionUpdateItem
                                   key={index}
                                   index={index}
@@ -1571,6 +1488,7 @@ const QuestionUpdateItem = ({
               !!errors.options &&
               !!errors.options[index]?.content
             }
+            autoComplete="off"
             className="create-course-input"
           />
           <Form.Control.Feedback type="invalid">
@@ -1596,6 +1514,7 @@ const QuestionUpdateItem = ({
               !!errors.options &&
               !!errors.options[index]?.answerExplain
             }
+            autoComplete="off"
             className="create-course-input"
           />
           <Form.Control.Feedback type="invalid">

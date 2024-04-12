@@ -202,3 +202,26 @@ button.create-course-save:hover {
 .create-course-modal-drag:hover {
   background-color: #faa287;
 }
+
+
+.create-course-drag {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #ff8a00;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.create-course-drag:hover {
+  background-color: #f7cc9c;
+}

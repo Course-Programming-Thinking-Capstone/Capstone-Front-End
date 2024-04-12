@@ -41,8 +41,32 @@ import {
 
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
-import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
+import {
+  setDescription,
+  swapLessonOrder,
+  swapQuizOrder,
+} from "../../../../../../store/slices/course/createCourseSlice";
 import { changeData } from "../../../../../../store/slices/course/componentNumber";
+
+//dnd kit
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -100,7 +124,7 @@ const CreateCourseComponent = () => {
               } else if (lesson.type === "Document") {
                 documentNumber++;
               }
-            }); 
+            });
 
             quizNumber = section.quizzes.length;
 
@@ -185,6 +209,50 @@ const CreateCourseComponent = () => {
     };
     updateData();
   };
+
+  //dnd part
+
+  //sensor
+  const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+
+  const handleLessonDragEnd = (event, sectionId) => {
+    const { active, over } = event;
+
+    if (active.id === over.id) {
+      return;
+    }
+
+    const originalPos = active.id;
+    const newPos = over.id;
+
+    dispatch(
+      swapLessonOrder({
+        sectionId: sectionId,
+        index1: originalPos,
+        index2: newPos,
+      })
+    );
+  };
+
+  const handleQuizDragEnd = (event, sectionId) => {
+    const { active, over } = event;
+
+    if (active.id === over.id) {
+      return;
+    }
+
+    const originalPos = active.id;
+    const newPos = over.id;
+
+    dispatch(
+      swapQuizOrder({
+        sectionId: sectionId,
+        index1: originalPos,
+        index2: newPos,
+      })
+    );
+  };
+  //dnd part
 
   return (
     <div className="create-course">
@@ -290,36 +358,67 @@ const CreateCourseComponent = () => {
                       <Accordion.Item eventKey={index}>
                         <Accordion.Header>{section.name}</Accordion.Header>
                         <Accordion.Body>
-                          {/* Content */}
-                          {section.lessons.map((lesson, lessonIndex) =>
-                            lesson.type === "Video" ? (
-                              <VideoContent
-                                sectionId={section.id}
-                                key={lessonIndex}
-                                lesson={lesson}
-                                index={lessonIndex}
-                                sectionIndex={index}
-                              />
-                            ) : (
-                              <DocumentContent
-                                sectionId={section.id}
-                                key={lessonIndex}
-                                lesson={lesson}
-                                index={lessonIndex}
-                                sectionIndex={index}
-                              />
-                            )
-                          )}
+                          {/* Dnd Content */}
+                          <DndContext
+                            collisionDetection={closestCenter}
+                            sensors={sensor}
+                            onDragEnd={(event) =>
+                              handleLessonDragEnd(event, section.id)
+                            }
+                          >
+                            <SortableContext
+                              items={section.lessons}
+                              strategy={verticalListSortingStrategy}
+                              id={`sortable-lesson-${section.id}`}
+                            >
+                              {section.lessons.map((lesson, lessonIndex) =>
+                                lesson.type === "Video" ? (
+                                  <VideoContent
+                                    sectionId={section.id}
+                                    key={lessonIndex}
+                                    lesson={lesson}
+                                    index={lessonIndex}
+                                    sectionIndex={index}
+                                  />
+                                ) : (
+                                  <DocumentContent
+                                    sectionId={section.id}
+                                    key={lessonIndex}
+                                    lesson={lesson}
+                                    index={lessonIndex}
+                                    sectionIndex={index}
+                                  />
+                                )
+                              )}
+                            </SortableContext>
+                          </DndContext>
+                          {/* Dnd Content */}
 
-                          {section.quizzes.map((quiz, quizIndex) => (
-                            <QuizContent
-                              key={quizIndex}
-                              sectionId={section.id}
-                              quiz={quiz}
-                              index={quizIndex}
-                              sectionIndex={index}
-                            />
-                          ))}
+                          {/* Dnd Content */}
+                          <DndContext
+                            collisionDetection={closestCenter}
+                            sensors={sensor}
+                            onDragEnd={(event) =>
+                              handleQuizDragEnd(event, section.id)
+                            }
+                          >
+                            <SortableContext
+                              items={section.quizzes}
+                              strategy={verticalListSortingStrategy}
+                              id={`sortable-quiz-${section.id}`}
+                            >
+                              {section.quizzes.map((quiz, quizIndex) => (
+                                <QuizContent
+                                  key={quizIndex}
+                                  sectionId={section.id}
+                                  quiz={quiz}
+                                  index={quizIndex}
+                                  sectionIndex={index}
+                                />
+                              ))}
+                            </SortableContext>
+                          </DndContext>
+                          {/* Dnd Content */}
 
                           <Container>
                             <Row>
@@ -429,8 +528,29 @@ const CreateCourseComponent = () => {
 export default CreateCourseComponent;
 
 const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
   return (
-    <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
+    <Accordion
+      ref={setNodeRef}
+      style={style}
+      defaultActiveKey="0"
+      flush
+      className="teacher-accordion "
+    >
       <Accordion.Item eventKey={index}>
         <div className="d-flex justify-content-between align-items-center w-100">
           <Accordion.Header className="lesson-title w-100">
@@ -457,6 +577,18 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
               sectionIndex={sectionIndex}
               type={"Video"}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
 
@@ -486,8 +618,26 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
 };
 
 const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
+
   return (
     <Accordion
+      ref={setNodeRef}
+      style={style}
       defaultActiveKey="0"
       flush
       className="teacher-accordion lesson-title"
@@ -516,6 +666,18 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
               sectionIndex={sectionIndex}
               type={"Document"}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
         <Accordion.Body>
@@ -543,8 +705,26 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
 };
 
 const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
+
   return (
     <Accordion
+      ref={setNodeRef}
+      style={style}
       defaultActiveKey="0"
       flush
       className="teacher-accordion lesson-title"
@@ -574,6 +754,18 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               index={index}
               sectionIndex={sectionIndex}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
 
@@ -599,7 +791,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               <Col md="8">{quiz.numberOfAttempt}</Col>
             </Row>
 
-            <Row className="mb-3">
+            {/* <Row className="mb-3">
               <Col md="3">
                 <span className="blue fw-bold">Random order:</span>{" "}
               </Col>
@@ -612,7 +804,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
                 </Col>
                 <Col md="9">{quiz.numberOfQuestion}</Col>
               </Row>
-            )}
+            )} */}
 
             {quiz.questions && (
               <Row className="mb-3">
