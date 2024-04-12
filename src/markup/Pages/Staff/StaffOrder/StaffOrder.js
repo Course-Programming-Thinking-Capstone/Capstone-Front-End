@@ -4,6 +4,7 @@ import background from '../../../../images/background/adminStaffBackground.jpg';
 
 export default function StaffOrder() {
     const [orders, setOrders] = useState([]);
+    const [ordersTotal, setOrdersTotal] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('Success');
     const accessToken = localStorage.getItem('accessToken');
     const [loading, setLoading] = useState(false);
@@ -17,15 +18,15 @@ export default function StaffOrder() {
     const getStatusColor = (status) => {
         switch (status) {
             case 'Success':
-                return '#1A9CB7'; 
+                return '#1A9CB7';
             case 'Pending':
-                return '#FF8A00'; 
+                return '#FF8A00';
             case 'Refunded':
-                return '#2C44D8'; 
+                return '#2C44D8';
             case 'RequestRefund':
-                return '#F11616'; 
+                return '#F11616';
             default:
-                return '#6c757d'; 
+                return '#6c757d';
         }
     };
 
@@ -47,7 +48,8 @@ export default function StaffOrder() {
 
                 const data = await response.json();
                 console.log('data: ', data);
-                setOrders(data);
+                setOrders(data.order);
+                setOrdersTotal(data.orderTotal)
             } catch (error) {
                 console.error('There was an error fetching the orders:', error);
             } finally {
@@ -66,7 +68,7 @@ export default function StaffOrder() {
                         <hr className='mt-0' />
                     </div>
                     <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Pending' ? 'active' : ''} onClick={() => setSelectedStatus('Pending')}>
-                        <p className='mb-1' style={{ fontSize: '18px', fontWeight:'bold' }}>Pending</p>
+                        <p className='mb-1' style={{ fontSize: '18px', fontWeight: 'bold' }}>Pending</p>
                         <hr className='mt-0' />
                     </div>
                     <div style={{ marginLeft: '25px' }} className={selectedStatus === 'Refunded' ? 'active' : ''} onClick={() => setSelectedStatus('Refunded')}>
@@ -85,7 +87,7 @@ export default function StaffOrder() {
                         <div className='pt-1' style={{ fontWeight: 'bold', backgroundColor: '#FFA63D', borderRadius: '5px', color: 'white', height: '30px', width: '150px', textAlign: 'center', fontSize: '16px' }}>Enter order code</div>
                         <input style={{ outline: 'none', borderRadius: '8px', border: '1px solid #FFA63D', width: '400px' }} className='ms-3' type="text" />
                     </div>
-                    <div className='text-center pt-1' style={{ border: '1px solid #F25B58', borderRadius: '8px', color: '#F25B58', width: '120px', fontWeight: 'bold' }}> Orders</div>
+                    <div className='text-center pt-1' style={{ border: '1px solid #F25B58', borderRadius: '8px', color: '#F25B58', width: '120px', fontWeight: 'bold' }}>{ordersTotal} Orders</div>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -122,7 +124,7 @@ export default function StaffOrder() {
                                                 <p className='mt-2 mb-0'>{order.totalPrice}</p>
                                             </td>
                                             <td className='text-center mt-2'>
-                                                <p style={{color: getStatusColor(order.orderStatus), fontWeight:'bold'}} className='mt-2 mb-0'>{order.orderStatus}</p>
+                                                <p style={{ color: getStatusColor(order.orderStatus), fontWeight: 'bold' }} className='mt-2 mb-0'>{order.orderStatus}</p>
                                             </td>
                                             <td className='text-center'>
                                                 <p className='mb-1'>Order code: {order.orderCode}</p>

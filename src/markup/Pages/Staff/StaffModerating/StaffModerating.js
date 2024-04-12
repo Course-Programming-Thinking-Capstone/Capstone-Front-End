@@ -7,13 +7,14 @@ import Modal from 'react-bootstrap/Modal';
 import background from '../../../../images/background/adminStaffBackground.jpg';
 
 const ModeratingLesson = ({ onBack, section }) => {
-    const [selectedLesson, setSelectedLesson] = useState(null);
-
+    const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
     const handleSelectLesson = (lesson) => {
         setSelectedLesson(lesson);
     };
-
-    console.log('section: ', section);
+    const getDriveFileID = (url) => {
+        const parts = url.split('/');
+        return parts[parts.length - 2];
+    };
     function getIconBasedOnType(type) {
         const iconMap = {
             'Video': 'fa-solid fa-circle-play',
@@ -25,17 +26,27 @@ const ModeratingLesson = ({ onBack, section }) => {
 
     const renderLessonContent = () => {
         if (!selectedLesson) return <p>Select a lesson to see the content.</p>;
-
-        // Here you can customize how to display the content based on the selected lesson
         return (
             <div>
                 {selectedLesson.type === 'Video' && selectedLesson.resourceUrl && (
-                    <div>{selectedLesson.resourceUrl}</div>
+                    <div style={{ marginLeft: 170, marginTop: 5 }}>
+                        <iframe
+                            title="Embedded Video"
+                            width="800"
+                            height="340"
+                            src={`https://drive.google.com/file/d/${getDriveFileID(selectedLesson.resourceUrl)}/preview`}
+                            // frameborder="0"
+                            allowFullScreen
+                        // style={{ border: '2px solid white' }} 
+                        ></iframe>
+                        <p style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5 }}>{selectedLesson.name}</p>
+                    </div>
                 )}
                 {selectedLesson.type === 'Document' && (
-                    <div>
-                        {/* Here you can render the document content, for example as a link or embedded object */}
-                        <p>{selectedLesson.content || "Document content goes here."}</p>
+                    <div style={{ paddingLeft: 50, paddingRight: 30 }}>
+                        {/* <p style={{fontSize:20, fontWeight:'bold'}}>{selectedLesson.name}</p> */}
+                        {/* <p style={{paddingRight:20,lineHeight:2.7,textAlign:'start'}}>{selectedLesson.content || "Document content goes here."}</p> */}
+                        <div style={{ paddingRight: 20, lineHeight: 2.7, textAlign: 'start' }} dangerouslySetInnerHTML={{ __html: selectedLesson.content }} />
                     </div>
                 )}
                 {selectedLesson.type === 'Quiz' && (
@@ -48,69 +59,74 @@ const ModeratingLesson = ({ onBack, section }) => {
     };
 
     return (
-        <div className="moderating-lesson mx-5" style={{ backgroundColor: 'white' }}>
-            <div className="header">
-                <div className="d-flex justify-content-between">
-                    <div className="d-flex justify-content-start">
+        <div>
+            <div className="mx-5" style={{ backgroundColor: 'white', borderRadius: 20, borderStyle: 'solid', border: 'none', marginTop: 30, height: 700, overflowY: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 47, paddingTop: 20, paddingRight: 30 }}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div>
-                            <h5 className='mb'>MODERATING</h5>
-                            <hr />
+                            <h5 className='mb' >Lesson {section.order}:<span style={{ marginLeft: 8 }}>{section.name}</span></h5>
                         </div>
-                        <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-bell"></i>
+                        <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-book-open-reader"></i>
                     </div>
-                    <div className="d-flex justify-content-end">
-                        <button onClick={onBack} style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} ><i class="fa-solid fa-chevron-left"></i>Back</button>
+                    <div>
+                        <button onClick={onBack} style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', padding: '5px 5px' }} ><i class="fa-solid fa-chevron-left" style={{ paddingRight: 5 }}></i>Back</button>
                     </div>
                 </div>
-            </div>
-            <div>
-
-            </div>
-            <div className='mt-3'>
-                {section.lessons.map((lesson) => (
-                    <div className={`d-flex justify-content-start ms-5 mt-2 ${selectedLesson && selectedLesson.id === lesson.id ? 'selected-lesson' : ''}`} key={lesson.id} onClick={() => handleSelectLesson(lesson)}>
-                        <i style={{ fontSize: '19px', marginTop: '12px' }} className={getIconBasedOnType(lesson.type)} />
-                        <div className='ms-3'>
-                            <p className='mb-0'>{lesson.name}</p>
-                            <span>{lesson.type} - {lesson.duration} min</span>
+                <div>
+                    {section.lessons.map((lesson) => (
+                        <div
+                            style={{
+                                cursor: 'pointer', backgroundColor: selectedLesson && selectedLesson.id === lesson.id ? '#FED37E' : 'transparent', width: 600, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: '10px 0px 10px 130px'
+                                , color: selectedLesson && selectedLesson.id === lesson.id ? '#f8f8f8' : 'black',
+                                fontWeight: selectedLesson && selectedLesson.id === lesson.id ? 'bold' : 'normal', fontSize: 16
+                            }}
+                            className={`d-flex justify-content-start mt-2 ${selectedLesson && selectedLesson.id === lesson.id ? 'selected-lesson' : ''}`}
+                            key={lesson.id}
+                            onClick={() => handleSelectLesson(lesson)}
+                        >
+                            <i style={{ fontSize: '19px', marginTop: '12px' }} className={getIconBasedOnType(lesson.type)} />
+                            <div className='ms-3'>
+                                <p className='mb-0' >{lesson.name}</p>
+                                <span>{lesson.type} - {lesson.duration} min</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-            <div className="render-lesson">
-                {renderLessonContent()}
+                    ))}
+                </div>
+                <hr style={{ backgroundColor: '#FFCF7B', height: 2, marginBottom: 0 }} />
+                <div className="render-lesson">
+                    {renderLessonContent()}
+                </div>
             </div>
         </div>
     );
 }
 
 const ModeratingQuiz = ({ onBack, quiz }) => {
-    console.log('quiz: ', quiz);
     return (
-        <div className="moderating-quiz" style={{ backgroundColor: 'white', width: 1100, height: 650, marginLeft: 65, marginTop: 60, borderRadius: 30,overflowY:'auto' }}>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 30, paddingRight: 5, alignItems: 'center',marginTop:20 }}>
-                <p style={{fontWeight:'bolder',fontSize:20,height:0}}>Quiz Name: <span style={{fontWeight:'500',fontSize:18,marginLeft:5}}>{quiz.title}</span></p>
-                <button onClick={onBack} style={{ height: 30, width: 60,borderRadius:10,borderColor:"white",borderStyle:'solid',backgroundColor:'#1A9CB7',color:'white' }}>Back</button>
+        <div className="moderating-quiz" style={{ backgroundColor: 'white', width: 1100, height: 650, marginLeft: 65, marginTop: 60, borderRadius: 30, overflowY: 'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 30, paddingRight: 5, alignItems: 'center', marginTop: 20 }}>
+                <p style={{ fontWeight: 'bolder', fontSize: 20, height: 0 }}>Quiz Name: <span style={{ fontWeight: '500', fontSize: 18, marginLeft: 5 }}>{quiz.title}</span></p>
+                <button onClick={onBack} style={{ height: 30, width: 60, borderRadius: 10, borderColor: "white", borderStyle: 'solid', backgroundColor: '#1A9CB7', color: 'white' }}>Back</button>
             </div>
             <hr />
             <div>
-                <p style={{fontWeight:'bold',color:"#EF7E54",marginLeft:100}}>Test time <span style={{ borderWidth: 2, borderStyle: 'solid', padding: '10px 15px', borderColor: '#D4D4D4',borderRadius:10,marginLeft:30 }}>{quiz.duration}</span></p>
-                <p style={{fontWeight:'bold',color:"#EF7E54",marginLeft:100}}>Quiz Content</p>
+                <p style={{ fontWeight: 'bold', color: "#EF7E54", marginLeft: 100 }}>Test time <span style={{ borderWidth: 2, borderStyle: 'solid', padding: '10px 15px', borderColor: '#D4D4D4', borderRadius: 10, marginLeft: 30 }}>{quiz.duration}</span></p>
+                <p style={{ fontWeight: 'bold', color: "#EF7E54", marginLeft: 100 }}>Quiz Content</p>
                 {quiz && quiz.questions.map((question, index) => (
-                    <div key={index} style={{ marginBottom: 20}}>
-                        <div style={{ borderRadius:'10px',backgroundColor: '#FBEDE1',width:900,marginLeft:100,height:450 }}>
-                            <div style={{ backgroundColor: '#F6D3C8',paddingLeft:35,fontWeight:'bold',borderTopLeftRadius:10,borderTopRightRadius:10,height:50,paddingTop:15 }}>{question.order} .</div>
-                            <p style={{ color: '#EF7E54', fontWeight: '600',paddingLeft:50,color:'#EF7E54',height:0,marginTop:5 }}>Question</p>
-                            <p style={{textAlign:'center',height:0}}>{question.title}</p>
-                            <div style={{width:800, marginLeft:50}}>
-                                <hr style={{height:3}}/>
+                    <div key={index} style={{ marginBottom: 20 }}>
+                        <div style={{ borderRadius: '10px', backgroundColor: '#FBEDE1', width: 900, marginLeft: 100, height: 450 }}>
+                            <div style={{ backgroundColor: '#F6D3C8', paddingLeft: 35, fontWeight: 'bold', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 50, paddingTop: 15 }}>{question.order} .</div>
+                            <p style={{ color: '#EF7E54', fontWeight: '600', paddingLeft: 50, color: '#EF7E54', height: 0, marginTop: 5 }}>Question</p>
+                            <p style={{ textAlign: 'center', height: 0 }}>{question.title}</p>
+                            <div style={{ width: 800, marginLeft: 50 }}>
+                                <hr style={{ height: 3 }} />
                             </div>
-                            <p style={{paddingLeft:50,color:'#EF7E54',fontWeight:'600',height:10}}>Answer</p>
+                            <p style={{ paddingLeft: 50, color: '#EF7E54', fontWeight: '600', height: 10 }}>Answer</p>
                             {question.options.map((option, optionIndex) => (
-                                <div key={optionIndex} className='d-flex' style={{paddingLeft:50,borderWidth:2,borderColor:'red',borderStyle:'solid',width:800, marginLeft:50,marginBottom:15,borderRadius:10,backgroundColor:'white', alignItems:'center',height:50,display:'flex',flexDirection:'row',justifyContent:'space-between',paddingRight:10}} >
-                                    <p style={{height:0}}>{option.content}</p>
+                                <div key={optionIndex} className='d-flex' style={{ paddingLeft: 50, borderWidth: 2, borderColor: '#FBEDE1', borderStyle: 'solid', width: 800, marginLeft: 50, marginBottom: 15, borderRadius: 10, backgroundColor: 'white', alignItems: 'center', height: 50, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingRight: 10 }} >
+                                    <p style={{ height: 0 }}>{option.content}</p>
                                     {option.isCorrect && (
-                                        <span style={{ marginLeft: '10px', color: 'green',borderStyle:'solid',borderColor:'white',borderRadius:30,paddingLeft:15,paddingRight:15,backgroundColor:'#F15C58',color:'white',fontWeight:'500',paddingTop:5,paddingBottom:5}}>Correct</span>
+                                        <span style={{ marginLeft: '10px', color: 'green', borderStyle: 'solid', borderColor: 'white', borderRadius: 30, paddingLeft: 15, paddingRight: 15, backgroundColor: '#F15C58', color: 'white', fontWeight: '500', paddingTop: 5, paddingBottom: 5 }}>Correct</span>
                                     )}
                                 </div>
                             ))}
@@ -136,6 +152,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [showQuiz, setShowQuiz] = useState(false);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
 
+    
 
     useEffect(() => {
         const fetchCourseDetails = async () => {
@@ -152,7 +169,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log(' moderatingDetailData: ', data);
                 setCourseDetails(data); // Assuming the API returns the details directly
             } catch (error) {
                 console.error("Failed to fetch course details", error);
@@ -210,7 +226,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             price: isFree ? 0 : price, // Use the state variable price
         };
 
-        console.log('payload: ', payload);
         const accessToken = localStorage.getItem('accessToken'); // Or your method of getting the token
 
         try {
@@ -227,7 +242,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            console.log('Approve response:');
             // Handle the successful approval
         } catch (error) {
             console.error("Failed to approve course", error);
@@ -436,19 +450,19 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
                             <div className="d-flex">
                                 <i class="fa-solid fa-book mt-1"></i>
-                                <p className='mb-0 ms-1'>4 lessons</p>
+                                <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalLesson} lessons</p>
                             </div>
                             <div className="d-flex">
                                 <i class="fa-solid fa-circle-play mt-1"></i>
-                                <p className='mb-0 ms-1'>4 videos</p>
+                                <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalVideo} videos</p>
                             </div>
                             <div className="d-flex">
                                 <i class="fa-solid fa-book-open mt-1"></i>
-                                <p className='mb-0 ms-1'>4 documents</p>
+                                <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalDocument} documents</p>
                             </div>
                             <div className="d-flex">
                                 <i class="fa-solid fa-pen-to-square mt-1"></i>
-                                <p className='mb-0 ms-1'>4 quiz</p>
+                                <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalQuiz} quiz</p>
                             </div>
                         </div>
                         <div>
@@ -461,7 +475,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             <div className="accordion-item" key={section.id}>
                                 <h2 className="accordion-header" id={`heading${index}`}>
                                     <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
-                                        <span style={{ fontWeight: 'bold', marginRight: 10 }}>Section {section.order}:  </span>{section.name}
+                                        <span style={{ fontWeight: 'bold', marginRight: 10 }}>Lesson {section.order}:  </span>{section.name}
                                     </button>
                                 </h2>
                                 <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
@@ -496,7 +510,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                                         <div className='ms-3' key={section.id}>
                                             {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
                                                 <div key={quiz.id} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                    <p>Section {sectionIndex + 1}: Quiz {quizIndex + 1}: {quiz.title}</p>
+                                                    <p>Lesson {sectionIndex + 1}: {quiz.title}</p>
                                                     <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', height: 23, width: 93 }}>View Quiz</button>
                                                 </div>
                                             ))}
@@ -542,8 +556,7 @@ export default function StaffModerating() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('data: ', data);
-                setCourses(data); // Assuming the response has the data directly
+                setCourses(data);
             } catch (error) {
                 console.error("Failed to fetch courses", error);
             }

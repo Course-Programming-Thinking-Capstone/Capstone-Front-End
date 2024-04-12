@@ -51,6 +51,9 @@ import CoursesPlan from "./markup/Pages/CoursesPlan";
 import { NotFound } from "./markup/Pages/NotFound/NotFound";
 import { EditText } from "./markup/Pages/TestPage/EditText";
 import ErrorPage from "./markup/Pages/ErrorPage";
+import StudentHome from "./markup/Pages/StudentHome";
+import CourseStudy from "./markup/Pages/CourseStudy";
+import Order from "./markup/Pages/Order";
 
 // function App() {
 // 	return (
@@ -298,6 +301,16 @@ const App = () => {
             />
 
             <Route
+              path="/order"
+              element={
+                <PrivateRoute
+                  page="order"
+                  component={<Order />}
+                />
+              }
+            />
+
+            <Route
               path="/payment"
               element={
                 <PrivateRoute page="payment" component={<CoursePayment />} />
@@ -313,12 +326,32 @@ const App = () => {
               }
             />
             {/* Student pages */}
+
             <Route
-              path="/courses-plan"
+              path="/student-home"
+              element={
+                <PrivateRoute
+                  page="student-home"
+                  component={<StudentHome />}
+                />
+              }
+            />
+            <Route
+              path="/courses-plan/:courseId"
               element={
                 <PrivateRoute
                   page="courses-plan"
                   component={<CoursesPlan />}
+                />
+              }
+            />
+
+            <Route
+              path="/courses-study"
+              element={
+                <PrivateRoute
+                  page="courses-study"
+                  component={<CourseStudy />}
                 />
               }
             />

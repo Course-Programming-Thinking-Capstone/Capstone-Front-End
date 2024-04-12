@@ -23,7 +23,7 @@ const Header = () => {
 
     const rolesMenus = {
         Student: [
-            { maintitle: 'Home', to: '/courses-plan' },
+            { maintitle: 'Home', to: '/student-home' },
             { maintitle: 'Schedule', to: '/schedule' },
             { maintitle: 'Certificate', to: '/schedule' },
             { maintitle: 'Acount', to: '/account' },

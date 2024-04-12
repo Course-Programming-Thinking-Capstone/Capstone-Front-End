@@ -1,17 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import teacher from './../../images/team/teacher.png';
 import Footer from '../Layout/Footer';
 import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
+import { useNavigate } from 'react-router-dom';
 
 export default function CoursesPlan() {
-    const CollapsibleQuestion = ({ id, title, children }) => {
-        // State to track if the collapsible content is visible
+    const { courseId } = useParams();
+    console.log("Course ID:", courseId);
+    const accessToken = localStorage.getItem('accessToken');
+    const [courseDetails, setCourseDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(null);
+
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchCourseDetails = async () => {
+            if (!courseId) {
+                console.error('Course ID is undefined!');
+                return;
+            }
+
+            const url = `https://www.kidpro-production.somee.com/api/v1/courses/${courseId}`;
+            console.log('Fetching from URL:', url); // Log the URL
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text(); // Getting error message from response
+                    throw new Error(errorText);
+                }
+
+                const data = await response.json();
+                console.log('Course detail data:', data); // Check the fetched data
+                setCourseDetails(data);
+            } catch (error) {
+                console.error('Error fetching course details:', error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCourseDetails();
+    }, [courseId, accessToken]);
+
+    const LessonIcon = ({ type }) => {
+        switch (type) {
+            case 'Video':
+                return <i className="fa-regular fa-circle-play"></i>;
+            case 'Document':
+                return <i className="fa-solid fa-book-open"></i>;
+            default:
+                return <i className="fa-solid fa-file"></i>;
+        }
+    };
+
+    const navigate = useNavigate();
+
+    const getStarted = () => {
+        navigate(`/courses-study`);
+    }
+
+    const CollapsibleQuestion = ({ id, title, lessons, quizzes }) => {
         const [isOpen, setIsOpen] = useState(false);
 
-        // Function to toggle the isOpen state
         const toggleCollapse = (e) => {
-            e.preventDefault(); // Prevent the default anchor link behavior
+            e.preventDefault();
             setIsOpen(!isOpen);
         };
 
@@ -23,64 +84,42 @@ export default function CoursesPlan() {
                     href={`#${id}`}
                     className={`btn btn-primary ${linkClass}`}
                     onClick={toggleCollapse}
-                    style={{ fontSize: '18px' }}
                 >
                     <i className="fa-solid fa-chevron-right"></i> {title}
                 </a><br />
                 <div id={id} style={{ display: isOpen ? 'block' : 'none' }} className="collapse">
-                    <div>
-                        <div className='content row'>
-                            <div className='col-lg-8'>
-                                <div className='document d-flex'>
-                                    <i class="fa-regular fa-circle-play"></i>
+                    <div className='d-flex justify-content-between'>
+                        <div className='content'>
+                            {lessons.map((lesson) => (
+                                <div key={lesson.id} className='document d-flex'>
+                                    <LessonIcon type={lesson.type} />
                                     <div className='document-content'>
-                                        <p>Welcome to technology!</p>
-                                        <span>Video - 1min</span>
+                                        <p>{lesson.name}</p>
+                                        <span>{lesson.type} - {lesson.duration}min</span>
                                     </div>
                                 </div>
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-book-open"></i>
+                            ))}
+                            {quizzes.map((quiz) => (
+                                <div key={quiz.id} className='document d-flex'>
+                                    <i className="fa-solid fa-pen-to-square"></i>
                                     <div className='document-content'>
-                                        <p>Welcome to technology!</p>
-                                        <span>Reading - 1min</span>
+                                        <p>{quiz.title}</p>
+                                        <span>Quiz - {quiz.totalQuestion} questions</span>
                                     </div>
                                 </div>
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-book-open"></i>
-                                    <div className='document-content'>
-                                        <p>Welcome to technology!</p>
-                                        <span>Reading - 1min</span>
-                                    </div>
+                            ))}
+                            <div className='document d-flex'>
+                                <i className="fa-solid fa-gamepad"></i>
+                                <div className='document-content'>
+                                    <p>Practice game</p>
+                                    <span>Map 1 - Level 1</span>
                                 </div>
-                                <div className='document d-flex'>
-                                    <i class="fa-regular fa-circle-play"></i>
-                                    <div className='document-content'>
-                                        <p>Welcome to technology!</p>
-                                        <span>Video - 1min</span>
-                                    </div>
-                                </div>
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                    <div className='document-content'>
-                                        <p>Graded Quiz: Test your tech knowledge!</p>
-                                        <span>Quiz - 10 questions</span>
-                                    </div>
-                                </div>
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-gamepad"></i>
-                                    <div className='document-content'>
-                                        <p>Practice game</p>
-                                        <span>Map 1 - level 1</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='col-lg-4'>
-                                <button>Get started</button>
                             </div>
                         </div>
+                        <div>
+                            <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
+                        </div>
                     </div>
-                    {children}
                 </div>
             </>
         );
@@ -94,13 +133,6 @@ export default function CoursesPlan() {
                 <div className="container">
                     <div className="plan row">
                         <div className="col-lg-3">
-                            <div className='d-flex'>
-                                <div><img src={teacher} /></div>
-                                <div className='teacher'>
-                                    <p>Teacher</p>
-                                    <p>Yua Mikami</p>
-                                </div>
-                            </div>
                             <table className="table table-bordered">
                                 <tbody>
                                     <tr>
@@ -118,30 +150,47 @@ export default function CoursesPlan() {
                                 </tbody>
                             </table>
                         </div>
+                        <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
                         <div className="plan-content col-lg-9">
-                            <h5>What is proggraming?</h5>
-                            <div>
-                                <ul className='d-flex justify-content-around'>
-                                    <li><i class="fa-solid fa-book-open-reader"></i>  Lessons</li>
-                                    <li><i class="fa-regular fa-circle-play"></i>  Videos</li>
-                                    <li><i class="fa-solid fa-file-lines"></i>  Documents</li>
-                                    <li><i class="fa-solid fa-pen-to-square"></i>  Quiz</li>
-                                    <li><i class="fa-solid fa-gamepad"></i>  Game</li>
-                                </ul>
-                            </div>
-                            <hr />
-                            <p>Thay An rat dep trai</p>
-                            <p>Show learning object</p>
-                            <div>
-                                <CollapsibleQuestion id="demo1" title="Lesson 1">
+                            {isLoading ? (
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            ) : (
+                                <div>
+                                    <h5>{courseDetails && courseDetails.name}</h5>
+                                    <div>
+                                        <ul className='d-flex justify-content-around'>
+                                            <li><i class="fa-solid fa-book-open-reader"></i>{courseDetails && courseDetails.totalLesson}  Lessons</li>
+                                            <li><i class="fa-regular fa-circle-play"></i>{courseDetails && courseDetails.totalVideo}  Videos</li>
+                                            <li><i class="fa-solid fa-file-lines"></i>{courseDetails && courseDetails.totalDocument}  Documents</li>
+                                            <li><i class="fa-solid fa-pen-to-square"></i>{courseDetails && courseDetails.totalQuiz}  Quiz</li>
+                                            <li><i class="fa-solid fa-gamepad"></i>1  Game</li>
+                                        </ul>
+                                    </div>
+                                    <hr />
+                                    <p>{courseDetails && courseDetails.description}</p>
+                                    <div>
+                                        {courseDetails && courseDetails.sections.map((section) => (
+                                            <CollapsibleQuestion
+                                                key={section.id}
+                                                id={`section${section.id}`}
+                                                title={`Lesson ${section.order}: ${section.name}`}
+                                                lessons={section.lessons}
+                                                quizzes={section.quizzes}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )
+                            }
 
-                                </CollapsibleQuestion>
-                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             <Footer />
-        </div>
+        </div >
     )
 }

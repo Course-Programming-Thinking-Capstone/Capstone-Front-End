@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactPaginate from 'react-paginate';
@@ -16,8 +16,9 @@ export default function StaffClassDetail() {
     const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
     const [classIdForForm, setClassIdForForm] = useState(null);
 
+
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
-        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid #F69E4A', width: '150px', height: '30px' }} >
+        <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid #F69E4A', width: '150px', height: '30px', borderRadius: '8px' }} >
             <div>
                 {formatDate(value)}
             </div>
@@ -35,11 +36,10 @@ export default function StaffClassDetail() {
         const today = new Date().toISOString().split('T')[0];
         const [courses, setCourses] = useState([]);
         const [selectedCourseId, setSelectedCourseId] = useState('');
-        const [scheduleCreated, setScheduleCreated] = useState(false);
-        const [classDetails, setClassDetails] = useState(null);
         const [isScheduleSectionEnabled, setIsScheduleSectionEnabled] = useState(false);
         const [createdClassDetails, setCreatedClassDetails] = useState(null);
-        const [createdClassId, setCreatedClassId] = useState(null); const [checkedDays, setCheckedDays] = useState({
+        const secondAccordionButtonRef = useRef(null);
+        const [checkedDays, setCheckedDays] = useState({
             Monday: false,
             Tuesday: false,
             Wednesday: false,
@@ -47,6 +47,8 @@ export default function StaffClassDetail() {
             Friday: false,
             Saturday: false,
         });
+        const [isCreatingClass, setIsCreatingClass] = useState(false);
+        const [isCreatingSchedule, setIsCreatingSchedule] = useState(false);
 
         useEffect(() => {
             const fetchCourses = async () => {
@@ -63,9 +65,9 @@ export default function StaffClassDetail() {
                         throw new Error('Failed to fetch courses');
                     }
                     const data = await response.json();
-                    setCourses(data.results); // Assuming the results are in data.results
+                    setCourses(data.results);
                     if (data.results.length > 0) {
-                        setSelectedCourseId(data.results[0].id); // Default to the first course
+                        setSelectedCourseId(data.results[0].id);
                     }
                 } catch (error) {
                     alert(error.message);
@@ -90,30 +92,28 @@ export default function StaffClassDetail() {
         };
 
         const handleCreateClass = async () => {
-            // Ensure all fields are filled out (basic validation)
-            if (!classCode || !openDay || !closeDay) {
-                toast.error('Please fill out all fields', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeButton: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
-                return;
-            }
-
-            const data = {
-                classCode: classCode,
-                openDay: formatBirthday(openDay),
-                closeDay: formatBirthday(closeDay),
-                courseId: selectedCourseId
-            };
-
-            console.log('data: ', data);
             try {
+                setIsCreatingClass(true);
+                if (!classCode || !openDay || !closeDay) {
+                    toast.error('Please fill out all fields', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeButton: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    return;
+                }
+
+                const data = {
+                    classCode: classCode,
+                    openDay: formatBirthday(openDay),
+                    closeDay: formatBirthday(closeDay),
+                    courseId: selectedCourseId
+                };
                 const response = await fetch('https://www.kidpro-production.somee.com/api/v1/classes', {
                     method: 'POST',
                     headers: {
@@ -130,6 +130,7 @@ export default function StaffClassDetail() {
                 const responseData = await response.json();
                 console.log('createClass: ', responseData);
 
+
                 setIsScheduleSectionEnabled(true);
                 setCreatedClassDetails(responseData);
                 toast.success('Create class successfully', {
@@ -142,6 +143,12 @@ export default function StaffClassDetail() {
                     progress: undefined,
                     theme: "colored",
                 });
+
+                if (secondAccordionButtonRef.current) {
+                    new bootstrap.Collapse(secondAccordionButtonRef.current, {
+                        toggle: false
+                    }).show();
+                }
             } catch (error) {
                 toast.error(error.message, {
                     position: "top-right",
@@ -153,6 +160,8 @@ export default function StaffClassDetail() {
                     progress: undefined,
                     theme: "colored",
                 });
+            } finally {
+                setIsCreatingClass(false);
             }
         };
 
@@ -256,6 +265,7 @@ export default function StaffClassDetail() {
             };
 
             try {
+                setIsCreatingSchedule(true);
                 const response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/schedules', {
                     method: 'POST',
                     headers: {
@@ -287,6 +297,8 @@ export default function StaffClassDetail() {
                     progress: undefined,
                     theme: "colored",
                 });
+            } finally {
+                setIsCreatingSchedule(false);
             }
         };
 
@@ -359,7 +371,15 @@ export default function StaffClassDetail() {
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-end'>
-                                        <button className='mt-4' style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateClass}>Create class</button>
+                                        <button className='mt-4' style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '35px', width: '120px' }} onClick={handleCreateClass}>
+                                            {isCreatingClass ? (
+                                                <div class="spinner-border text-light" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            ) : (
+                                                "Create class"
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -374,7 +394,7 @@ export default function StaffClassDetail() {
                                 Create schedule
                             </button>
                         </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" ref={secondAccordionButtonRef} >
                             <div class="accordion-body">
                                 <div className='p-5'>
                                     <div className="d-flex">
@@ -391,7 +411,15 @@ export default function StaffClassDetail() {
                                         {createdClassDetails && <SlotTimeSelection classDetails={createdClassDetails} />}
                                     </div>
                                     <div className="d-flex justify-content-end">
-                                        <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={handleCreateSchedule}>Create schedule</button>
+                                        <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '35px', width: '150px' }} onClick={handleCreateSchedule}>
+                                            {isCreatingSchedule ? (
+                                                <div class="spinner-border text-light" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            ) : (
+                                                "Create schedule"
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -402,7 +430,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const ClassContent = ({ classId, setView }) => {
+    const ClassContent = ({ classId, setView, setClassIdForStudentForm, setClassIdForTeacherForm }) => {
         const [classDetails, setClassDetails] = useState(null);
         const [loading, setLoading] = useState(true);
         const accessToken = localStorage.getItem('accessToken');
@@ -415,12 +443,14 @@ export default function StaffClassDetail() {
             setCurrentPage(selectedItem.selected);
         };
 
-        const handleAddTeacherClick = () => {
-            navigateToView('addTeacher', classId);
+        const handleAddStudentClick = () => {
+            setClassIdForStudentForm(classId); // Set the classId for the StudentForm
+            setView('addStudent');
         };
 
-        const handleAddStudentClick = () => {
-            navigateToView('addStudent', classId);
+        const handleAddTeacherClick = () => {
+            setClassIdForTeacherForm(classId); // Set the classId for the TeacherForm
+            setView('addTeacher');
         };
 
         // Calculate the students to be displayed on the current page
@@ -619,6 +649,308 @@ export default function StaffClassDetail() {
         )
     }
 
+    const StudentForm = ({ onBack, classId }) => {
+        const [currentClass, setCurrentClass] = useState([]);
+        const accessToken = localStorage.getItem('accessToken');
+        const [searchTerm, setSearchTerm] = useState('');
+        const [searchResults, setSearchResults] = useState([]);
+        const [isLoading, setIsLoading] = useState(false);
+        const [isSearching, setIsSearching] = useState(false);
+        const [pageNumber, setPageNumber] = useState(0);
+        const studentsPerPage = 5;
+        const pagesVisited = pageNumber * studentsPerPage;
+        const [enrolledStudents, setEnrolledStudents] = useState([]);
+        const [enrolledStudentsPageNumber, setEnrolledStudentsPageNumber] = useState(0);
+        const enrolledStudentsPagesVisited = enrolledStudentsPageNumber * studentsPerPage;
+        const [isAdding, setIsAdding] = useState(false);
+
+        const enrolledStudentsPageCount = Math.ceil(enrolledStudents.length / studentsPerPage);
+
+        const changeEnrolledStudentsPage = ({ selected }) => {
+            setEnrolledStudentsPageNumber(selected);
+        };
+
+        // Displaying enrolled students for the current page
+        const currentEnrolledStudents = enrolledStudents.slice(
+            enrolledStudentsPagesVisited,
+            enrolledStudentsPagesVisited + studentsPerPage
+        );
+
+        const pageCount = Math.ceil(searchResults.length / studentsPerPage);
+        const changePage = ({ selected }) => {
+            setPageNumber(selected);
+        };
+
+        console.log(classId);
+
+        useEffect(() => {
+            const fetchClassDetails = async () => {
+                try {
+                    const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const classData = await response.json();
+                    console.log('classData: ', classData);
+
+                    // Assuming classData includes a 'students' array with the necessary details
+                    // Update the state for both currentClass and enrolledStudents
+                    setCurrentClass(classData);
+                    setEnrolledStudents(classData.students || []);
+                } catch (error) {
+                    console.error("Failed to fetch class details", error);
+                }
+            };
+
+            if (classId) {
+                fetchClassDetails();
+            }
+        }, [classId, accessToken]);
+
+
+        const handleSearchChange = (event) => {
+            setSearchTerm(event.target.value);
+        };
+
+        const executeSearch = async () => {
+            if (!searchTerm.trim()) return;
+
+            setIsSearching(true);
+            try {
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/students/search?input=${encodeURIComponent(searchTerm)}&classId=${classId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const searchData = await response.json();
+                console.log('searchData: ', searchData);
+                setSearchResults(searchData); // Update your state with the search result
+            } catch (error) {
+                console.error("Search failed", error);
+            } finally {
+                setIsSearching(false);
+            }
+        };
+
+        // Function to handle adding a student
+        const handleAddStudent = (studentToAdd) => {
+            setEnrolledStudents((prevStudents) => {
+                // Check if the student is already added to prevent duplicates
+                const isAlreadyAdded = prevStudents.some(student => student.studentId === studentToAdd.studentId);
+                if (!isAlreadyAdded) {
+                    return [...prevStudents, studentToAdd];
+                }
+                return prevStudents;
+            });
+        };
+
+        // Function to handle removing a student
+        const handleRemoveStudent = (studentIdToRemove) => {
+            setEnrolledStudents((prevStudents) => prevStudents.filter(student => student.studentId !== studentIdToRemove));
+        };
+
+        // Function to save changes
+        const handleSaveChanges = async () => {
+
+            let response;
+            try {
+                setIsLoading(true);
+                response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/students/add-or-remove', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        studentIds: enrolledStudents.map((student) => student.studentId), // Make sure to use student.studentId if that's the correct property
+                        classId: classId,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const postListStudent = await response.json();
+                console.log('postListStudent: ', postListStudent);
+                toast.success("Update student list successfully", { // Use the message from the response for the toast
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } catch (error) {
+                console.error("An error occurred:", error);
+                toast.error('Update student list failed', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+
+        useEffect(() => {
+            console.log(enrolledStudents);
+        }, [enrolledStudents]);
+
+        const goBack = () => {
+            onBack();
+            setView('classContent');
+        }
+
+        return (
+            <div className='m-5 p-5' style={{ backgroundColor: 'white', minHeight: '600px' }}>
+                <div className="d-flex justify-content-between">
+                    <div>
+                        <p className='orange' style={{ fontSize: '22px' }}>Add/Update students</p>
+                    </div>
+                    <div>
+                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={goBack}>Back</button>
+                    </div>
+                </div>
+                <ToastContainer />
+                <div className='px-3'>
+                    <div>
+                        <div className="d-flex">
+                            <p className='blue'>Class name</p>
+                            <p className='ms-3'>{currentClass.classCode}</p>
+                        </div>
+
+                    </div>
+                    <div className='d-flex justify-content-between'>
+                        <div style={{ width: '45%' }}>
+                            <div>
+                                <p className='blue mb-1'>Search student's name</p>
+                                <div className="d-flex justify-content-center mb-2">
+                                    <div>
+                                        <input value={searchTerm}
+                                            onChange={handleSearchChange}
+                                            style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
+                                    </div>
+                                    <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
+                                        <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {searchResults.length > 0 ? (
+                                            searchResults
+                                                .slice(pagesVisited, pagesVisited + studentsPerPage)
+                                                .map((student, index) => (
+                                                    <tr key={index}>
+                                                        <td className='text-center'>{student.studentName}</td>
+                                                        <td className='text-center'>{student.dateOfBirth}</td>
+                                                        <td className='text-center'>
+                                                            <button style={{ border: 'none', color: '#FFA63D' }}
+                                                                onClick={() => handleAddStudent(student)}>
+                                                                <i style={{ fontSize: '18px' }} class="fa-solid fa-circle-plus"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="4" className="text-center">
+                                                    No students found
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="d-flex justify-content-center">
+
+                                <ReactPaginate
+                                    previousLabel={"Previous"}
+                                    nextLabel={"Next"}
+                                    pageCount={pageCount}
+                                    onPageChange={changePage}
+                                    containerClassName={"pagination"}
+                                    previousLinkClassName={"pagination__link"}
+                                    nextLinkClassName={"pagination__link"}
+                                    disabledClassName={"pagination__link--disabled"}
+                                    activeClassName={"pagination__link--active"}
+                                />
+                            </div>
+                        </div>
+                        <div style={{ width: '45%', marginTop: '50px' }}>
+                            <p className='blue mb-0'>Current class student list</p>
+                            <div class="table-responsive" style={{ height: '400px', overflowY: 'scroll' }}>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
+                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {enrolledStudents.map((student, index) => (
+                                            <tr key={index}>
+                                                <td className='text-center'>{student.studentName}</td>
+                                                <td className='text-center'>{student.dateOfBirth}</td>
+                                                <td className='text-center'>
+                                                    <button style={{ border: 'none', color: '#FFA63D' }}
+                                                        onClick={() => handleRemoveStudent(student.studentId)}>
+                                                        <i style={{ fontSize: '18px' }} className="fa-solid fa-circle-minus"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className='d-flex justify-content-end'>
+                                <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px', height: '35px', width: '120px' }} onClick={handleSaveChanges}>
+                                    {isLoading ? (
+                                        <div class="spinner-border text-light" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    ) : (
+                                        "Save changes"
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     const TeacherForm = ({ onBack }) => {
         const accessToken = localStorage.getItem('accessToken');
         const [teachers, setTeachers] = useState([]);
@@ -660,8 +992,8 @@ export default function StaffClassDetail() {
 
         useEffect(() => {
             const fetchTeachers = async () => {
-                setIsLoading(true);
                 try {
+                    setIsLoading(true);
                     const response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/teachers', {
                         method: 'GET',
                         headers: {
@@ -716,8 +1048,8 @@ export default function StaffClassDetail() {
                 alert('Please select a teacher first.');
                 return;
             }
-            setIsLoading(true);
             try {
+                setIsLoading(true);
                 const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`, {
                     method: 'POST', // or 'PUT'
                     headers: {
@@ -888,297 +1220,6 @@ export default function StaffClassDetail() {
         )
     }
 
-    const StudentForm = ({ onBack, classId }) => {
-        const [currentClass, setCurrentClass] = useState([]);
-        const accessToken = localStorage.getItem('accessToken');
-        const [searchTerm, setSearchTerm] = useState('');
-        const [searchResults, setSearchResults] = useState([]);
-        const [isLoading, setIsLoading] = useState([]);
-        const [isSearching, setIsSearching] = useState(false);
-        const [pageNumber, setPageNumber] = useState(0);
-        const studentsPerPage = 5;
-        const pagesVisited = pageNumber * studentsPerPage;
-        const [enrolledStudents, setEnrolledStudents] = useState([]);
-        const [enrolledStudentsPageNumber, setEnrolledStudentsPageNumber] = useState(0);
-        const enrolledStudentsPagesVisited = enrolledStudentsPageNumber * studentsPerPage;
-
-        const enrolledStudentsPageCount = Math.ceil(enrolledStudents.length / studentsPerPage);
-
-        const changeEnrolledStudentsPage = ({ selected }) => {
-            setEnrolledStudentsPageNumber(selected);
-        };
-
-        // Displaying enrolled students for the current page
-        const currentEnrolledStudents = enrolledStudents.slice(
-            enrolledStudentsPagesVisited,
-            enrolledStudentsPagesVisited + studentsPerPage
-        );
-
-        const pageCount = Math.ceil(searchResults.length / studentsPerPage);
-        const changePage = ({ selected }) => {
-            setPageNumber(selected);
-        };
-
-        useEffect(() => {
-            const fetchClassDetails = async () => {
-                try {
-                    const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const classData = await response.json();
-                    console.log('classData: ', classData);
-
-                    // Assuming classData includes a 'students' array with the necessary details
-                    // Update the state for both currentClass and enrolledStudents
-                    setCurrentClass(classData);
-                    setEnrolledStudents(classData.students || []);
-                } catch (error) {
-                    console.error("Failed to fetch class details", error);
-                }
-            };
-
-            if (classId) {
-                fetchClassDetails();
-            }
-        }, [classId, accessToken]);
-
-
-        const handleSearchChange = (event) => {
-            setSearchTerm(event.target.value);
-        };
-
-        const executeSearch = async () => {
-            if (!searchTerm.trim()) return;
-
-            setIsSearching(true);
-            try {
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/students/search?input=${encodeURIComponent(searchTerm)}&classId=${classId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const searchData = await response.json();
-                console.log('searchData: ', searchData);
-                setSearchResults(searchData); // Update your state with the search result
-            } catch (error) {
-                console.error("Search failed", error);
-            } finally {
-                setIsSearching(false);
-            }
-        };
-
-        // Function to handle adding a student
-        const handleAddStudent = (studentToAdd) => {
-            setEnrolledStudents((prevStudents) => {
-                // Check if the student is already added to prevent duplicates
-                const isAlreadyAdded = prevStudents.some(student => student.studentId === studentToAdd.studentId);
-                if (!isAlreadyAdded) {
-                    return [...prevStudents, studentToAdd];
-                }
-                return prevStudents;
-            });
-        };
-
-        // Function to handle removing a student
-        const handleRemoveStudent = (studentIdToRemove) => {
-            setEnrolledStudents((prevStudents) => prevStudents.filter(student => student.studentId !== studentIdToRemove));
-        };
-
-        // Function to save changes
-        const handleSaveChanges = async () => {
-            setIsLoading(true);
-            let response;
-            try {
-                response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/students/add-or-remove', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        studentIds: enrolledStudents.map((student) => student.studentId), // Make sure to use student.studentId if that's the correct property
-                        classId: classId,
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const postListStudent = await response.json();
-                console.log('postListStudent: ', postListStudent);
-                alert('Students updated successfully.');
-            } catch (error) {
-                console.error("An error occurred:", error);
-                if (response) {
-                    try {
-                        const errorResponse = await response.json();
-                        console.log('Error response:', errorResponse);
-                        alert(`Failed to update students: ${errorResponse.message || ''}`);
-                    } catch (jsonError) {
-                        console.error("Error reading error response:", jsonError);
-                        alert('Failed to update students. An unknown error occurred.');
-                    }
-                } else {
-                    alert('Failed to update students. No response from the server.');
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-
-        useEffect(() => {
-            console.log(enrolledStudents);
-        }, [enrolledStudents]);
-
-
-        return (
-            <div className='m-5 p-5' style={{ backgroundColor: 'white', minHeight: '600px' }}>
-                <div className="d-flex justify-content-between">
-                    <div>
-                        <p className='orange' style={{ fontSize: '22px' }}>Add/Update students</p>
-                    </div>
-                    <div>
-                        <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack}>Back</button>
-                    </div>
-                </div>
-                <div className='px-3'>
-                    <div>
-                        <div className="d-flex">
-                            <p className='blue'>Class name</p>
-                            <p className='ms-3'>{currentClass.classCode}</p>
-                        </div>
-
-                    </div>
-                    <div className='d-flex justify-content-between'>
-                        <div style={{ width: '45%' }}>
-                            <div>
-                                <p className='blue mb-1'>Search student's name</p>
-                                <div className="d-flex justify-content-center mb-2">
-                                    <div>
-                                        <input value={searchTerm}
-                                            onChange={handleSearchChange}
-                                            style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
-                                    </div>
-                                    <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
-                                        <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {searchResults.length > 0 ? (
-                                            searchResults
-                                                .slice(pagesVisited, pagesVisited + studentsPerPage)
-                                                .map((student, index) => (
-                                                    <tr key={index}>
-                                                        <td className='text-center'>{student.studentName}</td>
-                                                        <td className='text-center'>{student.dateOfBirth}</td>
-                                                        <td className='text-center'>
-                                                            <button style={{ border: 'none', color: '#FFA63D' }}
-                                                                onClick={() => handleAddStudent(student)}>
-                                                                <i style={{ fontSize: '18px' }} class="fa-solid fa-circle-plus"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="4" className="text-center">
-                                                    No students found
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="d-flex justify-content-center">
-
-                                <ReactPaginate
-                                    previousLabel={"Previous"}
-                                    nextLabel={"Next"}
-                                    pageCount={pageCount}
-                                    onPageChange={changePage}
-                                    containerClassName={"pagination"}
-                                    previousLinkClassName={"pagination__link"}
-                                    nextLinkClassName={"pagination__link"}
-                                    disabledClassName={"pagination__link--disabled"}
-                                    activeClassName={"pagination__link--active"}
-                                />
-                            </div>
-                        </div>
-                        <div style={{ width: '45%', marginTop: '50px' }}>
-                            <p className='blue mb-0'>Current class student list</p>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Full name</th>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Date of birth</th>
-                                            <th className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white' }}>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {enrolledStudents.map((student, index) => (
-                                            <tr key={index}>
-                                                <td className='text-center'>{student.studentName}</td>
-                                                <td className='text-center'>{student.dateOfBirth}</td>
-                                                <td className='text-center'>
-                                                    <button style={{ border: 'none', color: '#FFA63D' }}
-                                                        onClick={() => handleRemoveStudent(student.studentId)}>
-                                                        <i style={{ fontSize: '18px' }} className="fa-solid fa-circle-minus"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className='d-flex justify-content-center'>
-                                <ReactPaginate
-                                    previousLabel={"Previous"}
-                                    nextLabel={"Next"}
-                                    pageCount={enrolledStudentsPageCount}
-                                    onPageChange={changeEnrolledStudentsPage}
-                                    containerClassName={"pagination"}
-                                    previousLinkClassName={"pagination__link"}
-                                    nextLinkClassName={"pagination__link"}
-                                    disabledClassName={"pagination__link--disabled"}
-                                    activeClassName={"pagination__link--active"}
-                                />
-                            </div>
-                            <div className='d-flex justify-content-end'>
-                                <button style={{ backgroundColor: '#F15C58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={handleSaveChanges}>Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     const handleViewClassContent = (classId) => {
         setSelectedClassId(classId);
         setView('classContent');
@@ -1190,7 +1231,6 @@ export default function StaffClassDetail() {
         }
         setView(viewName);
     };
-
 
     useEffect(() => {
         if (view === 'detail') {
@@ -1254,6 +1294,8 @@ export default function StaffClassDetail() {
                 return <ClassContent
                     classId={selectedClassId}
                     setView={setView}
+                    setClassIdForStudentForm={setClassIdForStudentForm}
+                    setClassIdForTeacherForm={setClassIdForTeacherForm}
                 />;
             default:
                 return (
@@ -1268,7 +1310,12 @@ export default function StaffClassDetail() {
                                     <i className="fa-solid fa-bell"></i>
                                 </div>
                                 <div>
-                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={() => setView('createClass')}><i style={{ color: 'white' }} className="fa-solid fa-circle-plus"></i>Create class</button>
+                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={() => setView('createClass')}>
+                                        <div className='d-flex'>
+                                            <i style={{ color: 'white' }} className="fa-solid fa-circle-plus"></i>
+                                            <span className='ms-1'>Create class</span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>

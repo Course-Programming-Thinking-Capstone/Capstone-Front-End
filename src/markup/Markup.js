@@ -46,6 +46,7 @@ import StaffOrderDetail from './Pages/Staff/StaffOrder/StaffOrderDetail';
 import StaffModerating from './Pages/Staff/StaffModerating/StaffModerating';
 import StaffClassDetail from './Pages/Staff/StaffClassDetail/StaffClassDetail';
 import CreateCourseContent from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent';
+import StudentHome from './Pages/StudentHome';
 
 
 export default function Markup() {
@@ -70,10 +71,14 @@ export default function Markup() {
 					<Route path='/not-found' exact element={<ErrorPage />} />
 
 
+					<Route path='/student-home' exact element={<StudentHome />} />
 					<Route path='/schedule' exact element={<Schedule />} />
-					<Route path='/courses-plan' exact element={<CoursesPlan />} />
+					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
 					<Route path='/courses-study' exact element={<CourseStudy />} />
 					<Route path='/courses-quiz' exact element={<CourseQuiz />} />
+					
+					
+					
 					<Route path='/order' exact element={<Order />} />
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
