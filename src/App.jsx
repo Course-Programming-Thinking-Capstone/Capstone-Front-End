@@ -50,6 +50,7 @@ import PaymentSuccess from "./markup/Pages/PaymentSuccess";
 import CoursesPlan from "./markup/Pages/CoursesPlan";
 import { NotFound } from "./markup/Pages/NotFound/NotFound";
 import { EditText } from "./markup/Pages/TestPage/EditText";
+import ErrorPage from "./markup/Pages/ErrorPage";
 
 // function App() {
 // 	return (
@@ -314,20 +315,19 @@ const App = () => {
             {/* Student pages */}
             <Route
               path="/courses-plan"
-              element={<CoursesPlan />}
-            // element={
-            //   <PrivateRoute
-            //     page="courses-plan"
-            //     component={<CoursesPlan/>}
-            //   />
-            // }
+              element={
+                <PrivateRoute
+                  page="courses-plan"
+                  component={<CoursesPlan />}
+                />
+              }
             />
 
             {/* Test page */}
             <Route path="/test" element={<DragAndDropComponent />} />
 
             {/* Error pages  */}
-            <Route path="/not-found" element={<NotFound />} />
+            <Route path="/not-found" element={<ErrorPage />} />
             <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </div>

@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // images
 import logo from './../../images/logo.png';
@@ -7,44 +7,54 @@ import LanguageSwitcher from '../Element/LanguageSwitcher';
 
 
 const Header = () => {
-    // sidebar open	
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    // header scroll
     const [headerFix, setheaderFix] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
         window.addEventListener("scroll", () => {
             setheaderFix(window.scrollY > 50);
         });
     }, []);
 
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const userRole = user ? user.role : 'Guest';
+
     const rolesMenus = {
-        Teacher: [
-            { maintitle: 'Home', to: '/classes' },
-            { maintitle: 'Schedule', to: '/schedule' },
-            // { maintitle: 'Account', to: '/teachers-details/:id' },
-        ],
         Student: [
-            { maintitle: 'Courses', to: '/courses' },
-            { maintitle: 'Profile', to: '/profile' },
+            { maintitle: 'Home', to: '/courses-plan' },
+            { maintitle: 'Schedule', to: '/schedule' },
+            { maintitle: 'Certificate', to: '/schedule' },
+            { maintitle: 'Acount', to: '/account' },
+            { maintitle: 'Log out', to: '/logout' },
         ],
-        guest: [
+        Parent: [
+            { maintitle: 'Home', to: '/home' },
+            { maintitle: 'Courses', to: '/classes' },
+            { maintitle: 'Teacher', to: '/teacher' },
+            { maintitle: 'Order', to: '/order' },
+            { maintitle: 'Account', to: '/account' },
+            { maintitle: 'Log out', to: '/logout' },
+        ],
+        Guest: [
             { maintitle: 'Home', to: '/' },
-            // { maintitle: 'Course', to: '/classes' },
-            // { maintitle: 'Teacher', to: '/teachers' },
+            { maintitle: 'Courses', to: '/classes' },
+            { maintitle: 'Teacher', to: '/teacher' },
             { maintitle: 'Login', to: '/login' },
-        ],
-        Staff: [
-            { maintitle: 'Courses', to: '/courses' },
-            { maintitle: 'Profile', to: '/profile' },
         ],
     };
 
-    let userRole = localStorage.getItem('userRole') || 'guest';
 
     if (!rolesMenus[userRole]) {
         // If userRole is not found or invalid, default to 'guest'
-        userRole = 'guest';
+        userRole = 'Guest';
     }
+
+    const handleLogout = () => {
+        localStorage.removeItem('user'); // Clear the user from local storage
+        navigate('/login'); // Redirect to the login page
+    };
 
     // Current path
     let path = window.location.pathname;
@@ -95,7 +105,10 @@ const Header = () => {
                                 <ul className="nav navbar-nav">
                                     {rolesMenus[userRole].map((item, ind) => (
                                         <li key={ind} className={item.to === path ? 'active' : ''}>
-                                            <Link to={item.to}>{item.maintitle}</Link>
+                                            {item.maintitle === 'Log out' ?
+                                                <a href="#" onClick={handleLogout}>{item.maintitle}</a> :
+                                                <Link to={item.to}>{item.maintitle}</Link>
+                                            }
                                         </li>
                                     ))}
                                 </ul>
