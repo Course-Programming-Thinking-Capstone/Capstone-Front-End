@@ -5,17 +5,12 @@ import Footer from '../Layout/Footer';
 import background from './../../images/background/courseBackground.jpg';
 
 export default function CourseStudy() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [selectedContent, setSelectedContent] = useState(null);
 
     const pageStyle = {
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-    };
-
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
     };
 
     const handleContentClick = (content) => {
@@ -75,18 +70,16 @@ export default function CourseStudy() {
             <div className="page" style={pageStyle}>
                 <PageTitle motherMenu="Courses" activeMenu="Study" />
                 <div className=''>
-                    <div className="study">
-                        <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-                            <a href="javascript:void(0)" className="closebtn" onClick={toggleSidebar}>×</a>
-
-                            <div className='document d-flex' onClick={() => handleContentClick('video')} style={{ backgroundColor: selectedContent === 'video' ? '#ffecb7' : 'transparent', borderRadius:"10px 0 0 10px" }}>
+                    <div className="study d-flex">
+                        <div style={{ backgroundColor: 'white', width: '30%' }}>
+                            <div className='document d-flex' onClick={() => handleContentClick('video')} style={{ backgroundColor: selectedContent === 'video' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
                                 <i class="fa-regular fa-circle-play"></i>
                                 <div className='document-content'>
                                     <p>Welcome to technology!</p>
                                     <span>Video - 1min</span>
                                 </div>
                             </div>
-                            <div className='document d-flex' onClick={() => handleContentClick('reading')} style={{ backgroundColor: selectedContent === 'reading' ? '#ffecb7' : 'transparent', borderRadius:"10px 0 0 10px" }}>
+                            <div className='document d-flex' onClick={() => handleContentClick('reading')} style={{ backgroundColor: selectedContent === 'reading' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
                                 <i class="fa-solid fa-book-open"></i>
                                 <div className='document-content'>
                                     <p>Welcome to technology!</p>
@@ -100,7 +93,6 @@ export default function CourseStudy() {
                                     <span>Reading - 1min</span>
                                 </div>
                             </div>
-
                             <div className='document d-flex' onClick={() => handleContentClick('video')}>
                                 <i class="fa-regular fa-circle-play"></i>
                                 <div className='document-content'>
@@ -108,27 +100,22 @@ export default function CourseStudy() {
                                     <span>Video - 1min</span>
                                 </div>
                             </div>
-                            <a href="#">
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                    <div className='document-content'>
-                                        <p>Graded Quiz: Test your tech knowledge!</p>
-                                        <span>Quiz - 10 questions</span>
-                                    </div>
+                            <div className='document d-flex'>
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <div className='document-content'>
+                                    <p>Graded Quiz: Test your tech knowledge!</p>
+                                    <span>Quiz - 10 questions</span>
                                 </div>
-                            </a>
-                            <a href="#">
-                                <div className='document d-flex'>
-                                    <i class="fa-solid fa-gamepad"></i>
-                                    <div className='document-content'>
-                                        <p>Practice game</p>
-                                        <span>Map 1 - level 1</span>
-                                    </div>
+                            </div>
+                            <div className='document d-flex'>
+                                <i class="fa-solid fa-gamepad"></i>
+                                <div className='document-content'>
+                                    <p>Practice game</p>
+                                    <span>Map 1 - level 1</span>
                                 </div>
-                            </a>
+                            </div>
                         </div>
-                        <div className={`main ${sidebarOpen ? 'shifted' : ''}`}>
-                            <button className="openbtn" onClick={toggleSidebar}>☰ Menu</button>
+                        <div style={{ width: '70%' }}>
                             {renderContent()}
                         </div>
                     </div>

@@ -154,10 +154,6 @@
 /* Courses plan ends */
 
 /* Course study starts */
-.study {
-  display: flex;
-}
-
 .sidebar {
   width: 0;
   z-index: 1;

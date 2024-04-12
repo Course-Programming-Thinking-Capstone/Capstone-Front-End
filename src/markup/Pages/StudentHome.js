@@ -39,8 +39,8 @@ export default function StudentHome() {
         fetchCourses();
     }, []);
 
-    const handleViewDetails = (classId) => {
-        navigate(`/courses-plan/${classId}`); // Navigate to the course details page
+    const handleViewDetails = (courseId) => {
+        navigate(`/courses-plan/${courseId}`); // Navigate to the course details page
     };
 
     return (
@@ -73,7 +73,7 @@ export default function StudentHome() {
                                         <p>Nguyen Ngoc Lam</p>
                                     </div>
                                     <div className='d-flex align-items-center'>
-                                        <button onClick={() => handleViewDetails(course.classId)} style={{ backgroundColor: '#EF7E54', height: '30px', width: '120px', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
+                                        <button onClick={() => handleViewDetails(course.courseId)} style={{ backgroundColor: '#EF7E54', height: '30px', width: '120px', color: 'white', border: 'none', borderRadius: '8px' }}>View detail</button>
                                     </div>
                                 </div>
                             ))}

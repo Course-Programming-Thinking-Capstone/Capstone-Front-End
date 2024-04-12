@@ -52,6 +52,7 @@ import { NotFound } from "./markup/Pages/NotFound/NotFound";
 import { EditText } from "./markup/Pages/TestPage/EditText";
 import ErrorPage from "./markup/Pages/ErrorPage";
 import StudentHome from "./markup/Pages/StudentHome";
+import CourseStudy from "./markup/Pages/CourseStudy";
 
 // function App() {
 // 	return (
@@ -325,11 +326,21 @@ const App = () => {
               }
             />
             <Route
-              path="/courses-plan/:classId"
+              path="/courses-plan/:courseId"
               element={
                 <PrivateRoute
                   page="courses-plan"
                   component={<CoursesPlan />}
+                />
+              }
+            />
+
+            <Route
+              path="/courses-study"
+              element={
+                <PrivateRoute
+                  page="courses-study"
+                  component={<CourseStudy />}
                 />
               }
             />

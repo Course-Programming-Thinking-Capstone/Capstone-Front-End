@@ -53,6 +53,11 @@ export default function Staff() {
         navigate(`/staff/${path.toLowerCase()}`); // Adjust path as needed
     };
 
+    const handleLogout = () => {
+        localStorage.clear(); // Clear the local storage
+        navigate('/login'); // Navigate to login page
+    };
+
     const getItemClass = (itemName) => {
         return `item d-flex justify-content-start ${activeItem === itemName ? 'active' : ''}`;
     };
@@ -101,7 +106,7 @@ export default function Staff() {
                             <i class="fa-solid fa-book"></i>
                             <span>Course</span>
                         </div>
-                        <div className="item d-flex justify-content-start">
+                        <div className="item d-flex justify-content-start" onClick={handleLogout}>
                             <i class="fa-solid fa-right-from-bracket"></i>
                             Log out
                         </div>
