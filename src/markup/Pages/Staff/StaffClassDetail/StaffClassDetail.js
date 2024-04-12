@@ -144,11 +144,6 @@ export default function StaffClassDetail() {
                     theme: "colored",
                 });
 
-                if (secondAccordionButtonRef.current) {
-                    new bootstrap.Collapse(secondAccordionButtonRef.current, {
-                        toggle: false
-                    }).show();
-                }
             } catch (error) {
                 toast.error(error.message, {
                     position: "top-right",

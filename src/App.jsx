@@ -317,7 +317,7 @@ const App = () => {
               }
             />
             <Route
-              path="/payment-success"
+              path="/payment-success/:orderId"
               element={
                 <PrivateRoute
                   page="payment-success"
