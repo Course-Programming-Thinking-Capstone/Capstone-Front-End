@@ -5,6 +5,8 @@ import simp from '../../../../images/gallery/simp.jpg';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import background from '../../../../images/background/adminStaffBackground.jpg';
+import instance from '../../../../helper/apis/baseApi/baseApi';
+import ReactPaginate from 'react-paginate';
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -138,7 +140,6 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
     );
 };
 
-
 const ModeratingDetail = ({ onBack, courseId }) => {
     const [showLesson, setShowLesson] = useState(false);
     const [modalApproveShow, setApproveModalShow] = React.useState(false);
@@ -152,23 +153,11 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [showQuiz, setShowQuiz] = useState(false);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
 
-    
-
     useEffect(() => {
         const fetchCourseDetails = async () => {
-            const accessToken = localStorage.getItem('accessToken'); // Or your method of getting the token
             try {
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${courseId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
+                const response = await instance.get(`api/v1/courses/${courseId}`);
+                const data = response.data
                 setCourseDetails(data); // Assuming the API returns the details directly
             } catch (error) {
                 console.error("Failed to fetch course details", error);
@@ -226,23 +215,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             price: isFree ? 0 : price, // Use the state variable price
         };
 
-        const accessToken = localStorage.getItem('accessToken'); // Or your method of getting the token
-
         try {
-            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${courseId}/approve`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            // Handle the successful approval
+            const response = await instance.post("api/v1/Classes/schedules", payload);
+            const data = response.data;
         } catch (error) {
             console.error("Failed to approve course", error);
             // Handle the error
@@ -531,6 +506,13 @@ export default function StaffModerating() {
     const [courses, setCourses] = useState([]);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 10;
+
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected);
+    };
 
     const handleViewDetail = (courseId) => {
         setSelectedCourseId(courseId);
@@ -543,20 +525,12 @@ export default function StaffModerating() {
 
     useEffect(() => {
         const fetchCourses = async () => {
-            const accessToken = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses?status=Pending&action=manage', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
+                const response = await instance.get(`api/v1/courses?status=Pending&action=manage`);
+                const data = response.data
+
                 setCourses(data);
+                setTotalPages(Math.ceil(data.total / itemsPerPage));
             } catch (error) {
                 console.error("Failed to fetch courses", error);
             }
@@ -606,6 +580,22 @@ export default function StaffModerating() {
                     </div>
                 </div>
             ))}
+            <div className="d-flex justify-content-center">
+                <ReactPaginate
+                    previousLabel={'previous'}
+                    nextLabel={'next'}
+                    breakLabel={'...'}
+                    pageCount={totalPages}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageClick}
+                    containerClassName={'pagination'}
+                    subContainerClassName={'pages pagination'}
+                    activeClassName={'active'}
+                    forcePage={currentPage}
+                />
+
+            </div>
         </div>
     );
 }
