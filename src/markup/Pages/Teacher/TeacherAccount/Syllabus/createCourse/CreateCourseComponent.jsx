@@ -890,3 +890,4 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
     </Accordion>
   );
 };
+
