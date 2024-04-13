@@ -132,6 +132,8 @@ const SyllabusComponent = () => {
                     />
                   </div>
                 ) : (
+                  <>
+                  {syllabuses && syllabuses.totalRecords === 0 ? (<p className="mt-3 text-center">There is no syllabus</p>) :
                   syllabuses.results.map((syllabus, index) => (
                     <div key={index} className="syllabus-content-item mt-2">
                       <div className="d-flex justify-content-between align-items-center">
@@ -174,6 +176,8 @@ const SyllabusComponent = () => {
                       </div>
                     </div>
                   ))
+                }
+                  </>
                 )}
               </div>
 
