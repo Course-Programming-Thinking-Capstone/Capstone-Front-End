@@ -36,7 +36,7 @@ export default function OrderDetail() {
                         <p>{orderDetails.courseName}</p>
                         <p style={{ color: '#FF8A00' }}>Price: {orderDetails.price} đ</p>
                         <p>Quantity purchased: {orderDetails.quantityPurchased}</p>
-                        <span className='text-center' style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '5px', width: '200px', height: '30px' }}>creating a course account</span>
+                        <span className='text-center p-1' style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '5px', width: '200px' }}>creating a course account</span>
                     </div>
                 </div>
                 <div className="order-id row">
@@ -46,7 +46,7 @@ export default function OrderDetail() {
                     </div>
                     <div className='col-lg-6 col-md-6 col-sm-6 d-flex'>
                         <img src={momo} alt="" style={{ height: '50px', width: '50px' }} />
-                        <p>Pay with momo e-wallet</p>
+                <p className='ms-3 mt-2'>Pay with momo e-wallet</p>
                     </div>
                 </div>
                 <div className="order-info row">
@@ -66,7 +66,7 @@ export default function OrderDetail() {
                                 </div>
                             ))}
 
-                            <p>Child's account will send to:</p>
+                            <p className='mt-2 mb-3'>Child's account will send to:</p>
                             <div className='d-flex justify-content-center'>
                                 <div className='d-flex justify-content-center' style={{ width: '60%', border: '1px solid #1A9CB7', borderRadius: '5px', padding: '5px 0', }}>
                                     <i style={{ color: '#FF8A00', fontSize: '20px' }} class="fa-regular fa-envelope"></i>
@@ -107,7 +107,7 @@ export default function OrderDetail() {
 
     const SuccessOrder = () => {
         const Repurchase = () => {
-            navigate(`/classes`);
+            navigate(`/courses`);
         };
 
         return (
@@ -134,7 +134,7 @@ export default function OrderDetail() {
                     </div>
                     <div className='col-lg-6 col-md-6 col-sm-6 d-flex'>
                         <img src={momo} alt="" style={{ height: '50px', width: '50px' }} />
-                        <p>Pay with momo e-wallet</p>
+                        <p className='ms-3 mt-2'>Pay with momo e-wallet</p>
                     </div>
                 </div>
                 <div className="order-info row">

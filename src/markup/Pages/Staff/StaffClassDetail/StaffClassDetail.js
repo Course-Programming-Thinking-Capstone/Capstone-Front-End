@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ReactPaginate from 'react-paginate';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import instance from '../../../../helper/apis/baseApi/baseApi';
 
 export default function StaffClassDetail() {
     const [view, setView] = useState('detail');
@@ -53,24 +54,21 @@ export default function StaffClassDetail() {
         useEffect(() => {
             const fetchCourses = async () => {
                 try {
-                    const response = await fetch('https://www.kidpro-production.somee.com/api/v1/courses?status=Active&action=manage', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
+                    const response = await instance.get("api/v1/courses?status=Active&action=manage");
+                    const data = response.data
 
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch courses');
-                    }
-                    const data = await response.json();
                     setCourses(data.results);
                     if (data.results.length > 0) {
                         setSelectedCourseId(data.results[0].id);
                     }
                 } catch (error) {
-                    alert(error.message);
+                    if (error.response) {
+                        console.log(`Error response: ${error.response?.data?.message}`);
+                        // setMessage(error.response?.data?.message || "Undefined.");
+                    } else {
+                        console.log(`Error message abc: ${error.message}`);
+                        // setMessage(error.message || "Undefined.");
+                    }
                 }
             };
 
@@ -114,22 +112,11 @@ export default function StaffClassDetail() {
                     closeDay: formatBirthday(closeDay),
                     courseId: selectedCourseId
                 };
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/classes', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                    body: JSON.stringify(data),
-                });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to create class');
-                }
-                const responseData = await response.json();
+                const response = await instance.post("api/v1/classes", data);
+
+                const responseData = response.json();
                 console.log('createClass: ', responseData);
-
 
                 setIsScheduleSectionEnabled(true);
                 setCreatedClassDetails(responseData);
@@ -261,21 +248,9 @@ export default function StaffClassDetail() {
 
             try {
                 setIsCreatingSchedule(true);
-                const response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/schedules', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                    body: JSON.stringify(data),
-                });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to create schedule');
-                }
-
-                const responseData = await response.json();
+                const response = await instance.post("api/v1/Classes/schedules", data);
+                const responseData = response.json();
                 console.log('responseData: ', responseData);
 
                 setSelectedClassId(responseData.classId);
@@ -429,8 +404,8 @@ export default function StaffClassDetail() {
         const [classDetails, setClassDetails] = useState(null);
         const [loading, setLoading] = useState(true);
         const accessToken = localStorage.getItem('accessToken');
-        const [currentPage, setCurrentPage] = useState(0); // Note: react-paginate uses 0-indexing for pages
-        const studentsPerPage = 3; // Number of students you want per page
+        const [currentPage, setCurrentPage] = useState(0);
+        const studentsPerPage = 3;
 
         const pageCount = Math.ceil(classDetails?.students.length / studentsPerPage);
 
@@ -457,18 +432,9 @@ export default function StaffClassDetail() {
         useEffect(() => {
             const fetchClassDetails = async () => {
                 try {
-                    const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
+                    const response = await instance.get(`api/v1/Classes/detail/${classId}`);
+                    const data = response.data
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
                     console.log('data: ', data);
                     setClassDetails(data);
                 } catch (error) {
@@ -479,7 +445,7 @@ export default function StaffClassDetail() {
             };
 
             fetchClassDetails();
-        }, [classId, accessToken]); // Fetch class details when classId changes
+        }, [classId, accessToken]);
 
         if (loading) {
             return (
@@ -510,10 +476,8 @@ export default function StaffClassDetail() {
             window.open(url, '_blank');
         };
 
-
-
         return (
-            <div className='staff-class-content' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', minHeight: '700px', }}>
+            <div className='staff-class-content mx-5' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', overflowY: 'scroll', height: '90vh' }}>
                 <div className="header">
                     <div className='d-flex justify-content-between'>
                         <div className="d-flex justify-content-start">
@@ -524,7 +488,11 @@ export default function StaffClassDetail() {
                             <i class="fa-solid fa-bell"></i>
                         </div>
                         <div>
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>Back</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>
+                                <div className='py-1 px-2'>
+                                    Back
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -591,7 +559,11 @@ export default function StaffClassDetail() {
                                 </div>
                                 <p className='mb-1'>Slot {classDetails.slotNumber} ({classDetails.startSlot} - {classDetails.endSlot})</p>
                                 <p className='mb-1'>{classDetails.totalSlot}</p>
-                                <button onClick={() => handleOpenNewTab(classDetails.roomUrl)}>Open Discord Link</button>
+                                <button onClick={() => handleOpenNewTab(classDetails.roomUrl)} style={{ backgroundColor: '#5562ea', color: 'white', borderRadius: '8px', border: 'none' }}>
+                                    <div className='py-1 px-2' style={{ backgroundColor: '5562ea', borderRadius: '8px' }}>
+                                        Discord
+                                    </div>
+                                </button>
 
                             </div>
                         </div>
@@ -655,21 +627,6 @@ export default function StaffClassDetail() {
         const studentsPerPage = 5;
         const pagesVisited = pageNumber * studentsPerPage;
         const [enrolledStudents, setEnrolledStudents] = useState([]);
-        const [enrolledStudentsPageNumber, setEnrolledStudentsPageNumber] = useState(0);
-        const enrolledStudentsPagesVisited = enrolledStudentsPageNumber * studentsPerPage;
-        const [isAdding, setIsAdding] = useState(false);
-
-        const enrolledStudentsPageCount = Math.ceil(enrolledStudents.length / studentsPerPage);
-
-        const changeEnrolledStudentsPage = ({ selected }) => {
-            setEnrolledStudentsPageNumber(selected);
-        };
-
-        // Displaying enrolled students for the current page
-        const currentEnrolledStudents = enrolledStudents.slice(
-            enrolledStudentsPagesVisited,
-            enrolledStudentsPagesVisited + studentsPerPage
-        );
 
         const pageCount = Math.ceil(searchResults.length / studentsPerPage);
         const changePage = ({ selected }) => {
@@ -681,22 +638,11 @@ export default function StaffClassDetail() {
         useEffect(() => {
             const fetchClassDetails = async () => {
                 try {
-                    const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/detail/${classId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
+                    const response = await instance.get(`api/v1/Classes/detail/${classId}`);
+                    const classData = response.data;
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const classData = await response.json();
                     console.log('classData: ', classData);
 
-                    // Assuming classData includes a 'students' array with the necessary details
-                    // Update the state for both currentClass and enrolledStudents
                     setCurrentClass(classData);
                     setEnrolledStudents(classData.students || []);
                 } catch (error) {
@@ -719,18 +665,10 @@ export default function StaffClassDetail() {
 
             setIsSearching(true);
             try {
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/students/search?input=${encodeURIComponent(searchTerm)}&classId=${classId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const searchData = await response.json();
+                const response = await instance.get(`api/v1/Classes/students/search?input=${encodeURIComponent(searchTerm)}&classId=${classId}`);
+                const searchData = response.data;
+
                 console.log('searchData: ', searchData);
                 setSearchResults(searchData); // Update your state with the search result
             } catch (error) {
@@ -759,26 +697,16 @@ export default function StaffClassDetail() {
 
         // Function to save changes
         const handleSaveChanges = async () => {
-
-            let response;
             try {
                 setIsLoading(true);
-                response = await fetch('https://www.kidpro-production.somee.com/api/v1/Classes/students/add-or-remove', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        studentIds: enrolledStudents.map((student) => student.studentId), // Make sure to use student.studentId if that's the correct property
-                        classId: classId,
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                const data = {
+                    studentIds: enrolledStudents.map((student) => student.studentId), // Make sure to use student.studentId if that's the correct property
+                    classId: classId,
                 }
-                const postListStudent = await response.json();
+                const response = await instance.post("api/v1/Classes/students/add-or-remove", data);
+
+                const postListStudent = response.json();
+
                 console.log('postListStudent: ', postListStudent);
                 toast.success("Update student list successfully", { // Use the message from the response for the toast
                     position: "top-right",
@@ -807,7 +735,6 @@ export default function StaffClassDetail() {
             }
         };
 
-
         useEffect(() => {
             console.log(enrolledStudents);
         }, [enrolledStudents]);
@@ -832,7 +759,7 @@ export default function StaffClassDetail() {
                     <div>
                         <div className="d-flex">
                             <p className='blue'>Class name</p>
-                            <p className='ms-3'>{currentClass.classCode}</p>
+                            <p className='ms-3' style={{ color: '#F25B58' }}>{currentClass.classCode}</p>
                         </div>
 
                     </div>
@@ -846,7 +773,7 @@ export default function StaffClassDetail() {
                                             onChange={handleSearchChange}
                                             style={{ height: '35px', width: '300px', borderRadius: '8px 0px 0px 8px', borderRight: 'none', outline: 'none' }} type="text" placeholder="Type student's name" />
                                     </div>
-                                    <div onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
+                                    <div disabled={isSearching} onClick={executeSearch} className='text-center' style={{ height: '35px', width: '50px', borderRadius: '0px 8px 8px 0px', border: 'none', outline: 'none', backgroundColor: '#F69E4A', cursor: 'pointer' }}>
                                         <i style={{ fontSize: '18px', marginTop: '8px', color: 'white' }} class="fa-solid fa-magnifying-glass"></i>
                                     </div>
                                 </div>
@@ -861,7 +788,15 @@ export default function StaffClassDetail() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {searchResults.length > 0 ? (
+                                        {isSearching ? (
+                                            <tr>
+                                                <td colSpan="3" className="text-center">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ) : searchResults.length > 0 ? (
                                             searchResults
                                                 .slice(pagesVisited, pagesVisited + studentsPerPage)
                                                 .map((student, index) => (
@@ -878,7 +813,7 @@ export default function StaffClassDetail() {
                                                 ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="4" className="text-center">
+                                                <td colSpan="3" className="text-center">
                                                     No students found
                                                 </td>
                                             </tr>
@@ -901,7 +836,7 @@ export default function StaffClassDetail() {
                                 />
                             </div>
                         </div>
-                        <div style={{ width: '45%', marginTop: '50px' }}>
+                        <div style={{ width: '45%', marginTop: '47px' }}>
                             <p className='blue mb-0'>Current class student list</p>
                             <div class="table-responsive" style={{ height: '400px', overflowY: 'scroll' }}>
                                 <table class="table table-bordered">
@@ -946,7 +881,7 @@ export default function StaffClassDetail() {
         )
     }
 
-    const TeacherForm = ({ onBack }) => {
+    const TeacherForm = ({ onBack, classId }) => {
         const accessToken = localStorage.getItem('accessToken');
         const [teachers, setTeachers] = useState([]);
         const [currentClass, setCurrentClass] = useState([]);
@@ -955,7 +890,6 @@ export default function StaffClassDetail() {
         const [selectedTeacherId, setSelectedTeacherId] = useState(null);
         const [selectedTeacherSchedules, setSelectedTeacherSchedules] = useState([]);
         const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
-        const classId = classIdForForm;
 
         useEffect(() => {
             // Optionally, fetch class details if needed to get study days and slots
@@ -1040,13 +974,23 @@ export default function StaffClassDetail() {
 
         const addTeacherToClass = async () => {
             if (!selectedTeacherId) {
-                alert('Please select a teacher first.');
+                toast.error("Please choose a teacher first.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 return;
             }
+
             try {
                 setIsLoading(true);
                 const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`, {
-                    method: 'POST', // or 'PUT'
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
@@ -1054,38 +998,37 @@ export default function StaffClassDetail() {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error('Failed to add teacher to class');
                 }
-
                 const addTeacher = await response.json();
                 console.log('Success:', addTeacher);
-                toast.success('Add to teacher to class successfully', {
+                toast.success('Teacher added to class successfully', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
-                    closeButton: false,
+                    closeButton: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
                 });
-
             } catch (error) {
                 console.error('Failed to add teacher to class:', error);
-                toast.error("Add to teacher to class failed", {
+                toast.error("Failed to add teacher to class", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
-                    closeButton: false,
+                    closeButton: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
                 });
             } finally {
-                setIsLoading(false); // Stop loading indicator
+                setIsLoading(false);
             }
         };
+
 
         return (
             <div className='my-5 p-5' style={{ backgroundColor: 'white', marginLeft: '120px', marginRight: '120px' }}>
@@ -1234,19 +1177,10 @@ export default function StaffClassDetail() {
     }, [view, currentPage]);
 
     const fetchClassData = async (page) => {
-        const url = `https://www.kidpro-production.somee.com/api/v1/Classes?page=${page}&size=4`;
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            const data = await response.json();
+            const response = await instance.get(`api/v1/Classes?page=${page}&size=4`);
+            const data = response.data
+
             console.log('data: ', data);
             setClassData(data.classes);
             setTotalPages(data.totalPage);
@@ -1305,8 +1239,8 @@ export default function StaffClassDetail() {
                                     <i className="fa-solid fa-bell"></i>
                                 </div>
                                 <div>
-                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={() => setView('createClass')}>
-                                        <div className='d-flex'>
+                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={() => setView('createClass')}>
+                                        <div className='d-flex py-2 px-3'>
                                             <i style={{ color: 'white' }} className="fa-solid fa-circle-plus"></i>
                                             <span className='ms-1'>Create class</span>
                                         </div>
@@ -1321,13 +1255,17 @@ export default function StaffClassDetail() {
                                         <div>
                                             <p>Class Code: {classItem.classCode}</p>
                                             <div className="d-flex justify-content-start">
-                                                <p className='mb-1'>Start: {formatDate(classItem.dayStart)}</p>
-                                                <p className='mb-1 ms-3'>End: {formatDate(classItem.dayEnd)}</p>
+                                                <p className='mb-1'>Start date: {formatDate(classItem.dayStart)}</p>
+                                                <p className='mb-1 ms-3'>End date: {formatDate(classItem.dayEnd)}</p>
                                             </div>
 
                                         </div>
                                         <div className='d-flex align-items-center'>
-                                            <button onClick={() => handleViewClassContent(classItem.classId)} style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>View</button>
+                                            <button onClick={() => handleViewClassContent(classItem.classId)} style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>
+                                                <div className='py-1 px-2'>
+                                                    View
+                                                </div>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
