@@ -934,7 +934,7 @@ export default function StaffClassDetail() {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const data = await response.data;
+                    const data = await response.json();
                     console.log('data: ', data);
                     setTeachers(data);
                 } catch (error) {
@@ -990,7 +990,7 @@ export default function StaffClassDetail() {
             try {
                 setIsLoading(true);
                 const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`, {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
