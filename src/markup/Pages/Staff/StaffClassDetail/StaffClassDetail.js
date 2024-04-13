@@ -250,7 +250,7 @@ export default function StaffClassDetail() {
                 setIsCreatingSchedule(true);
 
                 const response = await instance.post("api/v1/Classes/schedules", data);
-                const responseData = response.json();
+                const responseData = response.data;
                 console.log('responseData: ', responseData);
 
                 setSelectedClassId(responseData.classId);
@@ -705,7 +705,7 @@ export default function StaffClassDetail() {
                 }
                 const response = await instance.post("api/v1/Classes/students/add-or-remove", data);
 
-                const postListStudent = response.json();
+                const postListStudent = response.data;
 
                 console.log('postListStudent: ', postListStudent);
                 toast.success("Update student list successfully", { // Use the message from the response for the toast
@@ -906,7 +906,7 @@ export default function StaffClassDetail() {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const classData = await response.json();
+                    const classData = await response.data;
                     console.log('classData: ', classData);
                     setCurrentClass(classData);
                 } catch (error) {
@@ -934,7 +934,7 @@ export default function StaffClassDetail() {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const data = await response.json();
+                    const data = await response.data;
                     console.log('data: ', data);
                     setTeachers(data);
                 } catch (error) {
