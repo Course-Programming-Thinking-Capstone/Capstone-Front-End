@@ -477,7 +477,7 @@ export default function StaffClassDetail() {
         };
 
         return (
-            <div className='staff-class-content' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', minHeight: '700px', }}>
+            <div className='staff-class-content mx-5' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', overflowY: 'scroll', height: '90vh' }}>
                 <div className="header">
                     <div className='d-flex justify-content-between'>
                         <div className="d-flex justify-content-start">
@@ -488,7 +488,11 @@ export default function StaffClassDetail() {
                             <i class="fa-solid fa-bell"></i>
                         </div>
                         <div>
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>Back</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>
+                                <div className='py-1 px-2'>
+                                    Back
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -555,7 +559,11 @@ export default function StaffClassDetail() {
                                 </div>
                                 <p className='mb-1'>Slot {classDetails.slotNumber} ({classDetails.startSlot} - {classDetails.endSlot})</p>
                                 <p className='mb-1'>{classDetails.totalSlot}</p>
-                                <button onClick={() => handleOpenNewTab(classDetails.roomUrl)}>Open Discord Link</button>
+                                <button onClick={() => handleOpenNewTab(classDetails.roomUrl)} style={{ backgroundColor: '#5562ea', color: 'white', borderRadius: '8px', border: 'none' }}>
+                                    <div className='py-1 px-2' style={{ backgroundColor: '5562ea', borderRadius: '8px' }}>
+                                        Discord
+                                    </div>
+                                </button>
 
                             </div>
                         </div>
@@ -966,42 +974,61 @@ export default function StaffClassDetail() {
 
         const addTeacherToClass = async () => {
             if (!selectedTeacherId) {
-                alert('Please select a teacher first.');
-                return;
-            }
-            try {
-                setIsLoading(true);
-                const response = await instance.get(`api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`);
-                const addTeacher = response.data
-
-                console.log('Success:', addTeacher);
-                toast.success('Add to teacher to class successfully', {
+                toast.error("Please choose a teacher first.", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
-                    closeButton: false,
+                    closeButton: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
                 });
+                return;
+            }
 
-            } catch (error) {
-                console.error('Failed to add teacher to class:', error);
-                toast.error("Add to teacher to class failed", {
+            try {
+                setIsLoading(true);
+                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/Classes/teacher/add-to-class?classId=${classId}&teacherId=${selectedTeacherId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to add teacher to class');
+                }
+                const addTeacher = await response.json();
+                console.log('Success:', addTeacher);
+                toast.success('Teacher added to class successfully', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
-                    closeButton: false,
+                    closeButton: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } catch (error) {
+                console.error('Failed to add teacher to class:', error);
+                toast.error("Failed to add teacher to class", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
                 });
             } finally {
-                setIsLoading(false); // Stop loading indicator
+                setIsLoading(false);
             }
         };
+
 
         return (
             <div className='my-5 p-5' style={{ backgroundColor: 'white', marginLeft: '120px', marginRight: '120px' }}>
@@ -1212,8 +1239,8 @@ export default function StaffClassDetail() {
                                     <i className="fa-solid fa-bell"></i>
                                 </div>
                                 <div>
-                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px', height: '30px' }} onClick={() => setView('createClass')}>
-                                        <div className='d-flex'>
+                                    <button style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', borderRadius: '8px' }} onClick={() => setView('createClass')}>
+                                        <div className='d-flex py-2 px-3'>
                                             <i style={{ color: 'white' }} className="fa-solid fa-circle-plus"></i>
                                             <span className='ms-1'>Create class</span>
                                         </div>
@@ -1228,13 +1255,17 @@ export default function StaffClassDetail() {
                                         <div>
                                             <p>Class Code: {classItem.classCode}</p>
                                             <div className="d-flex justify-content-start">
-                                                <p className='mb-1'>Start: {formatDate(classItem.dayStart)}</p>
-                                                <p className='mb-1 ms-3'>End: {formatDate(classItem.dayEnd)}</p>
+                                                <p className='mb-1'>Start date: {formatDate(classItem.dayStart)}</p>
+                                                <p className='mb-1 ms-3'>End date: {formatDate(classItem.dayEnd)}</p>
                                             </div>
 
                                         </div>
                                         <div className='d-flex align-items-center'>
-                                            <button onClick={() => handleViewClassContent(classItem.classId)} style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>View</button>
+                                            <button onClick={() => handleViewClassContent(classItem.classId)} style={{ backgroundColor: '#EF7E54', color: 'white', border: 'none', borderRadius: '8px' }}>
+                                                <div className='py-1 px-2'>
+                                                    View
+                                                </div>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

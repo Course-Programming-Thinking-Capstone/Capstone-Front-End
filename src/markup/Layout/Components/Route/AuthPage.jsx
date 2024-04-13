@@ -38,7 +38,7 @@ export const TeacherPages = [
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
-export const ParentPages = ["classes", "courses", "classes-detail", "payment", "payment-success", "order"];
+export const ParentPages = ["classes", "courses", "classes-detail", "payment", "payment-success", "order", "order-detail"];
 
 //Lưu đường dẫn các trang mà student được truy cập
 export const StudentPages = ["student-home", "courses-plan", "courses-study"];
