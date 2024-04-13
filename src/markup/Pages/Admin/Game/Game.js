@@ -483,8 +483,51 @@ export default function Game() {
             </button>
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <div className="d-flex justify-content-start">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <Container className="w-75 mx-0">
+            <Row>
+              <Col md="4">
+                <p className="mb-1 blue fw-bold">Level index</p>
+                <input
+                  className="game-level-detail"
+                  type="number"
+                  name="levelIndex"
+                  value={currentLevelDetail.levelIndex + 1}
+                  required
+                  min={1}
+                  max={100}
+                  onChange={handleLevelDetailInputNumberChange}
+                />
+              </Col>
+              <Col md="4">
+                <p className="mb-1 blue fw-bold">Coin earn</p>
+                <input
+                  className="game-level-detail"
+                  type="number"
+                  name="coinReward"
+                  value={currentLevelDetail.coinReward}
+                  required
+                  min={0}
+                  max={100}
+                  onChange={handleLevelDetailInputNumberChange}
+                />
+              </Col>
+              <Col md="4">
+                <p className="mb-1 blue fw-bold">Game earn</p>
+                <input
+                  className="game-level-detail"
+                  type="number"
+                  name="gemReward"
+                  value={currentLevelDetail.gemReward}
+                  required
+                  min={0}
+                  max={100}
+                  onChange={handleLevelDetailInputNumberChange}
+                />
+              </Col>
+            </Row>
+          </Container>
+          {/* <div className="d-flex justify-content-start">
             <div>
               <p className="mb-1">Level index</p>
               <input
@@ -521,7 +564,7 @@ export default function Game() {
                 onChange={handleLevelDetailInputNumberChange}
               />
             </div>
-          </div>
+          </div> */}
           <div>
             <button
               className="add"
@@ -537,7 +580,7 @@ export default function Game() {
             collisionDetection={closestCorners}
             sensors={sensor}
           >
-            <div className="map" style={{ width: "65%" }}>
+            <div className="map" style={{ width: "70%" }}>
               <LevelGrid />
             </div>
             <div className="map-item" style={{ width: "30%" }}>
