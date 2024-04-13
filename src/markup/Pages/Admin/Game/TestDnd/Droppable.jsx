@@ -1,5 +1,4 @@
 import { useDroppable } from "@dnd-kit/core";
-import { Button } from "react-bootstrap";
 
 export const DroppableTest = (props) => {
   const { isOver, setNodeRef } = useDroppable({

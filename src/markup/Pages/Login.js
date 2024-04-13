@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import background from "./../../images/background/loginBackground.webp";
 import { loginApi } from "../../helper/apis/auth/auth";
+import instance from "../../helper/apis/baseApi/baseApi";
+import { Spinner } from "react-bootstrap";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +13,7 @@ export default function Login() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,30 +36,31 @@ export default function Login() {
     event.preventDefault();
     if (!isFormValid()) return;
 
-    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-    const loginData = isEmail ? { email: email, password: password } : { account: email, password: password };
     try {
+      setIsLoading(true);
+
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      const loginData = isEmail
+        ? { email: email, password: password }
+        : { account: email, password: password };
+
       const apiUrl = isEmail
-        ? "https://www.kidpro-production.somee.com/api/v1/authentication/login/email"
-        : "https://www.kidpro-production.somee.com/api/v1/authentication/login/account";
+        ? "api/v1/authentication/login/email"
+        : "api/v1/authentication/login/account";
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
-      });
+      // const response = await fetch(apiUrl, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(loginData),
+      // });
 
-      // Check if the response was successful
-      if (!response.ok) {
-        const errorText = await response.text(); // Try to read text instead of JSON
-        throw new Error(errorText || "Something went wrong");
-      }
+      const response = await instance.post(apiUrl, loginData); 
 
-      const responseData = await response.json();
-      console.log('responseData: ', responseData);
+      const responseData = response.data;
+
       const user = {
         role: responseData.role,
         fullName: responseData.fullName,
@@ -72,28 +76,38 @@ export default function Login() {
 
       switch (responseData.role) {
         case "Admin":
-          navigate("/admin")
+          navigate("/admin");
           break;
         case "Staff":
-          navigate("/staff")
+          navigate("/staff");
           break;
         case "Parent":
-          navigate("/home")
+          navigate("/home");
           break;
         case "Teacher":
-          navigate("/teacher")
+          navigate("/teacher");
           break;
         case "Student":
-          navigate("/student-home")
+          navigate("/student-home");
           break;
         default:
-
           break;
       }
-
+      // } catch (error) {
+      //   console.error(`Error: ${error.message}`);
+      //   notifyLoginFail(error.message);
     } catch (error) {
-      console.error(`Error: ${error.message}`);
-      notifyLoginFail(error.message);
+      let errorMessage = null;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.message || "Login fail.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Login fail.";
+      }
+      notifyLoginFail(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -124,7 +138,7 @@ export default function Login() {
     >
       <div className="login-container">
         <h2 className="text-center" style={{ color: "#FF8A00" }}>
-          Login form
+          Login
         </h2>
         <ToastContainer />
         <form onSubmit={handleLoginSubmit}>
@@ -151,8 +165,20 @@ export default function Login() {
             {passwordError && <div className="error">{passwordError}</div>}
           </div>
 
-          <div className="d-flex justify-content-center mt-5">
-            <button type="submit">Login</button>
+          <div className="d-flex justify-content-center align-items-center mt-3">
+            <button type="submit">
+              <div className="d-flex justify-content-center align-items-center">
+                {isLoading ? (
+                  <Spinner
+                    animation="border"
+                    variant="light"
+                    style={{ fontSize: "14px" }}
+                  />
+                ) : (
+                  <>Login</>
+                )}
+              </div>
+            </button>
           </div>
 
           <div className="d-flex justify-content-center mt-4">

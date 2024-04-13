@@ -23,7 +23,7 @@ const Footer = () =>{
 	return(
 		<Fragment>
 			<footer className="site-footer">
-				<div className="footer-top">
+				{/* <div className="footer-top">
 					<div className="container wow fadeIn" data-wow-delay="0.5s">
 						<div className="row">
 							<div className="col-xl-3 col-lg-6 col-md-6 col-sm-6 footer-col-4">
@@ -100,11 +100,11 @@ const Footer = () =>{
 							</div>
 						</div>
 					</div>
-				</div>				
+				</div>				 */}
 				<div className="footer-bottom">
 					<div className="container">
 						<div className="row">
-							<div className="col-lg-6 col-md-8 col-sm-6 text-left "> <span>Copyright © 2023 Umang Academy. All right reserved</span> </div>
+							<div className="col-lg-6 col-md-8 col-sm-6 text-left "> <span>Copyright © 2024 Kid Pro. All right reserved</span> </div>
 							<div className="col-lg-6 col-md-4 col-sm-6 text-right "> 
 								<ul className="list-inline">
 									<li><Link to={"#"} className="btn-link facebook circle me-1"><i className="fa fa-facebook"></i></Link></li>

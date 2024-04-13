@@ -132,7 +132,7 @@ button.create-course-close {
   height: 35px;
   padding: 8px 16px;
   font-weight: normal;
-}
+} 
 
 button.create-course-close:hover {
   background-color: #f54340;
@@ -170,7 +170,7 @@ button.create-course-save:hover {
 
 @media (min-width: 576px) {
   .create-course-modal-content .modal-dialog {
-    max-width: 800px;
+    max-width: 700px;
     margin: 2rem auto;
   }
 }
@@ -179,4 +179,49 @@ button.create-course-save:hover {
   border-radius: 5px;
   border: 1px solid grey;
   padding: 5px;
+}
+
+.create-course-modal-drag {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  background-color: #fbede1;
+  color: #f54340;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.create-course-modal-drag:hover {
+  background-color: #faa287;
+}
+
+
+.create-course-drag {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  color: #ff8a00;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: normal;
+}
+
+.create-course-drag:hover {
+  background-color: #f7cc9c;
 }

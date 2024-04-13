@@ -286,8 +286,8 @@ const App = () => {
 
             {/* Parent pages  */}
             <Route
-              path="/classes"
-              element={<PrivateRoute page="classes" component={<Classes />} />}
+              path="/courses"
+              element={<PrivateRoute page="courses" component={<Classes />} />}
             />
 
             <Route
@@ -357,7 +357,7 @@ const App = () => {
             />
 
             {/* Test page */}
-            <Route path="/test" element={<EditText />} />
+            <Route path="/test" element={<DragAndDropComponent />} />
 
             {/* Error pages  */}
             <Route path="/not-found" element={<ErrorPage />} />
