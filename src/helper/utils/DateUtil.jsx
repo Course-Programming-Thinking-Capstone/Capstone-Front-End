@@ -26,6 +26,22 @@ export const convertUtcToLocalTime = (dateTimeString) => {
   return date;
 };
 
+///convert utc time "yyyy/mm/dd HH:mm:ss" to local time
+export const convertUtcToLocalTimeV2 = (dateTimeString) => {
+  const utcOffset = getUtcOffset();
+
+  const [dateStr, timeStr] = dateTimeString.split(" ");
+  const [year, month, day] = dateStr.split("/");
+  const [hoursStr, minutesStr, secondsStr] = timeStr.split(":");
+
+  const date = new Date(
+    `${month}/${day}/${year} ${hoursStr}:${minutesStr}:${secondsStr}`
+  );
+
+  date.setHours(date.getHours() + utcOffset);
+  return date;
+};
+
 //format to "DD/MM/YYYY HH:mm"
 export const formatDateV1 = (date) => {
   const dayString = String(date.getDate()).padStart(2, "0");
