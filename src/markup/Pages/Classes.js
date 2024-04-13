@@ -7,6 +7,7 @@ import PageTitle from "../Layout/PageTitle";
 import ReactPaginate from "react-paginate";
 import { formatPrice } from "../../helper/utils/NumberUtil";
 import "./Classes.css";
+import instance from "../../helper/apis/baseApi/baseApi";
 
 export default function Classes() {
   const [courses, setCourses] = useState([]);
@@ -19,21 +20,12 @@ export default function Classes() {
   const fetchCourses = async (page = 1) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://www.kidpro-production.somee.com/api/v1/courses?status=Active&page=${page}&size=6`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await instance.get(
+        `api/v1/courses?status=Active&page=${page}&size=6`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch courses");
-      }
-      const data = await response.json();
+      const data = response.data;
+
       console.log("data: ", data);
       setCourses(data.results);
       setPageCount(Math.ceil(data.total / 6));
@@ -44,11 +36,9 @@ export default function Classes() {
     }
   };
 
-  useEffect(() => {
-    if (accessToken) {
-      fetchCourses(currentPage);
-    }
-  }, [accessToken, currentPage]);
+  useEffect(async () => {
+    await fetchCourses(currentPage);
+  }, [currentPage]);
 
   const handlePageClick = (data) => {
     const selectedPage = data.selected + 1;

@@ -52,8 +52,8 @@ const Header = () => {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('user'); // Clear the user from local storage
-        navigate('/login'); // Redirect to the login page
+        localStorage.clear();// Clear the user from local storage
+        navigate('/home'); // Redirect to the login page
     };
 
     // Current path
