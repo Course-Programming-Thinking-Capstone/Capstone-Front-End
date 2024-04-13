@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { formatPrice } from '../../../../helper/utils/NumberUtil';
+import { convertUtcToLocalTime, convertUtcToLocalTimeV2, formatDateV1 } from '../../../../helper/utils/DateUtil';
 
 const SuccessOrder = ({ orderDetail }) => {
     const navigate = useNavigate();
@@ -50,7 +51,9 @@ const SuccessOrder = ({ orderDetail }) => {
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
                     <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
-                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                    <p className='mb-1'>Order date: <span> {formatDateV1(
+                                  convertUtcToLocalTimeV2(orderDetail.orderDate)
+                                )}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
                     <img style={{ height: '55px', width: '55px' }} src={momo} />
@@ -428,7 +431,9 @@ const PendingOrder = ({ orderDetail }) => {
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
                     <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
-                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                    <p className='mb-1'>Order date: <span> {formatDateV1(
+                                  convertUtcToLocalTimeV2(orderDetail.orderDate)
+                                )} {orderDetail.orderDate}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
                     <img style={{ height: '55px', width: '55px' }} src={momo} />
@@ -669,7 +674,9 @@ const RefundedOrder = ({ orderDetail }) => {
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
                     <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
-                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                    <p className='mb-1'>Order date: <span>{formatDateV1(
+                                  convertUtcToLocalTimeV2(orderDetail.orderDate)
+                                )}</span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
                     <img style={{ height: '55px', width: '55px' }} src={momo} />
@@ -859,7 +866,9 @@ const RequestOrder = ({ orderDetail }) => {
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
                 <div style={{ width: "60%" }}>
                     <p className='mb-1'>Transaction code: <span>{orderDetail.transactionCode}</span></p>
-                    <p className='mb-1'>Order date: <span>{orderDetail.orderDate}</span></p>
+                    <p className='mb-1'>Order date: <span> {formatDateV1(
+                                  convertUtcToLocalTimeV2(orderDetail.orderDate)
+                                )} </span></p>
                 </div>
                 <div className='d-flex' style={{ width: "40%" }}>
                     <img style={{ height: '55px', width: '55px' }} src={momo} />
