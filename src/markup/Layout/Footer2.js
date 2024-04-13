@@ -7,7 +7,7 @@ import logo from './../../images/logo.png';
 const Footer2 = () => {
     return (        
         <footer className="site-footer style-1">
-            <div className="footer-top style-1 content-inner-2">
+            {/* <div className="footer-top style-1 content-inner-2">
                 <div className="container wow fadeIn" data-wow-delay="0.5s">
                     <div className="footer-inner">
                         <div className="row">
@@ -94,10 +94,10 @@ const Footer2 = () => {
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>             */}
             <div className="footer-bottom style-1">
                 <div className="container">
-                    <span>Copyright © 2023 Umang Academy. All right reserved</span>
+                    <span>Copyright © 2023 Kid pro. All right reserved</span>
                 </div>
             </div>
         </footer>

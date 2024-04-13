@@ -286,8 +286,8 @@ const App = () => {
 
             {/* Parent pages  */}
             <Route
-              path="/classes"
-              element={<PrivateRoute page="classes" component={<Classes />} />}
+              path="/courses"
+              element={<PrivateRoute page="courses" component={<Classes />} />}
             />
 
             <Route

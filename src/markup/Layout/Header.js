@@ -31,7 +31,7 @@ const Header = () => {
         ],
         Parent: [
             { maintitle: 'Home', to: '/home' },
-            { maintitle: 'Courses', to: '/classes' },
+            { maintitle: 'Courses', to: '/courses' },
             { maintitle: 'Teacher', to: '/teacher' },
             { maintitle: 'Order', to: '/order' },
             { maintitle: 'Account', to: '/account' },
@@ -39,7 +39,7 @@ const Header = () => {
         ],
         Guest: [
             { maintitle: 'Home', to: '/' },
-            { maintitle: 'Courses', to: '/classes' },
+            { maintitle: 'Courses', to: '/courses' },
             { maintitle: 'Teacher', to: '/teacher' },
             { maintitle: 'Login', to: '/login' },
         ],
