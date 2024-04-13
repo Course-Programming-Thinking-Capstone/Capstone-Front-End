@@ -236,7 +236,7 @@ const PendingOrder = ({ orderDetail }) => {
             setUsername('');
             setPassword('');
 
-            const accountData = await response.data;
+            const accountData = await response.json();
             console.log('Account created: ', accountData);
 
             // Store the account creation response data
@@ -374,7 +374,7 @@ const PendingOrder = ({ orderDetail }) => {
                     if (!response.ok) {
                         throw new Error('Could not fetch student details');
                     }
-                    const studentData = await response.data;
+                    const studentData = await response.json();
                     console.log('StudentData: ', studentData);
                     setCurrentStudentDetail(studentData);
                 } catch (error) {
@@ -812,7 +812,7 @@ const RequestOrder = ({ orderDetail }) => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch cancellation reason: ${response.status}`);
             }
-            const reasondata = await response.data;
+            const reasondata = await response.json();
             console.log('reasondata: ', reasondata);
             setCancellationReason(reasondata);
             handleShow();
@@ -964,7 +964,7 @@ export default function StaffOrderDetail() {
                     throw new Error('Failed to fetch order details');
                 }
 
-                const data = await response.data;
+                const data = await response.json();
                 console.log('Classdata: ', data);
                 setOrderDetail(data);
             } catch (err) {
