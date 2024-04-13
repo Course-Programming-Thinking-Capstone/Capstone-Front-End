@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import background from '../../../../images/background/adminStaffBackground.jpg';
+import { formatPrice } from '../../../../helper/utils/NumberUtil';
 
 export default function StaffOrder() {
     const [orders, setOrders] = useState([]);
@@ -121,7 +122,7 @@ export default function StaffOrder() {
                                                 </div>
                                             </td>
                                             <td className='text-center mt-2'>
-                                                <p className='mt-2 mb-0'>{order.totalPrice}</p>
+                                                <p className='mt-2 mb-0'>{formatPrice(order.totalPrice)}</p>
                                             </td>
                                             <td className='text-center mt-2'>
                                                 <p style={{ color: getStatusColor(order.orderStatus), fontWeight: 'bold' }} className='mt-2 mb-0'>{order.orderStatus}</p>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { formatPrice } from '../../../../helper/utils/NumberUtil';
 
 const SuccessOrder = ({ orderDetail }) => {
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ const SuccessOrder = ({ orderDetail }) => {
                         <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
                     </div>
                     <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{formatPrice(orderDetail.totalPrice)}</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
@@ -83,7 +84,7 @@ const SuccessOrder = ({ orderDetail }) => {
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Price</span>
-                            <span>{orderDetail.price}</span>
+                            <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Quantity</span>
@@ -96,7 +97,7 @@ const SuccessOrder = ({ orderDetail }) => {
                         <hr />
                         <div className="d-flex justify-content-between mb-2">
                             <span>Total</span>
-                            <span className='orange'>{orderDetail.totalPrice}</span>
+                            <span className='orange'>{formatPrice(orderDetail.totalPrice)}</span>
                         </div>
                     </div>
                 </div>
@@ -421,7 +422,7 @@ const PendingOrder = ({ orderDetail }) => {
                         <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
                     </div>
                     <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{formatPrice(orderDetail.totalPrice)}</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
@@ -577,7 +578,7 @@ const PendingOrder = ({ orderDetail }) => {
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Price</span>
-                            <span>{orderDetail.price}</span>
+                            <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Quantity</span>
@@ -590,7 +591,7 @@ const PendingOrder = ({ orderDetail }) => {
                         <hr />
                         <div className="d-flex justify-content-between mb-2">
                             <span>Total</span>
-                            <span className='orange'>{orderDetail.totalPrice}</span>
+                            <span className='orange'>{formatPrice(orderDetail.totalPrice)}</span>
                         </div>
                     </div>
                 </div>
@@ -662,7 +663,7 @@ const RefundedOrder = ({ orderDetail }) => {
                         <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
                     </div>
                     <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{formatPrice(orderDetail.totalPrice)}</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
@@ -702,7 +703,7 @@ const RefundedOrder = ({ orderDetail }) => {
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Price</span>
-                            <span>{orderDetail.price}</span>
+                            <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Quantity</span>
@@ -715,7 +716,7 @@ const RefundedOrder = ({ orderDetail }) => {
                         <hr />
                         <div className="d-flex justify-content-between mb-2">
                             <span>Total</span>
-                            <span className='orange'>{orderDetail.totalPrice}</span>
+                            <span className='orange'>{formatPrice(orderDetail.totalPrice)}</span>
                         </div>
                     </div>
                 </div>
@@ -852,7 +853,7 @@ const RequestOrder = ({ orderDetail }) => {
                         <p className='mb-0'>Class: <span style={{ fontWeight: 'bold', color: '#E53E5C' }}>{orderDetail.classCode}</span></p>
                     </div>
                     <p style={{ marginLeft: '130px' }}>Quantity: <span>{orderDetail.quantityPurchased}</span></p>
-                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{orderDetail.totalPrice} đ</p>
+                    <p className='orange' style={{ marginLeft: '130px', fontWeight: 'bold' }}>{formatPrice(orderDetail.totalPrice)}</p>
                 </div>
             </div>
             <div className='d-flex mt-3 py-2 px-3' style={{ backgroundColor: '#eceace', borderRadius: '8px' }}>
@@ -892,7 +893,7 @@ const RequestOrder = ({ orderDetail }) => {
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Price</span>
-                            <span>{orderDetail.price}</span>
+                            <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between mb-2">
                             <span>Quantity</span>
@@ -905,7 +906,7 @@ const RequestOrder = ({ orderDetail }) => {
                         <hr />
                         <div className="d-flex justify-content-between mb-2">
                             <span>Total</span>
-                            <span className='orange'>{orderDetail.totalPrice}</span>
+                            <span className='orange'>{formatPrice(orderDetail.totalPrice)}</span>
                         </div>
                     </div>
                 </div>
