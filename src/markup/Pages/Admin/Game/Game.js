@@ -33,7 +33,7 @@ import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { CreateLevel } from "./CreateGameLevel";
 import "./Game.css";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -483,6 +483,8 @@ export default function Game() {
             </button>
           </div>
         </div>
+
+        <ToastContainer />
         <div className="d-flex justify-content-between align-items-center mb-4">
           <Container className="w-75 mx-0">
             <Row>
