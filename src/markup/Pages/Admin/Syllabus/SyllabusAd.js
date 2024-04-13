@@ -135,10 +135,11 @@ export default function SyllabusAd() {
   const [courses, setCourses] = useState([]);
   const [record, setRecord] = useState([]);
   const [isSyllabusLoading, setIsSyllabusLoading] = useState(false);
-  const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
   const [syllabusPage, setSyllabusPage] = useState(1);
   const [totalSyllabusPage, setTotalSyllabusPage] = useState(0);
   const [syllabusQuery, setSyllabusQuery] = useState("");
+
+  const [message, setMessage] = useState("");
 
   //useNavigate
   const navigate = useNavigate();
@@ -163,6 +164,8 @@ export default function SyllabusAd() {
       draggable: true,
       progress: undefined,
       theme: "colored",
+      toastId: "loadSyllabusFail",
+      containerId: "1",
     });
 
   const notifyApiSucess = (message) =>
@@ -176,6 +179,8 @@ export default function SyllabusAd() {
       draggable: true,
       progress: undefined,
       theme: "colored",
+      toastId: "loadSyllabusSuccess",
+      containerId: "1",
     });
 
   const offset = currentPage * itemsPerPage;
@@ -267,6 +272,7 @@ export default function SyllabusAd() {
     const [activePassCondition, setActivePassCondition] = useState(null);
     const [activeCourseSlot, setActiveCourseSlot] = useState(null);
     const [activeSlotTime, setActiveSlotTime] = useState(null);
+    const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
 
     const notifyCreateFail = () =>
       toast.error("Create syllabus failed", {
@@ -279,10 +285,12 @@ export default function SyllabusAd() {
         draggable: true,
         progress: undefined,
         theme: "colored",
+        toastId: "createSyllabusfail",
+        containerI: "2",
       });
 
     const notifyCreateSuccess = (message) =>
-      toast.info(message, {
+      toast.success(message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -292,6 +300,8 @@ export default function SyllabusAd() {
         draggable: true,
         progress: undefined,
         theme: "colored",
+        toastId: "createSyllabusfail",
+        containerId: "2",
       });
 
     const handleSelect = (category, value) => {
@@ -319,17 +329,6 @@ export default function SyllabusAd() {
     useEffect(() => {
       const fetchTeachers = async () => {
         try {
-          // const response = await fetch(
-          //   "https://www.kidpro-production.somee.com/api/v1/users/admin/account?role=Teacher&page=1&size=100",
-          //   {
-          //     method: "GET",
-          //     headers: {
-          //       "Content-Type": "application/json",
-          //       Authorization: `Bearer ${accessToken}`,
-          //     },
-          //   }
-          // );
-
           const response = await instance.get(
             `api/v1/users/admin/account?role=Teacher&page=1&size=100`
           );
@@ -379,7 +378,9 @@ export default function SyllabusAd() {
         // console.log("Course successfully created:", responseData);
         // Optionally, clear the form or give user feedback
 
-        notifyApiSucess("Create syllabus success.");
+        notifyCreateSuccess("Create syllabus success.");
+
+        // notifyApiSucess("Create syllabus success.");
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -389,12 +390,14 @@ export default function SyllabusAd() {
             error.response?.data?.message ||
             "Something wrong when create syllabuses.";
           console.log(`Error response: ${error.response?.data?.message}`);
-          notifyApiFail(message);
+          notifyCreateFail(message);
+          // notifyApiFail(message);
         } else {
           const message =
             error.message || "Something wrong when create syllabuses.";
           console.log(`Error message: ${error.message}`);
-          notifyApiFail(message);
+          notifyCreateFail(message);
+          // notifyApiFail(message);
         }
       } finally {
         setIsSyllabusCreating(false);
@@ -438,7 +441,7 @@ export default function SyllabusAd() {
                 <button
                   onClick={() => setShowCreateSyllabus(false)}
                   className="syllabus-ad-create-syllabus-button"
-                  disabled = {isSyllabusCreating}
+                  disabled={isSyllabusCreating}
                 >
                   <i
                     style={{ color: "white", fontSize: "16px" }}
@@ -451,7 +454,7 @@ export default function SyllabusAd() {
           </div>
           <hr />
 
-          <ToastContainer />
+          <ToastContainer containerId={2} />
 
           {isSyllabusCreating ? (
             <div className="d-flex justify-content-center py-5">
@@ -722,7 +725,7 @@ export default function SyllabusAd() {
           </div>
         </div>
 
-        <ToastContainer />
+        {!showCreateSyllabus && <ToastContainer containerId={1} />}
 
         <div className="syllabus-content">
           <div className="d-flex justify-content-between align-items-center mx-3 mt-2">
