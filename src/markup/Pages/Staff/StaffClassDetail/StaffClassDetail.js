@@ -254,6 +254,8 @@ export default function StaffClassDetail() {
                 console.log('responseData: ', responseData);
 
                 setSelectedClassId(responseData.classId);
+                //log
+                console.log(`ClassId: ${responseData.classId}`)
                 setView('classContent');
 
             } catch (error) {
@@ -638,6 +640,9 @@ export default function StaffClassDetail() {
         useEffect(() => {
             const fetchClassDetails = async () => {
                 try {
+
+                    //bug
+                    console.log(`ClassId: ${classId}`)
                     const response = await instance.get(`api/v1/Classes/detail/${classId}`);
                     const classData = response.data;
 
@@ -906,7 +911,7 @@ export default function StaffClassDetail() {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const classData = await response.data;
+                    const classData = await response.json();
                     console.log('classData: ', classData);
                     setCurrentClass(classData);
                 } catch (error) {
