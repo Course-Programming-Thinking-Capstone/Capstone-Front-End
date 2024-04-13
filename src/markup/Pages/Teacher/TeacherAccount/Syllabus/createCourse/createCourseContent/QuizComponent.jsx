@@ -1070,7 +1070,7 @@ const QuestionItem = ({
           controlId={`validationOptionIsCorrect${index}`}
         >
           <Form.Check
-            type="switch"
+            type="radio"
             id={`custom-switch-${index}`}
             label="Is correct answer?"
             checked={correctAnswerIndex === index}
@@ -1529,7 +1529,7 @@ const QuestionUpdateItem = ({
           controlId={`validationOptionIsCorrect${index}`}
         >
           <Form.Check
-            type="switch"
+            type="radio"
             id={`custom-switch-${index}`}
             label="Is correct answer?"
             checked={

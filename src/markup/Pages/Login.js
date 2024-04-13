@@ -85,7 +85,7 @@ export default function Login() {
           navigate("/home");
           break;
         case "Teacher":
-          navigate("/teacher");
+          navigate("/teacher/syllabuses");
           break;
         case "Student":
           navigate("/student-home");

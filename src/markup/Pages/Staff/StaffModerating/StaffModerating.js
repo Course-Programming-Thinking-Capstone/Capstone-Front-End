@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import background from '../../../../images/background/adminStaffBackground.jpg';
 import instance from '../../../../helper/apis/baseApi/baseApi';
 import ReactPaginate from 'react-paginate';
+import { convertUtcToLocalTime, formatDateV1 } from '../../../../helper/utils/DateUtil';
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -159,6 +160,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             try {
                 const response = await instance.get(`api/v1/courses/${courseId}`);
                 const data = response.data
+
+                //log
+                console.log(`Course details data: ${JSON.stringify(data, null, 2)}`)
                 setCourseDetails(data); // Assuming the API returns the details directly
             } catch (error) {
                 console.error("Failed to fetch course details", error);
@@ -426,7 +430,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 <div className="moderating-detail-content">
 
                     <div>
-                        <img src={simp} alt="" />
+                        <img src={ (courseDetails && courseDetails.pictureUrl) ? courseDetails.pictureUrl : simp} alt="" />
                         <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
                         <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
                             <div className="d-flex">
@@ -576,20 +580,22 @@ export default function StaffModerating() {
                     <div className="item" key={course.id || index}>
                         <div className="d-flex justify-content-between">
                             <div className="left d-flex justify-content-start">
-                                <img src={demo} alt="" />
+                                <img src={ (course && course.pictureUrl) ? course.pictureUrl :  demo} alt="" />
                                 <div style={{ marginLeft: '20px' }}>
                                     <div className='d-flex justify-content-start'>
                                         <p style={{ fontSize: '18px', fontWeight: 500 }}>{course.name} </p>
-                                        <span>|</span>
-                                        <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span>
+                                        {/* <span>|</span> */}
+                                        {/* <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span> */}
                                     </div>
-                                    <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p>
+                                    {/* <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p> */}
                                 </div>
                             </div>
                             <div className='right'>
                                 <div className="d-flex">
                                     <i class="fa-regular fa-clock mt-1"></i>
-                                    <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p>
+                                    {/* <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p> */}
+                                    <p className='ms-1'>{formatDateV1(convertUtcToLocalTime(course.createdDate))}</p>
+                                
                                 </div>
                                 <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
                                     <p >View Detail</p>
