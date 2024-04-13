@@ -46,7 +46,7 @@ export default function StaffOrder() {
                     throw new Error('Failed to fetch orders');
                 }
 
-                const data = await response.json();
+                const data = await response.data;
                 console.log('data: ', data);
                 setOrders(data.order);
                 setOrdersTotal(data.orderTotal)
