@@ -54,6 +54,7 @@ import ErrorPage from "./markup/Pages/ErrorPage";
 import StudentHome from "./markup/Pages/StudentHome";
 import CourseStudy from "./markup/Pages/CourseStudy";
 import Order from "./markup/Pages/Order";
+import OrderDetail from "./markup/Pages/OrderDetail";
 
 // function App() {
 // 	return (
@@ -306,6 +307,15 @@ const App = () => {
                 <PrivateRoute
                   page="order"
                   component={<Order />}
+                />
+              }
+            />
+            <Route
+              path="/order-detail/:orderId"
+              element={
+                <PrivateRoute
+                  page="order-detail"
+                  component={<OrderDetail />}
                 />
               }
             />
