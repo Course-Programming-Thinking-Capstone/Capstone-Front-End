@@ -159,10 +159,12 @@ export const CreateLevel = ({
         // alert("Add success");
         notifyApiSucess("Add success");
 
-        //back
-        setAddLevel(false);
-        setViewLevelDetail(false);
-        handleReloadLevels(modeId);
+        setTimeout(() => {
+          //back
+          setAddLevel(false);
+          setViewLevelDetail(false);
+          handleReloadLevels(modeId);
+        }, 2000);
       } catch (error) {
         let errorMessage = null;
         if (error.response) {
@@ -172,7 +174,7 @@ export const CreateLevel = ({
           console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
           errorMessage = error.message || "Undefined.";
         }
-        setMessage(errorMessage);
+        notifyApiFail(errorMessage);
       } finally {
         setIsSaveLoading(false);
       }
