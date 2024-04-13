@@ -115,7 +115,7 @@ export default function StaffClassDetail() {
 
                 const response = await instance.post("api/v1/classes", data);
 
-                const responseData = response.json();
+                const responseData = response.data;
                 console.log('createClass: ', responseData);
 
                 setIsScheduleSectionEnabled(true);
