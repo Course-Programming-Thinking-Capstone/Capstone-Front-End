@@ -32,6 +32,7 @@ import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { CreateLevel } from "./CreateGameLevel";
+import "./Game.css";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -129,6 +130,7 @@ export default function Game() {
     if (typeof modeId === "undefined") return;
 
     try {
+      setIsLoading(true);
       const levels = await getLevelDetailByModeIdApi({ modeId: modeId });
 
       setModeId(modeId);
@@ -144,6 +146,8 @@ export default function Game() {
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -600,7 +604,7 @@ export default function Game() {
 
   return (
     <div className="game-setting">
-      <div className="game-setting-content">
+      <div className="game-setting-content my-0">
         {viewGameData ? (
           <div className="header">
             <div className="d-flex justify-content-between">
@@ -699,8 +703,14 @@ export default function Game() {
           </div>
         ) : (
           <div className="row">
-            {isLoading && isLoading === true ? (
-              <CustomSpinner />
+            {isLoading ? (
+              <div className="d-flex justify-content-center py-5">
+                <Spinner
+                  animation="border"
+                  variant="success"
+                  className="custom-spinner"
+                />
+              </div>
             ) : (
               enhancedModes.map(({ typeName, src, totalLevel, id }) => (
                 <div
