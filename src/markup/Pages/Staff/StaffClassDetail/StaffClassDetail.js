@@ -461,7 +461,7 @@ export default function StaffClassDetail() {
             return <div>Class details not found.</div>;
         }
         const getDayStyle = (day) => {
-            const isScheduledDay = classDetails.studyDay.includes(day);
+            const isScheduledDay = classDetails?.studyDay?.includes(day);
             return {
                 borderRadius: '50%',
                 border: isScheduledDay ? 'none' : "1px solid black",
@@ -759,7 +759,7 @@ export default function StaffClassDetail() {
                     <div>
                         <div className="d-flex">
                             <p className='blue'>Class name</p>
-                            <p className='ms-3' style={{ color: '#F25B58' }}>{currentClass.classCode}</p>
+                            <p className='ms-3' style={{ color: '#F25B58' }}>{currentClass?.classCode}</p>
                         </div>
 
                     </div>
@@ -1047,7 +1047,7 @@ export default function StaffClassDetail() {
                         <div className="d-flex">
                             <p style={{ color: '#F11616', fontWeight: 'bold' }}>Current class</p>
                             <div className='ms-5'>
-                                {currentClass.studyDay?.map((day, index) => (
+                                {currentClass?.studyDay?.map((day, index) => (
                                     <span key={index} style={{ marginRight: '50px' }}>{day}</span>
                                 ))}
                             </div>
@@ -1055,7 +1055,7 @@ export default function StaffClassDetail() {
 
 
                         <div className="d-flex" style={{ marginLeft: '145px' }}>
-                            <p>Slot {currentClass.slotNumber} ({currentClass.startSlot} - {currentClass.endSlot})</p>
+                            <p>Slot {currentClass?.slotNumber} ({currentClass?.startSlot} - {currentClass?.endSlot})</p>
                         </div>
                     </div>
 
@@ -1108,7 +1108,7 @@ export default function StaffClassDetail() {
                                             <div className="d-flex">
                                                 <p className='blue' style={{ fontWeight: 'bold' }}>Study day :</p>
                                                 <div style={{ marginLeft: '50px' }}>
-                                                    {selectedTeacherSchedules[selectedScheduleIndex].studyDays?.map((day, index) => (
+                                                    {selectedTeacherSchedules[selectedScheduleIndex]?.studyDays?.map((day, index) => (
                                                         <span key={index} style={{ marginRight: '50px' }}>{day}</span>
                                                     ))}
                                                 </div>
