@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { componentNumberSelector } from "../../../../../../../store/selector";
 import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
 import { uploadVideoToDrive } from "../../../../../../../helper/apis/course/course";
+import { ToastContainer, toast } from "react-toastify";
 
 const VideoComponent = ({ sectionId, index, lessonIndex }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,33 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
   const [videoDuration, setVideoDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -36,7 +64,6 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
     const fileUpdate = event.target.files[0];
 
     try {
-
       const videoElement = document.createElement("video");
       videoElement.id = `videoSection${sectionId}`; // Set the correct ID for the video element
       const videoUrl = URL.createObjectURL(fileUpdate);
@@ -106,15 +133,15 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
     } catch (error) {
       //log
       console.log(`Error when add video: ${JSON.stringify(error, null, 2)}`);
+
+      let message;
       if (error.response) {
-        setMessage(error.response?.data?.message || "Undefined.");
+        message = error.response?.data?.message || "Error when add video.";
       } else {
-        setMessage(error.message || "Undefined.");
+        message = error.message || "Error when add video.";
       }
+      notifyApiFail(message);
     } finally {
-      if (message !== null) {
-        alert(message);
-      }
       setIsLoading(false);
     }
   };
@@ -152,6 +179,8 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
           </p>
         </div>
       </button>
+
+      <ToastContainer />
 
       <Modal
         show={show}
@@ -269,6 +298,33 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
   const [videoDuration, setVideoDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -276,7 +332,6 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
     const fileUpdate = event.target.files[0];
 
     try {
-
       const videoElement = document.createElement("video");
       videoElement.id = `videoSection${sectionId}`; // Set the correct ID for the video element
       const videoUrl = URL.createObjectURL(fileUpdate);
@@ -337,15 +392,16 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
     } catch (error) {
       //log
       console.log(`Error when add video: ${JSON.stringify(error, null, 2)}`);
+
+      let message;
       if (error.response) {
-        setMessage(error.response?.data?.message || "Undefined.");
+        message = error.response?.data?.message || "Error when add video.";
       } else {
-        setMessage(error.message || "Undefined.");
+        message = error.message || "Error when add video.";
       }
+
+      notifyApiFail(message);
     } finally {
-      if (message !== null) {
-        alert(message);
-      }
       setIsLoading(false);
     }
   };
@@ -372,6 +428,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
         <i className="fa-regular fa-pen-to-square fa-lg mx-1"></i>
       </button>
 
+      <ToastContainer />
       <Modal
         show={show}
         onHide={handleClose}
@@ -396,7 +453,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
               validationSchema={schema}
               onSubmit={handleSubmit}
               initialValues={{
-                lessonName: video.name
+                lessonName: video.name,
               }}
             >
               {({ handleSubmit, handleChange, values, touched, errors }) => (

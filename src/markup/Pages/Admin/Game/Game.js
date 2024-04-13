@@ -33,6 +33,7 @@ import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { CreateLevel } from "./CreateGameLevel";
 import "./Game.css";
+import { toast } from "react-toastify";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -48,6 +49,33 @@ export default function Game() {
   const [isLoading, setIsLoading] = useState(false);
   const [arr, setArr] = useState([]);
   const [modeId, setModeId] = useState();
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleLevelDetailInputNumberChange = (event) => {
     let value = parseInt(event.target.value);
@@ -121,7 +149,7 @@ export default function Game() {
   //Show message error
   useEffect(() => {
     if (message) {
-      alert(`Error: ${message}`);
+      notifyApiFail(`Error: ${message}`);
       setMessage(null);
     }
   }, [message]);
@@ -336,7 +364,7 @@ export default function Game() {
 
         await updateGameLevelApi({ data: updateData });
 
-        alert("Update success");
+        notifyApiSucess("Update success");
       } catch (error) {
         let errorMessage = null;
         if (error.response) {

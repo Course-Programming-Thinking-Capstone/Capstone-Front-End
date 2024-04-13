@@ -19,6 +19,7 @@ import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { addLevelApi } from "../../../../helper/apis/game/game";
+import { ToastContainer, toast } from "react-toastify";
 
 export const CreateLevel = ({
   modeId,
@@ -35,6 +36,33 @@ export const CreateLevel = ({
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isVStartExist, setIsVStartExist] = useState(false);
   const [message, setMessage] = useState(null);
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const columns = 8;
   const rows = 6;
@@ -128,7 +156,8 @@ export const CreateLevel = ({
 
         await addLevelApi({ data: data });
 
-        alert("Add success");
+        // alert("Add success");
+        notifyApiSucess("Add success");
 
         //back
         setAddLevel(false);
@@ -215,6 +244,8 @@ export const CreateLevel = ({
           </button>
         </div>
       </div>
+
+      <ToastContainer />
       <div className="d-flex justify-content-between">
         <div className="d-flex justify-content-start">
           <div>

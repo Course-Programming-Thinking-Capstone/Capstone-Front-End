@@ -36,8 +36,8 @@ export default function Classes() {
     }
   };
 
-  useEffect(async () => {
-    await fetchCourses(currentPage);
+  useEffect(() => {
+    fetchCourses(currentPage);
   }, [currentPage]);
 
   const handlePageClick = (data) => {

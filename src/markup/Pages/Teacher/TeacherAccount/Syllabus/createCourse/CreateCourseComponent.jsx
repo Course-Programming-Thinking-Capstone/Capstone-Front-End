@@ -67,6 +67,7 @@ import {
 } from "@dnd-kit/sortable";
 
 import { CSS } from "@dnd-kit/utilities";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,33 @@ const CreateCourseComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescriptionInput] = useState(undefined);
   const [confirm, setConfirm] = useState(false);
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleFileInputChange = (event) => {
     setCoursePictureFile(event.target.files[0]);
@@ -141,15 +169,16 @@ const CreateCourseComponent = () => {
         //log
         console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 
+        let message;
+
         if (error.response) {
-          setMessage(error.response?.data?.message || "Undefined.");
+          message = error.response?.data?.message || "Error when load data.";
         } else {
-          setMessage(error.message || "Undefined.");
+          message = error.message || "Error when load data.";
         }
+
+        notifyApiFail(message);
       } finally {
-        if (message !== null) {
-          alert(message);
-        }
         setIsLoading(false);
       }
     };
@@ -188,21 +217,25 @@ const CreateCourseComponent = () => {
           data: updatedData,
         });
 
-        alert("Update success");
-        if (action === "Post") {
+        if (action === "Save") {
+          notifyApiSucess("Update sucesss.");
+        } else if (action === "Post") {
+          notifyApiSucess("Post course sucesss.");
           setTimeout(() => {
             navigate("/teacher/syllabuses");
-          }, 0);
+          }, 2000);
         }
       } catch (error) {
+        let message;
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.response?.data?.message || "Undefined.");
+          message =
+            error.response?.data?.message || "Error when update course.";
         } else {
-          console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.message || "Undefined.");
+          console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+          message = error.message || "Error when update course.";
         }
-        alert(message);
+        notifyApiFail(message);
       } finally {
         setIsLoading(false);
       }
@@ -277,6 +310,9 @@ const CreateCourseComponent = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer />
+
       <div className="create-course-content">
         <div style={{ padding: "10px 20px" }}>
           {isLoading === true ? (
@@ -890,4 +926,3 @@ const QuestionContent = ({ sectionId, quizIndex, question, questionIndex }) => {
     </Accordion>
   );
 };
-
