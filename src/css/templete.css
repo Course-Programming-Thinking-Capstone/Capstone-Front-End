@@ -1360,6 +1360,29 @@ textarea.form-control {
 }
 /* Course ends */
 
+.notification-badge {
+  position: absolute;
+  z-index: 1000;
+  top: -5px;
+  right: 80px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.fa-bell {
+  position: relative;
+  font-size: 24px; /* Adjust size as needed */
+}
+
+.item.read {
+  background-color: #ccc; /* Or any other color to indicate it's read */
+}
+
+
 /* Staff starts */
 .staff {
   position: relative;
@@ -1436,7 +1459,7 @@ textarea.form-control {
 }
 
 .moderating-lesson .selected-lesson {
-  color: #1A9CB7;/* Light grey color, you can choose any color you like */
+  color: #1a9cb7; /* Light grey color, you can choose any color you like */
 }
 
 .staff-notification .header i,
@@ -1603,10 +1626,9 @@ textarea.form-control {
   color: #1a9cb7;
 }
 
-
 .create-syllabus .point i {
   font-size: 20px;
-  color: #1A9CB7;
+  color: #1a9cb7;
 }
 
 .create-syllabus .point .item {
@@ -5255,7 +5277,7 @@ select:-internal-autofill-selected {
 }
 
 button.add {
-  background-color: #EF7E54; 
+  background-color: #ef7e54;
   border: none;
   border-radius: 5px;
   color: white;
@@ -5273,7 +5295,7 @@ button.add:hover {
 }
 
 button.admin-back {
-  background-color: #7F7C7C; 
+  background-color: #7f7c7c;
   border: none;
   border-radius: 5px;
   color: white;
@@ -5291,7 +5313,7 @@ button.admin-back:hover {
 }
 
 button.admin-save {
-  background-color: #2A7FFF; 
+  background-color: #2a7fff;
   border: none;
   border-radius: 5px;
   color: white;
@@ -5311,16 +5333,13 @@ button.admin-save:hover {
 .teacher-accordion {
   margin-bottom: 20px;
   padding: 4px 8px;
-  
-  border: 1px solid #D4D4D4;
+
+  border: 1px solid #d4d4d4;
   border-radius: 5px;
 }
 
-
-
 .teacher-accordion button.accordion-button,
 .teacher-accordion button.collapsed {
-  
   padding: 4px 8px;
   background-color: white;
   min-height: 45px;
@@ -5336,7 +5355,7 @@ button.admin-save:hover {
 }
 
 .selected-class {
-  border: 1px solid #FF8A00;
+  border: 1px solid #ff8a00;
   border-radius: 8px;
 }
 
@@ -5344,16 +5363,16 @@ button.admin-save:hover {
   font-weight: bold;
 } */
 
-.teacher-accordion .lesson-title button{
-  color: #EF7E54;
+.teacher-accordion .lesson-title button {
+  color: #ef7e54;
   font-weight: bold;
 }
 
 button.teacher-button {
-  background-color: white; 
-  border: 1px solid #FF8A00;
+  background-color: white;
+  border: 1px solid #ff8a00;
   border-radius: 5px;
-  color: #FF8A00;
+  color: #ff8a00;
   text-align: center;
   text-decoration: none;
   font-size: 14px;
@@ -5362,15 +5381,15 @@ button.teacher-button {
 }
 
 button.teacher-button:hover {
-  background-color: #f7cc9c; 
+  background-color: #f7cc9c;
 }
 
 button.teacher-button-remove {
   /* border: 1px solid #FF8A00; */
   border: none;
   border-radius: 50%;
-  background-color: white; 
-  color: #EF7E54;
+  background-color: white;
+  color: #ef7e54;
   text-align: center;
   text-decoration: none;
   /* font-size: 14px; */
@@ -5393,4 +5412,3 @@ button.teacher-button-remove img {
   height: auto;
   vertical-align: middle;
 }
- 

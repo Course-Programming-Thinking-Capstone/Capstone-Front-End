@@ -47,6 +47,7 @@ import StaffModerating from './Pages/Staff/StaffModerating/StaffModerating';
 import StaffClassDetail from './Pages/Staff/StaffClassDetail/StaffClassDetail';
 import CreateCourseContent from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent';
 import StudentHome from './Pages/StudentHome';
+import StaffNotification from './Pages/Staff/StaffNotification/StaffNotification';
 
 
 export default function Markup() {
@@ -56,7 +57,7 @@ export default function Markup() {
 			<AuthCheck />
 			<div className="page-wraper">
 				<Routes>
-					
+
 					{/* routed */}
 					<Route path='/' exact element={<Index1 />} />
 					<Route path='/login' exact element={<Login />} />
@@ -76,9 +77,9 @@ export default function Markup() {
 					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
 					<Route path='/courses-study' exact element={<CourseStudy />} />
 					<Route path='/courses-quiz' exact element={<CourseQuiz />} />
-					
-					
-					
+
+
+
 					<Route path='/order' exact element={<Order />} />
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
@@ -101,6 +102,7 @@ export default function Markup() {
 					<Route path='/teacher/setting' exact element={<TeacherSetting />} />
 
 					<Route path='/staff' exact element={<Staff />} >
+						<Route path="staff-notification" element={<StaffNotification />} />
 						<Route path="staff-order" element={<StaffOrder />} />
 						<Route path="staff-order-detail/:orderId" element={<StaffOrderDetail />} />
 						<Route path="moderating" element={<StaffModerating />} />

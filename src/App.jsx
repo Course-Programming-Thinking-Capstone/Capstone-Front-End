@@ -55,6 +55,7 @@ import StudentHome from "./markup/Pages/StudentHome";
 import CourseStudy from "./markup/Pages/CourseStudy";
 import Order from "./markup/Pages/Order";
 import OrderDetail from "./markup/Pages/OrderDetail";
+import StaffNotification from "./markup/Pages/Staff/StaffNotification/StaffNotification";
 
 // function App() {
 // 	return (
@@ -149,6 +150,15 @@ const App = () => {
               path="/staff"
               element={<PrivateRoute page="staff" component={<Staff />} />}
             >
+              <Route
+                path="staff-notification"
+                element={
+                  <PrivateRoute
+                    page="staff/staff-notification"
+                    component={<StaffNotification />}
+                  />
+                }
+              />
               <Route
                 path="staff-order"
                 element={

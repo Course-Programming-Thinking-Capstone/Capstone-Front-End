@@ -6,55 +6,13 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import StaffOrder from "./StaffOrder/StaffOrder";
 import background from "./../../../images/background/adminStaffBackground.jpg";
-
-const StaffNotification = () => {
-  return (
-    <div className="staff-notification">
-      <div className="header">
-        <div className="d-flex justify-content-start">
-          <div>
-            <h5 className="mb">NOTIFICATIONS</h5>
-            <hr />
-          </div>
-          <i class="fa-solid fa-bell"></i>
-        </div>
-      </div>
-      <div className="item">
-        <div className="d-flex justify-content-between">
-          <div className="left d-flex justify-content-start">
-            <img src={demo} alt="" />
-            <div style={{ marginLeft: "20px" }}>
-              <div className="d-flex justify-content-start">
-                <p style={{ fontSize: "18px", fontWeight: 500 }}>
-                  Course review results{" "}
-                </p>
-                <span>|</span>
-                <span style={{ color: "#1A9CB7" }}>From Staff</span>
-              </div>
-              <p style={{ marginTop: "10px" }} className="mb">
-                Lesson 1 is missing images and videos
-              </p>
-            </div>
-          </div>
-          <div className="right">
-            <p>
-              <i class="fa-regular fa-clock"></i> 09-02-2024 at 9:30 AM
-            </p>
-            <i
-              style={{ marginTop: "10px", color: "red", float: "right" }}
-              class="fa-solid fa-circle-xmark"
-            ></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import instance from "../../../helper/apis/baseApi/baseApi";
 
 export default function Staff() {
   const [activeContent, setActiveContent] = useState("");
   const [activeItem, setActiveItem] = useState("");
   const location = useLocation();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -68,26 +26,44 @@ export default function Staff() {
   };
 
   const getItemClass = (itemName) => {
-    return `item d-flex justify-content-start ${
-      activeItem === itemName ? "active" : ""
-    }`;
+    return `item d-flex justify-content-start ${activeItem === itemName ? "active" : ""
+      }`;
   };
 
   useEffect(() => {
     const pathSegments = location.pathname.split("/");
-    let activePath = pathSegments[2];
+    let activePath = pathSegments[2]?.toLowerCase(); // Convert path segment to lowercase
     let activeMenu;
 
-    if (activePath && activePath.includes("staff-order")) {
+    if (activePath === "staff-order") {
       activeMenu = "Order";
+    } else if (activePath === "staff-notification") {
+      activeMenu = "Notification";
     } else {
       activeMenu = activePath
         ? activePath.charAt(0).toUpperCase() + activePath.slice(1)
         : "";
     }
 
+    console.log("Active Menu Item:", activeMenu);
+    console.log("Path:", activePath);
+
     setActiveItem(activeMenu);
   }, [location]);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await instance.get('api/v1/notifications/account/number-of-unread');
+        console.log('response: ', response);
+        setUnreadCount(response.data);
+      } catch (error) {
+        console.error('Error fetching unread notifications count:', error);
+      }
+    };
+
+    fetchUnreadCount();
+  }, []);
 
   return (
     <div>
@@ -99,11 +75,16 @@ export default function Staff() {
           <div>
             <div
               className={getItemClass("Notification")}
-            //   onClick={() => handleMenuItemClick("Notification")}
+              onClick={() => handleMenuItemClick("staff-notification")}
             >
-              <i class="fa-solid fa-bell"></i>
-              <span>Notification</span>
+              <div style={{ position: 'relative' }}>
+                <i class="fa-solid fa-bell"></i>
+                {unreadCount > 0 && <div className="notification-badge">{unreadCount}</div>}
+                <span>Notification</span>
+              </div>
+
             </div>
+
             <div
               className={getItemClass("Moderating")}
               onClick={() => handleMenuItemClick("Moderating")}
