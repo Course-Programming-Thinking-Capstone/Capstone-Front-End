@@ -17,7 +17,6 @@ export default function StaffClassDetail() {
     const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
     const [classIdForForm, setClassIdForForm] = useState(null);
 
-
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
         <div className="date-picker-custom-input d-flex justify-content-between p-1" onClick={onClick} ref={ref} style={{ border: '1px solid #F69E4A', width: '150px', height: '30px', borderRadius: '8px' }} >
             <div>
@@ -478,6 +477,25 @@ export default function StaffClassDetail() {
             window.open(url, '_blank');
         };
 
+        const handleStatusChange = async (newStatus) => {
+            try {
+                const response = await instance.patch(`api/v1/Classes/${classId}?status=${newStatus}`);
+                if (response.data) {
+                    toast.success(response.data.message);
+                    console.log("success");  // Displaying the toast message on successful API response
+                    setClassDetails(prevDetails => ({ ...prevDetails, classStatus: newStatus }));  // Update local state to reflect the new status
+                }
+            } catch (error) {
+                console.error('Failed to update class status', error);
+                toast.error('Failed to update class status');  // Display error toast message
+            }
+        };
+
+        const handleSelectChange = (event) => {
+            const selectedStatus = event.target.value;
+            handleStatusChange(selectedStatus);
+        };
+
         return (
             <div className='staff-class-content mx-5' style={{ padding: '20px 50px', backgroundColor: 'white', margin: '30px 80px', overflowY: 'scroll', height: '90vh' }}>
                 <div className="header">
@@ -489,7 +507,18 @@ export default function StaffClassDetail() {
                             </div>
                             <i class="fa-solid fa-bell"></i>
                         </div>
-                        <div>
+                        <ToastContainer />
+                        <div className='d-flex justify-content-start'>
+                            <select
+                                className='py-1 px-2'
+                                style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', outline: 'none' }}
+                                value={classDetails.classStatus}
+                                onChange={handleSelectChange}
+                            >
+                                <option value="Opening">Opening</option>
+                                <option value="Closed">Closed</option>
+                                <option value="OnGoing">On Going</option>
+                            </select>
                             <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={() => navigateToView('detail')}>
                                 <div className='py-1 px-2'>
                                     Back
@@ -1194,7 +1223,6 @@ export default function StaffClassDetail() {
         }
     };
 
-
     const handlePageClick = (data) => {
         setCurrentPage(data.selected + 1);
     };
@@ -1213,7 +1241,6 @@ export default function StaffClassDetail() {
 
         return [day, month, year].join('/');
     };
-
 
     const renderView = () => {
         switch (view) {
