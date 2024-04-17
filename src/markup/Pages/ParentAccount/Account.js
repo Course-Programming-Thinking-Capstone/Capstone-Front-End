@@ -18,16 +18,6 @@ export default function Account() {
         setActiveContent(contentKey);
     };
 
-
-    const handleMenuItemClick = (path) => {
-        navigate(`/account/${path.toLowerCase()}`); // Adjust path as needed
-    };
-
-    const getItemClass = (itemName) => {
-        const currentPath = location.pathname.split('/')[2];
-        return `item ${currentPath === itemName.toLowerCase() ? "active" : ""}`;
-    };
-
     const EditInfo = () => {
         return (
             <div className='account-details'>

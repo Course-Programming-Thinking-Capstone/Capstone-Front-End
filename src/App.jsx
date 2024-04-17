@@ -60,6 +60,7 @@ import Account from './markup/Pages/ParentAccount/Account';
 import AccountDetails from "./markup/Pages/ParentAccount/AccountDetails/AccountDetails";
 import PaymentMethods from "./markup/Pages/ParentAccount/PaymentMethods/PaymentMethods";
 import ChildProcess from './markup/Pages/ParentAccount/ChildProcess/ChildProcess';
+import ChildProcessDetail from "./markup/Pages/ParentAccount/ChildProcess/ChildProcessDetail";
 
 // function App() {
 // 	return (
@@ -318,6 +319,12 @@ const App = () => {
                 element={<PrivateRoute page="account/child-process" component={<ChildProcess />} />}
               />
             </Route>
+
+            <Route
+              path="/account/child-process-detail/:childId"
+              element={<PrivateRoute page="account/child-process-detail" component={<ChildProcessDetail />} />}
+            />
+
             <Route
               path="/courses"
               element={<PrivateRoute page="courses" component={<Classes />} />}
