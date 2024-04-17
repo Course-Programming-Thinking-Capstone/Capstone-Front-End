@@ -48,22 +48,44 @@ export default function StaffNotification() {
                 return notification;
             });
             setNotifications(updatedNotifications);
+            setUnreadCount(prevCount => prevCount - 1); // Decrement unread count
         } catch (error) {
             console.error('Error updating notification read status:', error);
         }
     };
 
+    const markAllAsRead = async () => {
+        const unreadNotifications = notifications.filter(notif => !notif.isRead);
+        const markReadPromises = unreadNotifications.map(notif =>
+            instance.patch(`api/v1/notifications/account/${notif.id}`)
+        );
 
+        try {
+            await Promise.all(markReadPromises);
+            const updatedNotifications = notifications.map(notif => ({ ...notif, isRead: true }));
+            setNotifications(updatedNotifications);
+            setUnreadCount(prevCount => prevCount - unreadNotifications.length); // Decrement by number of unread messages
+        } catch (error) {
+            console.error('Error marking all notifications as read:', error);
+        }
+    };
 
     return (
         <div className="staff-notification m-5" style={{ backgroundColor: 'white' }}>
             <div className="header">
-                <div className="d-flex justify-content-start">
-                    <div>
-                        <h5 className="mb">NOTIFICATIONS</h5>
-                        <hr />
+                <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-start">
+                        <div>
+                            <h5 className="mb">NOTIFICATIONS</h5>
+                            <hr />
+                        </div>
+                        <i class="fa-solid fa-bell"></i>
                     </div>
-                    <i class="fa-solid fa-bell"></i>
+                    <div>
+                        <button onClick={markAllAsRead} className="btn btn-primary">
+                            Mark all as read
+                        </button>
+                    </div>
                 </div>
             </div>
             <div>
