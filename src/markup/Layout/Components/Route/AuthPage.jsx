@@ -38,10 +38,10 @@ export const TeacherPages = [
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
-export const ParentPages = ["classes", "courses", "classes-detail", "payment", "payment-success", "order", "order-detail"];
+export const ParentPages = ["classes", "account", "account/account-details", "account/payment-methods", "account/child-process", "courses", "classes-detail", "payment", "payment-success", "order", "order-detail"];
 
 //Lưu đường dẫn các trang mà student được truy cập
-export const StudentPages = ["student-home", "courses-plan", "courses-study"];
+export const StudentPages = ["student-home", "schedule", "courses-plan", "courses-study"];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {

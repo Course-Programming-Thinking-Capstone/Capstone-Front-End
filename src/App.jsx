@@ -56,6 +56,10 @@ import CourseStudy from "./markup/Pages/CourseStudy";
 import Order from "./markup/Pages/Order";
 import OrderDetail from "./markup/Pages/OrderDetail";
 import StaffNotification from "./markup/Pages/Staff/StaffNotification/StaffNotification";
+import Account from './markup/Pages/ParentAccount/Account';
+import AccountDetails from "./markup/Pages/ParentAccount/AccountDetails/AccountDetails";
+import PaymentMethods from "./markup/Pages/ParentAccount/PaymentMethods/PaymentMethods";
+import ChildProcess from './markup/Pages/ParentAccount/ChildProcess/ChildProcess';
 
 // function App() {
 // 	return (
@@ -296,6 +300,24 @@ const App = () => {
             />
 
             {/* Parent pages  */}
+
+            <Route
+              path="account"
+              element={<PrivateRoute page="account" component={<Account />} />}
+            >
+              <Route
+                path="account-details"
+                element={<PrivateRoute page="account/account-details" component={<AccountDetails />} />}
+              />
+              <Route
+                path="payment-methods"
+                element={<PrivateRoute page="account/payment-methods" component={<PaymentMethods />} />}
+              />
+              <Route
+                path="child-process"
+                element={<PrivateRoute page="account/child-process" component={<ChildProcess />} />}
+              />
+            </Route>
             <Route
               path="/courses"
               element={<PrivateRoute page="courses" component={<Classes />} />}
@@ -357,6 +379,15 @@ const App = () => {
               }
             />
             <Route
+              path="/schedule"
+              element={
+                <PrivateRoute
+                  page="schedule"
+                  component={<Schedule />}
+                />
+              }
+            />
+            <Route
               path="/courses-plan/:courseId"
               element={
                 <PrivateRoute
@@ -380,8 +411,8 @@ const App = () => {
             <Route path="/test" element={<DragAndDropComponent />} />
 
             {/* Error pages  */}
-            <Route path="/not-found" element={<ErrorPage />} />
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
+            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

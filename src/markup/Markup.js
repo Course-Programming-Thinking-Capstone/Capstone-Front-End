@@ -22,7 +22,7 @@ import OrderDetail from './Pages/OrderDetail';
 import CoursePayment from './Pages/CoursePayment';
 import OrderCancel from './Pages/OrderCancel';
 import PaymentSuccess from './Pages/PaymentSuccess';
-import Account from './Pages/Account';
+
 import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff/Staff';
@@ -48,6 +48,10 @@ import StaffClassDetail from './Pages/Staff/StaffClassDetail/StaffClassDetail';
 import CreateCourseContent from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent';
 import StudentHome from './Pages/StudentHome';
 import StaffNotification from './Pages/Staff/StaffNotification/StaffNotification';
+import Account from './Pages/ParentAccount/Account';
+import AccountDetails from './Pages/ParentAccount/AccountDetails/AccountDetails';
+import PaymentMethods from './Pages/ParentAccount/PaymentMethods/PaymentMethods';
+import ChildProcess from './Pages/ParentAccount/ChildProcess/ChildProcess';
 
 
 export default function Markup() {
@@ -80,12 +84,18 @@ export default function Markup() {
 
 
 
+					<Route path='/account' exact element={<Account />} >
+						<Route path='account-details' exact element={<AccountDetails />} />
+						<Route path='payment-methods' exact element={<PaymentMethods />} />
+						<Route path='child-process' exact element={<ChildProcess />} />
+					</Route>
+
 					<Route path='/order' exact element={<Order />} />
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
 					<Route path='/payment' exact element={<CoursePayment />} />
 					<Route path='/payment-success/:orderId' exact element={<PaymentSuccess />} />
-					<Route path='/account' exact element={<Account />} />
+
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/teacher' exact element={<TeacherAccount />} />

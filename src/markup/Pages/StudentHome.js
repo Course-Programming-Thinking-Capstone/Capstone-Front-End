@@ -4,6 +4,7 @@ import Footer from '../Layout/Footer'
 import PageTitle from './../Layout/PageTitle';
 import background from './../../images/background/studentBackground.png';
 import { useNavigate } from 'react-router-dom';
+import instance from '../../helper/apis/baseApi/baseApi';
 
 
 export default function StudentHome() {
@@ -13,24 +14,12 @@ export default function StudentHome() {
 
     useEffect(() => {
         const fetchCourses = async () => {
-            const url = 'https://www.kidpro-production.somee.com/api/v1/Classes/teacher-or-student';
             try {
 
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await instance.get(`api/v1/Classes/teacher-or-student`);
+                const data = response.data;
+                setCourses(data);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('student classes: ', data);
-                    setCourses(data);
-                } else {
-                    throw new Error('Failed to fetch courses');
-                }
             } catch (error) {
                 console.error('Error fetching courses:', error);
             }
