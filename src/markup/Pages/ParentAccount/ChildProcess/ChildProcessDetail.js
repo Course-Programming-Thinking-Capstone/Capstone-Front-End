@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import instance from '../../../../helper/apis/baseApi/baseApi';
 import Header from './../../../Layout/Header';
 import PageTitle from '../../../Layout/PageTitle';
@@ -10,6 +10,7 @@ export default function ChildProcessDetail() {
     const { childId } = useParams();
     const [childDetails, setChildDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchChildDetails = async () => {
@@ -29,6 +30,10 @@ export default function ChildProcessDetail() {
 
         fetchChildDetails();
     }, [childId]);
+
+    const handleCourseClick = (courseId) => {
+        navigate(`/course-process/${childId}/${courseId}`);
+    };
 
     return (
         <div>
@@ -71,7 +76,7 @@ export default function ChildProcessDetail() {
                                         </div>
                                         <div style={{ width: '60%' }}>
                                             {childDetails.studentsCourse && childDetails.studentsCourse.map((course, index) => (
-                                                <div className='mt-3 px-3 py-3 d-flex justify-content-between align-items-center' key={index} style={{ border: '1px solid #1A9CB7', borderRadius: '8px', color: '#1A9CB7' }}>
+                                                <div onClick={() => handleCourseClick(course.courseId)} className='mt-3 px-3 py-3 d-flex justify-content-between align-items-center' key={index} style={{ border: '1px solid #1A9CB7', borderRadius: '8px', color: '#1A9CB7' }}>
                                                     <div className="d-flex justify-content-start">
                                                         <p className='mb-0'>
                                                             <i class="fa-solid fa-book ms-3"></i>
@@ -90,10 +95,9 @@ export default function ChildProcessDetail() {
                                 </div>
                             </div>
                         ) : (
-                            <p>Child details not available.</p> // Render this if no child details
+                            <p>Child details not available.</p> 
                         )
                     )}
-
                 </div>
             </div>
             <Footer />

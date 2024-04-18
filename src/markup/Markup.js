@@ -53,6 +53,7 @@ import AccountDetails from './Pages/ParentAccount/AccountDetails/AccountDetails'
 import PaymentMethods from './Pages/ParentAccount/PaymentMethods/PaymentMethods';
 import ChildProcess from './Pages/ParentAccount/ChildProcess/ChildProcess';
 import ChildProcessDetail from './Pages/ParentAccount/ChildProcess/ChildProcessDetail';
+import CourseProcess from './Pages/ParentAccount/ChildProcess/CourseProcess';
 
 
 export default function Markup() {
@@ -90,6 +91,7 @@ export default function Markup() {
 						<Route path='payment-methods' exact element={<PaymentMethods />} />
 						<Route path='child-process' exact element={<ChildProcess />} />
 						<Route path='child-process-detail/:childId' exact element={<ChildProcessDetail />} />
+						<Route path='course-process/:studentId/:courseId' exact element={<CourseProcess />} />
 					</Route>
 
 					<Route path='/order' exact element={<Order />} />
