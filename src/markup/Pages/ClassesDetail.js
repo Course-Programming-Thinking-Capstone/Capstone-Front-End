@@ -6,6 +6,7 @@ import Footer from '../Layout/Footer';
 import PageTitle from '../Layout/PageTitle';
 import demo from './../../images/gallery/simp.jpg';
 import { toast, ToastContainer } from 'react-toastify';
+import instance from './../../helper/apis/baseApi/baseApi';
 
 export default function ClassesDetail() {
 	const navigate = useNavigate();
@@ -19,18 +20,9 @@ export default function ClassesDetail() {
 		const fetchCourseDetails = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/${id}`, {
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Content-Type': 'application/json'
-					}
-				});
+				const response = await instance.get(`api/v1/courses/${id}`);
+				const data = response.data;
 
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-
-				const data = await response.json();
 				console.log('courseDetail: ', data);
 				setCourseDetails(data);
 			} catch (error) {

@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 import Footer from '../Layout/Footer';
 import background from './../../images/background/courseBackground.jpg';
+import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function CourseStudy() {
     const [selectedContent, setSelectedContent] = useState(null);
+    const { sectionId } = useParams();
+    const [sectionDetails, setSectionDetails] = useState(null);
+    const [detailedContent, setDetailedContent] = useState(null);
+
+    useEffect(() => {
+        const fetchSectionDetails = async () => {
+            try {
+                const response = await instance.get(`api/v1/courses/study/section/${sectionId}`);
+                // Assume the API returns the entire section data needed
+                const data = response.data;
+                console.log(' data: ', data);
+
+                setSelectedContent(data);
+                setSectionDetails(data);
+            } catch (error) {
+                console.error('Failed to fetch section details:', error);
+            }
+        };
+
+        fetchSectionDetails();
+    }, [sectionId]);
 
     const pageStyle = {
         backgroundImage: `url(${background})`,
@@ -13,54 +36,98 @@ export default function CourseStudy() {
         backgroundRepeat: 'no-repeat',
     };
 
-    const handleContentClick = (content) => {
-        setSelectedContent(content);
+    const handleContentClick = async (type, id) => {
+        try {
+            let url;
+            if (type === 'lesson') {
+                url = `api/v1/courses/study/section/lesson/${id}`;
+            } else if (type === 'quiz') {
+                url = `api/v1/courses/study/section/quiz/${id}`;
+                // Assume similar endpoint for quizzes if exists
+            }
+            const response = await instance.get(url);
+            setDetailedContent(response.data);
+            setSelectedContent({ type, id });
+        } catch (error) {
+            console.error('Error fetching details:', error);
+        }
     };
 
+    const renderSidebar = () => {
+        if (!sectionDetails) {
+            return (
+                <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            );
+        }
+    
+        return (
+            <>
+                {sectionDetails.lessons.map((lesson) => (
+                    <div key={lesson.id} className='document d-flex' onClick={() => handleContentClick('lesson', lesson.id)} style={{ backgroundColor: selectedContent?.id === lesson.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
+                        {lesson.type === 'Video' ? (
+                            <i className="fa-regular fa-circle-play"></i>
+                        ) : (
+                            <i className="fa-solid fa-book"></i>
+                        )}
+                        <div className='document-content'>
+                            <p>{lesson.name}</p>
+                            <span>{lesson.type} - {lesson.duration}min</span>
+                        </div>
+                    </div>
+                ))}
+                {sectionDetails.quizzes.map((quiz) => (
+                    <div key={quiz.id} className='document d-flex' onClick={() => handleContentClick('quiz', quiz.id)} style={{ backgroundColor: selectedContent?.id === quiz.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
+                        <i className="fa-solid fa-pen-to-square"></i>
+                        <div className='document-content'>
+                            <p>{quiz.title}</p>
+                            <span>Quiz - {quiz.totalQuestion} questions</span>
+                        </div>
+                    </div>
+                ))}
+            </>
+        );
+    };
+    
+
+
     const renderContent = () => {
-        switch (selectedContent) {
-            case 'video':
+        if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
+
+        switch (detailedContent.type) {
+            case 'Video':
                 return (
-                    <div>
+                    <div className='pt-5 px-5'>
                         <iframe
                             width="100%"
                             height="600px"
-                            src="https://www.youtube.com/embed/O36r05htZXU?si=VjRcukDHmxQZhIx-"
-                            title="YouTube video player"
+                            src={detailedContent.resourceUrl}
+                            title={detailedContent.name}
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen></iframe>
-
                         <div className='d-flex justify-content-center'>
                             <button className='button'>Mark as completed</button>
                         </div>
                     </div>
                 );
-            case 'reading':
+            case 'Document':
                 return (
-                    <div>
-                        Reading
+                    <div className='pt-5 px-5'>
+
+                        <div dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
                     </div>
                 );
-            case 'quiz':
+            case 'Quiz':
                 return (
                     <div>
-                        Quiz
-                    </div>
-                );
-            case 'game':
-                return (
-                    <div>
-                        Game
+                        <p>Quiz: {detailedContent.title}</p>
+                        {/* Render quiz details similarly */}
                     </div>
                 );
             default:
-                return (
-                    <>
-                        <h2>Collapsed Sidebar</h2>
-                        <p>Click on the menu items to render different content on the right.</p>
-                    </>
-                );
+                return <div>Content type not recognized.</div>;
         }
     };
 
@@ -70,51 +137,11 @@ export default function CourseStudy() {
             <div className="page" style={pageStyle}>
                 <PageTitle motherMenu="Courses" activeMenu="Study" />
                 <div className=''>
-                    <div className="study d-flex">
+                    <div className="study d-flex" style={{ minHeight: '700px' }}>
                         <div style={{ backgroundColor: 'white', width: '30%' }}>
-                            <div className='document d-flex' onClick={() => handleContentClick('video')} style={{ backgroundColor: selectedContent === 'video' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
-                                <i class="fa-regular fa-circle-play"></i>
-                                <div className='document-content'>
-                                    <p>Welcome to technology!</p>
-                                    <span>Video - 1min</span>
-                                </div>
-                            </div>
-                            <div className='document d-flex' onClick={() => handleContentClick('reading')} style={{ backgroundColor: selectedContent === 'reading' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
-                                <i class="fa-solid fa-book-open"></i>
-                                <div className='document-content'>
-                                    <p>Welcome to technology!</p>
-                                    <span>Reading - 1min</span>
-                                </div>
-                            </div>
-                            <div className='document d-flex' onClick={() => handleContentClick('reading')}>
-                                <i class="fa-solid fa-book-open"></i>
-                                <div className='document-content'>
-                                    <p>Welcome to technology!</p>
-                                    <span>Reading - 1min</span>
-                                </div>
-                            </div>
-                            <div className='document d-flex' onClick={() => handleContentClick('video')}>
-                                <i class="fa-regular fa-circle-play"></i>
-                                <div className='document-content'>
-                                    <p>Welcome to technology!</p>
-                                    <span>Video - 1min</span>
-                                </div>
-                            </div>
-                            <div className='document d-flex'>
-                                <i class="fa-solid fa-pen-to-square"></i>
-                                <div className='document-content'>
-                                    <p>Graded Quiz: Test your tech knowledge!</p>
-                                    <span>Quiz - 10 questions</span>
-                                </div>
-                            </div>
-                            <div className='document d-flex'>
-                                <i class="fa-solid fa-gamepad"></i>
-                                <div className='document-content'>
-                                    <p>Practice game</p>
-                                    <span>Map 1 - level 1</span>
-                                </div>
-                            </div>
+                            {renderSidebar()}
                         </div>
+
                         <div style={{ width: '70%' }}>
                             {renderContent()}
                         </div>

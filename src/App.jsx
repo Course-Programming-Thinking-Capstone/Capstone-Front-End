@@ -62,6 +62,7 @@ import PaymentMethods from "./markup/Pages/ParentAccount/PaymentMethods/PaymentM
 import ChildProcess from './markup/Pages/ParentAccount/ChildProcess/ChildProcess';
 import ChildProcessDetail from "./markup/Pages/ParentAccount/ChildProcess/ChildProcessDetail";
 import CourseProcess from "./markup/Pages/ParentAccount/ChildProcess/CourseProcess";
+import CourseQuiz from "./markup/Pages/CourseQuiz";
 
 // function App() {
 // 	return (
@@ -411,11 +412,20 @@ const App = () => {
             />
 
             <Route
-              path="/courses-study"
+              path="/courses-study/:sectionId"
               element={
                 <PrivateRoute
                   page="courses-study"
                   component={<CourseStudy />}
+                />
+              }
+            />
+            <Route
+              path="/courses-quiz"
+              element={
+                <PrivateRoute
+                  page="courses-study"
+                  component={<CourseQuiz />}
                 />
               }
             />

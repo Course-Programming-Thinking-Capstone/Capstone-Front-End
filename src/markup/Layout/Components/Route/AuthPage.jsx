@@ -41,7 +41,7 @@ export const TeacherPages = [
 export const ParentPages = ["classes", "account", "account/account-details", "account/payment-methods", "account/child-process", "account/child-process-detail", "account/course-process", "courses", "classes-detail", "payment", "payment-success", "order", "order-detail"];
 
 //Lưu đường dẫn các trang mà student được truy cập
-export const StudentPages = ["student-home", "schedule", "courses-plan", "courses-study"];
+export const StudentPages = ["student-home", "schedule", "courses-plan", "courses-study", "courses-quiz"];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {

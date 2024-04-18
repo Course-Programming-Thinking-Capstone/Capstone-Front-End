@@ -5,6 +5,7 @@ import Footer from '../Layout/Footer';
 import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 import { useNavigate } from 'react-router-dom';
+import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function CoursesPlan() {
     const { courseId } = useParams();
@@ -21,24 +22,10 @@ export default function CoursesPlan() {
                 return;
             }
 
-            const url = `https://www.kidpro-production.somee.com/api/v1/courses/${courseId}`;
-            console.log('Fetching from URL:', url); // Log the URL
-
             try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await instance.get(`api/v1/courses/study/${courseId}`);
+                const data = response.data;
 
-                if (!response.ok) {
-                    const errorText = await response.text(); // Getting error message from response
-                    throw new Error(errorText);
-                }
-
-                const data = await response.json();
                 console.log('Course detail data:', data); // Check the fetched data
                 setCourseDetails(data);
             } catch (error) {
@@ -64,8 +51,8 @@ export default function CoursesPlan() {
 
     const navigate = useNavigate();
 
-    const getStarted = () => {
-        navigate(`/courses-study`);
+    const getStarted = (sectionId) => {
+        navigate(`/courses-study/${sectionId}`);
     }
 
     const CollapsibleQuestion = ({ id, title, lessons, quizzes }) => {
@@ -117,7 +104,7 @@ export default function CoursesPlan() {
                             </div>
                         </div>
                         <div>
-                            <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
+                            <button onClick={() => getStarted(id)} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
                         </div>
                     </div>
                 </div>
@@ -131,6 +118,7 @@ export default function CoursesPlan() {
             <div className="page-content">
                 <PageTitle motherMenu="Courses" activeMenu="Courses" />
                 <div className="container">
+                <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
                     <div className="plan row">
                         <div className="col-lg-3">
                             <table className="table table-bordered">
@@ -150,7 +138,6 @@ export default function CoursesPlan() {
                                 </tbody>
                             </table>
                         </div>
-                        <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
                         <div className="plan-content col-lg-9">
                             {isLoading ? (
                                 <div class="spinner-border text-primary" role="status">
@@ -174,8 +161,8 @@ export default function CoursesPlan() {
                                         {courseDetails && courseDetails.sections.map((section) => (
                                             <CollapsibleQuestion
                                                 key={section.id}
-                                                id={`section${section.id}`}
-                                                title={`Lesson ${section.order}: ${section.name}`}
+                                                id={`${section.id}`}
+                                                title={`Section: ${section.name}`}
                                                 lessons={section.lessons}
                                                 quizzes={section.quizzes}
                                             />
