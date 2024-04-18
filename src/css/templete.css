@@ -1027,7 +1027,8 @@
 }
 
 .create-course,
-.syllabus-detail {
+.syllabus-detail, 
+.teacher-course {
   height: 90vh;
   margin-bottom: 30px;
   overflow: auto;
@@ -1280,21 +1281,22 @@ textarea.form-control {
   background-color: #fbede1;
 }
 
-.syllabus-content {
+.syllabus-content, .teacher-course-content {
   background-color: white;
   padding-top: 10px;
   border-radius: 20px;
+  min-height: 75vh;
 }
 
-.syllabus-content .blue {
+.syllabus-content .blue, .teacher-course-content .blue {
   color: #1a9cb7;
 }
 
-.syllabus-content .search {
+.syllabus-content .search, .teacher-course-content .search {
   margin-top: 20px;
 }
 
-.syllabus-content .search input {
+.syllabus-content .search input, .teacher-course-content .search input{
   border: 1px solid #988e8e66;
   border-radius: 10px 0 0 10px;
   border-right: none;
@@ -1304,7 +1306,7 @@ textarea.form-control {
   width: 70%;
 }
 
-.syllabus-content .syllabus-item {
+.syllabus-content .syllabus-item{
   margin-top: 20px;
   border: 1px solid #d9d9d9;
   padding: 10px 20px;

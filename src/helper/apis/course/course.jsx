@@ -73,3 +73,18 @@ export const uploadVideoToDrive = async ({ sectionId, index, file }) => {
   });
   return response.data;
 };
+
+
+export const filterTeacherCourse = async (filter) => {
+  let nameParam = filter.name === undefined ? "" : `name=${filter.name}&`;
+  let statusParam =
+    filter.status === undefined ? "" : `status=${filter.status}&`;
+    let pageParam = filter.page === undefined ? 1 : `page=${filter.page}&`;
+  let sizeParam = filter.size === undefined ? 10 : `size=${filter.size}`;
+
+  const response = await instance.get(
+    `api/v1/courses/teacher?${nameParam}${statusParam}${pageParam}${sizeParam}`
+  );
+
+  return response.data;
+}

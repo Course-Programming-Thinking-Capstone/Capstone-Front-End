@@ -66,8 +66,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
+import { styled } from "@mui/material/styles";
+import ButtonMui from "@mui/material/Button";
+
 import { CSS } from "@dnd-kit/utilities";
 import { ToastContainer, toast } from "react-toastify";
+import { CloudUpload } from "@mui/icons-material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -130,6 +134,18 @@ const CreateCourseComponent = () => {
   const goBack = () => {
     navigate(-1);
   };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   // fetch course detail
   useEffect(() => {
@@ -505,7 +521,24 @@ const CreateCourseComponent = () => {
                 {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-                <input
+                {/* <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                /> */}
+
+                <label htmlFor="fileInput">
+                  <ButtonMui
+                    component="span"
+                    variant="contained"
+                    startIcon={<CloudUpload />}
+                    className="mt-2"
+                  >
+                    Upload Picture
+                  </ButtonMui>
+                </label>
+                <VisuallyHiddenInput
                   type="file"
                   accept="image/jpeg, image/png"
                   onChange={handleFileInputChange}

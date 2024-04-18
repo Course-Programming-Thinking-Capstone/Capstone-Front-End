@@ -103,7 +103,7 @@ const SyllabusComponent = () => {
 
   const renderComponent = () => {
     return (
-      <div className="syllabus teacher-syllabus-container">
+      <div className="syllabus teacher-syllabus-container"> 
         <div className="header">
           <div className="d-flex justify-content-start align-items-center mb-3">
             <div>
@@ -131,7 +131,7 @@ const SyllabusComponent = () => {
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button> */}
 
-              <Tooltip title="Search" arrow>
+              <Tooltip title="Search" arrow className="p-1">
                 <IconButton
                   color="primary"
                   aria-label="Search"
@@ -207,31 +207,6 @@ const SyllabusComponent = () => {
               </div>
 
               {/* Paging */}
-              {/* <CustomPagination
-                page={page}
-                setPage={setPage}
-                totalPage={
-                  syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
-                }
-              /> */}
-
-              {/* <div className="d-flex justify-content-center align-items-center my-2"> */}
-              {/* <ReactPaginate
-                  // previousLabel={}
-                  // nextLabel={">"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={
-                    syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
-                  }
-                  forcePage={page}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={(data) => setPage(data.selected + 1)}
-                  containerClassName={"pagination"}
-                  activeClassName={"active"}
-                  renderOnZeroPageCount={null}
-                /> */}
 
               <Stack
                 spacing={2}
