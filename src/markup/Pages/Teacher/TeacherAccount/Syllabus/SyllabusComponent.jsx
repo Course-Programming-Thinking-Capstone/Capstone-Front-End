@@ -9,10 +9,24 @@ import {
   convertUtcToLocalTime,
   formatDateV1,
 } from "../../../../../helper/utils/DateUtil";
+
 import { CustomPagination } from "../../../../Layout/Components/Pagination";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 //css
 import "./SyllabusComponent.css";
+import ReactPaginate from "react-paginate";
+import {
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Tooltip,
+} from "@mui/material";
+import { Alarm } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SyllabusComponent = () => {
   //useDispath
@@ -89,7 +103,7 @@ const SyllabusComponent = () => {
 
   const renderComponent = () => {
     return (
-      <div className="syllabus">
+      <div className="syllabus teacher-syllabus-container">
         <div className="header">
           <div className="d-flex justify-content-start align-items-center mb-3">
             <div>
@@ -104,25 +118,32 @@ const SyllabusComponent = () => {
             <div className="d-flex justify-content-between align-items-center mt-3 syllabus-content-search mb-3">
               <input
                 type="text"
-                placeholder="Search course"
+                placeholder="Search syllabus"
                 className="syllabus-content-search-input"
                 name={query}
                 onChange={handleQueryChange}
               />
-              <button
+              {/* <button
                 type="button"
                 className="syllabus-content-search-button"
                 onClick={handleSearchSubmit}
               >
                 <i className="fa-solid fa-magnifying-glass"></i>
-              </button>
+              </button> */}
+
+              <Tooltip title="Search" arrow>
+                <IconButton
+                  color="primary"
+                  aria-label="Search"
+                  onClick={handleSearchSubmit}
+                >
+                  <SearchIcon color="action" />
+                </IconButton>
+              </Tooltip>
             </div>
 
-            <div
-              className="px-4 pb-3"
-              style={{ minHeight: "60vh", overflow: "auto" }}
-            >
-              <div style={{ minHeight: "50vh" }}>
+            <div className="px-4 pb-3">
+              <div className="teacher-syllabus-content">
                 {isLoading ? (
                   <div className="d-flex justify-content-center py-5">
                     <Spinner
@@ -133,62 +154,109 @@ const SyllabusComponent = () => {
                   </div>
                 ) : (
                   <>
-                  {syllabuses && syllabuses.totalRecords === 0 ? (<p className="mt-3 text-center">There are no syllabus</p>) :
-                  syllabuses.results.map((syllabus, index) => (
-                    <div key={index} className="syllabus-content-item mt-2">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="d-flex justify-content-start align-items-center">
-                          <img
-                            className="img-responsive syllabus-content-item-image"
-                            src={syllabusPicture}
-                            alt="Syllabus picture"
-                            title="Syllabus picture"
-                          />
-                          <div className="ms-3">
-                            <p className="my-1">{syllabus.name}</p>
-                            <p className="mb-1 ">
-                              Create date:{" "}
-                              <span className="title blue">
-                                {formatDateV1(
-                                  convertUtcToLocalTime(syllabus.createdDate)
-                                )}
-                              </span>
-                            </p>
+                    {syllabuses && syllabuses.totalRecords === 0 ? (
+                      <p className="mt-3 text-center">There are no syllabus</p>
+                    ) : (
+                      syllabuses.results.map((syllabus, index) => (
+                        <div key={index} className="syllabus-content-item mt-2">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex justify-content-start align-items-center">
+                              <img
+                                className="img-responsive syllabus-content-item-image"
+                                src={syllabusPicture}
+                                alt="Syllabus picture"
+                                title="Syllabus picture"
+                              />
+                              <div className="ms-3">
+                                <p className="my-1">{syllabus.name}</p>
+                                <p className="mb-1 ">
+                                  Create date:{" "}
+                                  <span className="title blue">
+                                    {formatDateV1(
+                                      convertUtcToLocalTime(
+                                        syllabus.createdDate
+                                      )
+                                    )}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                            <div>
+                              <Link
+                                to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
+                                style={{
+                                  display: "inline-block",
+                                  backgroundColor: "#EF7E54",
+                                  border: "none",
+                                  borderRadius: "10px",
+                                  color: "white",
+                                  textDecoration: "none",
+                                  textAlign: "center",
+                                  padding: "6px 30px",
+                                }}
+                              >
+                                View
+                              </Link>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <Link
-                            to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
-                            style={{
-                              display: "inline-block",
-                              backgroundColor: "#EF7E54",
-                              border: "none",
-                              borderRadius: "10px",
-                              color: "white",
-                              textDecoration: "none",
-                              textAlign: "center",
-                              padding: "6px 30px",
-                            }}
-                          >
-                            View
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                }
+                      ))
+                    )}
                   </>
                 )}
               </div>
 
               {/* Paging */}
-              <CustomPagination
+              {/* <CustomPagination
                 page={page}
                 setPage={setPage}
                 totalPage={
                   syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
                 }
-              />
+              /> */}
+
+              {/* <div className="d-flex justify-content-center align-items-center my-2"> */}
+              {/* <ReactPaginate
+                  // previousLabel={}
+                  // nextLabel={">"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={
+                    syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
+                  }
+                  forcePage={page}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={(data) => setPage(data.selected + 1)}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                  renderOnZeroPageCount={null}
+                /> */}
+
+              <Stack
+                spacing={2}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={2}
+              >
+                <Pagination
+                  count={syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages}
+                  color="primary"
+                  page={page}
+                  onChange={(event, value) => setPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+              {/* </div> */}
             </div>
           </div>
         </div>
