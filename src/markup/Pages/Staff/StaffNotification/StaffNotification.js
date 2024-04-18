@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Paginate from 'react-paginate';
 import instance from '../../../../helper/apis/baseApi/baseApi';
 
-export default function StaffNotification() {
+export default function StaffNotification({setUnreadCount}) {
     const [notifications, setNotifications] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);

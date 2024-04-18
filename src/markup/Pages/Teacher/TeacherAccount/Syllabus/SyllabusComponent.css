@@ -50,3 +50,11 @@ ul.pagination.custom-pagination {
   border: 1px solid #d9d9d9;
   border-radius: 5px;
 }
+
+.teacher-syllabus-content {
+  min-height: 340px;
+}
+
+.teacher-syllabus-container {
+  overflow: auto;
+}

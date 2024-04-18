@@ -431,11 +431,11 @@ const App = () => {
             />
 
             {/* Test page */}
-            <Route path="/test" element={<DragAndDropComponent />} />
+            <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
-            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
+            <Route path="/not-found" element={<ErrorPage />} />
+            <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </div>
       </BrowserRouter>
