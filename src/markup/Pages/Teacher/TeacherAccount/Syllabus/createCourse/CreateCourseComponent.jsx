@@ -11,7 +11,6 @@ import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/cou
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
-  Button,
   Col,
   Container,
   Form,
@@ -71,7 +70,15 @@ import ButtonMui from "@mui/material/Button";
 
 import { CSS } from "@dnd-kit/utilities";
 import { ToastContainer, toast } from "react-toastify";
-import { CloudUpload } from "@mui/icons-material";
+import {
+  CloudUpload,
+  DriveFolderUpload,
+  KeyboardBackspace,
+  Save,
+  Upload,
+} from "@mui/icons-material";
+
+import { Button } from "@mui/material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -316,9 +323,11 @@ const CreateCourseComponent = () => {
           </div>
           <div>
             <Button
-              variant="outline-warning"
-              className="px-3 py-2"
-              style={{ borderRadius: "5px" }}
+              variant="contained"
+              color="warning"
+              size="small"
+              aria-label="Back"
+              startIcon={<KeyboardBackspace />}
               onClick={goBack}
             >
               Back
@@ -531,8 +540,9 @@ const CreateCourseComponent = () => {
                 <label htmlFor="fileInput">
                   <ButtonMui
                     component="span"
+                    size="small"
                     variant="contained"
-                    startIcon={<CloudUpload />}
+                    startIcon={<Upload />}
                     className="mt-2"
                   >
                     Upload Picture
@@ -564,8 +574,8 @@ const CreateCourseComponent = () => {
                 </p>
               </div>
               <div>
-                <div className="d-flex justify-content-end">
-                  <Button
+                <div className="d-flex justify-content-end my-2">
+                  {/* <Button
                     variant="primary"
                     className="mx-3 px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -573,8 +583,21 @@ const CreateCourseComponent = () => {
                     type="button"
                   >
                     Save Draft
-                  </Button>
-                  <Button
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="primary"
+                    aria-label="Save draft"
+                    startIcon={<Save />}
+                    onClick={() => saveCourse("Save")}
+                    type="button"
+                    className="mx-2"
+                  >
+                    Save Draft
+                  </ButtonMui>
+                  {/* <Button
                     variant="danger"
                     className="px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -583,7 +606,20 @@ const CreateCourseComponent = () => {
                     disabled={confirm === false}
                   >
                     Post Course
-                  </Button>
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="warning"
+                    aria-label="Save draft"
+                    startIcon={<DriveFolderUpload />}
+                    onClick={() => saveCourse("Post")}
+                    type="button"
+                    disabled={confirm === false}
+                  >
+                    Post Course
+                  </ButtonMui>
                 </div>
               </div>
             </>

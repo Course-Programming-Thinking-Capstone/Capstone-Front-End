@@ -3,7 +3,7 @@ import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
 import { filterTeacherSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
@@ -25,12 +25,14 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import { Alarm } from "@mui/icons-material";
+import { Alarm, CalendarMonth, Visibility } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
+import ButtonMui from "@mui/material/Button";
 
 const SyllabusComponent = () => {
   //useDispath
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //set information message
   const [message, setMessage] = useState(undefined);
@@ -103,7 +105,7 @@ const SyllabusComponent = () => {
 
   const renderComponent = () => {
     return (
-      <div className="syllabus teacher-syllabus-container"> 
+      <div className="syllabus teacher-syllabus-container">
         <div className="header">
           <div className="d-flex justify-content-start align-items-center mb-3">
             <div>
@@ -169,9 +171,9 @@ const SyllabusComponent = () => {
                               />
                               <div className="ms-3">
                                 <p className="my-1">{syllabus.name}</p>
-                                <p className="mb-1 ">
-                                  Create date:{" "}
-                                  <span className="title blue">
+                                <p className="mb-1 d-flex align-items-center">
+                                  <CalendarMonth fontSize="small" />{" "}
+                                  <span className="title mx-1">
                                     {formatDateV1(
                                       convertUtcToLocalTime(
                                         syllabus.createdDate
@@ -197,6 +199,22 @@ const SyllabusComponent = () => {
                               >
                                 View
                               </Link>
+
+                              {/* <ButtonMui
+                                size="small"
+                                variant="contained"
+                                color="warning"
+                                aria-label="View detail"
+                                endIcon={<Visibility />}
+                                onClick={() =>
+                                  navigate(
+                                    `/teacher/syllabuses/detail?id=${syllabus.id}`
+                                  )
+                                }
+                                type="button"
+                              >
+                                View
+                              </ButtonMui> */}
                             </div>
                           </div>
                         </div>

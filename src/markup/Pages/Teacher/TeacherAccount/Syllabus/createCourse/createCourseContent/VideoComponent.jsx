@@ -72,7 +72,7 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
       videoElement.onloadedmetadata = () => {
         const durationInSeconds = videoElement.duration;
         if (!isNaN(durationInSeconds)) {
-          const durationInMinutes = Math.floor(durationInSeconds / 60);
+          const durationInMinutes = Math.floor(durationInSeconds / 60) + 1;
           setVideoDuration(durationInMinutes);
         } else {
           setVideoDuration(0);
@@ -340,7 +340,7 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
       videoElement.onloadedmetadata = () => {
         const durationInSeconds = videoElement.duration;
         if (!isNaN(durationInSeconds)) {
-          const durationInMinutes = Math.floor(durationInSeconds / 60);
+          const durationInMinutes = Math.floor(durationInSeconds / 60) + 1;
           setVideoDuration(durationInMinutes);
         } else {
           setVideoDuration(0);
