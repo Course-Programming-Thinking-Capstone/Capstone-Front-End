@@ -1616,7 +1616,21 @@ textarea.form-control {
 .admin-syllabus,
 .game-setting {
   padding: 20px 80px;
-  min-height: 500px;
+  height: 100vh;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+
+.level-detail {
+  height: 90vh;
+  overflow: auto;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
 }
 
 .create-syllabus {
@@ -1654,10 +1668,11 @@ textarea.form-control {
 }
 
 .game-setting-content {
-  margin-top: 30px;
+  /* margin-top: 30px; */
   background-color: #fbede1;
   padding: 20px 40px;
-  min-height: 600px;
+  height: 90vh;
+  overflow: auto;
   border-radius: 5px;
   cursor: pointer;
 }
@@ -1732,10 +1747,11 @@ textarea.form-control {
 .grid-item {
   width: 60px; /* Width of grid items */
   height: 60px; /* Height of grid items */
-  border: 1px solid black; /* Border for grid items */
+  border: 1px solid grey; /* Border for grid items */
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
 }
 
 .level-grid-container {

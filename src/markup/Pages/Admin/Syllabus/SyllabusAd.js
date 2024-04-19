@@ -3,6 +3,8 @@ import syllabusPicture from "../../../../images/gallery/syllabus_image.jpg";
 import Modal from "react-bootstrap/Modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import arrowLeft from "../../../../images/icon/arrow-left.png";
+import plusCircleIcon from "../../../../images/icon/plus_circle.png";
 
 //dnd kit
 import {
@@ -36,6 +38,16 @@ import {
 import { Spinner } from "react-bootstrap";
 import instance from "../../../../helper/apis/baseApi/baseApi";
 import { useNavigate } from "react-router-dom";
+import { Pagination, PaginationItem, Stack } from "@mui/material";
+import {
+  AddCircleOutline,
+  ArrowBack,
+  ArrowForward,
+  CalendarMonth,
+  CreateNewFolder,
+  KeyboardBackspace,
+} from "@mui/icons-material";
+import ButtonMui from "@mui/material/Button";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -438,16 +450,26 @@ export default function SyllabusAd() {
                 <i className="fa-solid fa-book"></i>
               </div>
               <div>
+                {/* <ButtonMui
+                  size="small"
+                  variant="contained"
+                  color="warning"
+                  aria-label="Back"
+                  startIcon={<KeyboardBackspace />}
+                  onClick={() => setShowCreateSyllabus(false)}
+                  type="button"
+                >
+                  Back
+                </ButtonMui> */}
+
                 <button
                   onClick={() => setShowCreateSyllabus(false)}
-                  className="syllabus-ad-create-syllabus-button"
-                  disabled={isSyllabusCreating}
+                  className="admin-back"
                 >
-                  <i
-                    style={{ color: "white", fontSize: "16px" }}
-                    className="fa-solid fa-chevron-left mx-1"
-                  ></i>{" "}
-                  <div className="mx-1">Back</div>
+                  <div className="d-flex jutify-content-between align-items-center">
+                    <img src={arrowLeft} alt="Arrow Left Icon" />
+                    <p className="mb-0 mx-2">Back</p>
+                  </div>
                 </button>
               </div>
             </div>
@@ -693,12 +715,24 @@ export default function SyllabusAd() {
               </div>
 
               <div className="d-flex justify-content-end mt-4">
-                <button
+                {/* <button
                   className="syllabus-ad-create-syllabus-button"
                   onClick={handleSaveChanges}
                 >
                   Post course
-                </button>
+                </button> */}
+
+                <ButtonMui
+                  // size="small"
+                  variant="contained"
+                  color="error"
+                  aria-label="Post course"
+                  startIcon={<CreateNewFolder />}
+                  onClick={handleSaveChanges}
+                  type="button"
+                >
+                  Post course
+                </ButtonMui>
               </div>
             </div>
           )}
@@ -727,7 +761,7 @@ export default function SyllabusAd() {
 
         {!showCreateSyllabus && <ToastContainer containerId={1} />}
 
-        <div className="syllabus-content">
+        <div className="syllabus-content pb-3">
           <div className="d-flex justify-content-between align-items-center mx-3 mt-2">
             <div
               className="d-flex justify-content-start align-items-center"
@@ -746,7 +780,7 @@ export default function SyllabusAd() {
                 className="d-flex justify-content-around"
                 style={{
                   backgroundColor: "#FF8A00",
-                  borderRadius: "10px",
+                  borderRadius: "5px",
                   padding: "5px 10px",
                   color: "white",
                 }}
@@ -755,12 +789,38 @@ export default function SyllabusAd() {
               </div>
             </div>
             <div>
-              <button
+              {/* <button
                 onClick={() => setShowCreateSyllabus(true)}
                 className="syllabus-ad-create-syllabus-button"
               >
                 <i className="fa-solid fa-circle-plus mx-1"></i>{" "}
                 <div className="mx-1">Create</div>
+              </button> */}
+
+              {/* <ButtonMui
+                size="small"
+                variant="contained"
+                color="error"
+                aria-label="Create new syllabus"
+                startIcon={<AddCircleOutline />}
+                onClick={() => setShowCreateSyllabus(true)}
+                type="button"
+              >
+                Create
+              </ButtonMui> */}
+
+              <button
+                className="add"
+                onClick={() => setShowCreateSyllabus(true)}
+              >
+                <div className="d-flex jutify-content-between align-items-center">
+                  <img
+                    className="mx-1"
+                    src={plusCircleIcon}
+                    alt="Plus Circle Icon"
+                  />
+                  <p className="mb-0 mx-1">Create</p>
+                </div>
               </button>
             </div>
           </div>
@@ -771,7 +831,7 @@ export default function SyllabusAd() {
                 type="text"
                 name={syllabusQuery}
                 onChange={(event) => setSyllabusQuery(event.target.value)}
-                placeholder="Search course"
+                placeholder="Search syllabus"
                 className="syllabus-content-search-input"
               />
               <button
@@ -805,9 +865,9 @@ export default function SyllabusAd() {
                         />
                         <div className="ms-3">
                           <p className="my-1">{course.name}</p>
-                          <p className="mb-1 ">
-                            Create date:{" "}
-                            <span className="title blue">
+                          <p className="mb-1 d-flex align-items-center">
+                            <CalendarMonth fontSize="small" />{" "}
+                            <span className="title mx-1">
                               {formatDateV1(
                                 convertUtcToLocalTime(course.createdDate)
                               )}
@@ -839,25 +899,37 @@ export default function SyllabusAd() {
               )}
             </div>
 
-            {/* <div className="d-flex justify-content-center mt-3">
-              <ReactPaginate
-                previousLabel={"← Previous"}
-                nextLabel={"Next →"}
-                pageCount={pageCount}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                previousLinkClassName={"pagination__link"}
-                nextLinkClassName={"pagination__link"}
-                disabledClassName={"pagination__link--disabled"}
-                activeClassName={"pagination__link--active"}
-              />
-            </div> */}
-
-            <CustomPagination
+            {/* <CustomPagination
               page={syllabusPage}
               setPage={setSyllabusPage}
               totalPage={totalSyllabusPage <= 0 ? 1 : totalSyllabusPage}
-            />
+            /> */}
+
+            {/* Paging */}
+
+            <Stack
+              spacing={2}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              my={2}
+            >
+              <Pagination
+                count={totalSyllabusPage <= 0 ? 1 : totalSyllabusPage}
+                color="warning"
+                page={syllabusPage}
+                onChange={(event, value) => setSyllabusPage(value)}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{
+                      previous: ArrowBack,
+                      next: ArrowForward,
+                    }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
           </div>
         </div>
       </div>
