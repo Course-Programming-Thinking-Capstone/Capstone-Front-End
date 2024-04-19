@@ -32,7 +32,7 @@ export default function ChildProcessDetail() {
     }, [childId]);
 
     const handleCourseClick = (courseId) => {
-        navigate(`/course-process/${childId}/${courseId}`);
+        navigate(`/account/course-process/${childId}/${courseId}`);
     };
 
     return (
