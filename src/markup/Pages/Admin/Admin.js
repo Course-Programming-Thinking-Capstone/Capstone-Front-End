@@ -5,16 +5,26 @@ import background from "./../../../images/background/adminStaffBackground.jpg";
 import Game from "./Game/Game";
 import Syllabus from "./Syllabus/SyllabusAd";
 import "./Admin.css";
+import { useDispatch } from "react-redux";
+import { changeAdminActiveMenu } from "../../../store/slices/menu/menuSlice";
+import {
+  adminActiveMenuSelector,
+  teacherActiveMenuSelector,
+} from "../../../store/selector";
+import { useSelector } from "react-redux";
 
 export default function Admin() {
   const [activeContent, setActiveContent] = useState("");
   const [activeItem, setActiveItem] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const activeMenu = useSelector(adminActiveMenuSelector);
 
   const handleMenuItemClick = (content) => {
     setActiveContent(content);
     setActiveItem(content);
-    navigate(`/admin/${content.toLowerCase()}`);
+    dispatch(changeAdminActiveMenu({ adminActiveMenu: content }));
+    navigate(`/admin/${content?.toLowerCase()}`);
   };
 
   const handleLogout = () => {
@@ -25,7 +35,7 @@ export default function Admin() {
 
   const getItemClass = (itemName) => {
     return `item d-flex justify-content-start align-items-center mt-3 mb-0 admin-menu-item ${
-      activeItem === itemName ? "active" : ""
+      activeMenu === itemName ? "active" : ""
     }`;
   };
 
@@ -55,42 +65,48 @@ export default function Admin() {
               className={getItemClass("Certificate")}
               // onClick={() => handleMenuItemClick("Certificate")}
             >
-              <i className="fa-solid fa-medal" style={{fontSize: "18px"}}></i>
+              <i className="fa-solid fa-medal" style={{ fontSize: "18px" }}></i>
               <span>Certificate</span>
             </div>
             <div
               className={getItemClass("User")}
               onClick={() => handleMenuItemClick("User")}
             >
-              <i className="fa-solid fa-user" style={{fontSize: "18px"}}></i>
+              <i className="fa-solid fa-user" style={{ fontSize: "18px" }}></i>
               <span>User</span>
             </div>
             <div
               className={getItemClass("Course")}
               // onClick={() => handleMenuItemClick("Course")}
             >
-              <i className="fa-solid fa-book" style={{fontSize: "18px"}}></i>
+              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
               <span>Course</span>
             </div>
             <div
               className={getItemClass("Game")}
               onClick={() => handleMenuItemClick("Game")}
             >
-              <i className="fa-solid fa-gamepad" style={{fontSize: "18px"}}></i>
+              <i
+                className="fa-solid fa-gamepad"
+                style={{ fontSize: "18px" }}
+              ></i>
               <span>Game</span>
             </div>
             <div
               className={getItemClass("Order")}
               // onClick={() => handleMenuItemClick("Order")}
             >
-              <i className="fa-solid fa-cart-shopping" style={{fontSize: "18px"}}></i>
+              <i
+                className="fa-solid fa-cart-shopping"
+                style={{ fontSize: "18px" }}
+              ></i>
               <span>Order</span>
             </div>
             <div
               className={getItemClass("SyllabusAd")}
               onClick={() => handleMenuItemClick("SyllabusAd")}
             >
-              <i className="fa-solid fa-book" style={{fontSize: "18px"}}></i>
+              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
               <span>Syllabus</span>
             </div>
             {/* <div className="item" onClick={handleLogout}>
@@ -102,7 +118,10 @@ export default function Admin() {
               className="item d-flex justify-content-start align-items-center mt-3 admin-menu-item"
               onClick={handleLogout}
             >
-              <i className="fa-solid fa-right-from-bracket " style={{fontSize: "18px"}}></i>
+              <i
+                className="fa-solid fa-right-from-bracket "
+                style={{ fontSize: "18px" }}
+              ></i>
               <div className="mx-4">Log out</div>
             </div>
           </div>

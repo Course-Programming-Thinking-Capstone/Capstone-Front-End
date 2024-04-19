@@ -8,6 +8,8 @@ import ReactPaginate from "react-paginate";
 import { formatPrice } from "../../helper/utils/NumberUtil";
 import "./Classes.css";
 import instance from "../../helper/apis/baseApi/baseApi";
+import { Pagination, PaginationItem, Stack } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 export default function Classes() {
   const [courses, setCourses] = useState([]);
@@ -28,7 +30,7 @@ export default function Classes() {
 
       console.log("data: ", data);
       setCourses(data.results);
-      setPageCount(Math.ceil(data.total / 6));
+      setPageCount(data.totalPages);
     } catch (error) {
       console.error(error.message);
     } finally {
@@ -129,7 +131,7 @@ export default function Classes() {
                   ))
                 )}
               </div>
-              <div className="d-flex justify-content-center">
+              {/* <div className="d-flex justify-content-center">
                 <ReactPaginate
                   previousLabel={"← Previous"}
                   nextLabel={"Next →"}
@@ -142,7 +144,33 @@ export default function Classes() {
                   subContainerClassName={"pages pagination"}
                   activeClassName={"active"}
                 />
-              </div>
+              </div> */}
+
+              <Stack
+                spacing={2}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={2}
+              >
+                <Pagination
+                  size="large"
+                  count={pageCount <= 0 ? 1 : pageCount}
+                  // count={10}
+                  color="warning"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBack,
+                        next: ArrowForward,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
             </div>
           </div>
         </div>

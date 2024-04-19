@@ -38,7 +38,13 @@ import {
 import { Spinner } from "react-bootstrap";
 import instance from "../../../../helper/apis/baseApi/baseApi";
 import { useNavigate } from "react-router-dom";
-import { Pagination, PaginationItem, Stack } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Pagination,
+  PaginationItem,
+  Stack,
+} from "@mui/material";
 import {
   AddCircleOutline,
   ArrowBack,
@@ -438,19 +444,26 @@ export default function SyllabusAd() {
     //dnd part
 
     return (
-      <div className="syllabus-ad-admin-syllabus-container admin-syllabus">
-        <div className="create-syllabus my-0">
-          <div className="header">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex justify-content-start align-items-center">
-                <div>
-                  <h5 className="mb">Create Syllabus</h5>
-                  <hr />
+      <>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isSyllabusCreating}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <div className="syllabus-ad-admin-syllabus-container admin-syllabus">
+          <div className="create-syllabus my-0">
+            <div className="header">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-start align-items-center">
+                  <div>
+                    <h5 className="mb">Create Syllabus</h5>
+                    <hr />
+                  </div>
+                  <i className="fa-solid fa-book"></i>
                 </div>
-                <i className="fa-solid fa-book"></i>
-              </div>
-              <div>
-                {/* <ButtonMui
+                <div>
+                  {/* <ButtonMui
                   size="small"
                   variant="contained"
                   color="warning"
@@ -462,31 +475,21 @@ export default function SyllabusAd() {
                   Back
                 </ButtonMui> */}
 
-                <button
-                  onClick={() => setShowCreateSyllabus(false)}
-                  className="admin-back"
-                >
-                  <div className="d-flex jutify-content-between align-items-center">
-                    <img src={arrowLeft} alt="Arrow Left Icon" />
-                    <p className="mb-0 mx-2">Back</p>
-                  </div>
-                </button>
+                  <button
+                    onClick={() => setShowCreateSyllabus(false)}
+                    className="admin-back"
+                  >
+                    <div className="d-flex jutify-content-between align-items-center">
+                      <img src={arrowLeft} alt="Arrow Left Icon" />
+                      <p className="mb-0 mx-2">Back</p>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <hr />
+            <hr />
 
-          <ToastContainer containerId={2} />
-
-          {isSyllabusCreating ? (
-            <div className="d-flex justify-content-center py-5">
-              <Spinner
-                animation="border"
-                variant="success"
-                className="custom-spinner"
-              />
-            </div>
-          ) : (
+            <ToastContainer containerId={2} />
             <div>
               <div>
                 <div className="d-flex justify-content-start fw-bold my-3">
@@ -735,9 +738,9 @@ export default function SyllabusAd() {
                 </ButtonMui>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 

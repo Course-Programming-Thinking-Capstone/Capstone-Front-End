@@ -1139,9 +1139,7 @@
 
 .teacher-classes-content {
   margin-top: 20px;
-  background-color: white;
   padding: 20px;
-  height: 600px;
 }
 
 .teacher-classes-content select {
@@ -1281,22 +1279,22 @@ textarea.form-control {
   background-color: #fbede1;
 }
 
-.syllabus-content, .teacher-course-content {
+.syllabus-content, .teacher-course-content, .teacher-classes-content {
   background-color: white;
   padding-top: 10px;
   border-radius: 20px;
   min-height: 75vh;
 }
 
-.syllabus-content .blue, .teacher-course-content .blue {
+.syllabus-content .blue, .teacher-course-content .blue, .teacher-classes-content .blue {
   color: #1a9cb7;
 }
 
-.syllabus-content .search, .teacher-course-content .search {
+.syllabus-content .search, .teacher-course-content .search, .teacher-classes-content .search {
   margin-top: 20px;
 }
 
-.syllabus-content .search input, .teacher-course-content .search input{
+.syllabus-content .search input, .teacher-course-content .search input, .teacher-classes-content .search input{
   border: 1px solid #988e8e66;
   border-radius: 10px 0 0 10px;
   border-right: none;

@@ -1,0 +1,32 @@
+.staff-class-render-list {
+  min-height: 70vh;
+}
+
+.staff-class-container {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  padding: 20px 40px;
+  height: 90vh;
+  overflow: auto;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.staff-class-container .header h5 {
+  font-size: 22px;
+}
+
+.staff-class-container .header hr {
+  width: 50%;
+  color: #ff8a00;
+  margin: 0;
+  height: 3px;
+}
+
+.staff-class-container .header i {
+  color: #ff8a00;
+  margin-left: 10px;
+  font-size: 20px;
+}

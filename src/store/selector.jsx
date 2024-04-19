@@ -15,5 +15,9 @@ export const createCourseIdSelector = (state) =>
 export const teacherActiveMenuSelector = (state) =>
   state.menu.data.teacherActiveMenu;
 
+//admin active menu
+export const adminActiveMenuSelector = (state) =>
+  state.menu.data.adminActiveMenu;
+
 //component number
 export const componentNumberSelector = (state) => state.componentNumber.data;
