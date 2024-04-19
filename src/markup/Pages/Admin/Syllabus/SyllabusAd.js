@@ -41,8 +41,10 @@ import { useNavigate } from "react-router-dom";
 import {
   Backdrop,
   CircularProgress,
+  MenuItem,
   Pagination,
   PaginationItem,
+  Select,
   Stack,
 } from "@mui/material";
 import {
@@ -54,6 +56,7 @@ import {
   KeyboardBackspace,
 } from "@mui/icons-material";
 import ButtonMui from "@mui/material/Button";
+import { getAvailableCourseGame } from "../../../../helper/apis/game/game";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -277,6 +280,7 @@ export default function SyllabusAd() {
 
   const CreateSyllabus = () => {
     const [teachers, setTeachers] = useState([]);
+    const [courseGames, setCourseGames] = useState([]);
     const [modalShow, setModalShow] = React.useState(false);
 
     //sortable list
@@ -286,6 +290,7 @@ export default function SyllabusAd() {
     const [courseName, setCourseName] = useState("");
     const [courseTarget, setCourseTarget] = useState("");
     const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+    const [courseGameId, setCourseGameId] = useState(-1);
 
     const [activePassCondition, setActivePassCondition] = useState(null);
     const [activeCourseSlot, setActiveCourseSlot] = useState(null);
@@ -322,6 +327,10 @@ export default function SyllabusAd() {
         containerId: "2",
       });
 
+    const handleCourseGameIdChange = (event) => {
+      setCourseGameId(event.target.value);
+    };
+
     const handleSelect = (category, value) => {
       if (category === "passCondition") {
         setActivePassCondition(value);
@@ -347,16 +356,25 @@ export default function SyllabusAd() {
     useEffect(() => {
       const fetchTeachers = async () => {
         try {
-          const response = await instance.get(
+          const teacherResponse = await instance.get(
             `api/v1/users/admin/account?role=Teacher&page=1&size=100`
           );
 
-          const data = response.data;
+          const teacherData = teacherResponse.data;
 
-          const teachersData = data.results.filter(
+          const teachersData = teacherData.results.filter(
             (item) => item.role === "Teacher"
           );
           setTeachers(teachersData);
+
+          //fetch course game
+          const courseGameData = await getAvailableCourseGame();
+          setCourseGames(courseGameData);
+
+          //log
+          console.log(
+            `CourseGames: ${JSON.stringify(courseGameData, null, 2)}`
+          );
         } catch (error) {
           if (error.response) {
             const message =
@@ -387,18 +405,14 @@ export default function SyllabusAd() {
           slotTime: activeSlotTime,
           minQuizScoreRatio: activePassCondition,
           sections: sections.map((sectionName) => ({ name: sectionName })),
+          courseGameId:
+            !courseGameId || courseGameId === -1 ? undefined : courseGameId,
         };
 
         const response = await createSyllabus(courseData);
 
-        // Handle a successful response
-        // const responseData = await response.json();
-        // console.log("Course successfully created:", responseData);
-        // Optionally, clear the form or give user feedback
-
         notifyCreateSuccess("Create syllabus success.");
 
-        // notifyApiSucess("Create syllabus success.");
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -637,6 +651,34 @@ export default function SyllabusAd() {
                   </button>
                 </div>
               </div>
+
+              {/* Game Section */}
+
+              <p className="blue mb-1 fw-bold">Game</p>
+              <div className="d-block w-100 mb-3">
+                <Select
+                  value={courseGameId}
+                  onChange={handleCourseGameIdChange}
+                  size="small"
+                  sx={{ width: "100%", backgroundColor: "white" }}
+                >
+                  <MenuItem value={-1}>
+                    <em>None</em>
+                  </MenuItem>
+                  {courseGames.map((courseGame, index) => {
+                    return (
+                      <MenuItem key={index} value={courseGame.id}>
+                        {courseGame.name}
+                      </MenuItem>
+                    );
+                  })}
+                  {/* <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
+                </Select>
+              </div>
+
+              {/* Game Section */}
 
               <div className="point d-flex">
                 <div>

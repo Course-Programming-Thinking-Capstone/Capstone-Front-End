@@ -33,3 +33,8 @@ export const removeLevelApi = async ({ id }) => {
   const response = await instance.delete(`api/v1/games/game-level/${id}`);
   return response.data;
 };
+
+export const getAvailableCourseGame = async () => {
+  const response = await instance.get(`api/v1/coursegames/available`);
+  return response.data;
+};
