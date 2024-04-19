@@ -3,7 +3,7 @@ import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
 import { filterTeacherSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
@@ -25,12 +25,14 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import { Alarm } from "@mui/icons-material";
+import { Alarm, CalendarMonth, Visibility } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
+import ButtonMui from "@mui/material/Button";
 
 const SyllabusComponent = () => {
   //useDispath
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //set information message
   const [message, setMessage] = useState(undefined);
@@ -131,7 +133,7 @@ const SyllabusComponent = () => {
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button> */}
 
-              <Tooltip title="Search" arrow>
+              <Tooltip title="Search" arrow className="p-1">
                 <IconButton
                   color="primary"
                   aria-label="Search"
@@ -169,9 +171,9 @@ const SyllabusComponent = () => {
                               />
                               <div className="ms-3">
                                 <p className="my-1">{syllabus.name}</p>
-                                <p className="mb-1 ">
-                                  Create date:{" "}
-                                  <span className="title blue">
+                                <p className="mb-1 d-flex align-items-center">
+                                  <CalendarMonth fontSize="small" />{" "}
+                                  <span className="title mx-1">
                                     {formatDateV1(
                                       convertUtcToLocalTime(
                                         syllabus.createdDate
@@ -197,6 +199,22 @@ const SyllabusComponent = () => {
                               >
                                 View
                               </Link>
+
+                              {/* <ButtonMui
+                                size="small"
+                                variant="contained"
+                                color="warning"
+                                aria-label="View detail"
+                                endIcon={<Visibility />}
+                                onClick={() =>
+                                  navigate(
+                                    `/teacher/syllabuses/detail?id=${syllabus.id}`
+                                  )
+                                }
+                                type="button"
+                              >
+                                View
+                              </ButtonMui> */}
                             </div>
                           </div>
                         </div>
@@ -207,31 +225,6 @@ const SyllabusComponent = () => {
               </div>
 
               {/* Paging */}
-              {/* <CustomPagination
-                page={page}
-                setPage={setPage}
-                totalPage={
-                  syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
-                }
-              /> */}
-
-              {/* <div className="d-flex justify-content-center align-items-center my-2"> */}
-              {/* <ReactPaginate
-                  // previousLabel={}
-                  // nextLabel={">"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={
-                    syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages
-                  }
-                  forcePage={page}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={(data) => setPage(data.selected + 1)}
-                  containerClassName={"pagination"}
-                  activeClassName={"active"}
-                  renderOnZeroPageCount={null}
-                /> */}
 
               <Stack
                 spacing={2}

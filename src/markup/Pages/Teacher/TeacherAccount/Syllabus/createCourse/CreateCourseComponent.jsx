@@ -11,7 +11,6 @@ import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/cou
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
-  Button,
   Col,
   Container,
   Form,
@@ -66,8 +65,20 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
+import { styled } from "@mui/material/styles";
+import ButtonMui from "@mui/material/Button";
+
 import { CSS } from "@dnd-kit/utilities";
 import { ToastContainer, toast } from "react-toastify";
+import {
+  CloudUpload,
+  DriveFolderUpload,
+  KeyboardBackspace,
+  Save,
+  Upload,
+} from "@mui/icons-material";
+
+import { Button } from "@mui/material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -130,6 +141,18 @@ const CreateCourseComponent = () => {
   const goBack = () => {
     navigate(-1);
   };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   // fetch course detail
   useEffect(() => {
@@ -300,9 +323,11 @@ const CreateCourseComponent = () => {
           </div>
           <div>
             <Button
-              variant="outline-warning"
-              className="px-3 py-2"
-              style={{ borderRadius: "5px" }}
+              variant="contained"
+              color="warning"
+              size="small"
+              aria-label="Back"
+              startIcon={<KeyboardBackspace />}
               onClick={goBack}
             >
               Back
@@ -505,7 +530,25 @@ const CreateCourseComponent = () => {
                 {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-                <input
+                {/* <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                /> */}
+
+                <label htmlFor="fileInput">
+                  <ButtonMui
+                    component="span"
+                    size="small"
+                    variant="contained"
+                    startIcon={<Upload />}
+                    className="mt-2"
+                  >
+                    Upload Picture
+                  </ButtonMui>
+                </label>
+                <VisuallyHiddenInput
                   type="file"
                   accept="image/jpeg, image/png"
                   onChange={handleFileInputChange}
@@ -531,8 +574,8 @@ const CreateCourseComponent = () => {
                 </p>
               </div>
               <div>
-                <div className="d-flex justify-content-end">
-                  <Button
+                <div className="d-flex justify-content-end my-2">
+                  {/* <Button
                     variant="primary"
                     className="mx-3 px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -540,8 +583,21 @@ const CreateCourseComponent = () => {
                     type="button"
                   >
                     Save Draft
-                  </Button>
-                  <Button
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="primary"
+                    aria-label="Save draft"
+                    startIcon={<Save />}
+                    onClick={() => saveCourse("Save")}
+                    type="button"
+                    className="mx-2"
+                  >
+                    Save Draft
+                  </ButtonMui>
+                  {/* <Button
                     variant="danger"
                     className="px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -550,7 +606,20 @@ const CreateCourseComponent = () => {
                     disabled={confirm === false}
                   >
                     Post Course
-                  </Button>
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="warning"
+                    aria-label="Save draft"
+                    startIcon={<DriveFolderUpload />}
+                    onClick={() => saveCourse("Post")}
+                    type="button"
+                    disabled={confirm === false}
+                  >
+                    Post Course
+                  </ButtonMui>
                 </div>
               </div>
             </>

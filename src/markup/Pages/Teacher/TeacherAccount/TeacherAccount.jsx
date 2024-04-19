@@ -1,6 +1,7 @@
 import React from "react";
 import background from "./../../../../images/background/teacherBackground.jpg";
 import demo from "./../../../../images/gallery/demo.jpg";
+import defaultAvatar from "./../../../../images/gallery/default-user.jpg";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
@@ -9,6 +10,8 @@ import { Image } from "react-bootstrap";
 
 //css
 import "./TeacherAccount.css";
+import { Badge } from "@mui/material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function TeacherAccount({ child }) {
   //retrieve user information
@@ -47,7 +50,13 @@ export default function TeacherAccount({ child }) {
             <div className="menu col-lg-3">
               <div className="d-flex justify-content-center">
                 <Image
-                  src={user.pictureUrl && user.pictureUrl !== null && user.pictureUrl !== "" ? user.pictureUrl : demo}
+                  src={
+                    user.pictureUrl &&
+                    user.pictureUrl !== null &&
+                    user.pictureUrl !== ""
+                      ? user?.pictureUrl
+                      : defaultAvatar
+                  }
                   alt="User avatar"
                   title="avatar"
                   roundedCircle
@@ -73,7 +82,9 @@ export default function TeacherAccount({ child }) {
                   className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("notification")}
                 >
-                  <i className="fa-solid fa-bell py-0"></i>
+                  <Badge color="error" overlap="circular" badgeContent={3} max={99}>
+                    <NotificationsIcon />
+                  </Badge>
                   <div className="mx-4">Notification</div>
                 </Link>
 
