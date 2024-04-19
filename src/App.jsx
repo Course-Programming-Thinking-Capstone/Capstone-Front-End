@@ -56,10 +56,10 @@ import CourseStudy from "./markup/Pages/CourseStudy";
 import Order from "./markup/Pages/Order";
 import OrderDetail from "./markup/Pages/OrderDetail";
 import StaffNotification from "./markup/Pages/Staff/StaffNotification/StaffNotification";
-import Account from './markup/Pages/ParentAccount/Account';
+import Account from "./markup/Pages/ParentAccount/Account";
 import AccountDetails from "./markup/Pages/ParentAccount/AccountDetails/AccountDetails";
 import PaymentMethods from "./markup/Pages/ParentAccount/PaymentMethods/PaymentMethods";
-import ChildProcess from './markup/Pages/ParentAccount/ChildProcess/ChildProcess';
+import ChildProcess from "./markup/Pages/ParentAccount/ChildProcess/ChildProcess";
 import ChildProcessDetail from "./markup/Pages/ParentAccount/ChildProcess/ChildProcessDetail";
 import CourseProcess from "./markup/Pages/ParentAccount/ChildProcess/CourseProcess";
 
@@ -124,6 +124,7 @@ const App = () => {
               path="/admin"
               element={<PrivateRoute page="admin" component={<Admin />} />}
             >
+              <Route index element={<Navigate to="game" replace />} />
               <Route
                 path="game"
                 element={
@@ -156,6 +157,7 @@ const App = () => {
               path="/staff"
               element={<PrivateRoute page="staff" component={<Staff />} />}
             >
+              <Route index element={<Navigate to="staff-order" replace />} />
               <Route
                 path="staff-notification"
                 element={
@@ -309,26 +311,51 @@ const App = () => {
             >
               <Route
                 path="account-details"
-                element={<PrivateRoute page="account/account-details" component={<AccountDetails />} />}
+                element={
+                  <PrivateRoute
+                    page="account/account-details"
+                    component={<AccountDetails />}
+                  />
+                }
               />
               <Route
                 path="payment-methods"
-                element={<PrivateRoute page="account/payment-methods" component={<PaymentMethods />} />}
+                element={
+                  <PrivateRoute
+                    page="account/payment-methods"
+                    component={<PaymentMethods />}
+                  />
+                }
               />
               <Route
                 path="child-process"
-                element={<PrivateRoute page="account/child-process" component={<ChildProcess />} />}
+                element={
+                  <PrivateRoute
+                    page="account/child-process"
+                    component={<ChildProcess />}
+                  />
+                }
               />
             </Route>
 
             <Route
               path="/account/child-process-detail/:childId"
-              element={<PrivateRoute page="account/child-process-detail" component={<ChildProcessDetail />} />}
+              element={
+                <PrivateRoute
+                  page="account/child-process-detail"
+                  component={<ChildProcessDetail />}
+                />
+              }
             />
 
             <Route
               path="/account/course-process/:studentId/:courseId"
-              element={<PrivateRoute page="account/course-process" component={<CourseProcess />} />}
+              element={
+                <PrivateRoute
+                  page="account/course-process"
+                  component={<CourseProcess />}
+                />
+              }
             />
 
             <Route
@@ -348,20 +375,12 @@ const App = () => {
 
             <Route
               path="/order"
-              element={
-                <PrivateRoute
-                  page="order"
-                  component={<Order />}
-                />
-              }
+              element={<PrivateRoute page="order" component={<Order />} />}
             />
             <Route
               path="/order-detail/:orderId"
               element={
-                <PrivateRoute
-                  page="order-detail"
-                  component={<OrderDetail />}
-                />
+                <PrivateRoute page="order-detail" component={<OrderDetail />} />
               }
             />
 
@@ -385,28 +404,19 @@ const App = () => {
             <Route
               path="/student-home"
               element={
-                <PrivateRoute
-                  page="student-home"
-                  component={<StudentHome />}
-                />
+                <PrivateRoute page="student-home" component={<StudentHome />} />
               }
             />
             <Route
               path="/schedule"
               element={
-                <PrivateRoute
-                  page="schedule"
-                  component={<Schedule />}
-                />
+                <PrivateRoute page="schedule" component={<Schedule />} />
               }
             />
             <Route
               path="/courses-plan/:courseId"
               element={
-                <PrivateRoute
-                  page="courses-plan"
-                  component={<CoursesPlan />}
-                />
+                <PrivateRoute page="courses-plan" component={<CoursesPlan />} />
               }
             />
 

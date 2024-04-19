@@ -12,8 +12,8 @@ const TeacherClassComponent = () => {
           <i class="fa-solid fa-user"></i>
         </div>
       </div>
-      <div className="teacher-classes-content">
-        <h5>STUDENT IN EACH CLASS</h5>
+      <div className="teacher-classes-content py-3">
+        <h5 >Student list</h5>
         <div className="row" style={{ marginTop: "25px" }}>
           <div className="col-lg-6 col-md-12 col-sm-12">
             <div

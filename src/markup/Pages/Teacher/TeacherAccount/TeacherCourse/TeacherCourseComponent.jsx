@@ -50,7 +50,7 @@ const TeacherCourseComponent = () => {
   const [query, setQuery] = useState("");
   const [courseStatus, setCourseStatus] = useState();
   const [page, setPage] = useState(1);
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState("All");
   const [courses, setCourses] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -202,7 +202,7 @@ const TeacherCourseComponent = () => {
                 className="custom-spinner"
               />
             </div>
-          ) : courses && courses.totalRecords == 0 ? (
+          ) : courses && courses.totalRecords === 0 ? (
             <p className="mt-3 text-center">There are no courses</p>
           ) : (
             <Grid container rowSpacing={1} columnSpacing={2}>
