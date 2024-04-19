@@ -54,6 +54,8 @@ import PaymentMethods from './Pages/ParentAccount/PaymentMethods/PaymentMethods'
 import ChildProcess from './Pages/ParentAccount/ChildProcess/ChildProcess';
 import ChildProcessDetail from './Pages/ParentAccount/ChildProcess/ChildProcessDetail';
 import CourseProcess from './Pages/ParentAccount/ChildProcess/CourseProcess';
+import User from './Pages/Admin/User/User';
+import UserParents from './Pages/Admin/User/UserParents';
 
 
 export default function Markup() {
@@ -126,6 +128,9 @@ export default function Markup() {
 
 					{/* routed */}
 					<Route path="/admin" element={<Admin />}>
+						<Route path="user" element={<User />} >
+						</Route>
+						<Route path="parent" element={<UserParents />} />
 						<Route path="game" element={<Game />} />
 						<Route path="game-data" element={<GameData />} />
 					</Route>

@@ -63,6 +63,8 @@ import ChildProcess from './markup/Pages/ParentAccount/ChildProcess/ChildProcess
 import ChildProcessDetail from "./markup/Pages/ParentAccount/ChildProcess/ChildProcessDetail";
 import CourseProcess from "./markup/Pages/ParentAccount/ChildProcess/CourseProcess";
 import CourseQuiz from "./markup/Pages/CourseQuiz";
+import User from "./markup/Pages/Admin/User/User";
+import UserParents from "./markup/Pages/Admin/User/UserParents";
 
 // function App() {
 // 	return (
@@ -125,6 +127,18 @@ const App = () => {
               path="/admin"
               element={<PrivateRoute page="admin" component={<Admin />} />}
             >
+              <Route
+                path="user"
+                element={
+                  <PrivateRoute page="admin/user" component={<User />} />
+                }
+              />
+              <Route
+                path="parent"
+                element={
+                  <PrivateRoute page="admin/parent" component={<UserParents />} />
+                }
+              />
               <Route
                 path="game"
                 element={
@@ -434,8 +448,8 @@ const App = () => {
             <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            <Route path="/not-found" element={<ErrorPage />} />
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
+            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

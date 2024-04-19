@@ -22,28 +22,6 @@ export default function Admin() {
     navigate("/home");
   };
 
-  const renderContent = () => {
-    switch (activeContent) {
-      // case "Notification":
-      //   return <div></div>;
-      // case "Dashboard":
-      //   return <div></div>;
-      case "Certificate":
-        return <div>Your orders...</div>;
-      case "User":
-        return <div>Class information...</div>;
-      case "Course":
-        return <div>Course details...</div>;
-      case "Game":
-        return <Game />;
-      case "Order":
-        return <div>Course details...</div>;
-      case "Syllabus":
-        return <Syllabus />;
-      default:
-        return <div>Select a menu item to see the content</div>;
-    }
-  };
 
   const getItemClass = (itemName) => {
     return `item d-flex justify-content-start align-items-center mt-3 mb-0 admin-menu-item ${
@@ -82,7 +60,7 @@ export default function Admin() {
             </div>
             <div
               className={getItemClass("User")}
-              // onClick={() => handleMenuItemClick("User")}
+              onClick={() => handleMenuItemClick("User")}
             >
               <i className="fa-solid fa-user" style={{fontSize: "18px"}}></i>
               <span>User</span>
