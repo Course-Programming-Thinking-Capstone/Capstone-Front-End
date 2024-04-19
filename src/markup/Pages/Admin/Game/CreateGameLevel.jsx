@@ -192,6 +192,9 @@ export const CreateLevel = ({
     if (active && over) {
       const updatedArray = arr.map((row) => {
         if (row.id === over.id) {
+          if (row.typeId === 0) {
+            setIsVStartExist(false);
+          }
           return {
             ...row,
             content: active.data.current.child,
@@ -248,7 +251,7 @@ export const CreateLevel = ({
               <div className="d-flex jutify-content-between align-items-center">
                 <img src={arrowLeft} alt="Arrow Left Icon" />
                 <p className="mb-0 mx-2">Back</p>
-              </div>
+              </div> 
             </button>
           </div>
         </div>
