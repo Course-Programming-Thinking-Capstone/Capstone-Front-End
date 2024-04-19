@@ -65,6 +65,7 @@ import CourseProcess from "./markup/Pages/ParentAccount/ChildProcess/CourseProce
 import CourseQuiz from "./markup/Pages/CourseQuiz";
 import User from "./markup/Pages/Admin/User/User";
 import UserParents from "./markup/Pages/Admin/User/UserParents";
+import CourseResult from './markup/Pages/CourseResult';
 
 // function App() {
 // 	return (
@@ -450,6 +451,15 @@ const App = () => {
                 <PrivateRoute
                   page="courses-quiz"
                   component={<CourseQuiz />}
+                />
+              }
+            />
+            <Route
+              path="/courses-result"
+              element={
+                <PrivateRoute
+                  page="courses-result"
+                  component={<CourseResult />}
                 />
               }
             />

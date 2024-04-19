@@ -20,7 +20,7 @@ export default function CourseStudy() {
                 const response = await instance.get(`api/v1/courses/study/section/${sectionId}`);
                 // Assume the API returns the entire section data needed
                 const data = response.data;
-                console.log(' data: ', data);
+                console.log(' listData: ', data);
 
                 setSelectedContent(data);
                 setSectionDetails(data);
@@ -46,17 +46,51 @@ export default function CourseStudy() {
                 url = `api/v1/courses/study/section/lesson/${id}`;
             } else if (type === 'quiz') {
                 url = `api/v1/courses/study/section/quiz/${id}`;
-                console.log('url: ', url);
                 // Assume similar endpoint for quizzes if exists
             }
-            const response = await instance.get(url);
-            setDetailedContent(response.data);
-            console.log('response.data: ', response.data);
+            const response = await instance.get(url); // Make sure to use `await` to wait for the API call
+            const data = response.data;
+            setDetailedContent(data);
+            console.log('response.data: ', data);
             setSelectedContent({ type, id });
         } catch (error) {
             console.error('Error fetching details:', error);
         }
     };
+
+    const markLessonAsCompleted = async (lessonId) => {
+        try {
+            const response = await instance.patch(`api/v1/courses/mark-lesson-completed?lessonId=${lessonId}`);
+
+            if (response.status === 200) {
+                // Assuming the response includes the updated lesson data
+                // Update the state with the new completion status
+                const updatedLessons = sectionDetails.lessons.map((lesson) => {
+                    if (lesson.id === lessonId) {
+                        // Use the updated data from the response if available
+                        // Otherwise, just set isComplete to true
+                        return { ...lesson, isComplete: true };
+                    }
+                    return lesson;
+                });
+
+                // Update the section details with the new lessons array
+                setSectionDetails({ ...sectionDetails, lessons: updatedLessons });
+
+                // If the selectedContent is the one being marked as completed,
+                // update it as well to reflect the new state
+                if (selectedContent && selectedContent.id === lessonId) {
+                    setSelectedContent((prevContent) => ({
+                        ...prevContent,
+                        isComplete: true,
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error('Error marking lesson as completed:', error);
+        }
+    };
+
 
     const renderSidebar = () => {
         if (!sectionDetails) {
@@ -71,7 +105,9 @@ export default function CourseStudy() {
             <>
                 {sectionDetails.lessons.map((lesson) => (
                     <div key={lesson.id} className='document d-flex' onClick={() => handleContentClick('lesson', lesson.id)} style={{ backgroundColor: selectedContent?.id === lesson.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
-                        {lesson.type === 'Video' ? (
+                        {lesson.isComplete ? (
+                            <i style={{color:'#FF8A00'}} className="fa-solid fa-circle-check"></i>
+                        ) : lesson.type === 'Video' ? (
                             <i className="fa-regular fa-circle-play"></i>
                         ) : (
                             <i className="fa-solid fa-book"></i>
@@ -95,6 +131,7 @@ export default function CourseStudy() {
         );
     };
 
+
     const renderContent = () => {
         if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
 
@@ -111,7 +148,9 @@ export default function CourseStudy() {
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen></iframe>
                         <div className='d-flex justify-content-center'>
-                            <button className='button'>Mark as completed</button>
+                            {!detailedContent.isComplete && (
+                                <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
+                            )}
                         </div>
                     </div>
                 );
@@ -119,6 +158,11 @@ export default function CourseStudy() {
                 return (
                     <div className='pt-5 px-5'>
                         <div dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
+                        <div className='d-flex justify-content-center'>
+                            {!detailedContent.isComplete && (
+                                <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
+                            )}
+                        </div>
                     </div>
                 );
 

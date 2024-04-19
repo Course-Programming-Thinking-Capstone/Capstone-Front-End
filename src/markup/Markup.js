@@ -56,6 +56,7 @@ import ChildProcessDetail from './Pages/ParentAccount/ChildProcess/ChildProcessD
 import CourseProcess from './Pages/ParentAccount/ChildProcess/CourseProcess';
 import User from './Pages/Admin/User/User';
 import UserParents from './Pages/Admin/User/UserParents';
+import CourseResult from './Pages/CourseResult';
 
 
 export default function Markup() {
@@ -85,6 +86,7 @@ export default function Markup() {
 					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
 					<Route path='/courses-study/:sectionId' exact element={<CourseStudy />} />
 					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
+					<Route path='/courses-result' exact element={<CourseResult />} />
 
 
 
