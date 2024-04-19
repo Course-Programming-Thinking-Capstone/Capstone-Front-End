@@ -8,26 +8,26 @@ export default function UserParents() {
     const [currentPage, setCurrentPage] = useState(0); // Pagination starts at page 0
     const [pageCount, setPageCount] = useState(0);
 
-    useEffect(() => {
-        const fetchParents = async () => {
-            setLoading(true)
-            try {
-                const response = await instance.get(`api/v1/users/admin/account?role=Parent`);
-                // Assume the API returns the entire section data needed
-                const data = response.data;
-                console.log(' data: ', data);
+    // useEffect(() => {
+    //     const fetchParents = async () => {
+    //         setLoading(true)
+    //         try {
+    //             const response = await instance.get(`api/v1/users/admin/account?role=Parent`);
+    //             // Assume the API returns the entire section data needed
+    //             const data = response.data;
+    //             console.log(' data: ', data);
 
-                setParents(data.results);
-                setPageCount(Math.ceil(data.totalRecords / pageSize));
-            } catch (error) {
-                console.error('Failed to fetch section details:', error);
-            } finally {
-                setLoading(false)
-            }
-        };
+    //             setParents(data.results);
+    //             setPageCount(Math.ceil(data.totalRecords / pageSize));
+    //         } catch (error) {
+    //             console.error('Failed to fetch section details:', error);
+    //         } finally {
+    //             setLoading(false)
+    //         }
+    //     };
 
-        fetchParents();
-    }, []);
+    //     fetchParents();
+    // }, []);
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected); // react-paginate uses selected to indicate the new page number
