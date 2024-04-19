@@ -66,7 +66,7 @@ export default function CoursesPlan() {
         const linkClass = isOpen ? "link-open" : "link-closed";
 
         return (
-            <>
+            <div className='mt-2'>
                 <a
                     href={`#${id}`}
                     className={`btn btn-primary ${linkClass}`}
@@ -108,7 +108,7 @@ export default function CoursesPlan() {
                         </div>
                     </div>
                 </div>
-            </>
+            </div>
         );
     };
 

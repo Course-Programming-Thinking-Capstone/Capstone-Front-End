@@ -1,42 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import backgroundImage from './../../images/background/quizBackground.jpg';
 import Footer from '../Layout/Footer';
 import Header from '../Layout/Header';
+import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function CourseQuiz() {
-    const Question = () => {
-        return (
-            <div className='quiz-question'>
+    const { quizId } = useParams(); // Get quizId from URL parameter
+    const [quizData, setQuizData] = useState(null); // State to store the quiz data
 
-                <span style={{ fontSize: '14px', marginTop: '10px' }}>Question 1</span>
-                <h5 style={{ fontSize: '24px', marginTop: '10px' }}>Ai là người đẹp trai nhất trong nhóm ?</h5>
-                <span style={{ fontSize: '14px', marginTop: '10px', color: 'rgba(255, 138, 0, 1)' }}>Choose the correct answer</span>
-                <div className="row">
-                    <div className="col-lg-6 col-md-6 col-sm-12">
-                        <div className='answer'>
-                            <p>Vũ</p>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 col-sm-12">
-                        <div className='answer'>
-                            <p>Vũ</p>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 col-sm-12">
-                        <div className='answer'>
-                            <p>Vũ</p>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-md-6 col-sm-12">
-                        <div className='answer'>
-                            <p>Vũ</p>
-                        </div>
-                    </div>
+    useEffect(() => {
+        const fetchQuizData = async () => {
+            try {
+                const response = await instance.get(`api/v1/courses/study/section/quiz/${quizId}`); // Adjust the URL according to your API
+                setQuizData(response.data); // Store the fetched data in state
+                console.log('response.data: ', response.data);
+            } catch (error) {
+                console.error('Failed to fetch quiz data:', error);
+            }
+        };
 
-                </div>
+        fetchQuizData();
+    }, [quizId]);
+
+    const Question = ({ question }) => (
+        <div className='quiz-question'>
+            <span style={{ fontSize: '14px', marginTop: '10px' }}>Question {question.id}</span>
+            <h5 style={{ fontSize: '24px', marginTop: '10px' }}>{question.title}</h5>
+            <span style={{ fontSize: '14px', marginTop: '10px', color: 'rgba(255, 138, 0, 1)' }}>Choose the correct answer</span>
+            <div className="row">
+                {question.options.map(option => (
+                    <div key={option.id} className="col-lg-6 col-md-6 col-sm-12">
+                        <div className='answer'>
+                            <p>{option.content}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
-        );
-    };
+        </div>
+    );
 
     return (
         <div>
@@ -60,12 +62,10 @@ export default function CourseQuiz() {
 
             <div className="quiz-content" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }} s>
                 <div className="container">
-                    <div style={{height: '30px'}}></div>
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
+                    <div style={{ height: '30px' }}></div>
+                    {quizData && quizData.questions.map(question => (
+                        <Question key={question.id} question={question} />
+                    ))}
                 </div>
             </div>
             <Footer />

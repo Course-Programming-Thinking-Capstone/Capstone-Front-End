@@ -435,10 +435,10 @@ const App = () => {
               }
             />
             <Route
-              path="/courses-quiz"
+              path="/courses-quiz/:quizId"
               element={
                 <PrivateRoute
-                  page="courses-study"
+                  page="courses-quiz"
                   component={<CourseQuiz />}
                 />
               }

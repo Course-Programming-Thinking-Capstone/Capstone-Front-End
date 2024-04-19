@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 import Footer from '../Layout/Footer';
@@ -11,6 +11,8 @@ export default function CourseStudy() {
     const { sectionId } = useParams();
     const [sectionDetails, setSectionDetails] = useState(null);
     const [detailedContent, setDetailedContent] = useState(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchSectionDetails = async () => {
@@ -39,14 +41,17 @@ export default function CourseStudy() {
     const handleContentClick = async (type, id) => {
         try {
             let url;
+            console.log(id);
             if (type === 'lesson') {
                 url = `api/v1/courses/study/section/lesson/${id}`;
             } else if (type === 'quiz') {
                 url = `api/v1/courses/study/section/quiz/${id}`;
+                console.log('url: ', url);
                 // Assume similar endpoint for quizzes if exists
             }
             const response = await instance.get(url);
             setDetailedContent(response.data);
+            console.log('response.data: ', response.data);
             setSelectedContent({ type, id });
         } catch (error) {
             console.error('Error fetching details:', error);
@@ -61,7 +66,7 @@ export default function CourseStudy() {
                 </div>
             );
         }
-    
+
         return (
             <>
                 {sectionDetails.lessons.map((lesson) => (
@@ -89,8 +94,6 @@ export default function CourseStudy() {
             </>
         );
     };
-    
-
 
     const renderContent = () => {
         if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
@@ -115,21 +118,21 @@ export default function CourseStudy() {
             case 'Document':
                 return (
                     <div className='pt-5 px-5'>
-
                         <div dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
                     </div>
                 );
-            case 'Quiz':
-                return (
-                    <div>
-                        <p>Quiz: {detailedContent.title}</p>
-                        {/* Render quiz details similarly */}
-                    </div>
-                );
+
             default:
-                return <div>Content type not recognized.</div>;
+                return <div className='pt-5 px-5'>
+                    <h3>{detailedContent.title}</h3>
+                    <p>Total Questions: {detailedContent.totalQuestion}</p>
+                    <p>Number of attempt: {detailedContent.numberOfAttempt}</p>
+                    <p>Time: {detailedContent.duration} minutes</p>
+                    <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
+                </div>;
         }
     };
+
 
     return (
         <div>

@@ -84,7 +84,7 @@ export default function Markup() {
 					<Route path='/schedule' exact element={<Schedule />} />
 					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
 					<Route path='/courses-study/:sectionId' exact element={<CourseStudy />} />
-					<Route path='/courses-quiz' exact element={<CourseQuiz />} />
+					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
 
 
 
