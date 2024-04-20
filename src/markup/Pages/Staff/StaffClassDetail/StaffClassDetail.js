@@ -9,6 +9,7 @@ import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 import "./StaffClassDetail.css";
+import { formatDayV1, formatTimeV1 } from "../../../../helper/utils/DateUtil";
 
 export default function StaffClassDetail() {
   const [view, setView] = useState("detail");
@@ -754,7 +755,8 @@ export default function StaffClassDetail() {
                   )}
                 </p>
                 <p className="mb-1">
-                  {classDetails.openClass} - {classDetails.closeClass}
+                  {formatDayV1(classDetails?.openClass)} -{" "}
+                  {formatDayV1(classDetails?.closeClass)}
                 </p>
                 <p className="mb-1">{classDetails.slotDuration} minutes/slot</p>
               </div>
@@ -839,8 +841,9 @@ export default function StaffClassDetail() {
                   </div>
                 </div>
                 <p className="mb-1">
-                  Slot {classDetails.slotNumber} ({classDetails.startSlot} -{" "}
-                  {classDetails.endSlot})
+                  Slot {classDetails.slotNumber} (
+                  {formatTimeV1(classDetails?.startSlot)} -{" "}
+                  {formatTimeV1(classDetails?.endSlot)})
                 </p>
                 <p className="mb-1">{classDetails.totalSlot}</p>
                 <button

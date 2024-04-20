@@ -54,3 +54,24 @@ export const formatDateV1 = (date) => {
   const result = `${dayString}/${monthString}/${yearString} ${hoursString}:${minuteString}`;
   return result;
 };
+
+//format day "yyyy/MM/dd" to "dd/MM/yyyy"
+export const formatDayV1 = (inputDate) => {
+  if (!inputDate) return "";
+  var parts = inputDate.split("/");
+  var year = parts[0];
+  var month = parts[1];
+  var day = parts[2];
+
+  return day + "/" + month + "/" + year;
+};
+
+export const formatTimeV1 = (input) => {
+  if (!input) return "";
+  var parts = input.split(":");
+  var hour = parts[0];
+  var minute = parts[1];
+  var second = parts[2];
+
+  return hour + ":" + minute;
+};
