@@ -919,7 +919,7 @@ export default function StaffClassDetail() {
                       </td>
                       <td className="text-center">{student.studentName}</td>
                       <td className="text-center">{student.dateOfBirth}</td>
-                      <td className="text-center">{student.gender}</td>
+                      <td className="text-center">{student?.gender == 0 ? "Other" : student?.gender}</td>
                     </tr>
                   ))}
                 </tbody>
