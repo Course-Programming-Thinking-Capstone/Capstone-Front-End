@@ -12,6 +12,7 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useLocation } from 'react-router-dom';
+import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function CoursePayment() {
     const [selectedChildren, setSelectedChildren] = useState([]);
@@ -42,19 +43,9 @@ export default function CoursePayment() {
                 return;
             }
 
-            const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/students?classId=${classId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
+            const response = await instance.get(`api/v1/students?classId=${classId}`);
+            const data = response.data;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
             setChildren(data.map(child => ({
                 id: child.id,
                 name: child.fullName,
@@ -81,19 +72,9 @@ export default function CoursePayment() {
 
             setLoading(true);
             try {
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/courses/payment?courseId=${courseId}&classId=${classId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
+                const response = await instance.get(`api/v1/courses/payment?courseId=${courseId}&classId=${classId}`);
+                const data = response.data;
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
                 console.log('curentCourse: ', data);
                 setCourseDetails(data);
             } catch (error) {
@@ -111,19 +92,9 @@ export default function CoursePayment() {
 
             setLoading(true);
             try {
-                const response = await fetch(`https://www.kidpro-production.somee.com/api/v1/parents/contact`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
+                const response = await instance.get(`api/v1/parents/contact`);
+                const data = response.data;
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
                 console.log('curentEmail: ', data.email);
                 setParentEmail(data.email);
             } catch (error) {
@@ -430,18 +401,20 @@ export default function CoursePayment() {
                                                 }}>
                                                     <div className='d-flex'>
                                                         <img className='img-responsive mt-2' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
-                                                        <div>
+                                                        <div style={{ width: '50%' }}>
                                                             <p className='mt-2'>{courseDetails.courseName}</p>
                                                             <div className='d-flex'>
                                                                 <p style={{ fontWeight: 'inherit' }}>Class: </p>
                                                                 <p style={{ color: '#E53E5C' }}>{courseDetails.classCode}</p>
                                                             </div>
                                                         </div>
-                                                        <div >
-                                                            <div>
+                                                        <div style={{ width: '30%' }}>
+                                                            <div className='d-flex justify-content-center'>
                                                                 <p className='mt-2' style={{ fontWeight: 'inherit' }}> {courseDetails.teacherName}</p>
                                                             </div>
-                                                            <p style={{ color: '#FF8A00', fontWeight: 'bold' }}>{formatPrice(courseDetails.price)}</p>
+                                                            <div className='d-flex justify-content-center'>
+                                                                <p style={{ color: '#FF8A00', fontWeight: 'bold' }}>{formatPrice(courseDetails.price)}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -456,9 +429,6 @@ export default function CoursePayment() {
 
 
                         <div className='col-lg-6'>
-                            <div style={{ backgroundColor: '#e6e3e3', borderRadius: '10px 10px 0 0', padding: '10px 20px 10px 20px' }}>
-                                <h5 className='mb-0'>Select a payment method</h5>
-                            </div>
                             <div className="payment">
                                 <div style={{ padding: '10px 35px' }}>
                                     <div className='d-flex radio-wrapper justify-content-between' onClick={() => setSelectedPayment('momo')} style={{ border: selectedPayment === 'momo' ? '2px solid #1A9CB7' : '2px solid #c9c9c9', padding: '10px 35px', cursor: 'pointer', borderRadius: '10px' }}>
@@ -469,21 +439,6 @@ export default function CoursePayment() {
                                             </div>
                                             <p className='mb-0'>Momo E-Wallet</p>
                                         </div>
-                                        {selectedPayment === 'momo' ?
-                                            <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> :
-                                            <i className="fa-regular fa-circle"></i>}
-                                    </div>
-                                    <div className='d-flex radio-wrapper justify-content-between' onClick={() => setSelectedPayment('zalopay')} style={{ border: selectedPayment === 'zalopay' ? '2px solid #1A9CB7' : '2px solid #c9c9c9', padding: '10px 35px', cursor: 'pointer', marginTop: '20px', borderRadius: '10px' }}>
-                                        <div>
-                                            <div className='d-flex'>
-                                                <img style={{ height: '40px', width: '40px' }} src={zalopay} alt="" />
-                                                <p style={{ marginBottom: '12px' }}>09123123123</p>
-                                            </div>
-                                            <p className='mb-0'>Zalo E-Wallet</p>
-                                        </div>
-                                        {selectedPayment === 'zalopay' ?
-                                            <i className="fa-solid fa-circle" style={{ color: '#1A9CB7' }}></i> :
-                                            <i className="fa-regular fa-circle"></i>}
                                     </div>
                                 </div>
                                 <div>

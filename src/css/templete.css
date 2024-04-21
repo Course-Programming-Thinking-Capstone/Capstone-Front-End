@@ -5371,10 +5371,6 @@ button.admin-save:hover {
   padding: 10px;
 }
 
-.selected-class {
-  border: 1px solid #ff8a00;
-  border-radius: 8px;
-}
 
 /* .teacher-accordion .section-title button{
   font-weight: bold;

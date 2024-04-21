@@ -1,8 +1,5 @@
 import axios from "axios";
 
-//api cũ
-// const url = "https://www.kidpro-production.somee.com/";
-
 //api test
 // const url = "https://kidpro.azurewebsites.net/";
 

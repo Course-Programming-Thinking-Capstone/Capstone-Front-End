@@ -56,7 +56,10 @@ export default function StudentHome() {
                                     <img style={{ height: '100px', width: '100px', borderRadius: '8px' }} className='img-responsive' src={course.courseImage} alt="" />
                                     <div>
                                         <p>{course.courseName}</p>
+                                        <div class="progress">
+
                                         <div className='progress-bar' style={{ width: `${course.courseProgress}%` }}>{course.courseProgress}</div>
+                                        </div>
                                     </div>
                                     <div className='d-flex'>
                                         <p>Teacher:</p>

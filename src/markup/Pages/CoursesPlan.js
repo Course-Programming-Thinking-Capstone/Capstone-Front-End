@@ -95,13 +95,6 @@ export default function CoursesPlan() {
                                     </div>
                                 </div>
                             ))}
-                            <div className='document d-flex'>
-                                <i className="fa-solid fa-gamepad"></i>
-                                <div className='document-content'>
-                                    <p>Practice game</p>
-                                    <span>Map 1 - Level 1</span>
-                                </div>
-                            </div>
                         </div>
                         <div>
                             <button onClick={() => getStarted(id)} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
@@ -118,7 +111,6 @@ export default function CoursesPlan() {
             <div className="page-content">
                 <PageTitle motherMenu="Courses" activeMenu="Courses" />
                 <div className="container">
-                <button onClick={getStarted} style={{ backgroundColor: '#FF8A00', border: 'none', color: 'white', borderRadius: '8px' }}>Get started</button>
                     <div className="plan row">
                         <div className="col-lg-3">
                             <table className="table table-bordered">
@@ -148,7 +140,7 @@ export default function CoursesPlan() {
                                     <h5>{courseDetails && courseDetails.name}</h5>
                                     <div>
                                         <ul className='d-flex justify-content-around'>
-                                            <li><i class="fa-solid fa-book-open-reader"></i>{courseDetails && courseDetails.totalLesson}  Lessons</li>
+                                            <li><i class="fa-solid fa-book-open-reader"></i>{courseDetails && courseDetails.totalSection}  Lessons</li>
                                             <li><i class="fa-regular fa-circle-play"></i>{courseDetails && courseDetails.totalVideo}  Videos</li>
                                             <li><i class="fa-solid fa-file-lines"></i>{courseDetails && courseDetails.totalDocument}  Documents</li>
                                             <li><i class="fa-solid fa-pen-to-square"></i>{courseDetails && courseDetails.totalQuiz}  Quiz</li>

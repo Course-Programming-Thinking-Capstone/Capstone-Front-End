@@ -98,20 +98,36 @@ export default function ClassesDetail() {
 									<div className="col-lg-4 col-md-12 col-sm-12" style={{ maxHeight: '600px', overflowY: 'auto' }}>
 										<h5 className='orange'>Select class for course</h5>
 										{courseDetails && courseDetails.classes && courseDetails.classes.length > 0 ? (
-											courseDetails && courseDetails.classes.map((classDetail) => (
-												<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '1px solid #FF8A00' : '1px solid  #7F7C7C', borderRadius: '8px' }}>
-													<div className='ps-4 pt-2' style={{ border: '1px solid #7F7C7C', borderRadius: '8px' }}>
-														<p>Class: <span style={{ color: '#F15C58' }}>{classDetail.classCode}</span></p>
-														<p>Date start: <span style={{ fontWeight: 'bold' }}>{classDetail.dayStart} - {classDetail.dayEnd}</span></p>
-														<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>{classDetail.dayOfWeekStart}</span></p>
-														<p>Slot time: <span style={{ fontWeight: 'bold' }}>({classDetail.slotStart} - {classDetail.slotEnd})</span></p>
-														<p>Teacher: <span style={{ fontWeight: 'bold' }}>{classDetail.teacher}</span></p>
+											courseDetails.classes.map((classDetail) => {
+												// Refactor dates to DD/MM/YYYY
+												const startDate = new Date(classDetail.dayStart).toLocaleDateString("en-GB");
+												const endDate = new Date(classDetail.dayEnd).toLocaleDateString("en-GB");
+
+												// Refactor times to HH:mm
+												const startTime = classDetail.slotStart.slice(0, 5);
+												const endTime = classDetail.slotEnd.slice(0, 5);
+
+												return (
+													<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '3px solid #FF8A00' : '3px solid  #7F7C7C', borderRadius: '8px' }}>
+														<div className='ps-4 pt-2'>
+															<p>Class: <span style={{ color: '#F15C58', fontWeight: 'bold' }}>{classDetail.classCode}</span></p>
+															<p>Date start: <span style={{ fontWeight: 'bold' }}>{startDate} - {endDate}</span></p>
+															<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>{classDetail.days.join(', ')}</span></p>
+															<p>Slot time: <span style={{ fontWeight: 'bold' }}>({startTime} - {endTime})</span></p>
+															<div className="teacher-info">
+																<p>Teacher: <span style={{
+																	fontWeight: 'bold',
+																	fontFamily: '"Noto Sans", "Arial", sans-serif', // Choose a font that supports Vietnamese characters
+																}}>{classDetail.teacher}</span></p>
+															</div>
+														</div>
 													</div>
-												</div>
-											))
+												);
+											})
 										) : (
 											<p>This course does not have any class yet.</p>
 										)}
+
 
 									</div>
 								</div>

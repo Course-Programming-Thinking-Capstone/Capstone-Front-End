@@ -13,15 +13,8 @@ export default function CourseResult() {
             <h5>{question.title}</h5>
             <div className="row">
                 {question.options.map((option) => {
-                    // Determine the background color based on the correctness and student's choice
-                    let bgColor;
-                    if (option.isCorrect) {
-                        bgColor = '#6DCE63'; // green background for correct answers
-                    } else if (!option.isCorrect && option.isStudentChoose) {
-                        bgColor = '#FF6B6B'; // red background for wrong selected answers
-                    } else {
-                        bgColor = 'white'; // white background for non-selected options
-                    }
+                    // Determine the background color based on the student's choice
+                    let bgColor = option.isStudentChoose ? '#d1e7dd' : '#f8f9fa'; // Light green for chosen, light grey for others
 
                     return (
                         <div key={option.optionId} className="col-lg-6 col-md-6 col-sm-12">
@@ -29,7 +22,10 @@ export default function CourseResult() {
                                 className='answer'
                                 style={{
                                     backgroundColor: bgColor,
-                                    // Other styles...
+                                    padding: '10px',
+                                    margin: '5px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer'
                                 }}
                             >
                                 <p>{option.content}</p>
@@ -42,43 +38,36 @@ export default function CourseResult() {
     );
 
     useEffect(() => {
-        console.log(location.state); // Check what's being passed in the state
+        console.log(location.state); // Debugging to see what's being passed in the state
     }, [location.state]);
-    
 
     if (!quizSubmit || !quizSubmit.questionDtos) {
-        return <div>Loading quiz results...</div>; // Or some other placeholder content
+        return <div>Loading quiz results...</div>; // Placeholder content while loading
     }
 
     return (
         <div>
             <Header />
-            <div className="quiz-header">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className='d-flex justify-content-center col-lg-1 col-md-1 d-sm-none d-md-block'>
-                            <a href=""><i className="fa-solid fa-chevron-left"></i>Back</a>
-                        </div>
-                        <div className='col-lg-9 col-md-9 col-sm-10' style={{ height: '100px' }}>
-                            <h5 style={{ fontSize: '26px', fontWeight: '700', marginTop: '15px' }}>Quiz: Test your tech knowledge</h5>
-                            <p style={{ fontSize: '18px' }}>Total 3 questions</p>
-                        </div>
-                        <div className='col-lg-2 col-md-2 col-sm-2'>
-                            <p>dong ho</p>
-                        </div>
+            <div className="quiz-content" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '600px' }} >
+                <div className='d-flex justify-content-center mt-5'>
+                    <div>
+                        <h5 style={{fontSize:'30px'}}>Your score</h5>
+                        <p style={{fontSize:'30px'}} className='text-center'>
+                            <span>{quizSubmit && quizSubmit.score}</span>
+                        </p>
                     </div>
                 </div>
-            </div>
-            <div className="quiz-content" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '600px' }} >
                 <div className="container">
-                <div style={{ height: '30px' }}></div>
+                    <div style={{ height: '30px' }}></div>
                     {quizSubmit && quizSubmit.questionDtos.map((question) => (
                         <Question key={question.questionId} question={question} />
                     ))}
                 </div>
-
             </div>
             <Footer />
         </div>
     )
 }
+
+
+
