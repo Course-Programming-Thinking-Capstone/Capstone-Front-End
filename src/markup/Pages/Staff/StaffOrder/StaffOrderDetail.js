@@ -594,9 +594,7 @@ const PendingOrder = ({ orderDetail }) => {
             Order date:{" "}
             <span>
               {" "}
-              {formatDateV1(
-                convertUtcToLocalTimeV2(orderDetail.orderDate)
-              )}
+              {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}
             </span>
           </p>
         </div>
