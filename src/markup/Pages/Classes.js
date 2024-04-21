@@ -16,7 +16,6 @@ export default function Classes() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
   const fetchCourses = async (page = 1) => {

@@ -10,7 +10,6 @@ import instance from '../../helper/apis/baseApi/baseApi';
 export default function CoursesPlan() {
     const { courseId } = useParams();
     console.log("Course ID:", courseId);
-    const accessToken = localStorage.getItem('accessToken');
     const [courseDetails, setCourseDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
 
@@ -36,7 +35,7 @@ export default function CoursesPlan() {
         };
 
         fetchCourseDetails();
-    }, [courseId, accessToken]);
+    }, [courseId]);
 
     const LessonIcon = ({ type }) => {
         switch (type) {
