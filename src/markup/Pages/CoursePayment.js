@@ -210,7 +210,7 @@ export default function CoursePayment() {
       
       let response = await instance.post(`api/v1/orders`, orderDetails);
 
-      let responseData;
+      let responseData = response.data;
 
       response = await instance.post(`api/v1/payment/momo/${responseData.orderId}`, {});
       responseData = response.data;
