@@ -9,7 +9,6 @@ import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function StudentHome() {
     const [courses, setCourses] = useState([]);
-    const accessToken = localStorage.getItem('accessToken');
     const navigate = useNavigate();
 
     useEffect(() => {

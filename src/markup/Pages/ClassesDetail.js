@@ -12,7 +12,6 @@ export default function ClassesDetail() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const [courseDetails, setCourseDetails] = useState(null);
-	const accessToken = localStorage.getItem('accessToken');
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedClassId, setSelectedClassId] = useState(null);
 

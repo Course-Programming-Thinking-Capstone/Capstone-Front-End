@@ -6,13 +6,13 @@ import Footer from "../Layout/Footer";
 import background from "./../../images/background/orderBackground.jpg";
 import demo from "./../../images/gallery/simp.jpg";
 import { formatPrice } from "../../helper/utils/NumberUtil";
+import instance from "../../helper/apis/baseApi/baseApi";
 
 export default function Order() {
   const [activeItem, setActiveItem] = useState("Pending");
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const accessToken = localStorage.getItem("accessToken");
 
   const handleItemClick = (itemName) => {
     setActiveItem(itemName);
@@ -26,23 +26,11 @@ export default function Order() {
     const fetchOrders = async () => {
       setLoading(true);
       const statusQueryParam = activeItem.replace(" ", "");
-      const accessToken = localStorage.getItem("accessToken");
-      const url = `https://www.kidpro-production.somee.com/api/v1/orders?status=${statusQueryParam}`;
 
       try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        
+        const response = await instance.get(`api/v1/orders?status=${statusQueryParam}`);
+        const data = response.data;
         setOrders(data.order); // Assuming the API returns an array of orders
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);

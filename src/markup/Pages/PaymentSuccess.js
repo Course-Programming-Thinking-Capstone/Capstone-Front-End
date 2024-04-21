@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../Layout/Header'
-import PageTitle from '../Layout/PageTitle'
-import Footer from '../Layout/Footer'
-import background from './../../images/background/paymentSuccess.jpg';
-import demo from './../../images/gallery/simp.jpg';
-import momo from './../../images/icon/momo.png';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Header from "../Layout/Header";
+import PageTitle from "../Layout/PageTitle";
+import Footer from "../Layout/Footer";
+import background from "./../../images/background/paymentSuccess.jpg";
+import demo from "./../../images/gallery/simp.jpg";
+import momo from "./../../images/icon/momo.png";
 import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function PaymentSuccess() {
     const [orderDetails, setOrderDetails] = useState(null);
     const { orderId } = useParams();
-    const accessToken = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
 
     const navigate = useNavigate();
 
@@ -41,11 +40,11 @@ export default function PaymentSuccess() {
     }, [orderId]);
 
     const GoBack = () => {
-        navigate('/classes');
+        navigate("/classes");
     };
 
     const ViewOrder = () => {
-        navigate('/order');
+        navigate("/order");
     };
 
     return (

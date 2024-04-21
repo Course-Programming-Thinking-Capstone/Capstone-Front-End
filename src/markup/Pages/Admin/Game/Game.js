@@ -40,7 +40,6 @@ import ButtonMui from "@mui/material/Button";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
-  const accessToken = localStorage.getItem("accessToken");
   const [viewGameData, setViewGameData] = useState(false);
   const [gameLevels, setGameLevels] = useState([]);
   const [viewLevelDetail, setViewLevelDetail] = useState(false);
@@ -147,7 +146,7 @@ export default function Game() {
 
       fetchGameModes();
     }
-  }, [viewGameData, accessToken]);
+  }, [viewGameData]);
 
   //Show message error
   useEffect(() => {

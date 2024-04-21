@@ -16,7 +16,6 @@ export default function StaffClassDetail() {
   const [classData, setClassData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const accessToken = localStorage.getItem("accessToken");
   const [selectedClassId, setSelectedClassId] = useState(null);
   const [classIdForTeacherForm, setClassIdForTeacherForm] = useState(null);
   const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
@@ -42,7 +41,6 @@ export default function StaffClassDetail() {
   ));
 
   const CreateClass = ({ onBack, onNext }) => {
-    const accessToken = localStorage.getItem("accessToken");
     const [classCode, setClassCode] = useState("");
     const [openDay, setOpenDay] = useState("");
     const [closeDay, setCloseDay] = useState("");
@@ -88,7 +86,7 @@ export default function StaffClassDetail() {
       };
 
       fetchCourses();
-    }, [accessToken]); // accessToken is a dependency here
+    }, []);
 
     const formatBirthday = (date) => {
       const d = new Date(date);
@@ -535,7 +533,6 @@ export default function StaffClassDetail() {
   }) => {
     const [classDetails, setClassDetails] = useState(null);
     const [loading, setLoading] = useState(true);
-    const accessToken = localStorage.getItem("accessToken");
     const [currentPage, setCurrentPage] = useState(0);
     const studentsPerPage = 3;
 
@@ -581,7 +578,7 @@ export default function StaffClassDetail() {
       };
 
       fetchClassDetails();
-    }, [classId, accessToken]);
+    }, [classId]);
 
     if (loading) {
       return (
@@ -947,7 +944,6 @@ export default function StaffClassDetail() {
 
   const StudentForm = ({ onBack, classId }) => {
     const [currentClass, setCurrentClass] = useState([]);
-    const accessToken = localStorage.getItem("accessToken");
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -986,7 +982,7 @@ export default function StaffClassDetail() {
       if (classId) {
         fetchClassDetails();
       }
-    }, [classId, accessToken]);
+    }, [classId]);
 
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
@@ -1335,7 +1331,6 @@ export default function StaffClassDetail() {
   };
 
   const TeacherForm = ({ onBack, classId }) => {
-    const accessToken = localStorage.getItem("accessToken");
     const [teachers, setTeachers] = useState([]);
     const [currentClass, setCurrentClass] = useState([]);
     const [isLoading, setIsLoading] = useState([]);
@@ -1365,7 +1360,7 @@ export default function StaffClassDetail() {
       if (classId) {
         fetchClassDetails();
       }
-    }, [classId, accessToken]);
+    }, [classId]);
 
     useEffect(() => {
       const fetchTeachers = async () => {
@@ -1384,7 +1379,7 @@ export default function StaffClassDetail() {
       };
 
       fetchTeachers();
-    }, [accessToken]);
+    }, []);
 
     const handleTeacherSelection = (event) => {
       const teacherId = event.target.value;
