@@ -478,9 +478,9 @@ export default function CoursePayment() {
 
                         }}>
                           <div>
-                            <div className="d-flex justify-content-center">
+                            {/* <div className="d-flex justify-content-center">
                               <img className='img-responsive mt-2' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
-                            </div>
+                            </div> */}
                             <div>
                               <p className='mt-2'>Course's name: {courseDetails.courseName}</p>
                               <div className='d-flex'>

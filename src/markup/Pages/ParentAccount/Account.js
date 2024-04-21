@@ -13,6 +13,14 @@ export default function Account() {
     const [activeContent, setActiveContent] = useState('accountDetails');
     const navigate = useNavigate();
     const location = useLocation();
+    const user = localStorage.getItem('user');
+    if (!user) {
+        console.log('No user found in localStorage');
+        // Optional: Redirect to login or handle the absence of user data
+    } else {
+        console.log('user: ', JSON.parse(user));
+    }
+
 
     const handleButtonClick = (contentKey) => {
         setActiveContent(contentKey);

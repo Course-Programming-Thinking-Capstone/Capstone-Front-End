@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../../../helper/utils/NumberUtil";
 import { getOrderList } from "../../../../helper/apis/order/order";
 import { ToastContainer, toast } from "react-toastify";
-import "./StaffOrder.css";
+import "../../../../markup/Pages/Staff/StaffOrder/StaffOrder.css";
 import { Tab, Tabs } from "@mui/material";
 
 export default function StaffOrder() {
