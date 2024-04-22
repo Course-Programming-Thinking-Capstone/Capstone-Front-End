@@ -476,7 +476,7 @@ export default function StaffClassDetail() {
               ref={secondAccordionButtonRef}
             >
               <div class="accordion-body">
-                <div className="p-5">
+                <div className="px-5 pt-2">
                   <div className="d-flex">
                     <p className="blue">Slot duration</p>
                     <span className="ms-5">
