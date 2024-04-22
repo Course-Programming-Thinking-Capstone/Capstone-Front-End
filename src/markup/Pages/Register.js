@@ -91,20 +91,6 @@ export default function Register() {
 
   const registerUser = async (username, password, email, rePassword) => {
     try {
-      //   const url =
-      //     "https://www.kidpro-production.somee.com/api/v1/authentication/register/email";
-      //   const response = await fetch(url, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       email,
-      //       fullName: username,
-      //       password,
-      //       rePassword,
-      //     }),
-      //   });
       setIsLoading(true);
       const response = await instance.post(
         `api/v1/authentication/register/email`,
@@ -114,7 +100,6 @@ export default function Register() {
       const data = response.data;
       navigate("/verify");
       return data;
-
     } catch (error) {
       let errorMessage = null;
       if (error.response) {

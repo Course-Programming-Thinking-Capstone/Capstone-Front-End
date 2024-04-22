@@ -170,8 +170,8 @@ export default function StaffClassDetail() {
         .map(([day]) => day);
     };
 
-    const firstRowDays = Object.entries(checkedDays).slice(0, 3);
-    const secondRowDays = Object.entries(checkedDays).slice(3);
+    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3);
+    const secondRowDays = Object.entries(checkedDays)?.slice(3);
 
     const [selectedSlotId, setSelectedSlotId] = useState(null);
 
@@ -229,8 +229,8 @@ export default function StaffClassDetail() {
       }));
 
       // Split slots into two rows for rendering
-      const firstRowSlots = slots.slice(0, 3);
-      const secondRowSlots = slots.slice(3);
+      const firstRowSlots = slots?.slice(0, 3);
+      const secondRowSlots = slots?.slice(3);
 
       const handleSlotSelection = (id) => {
         setSelectedSlotId(id);
@@ -555,7 +555,7 @@ export default function StaffClassDetail() {
     };
 
     // Calculate the students to be displayed on the current page
-    const currentStudents = classDetails?.students.slice(
+    const currentStudents = classDetails?.students?.slice(
       currentPage * studentsPerPage,
       (currentPage + 1) * studentsPerPage
     );
@@ -916,7 +916,9 @@ export default function StaffClassDetail() {
                       </td>
                       <td className="text-center">{student.studentName}</td>
                       <td className="text-center">{student.dateOfBirth}</td>
-                      <td className="text-center">{student?.gender == 0 ? "Other" : student?.gender}</td>
+                      <td className="text-center">
+                        {student?.gender == 0 ? "Other" : student?.gender}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -1204,8 +1206,8 @@ export default function StaffClassDetail() {
                       </tr>
                     ) : searchResults.length > 0 ? (
                       searchResults
-                        .slice(pagesVisited, pagesVisited + studentsPerPage)
-                        .map((student, index) => (
+                        ?.slice(pagesVisited, pagesVisited + studentsPerPage)
+                        ?.map((student, index) => (
                           <tr key={index}>
                             <td className="text-center">
                               {student.studentName}
