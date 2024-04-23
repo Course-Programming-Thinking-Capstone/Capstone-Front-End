@@ -1254,7 +1254,7 @@ export default function StaffClassDetail() {
               <p className="blue mb-0">Current class student list</p>
               <div
                 class="table-responsive"
-                style={{ height: "400px", overflowY: "scroll" }}
+                style={{ height: "300px", overflowY: "scroll" }}
               >
                 <table class="table table-bordered">
                   <thead>

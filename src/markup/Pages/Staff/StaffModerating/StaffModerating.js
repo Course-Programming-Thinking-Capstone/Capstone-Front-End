@@ -8,6 +8,7 @@ import background from '../../../../images/background/adminStaffBackground.jpg';
 import instance from '../../../../helper/apis/baseApi/baseApi';
 import ReactPaginate from 'react-paginate';
 import { convertUtcToLocalTime, formatDateV1 } from '../../../../helper/utils/DateUtil';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -234,6 +235,36 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     });
 
     const approveCourse = async () => {
+        if (!courseType) {
+            // If no course type is selected
+            toast.error("Please select a course type (Free or Paid).", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeButton: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return; // Stop the function execution
+        }
+
+        if (courseType === 'paid' && (!price || price < 10000 || price > 100000000)) {
+            // If it's a paid course but the price is not set or out of bounds
+            toast.error("Please enter a valid price between 10,000 and 100,000,000.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeButton: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return; // Stop the function execution
+        }
+
         const isFree = courseType === 'free';
         const isAdminSetup = selectedOption === 'option2';
         const payload = {
@@ -339,6 +370,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         </div>
                     </Modal.Body>
                 </Modal>
+                <ToastContainer />
 
                 <Modal
                     show={modalApproveSetting}
@@ -430,7 +462,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 <div className="moderating-detail-content">
 
                     <div>
-                        <img src={ (courseDetails && courseDetails.pictureUrl) ? courseDetails.pictureUrl : simp} alt="" />
+                        <img src={(courseDetails && courseDetails.pictureUrl) ? courseDetails.pictureUrl : simp} alt="" />
                         <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
                         <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
                             <div className="d-flex">
@@ -580,7 +612,7 @@ export default function StaffModerating() {
                     <div className="item" key={course.id || index}>
                         <div className="d-flex justify-content-between">
                             <div className="left d-flex justify-content-start">
-                                <img src={ (course && course.pictureUrl) ? course.pictureUrl :  demo} alt="" />
+                                <img src={(course && course.pictureUrl) ? course.pictureUrl : demo} alt="" />
                                 <div style={{ marginLeft: '20px' }}>
                                     <div className='d-flex justify-content-start'>
                                         <p style={{ fontSize: '18px', fontWeight: 500 }}>{course.name} </p>
@@ -595,7 +627,7 @@ export default function StaffModerating() {
                                     <i class="fa-regular fa-clock mt-1"></i>
                                     {/* <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p> */}
                                     <p className='ms-1'>{formatDateV1(convertUtcToLocalTime(course.createdDate))}</p>
-                                
+
                                 </div>
                                 <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
                                     <p >View Detail</p>

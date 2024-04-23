@@ -49,14 +49,6 @@ export default function Login() {
         ? "api/v1/authentication/login/email"
         : "api/v1/authentication/login/account";
 
-      // const response = await fetch(apiUrl, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(loginData),
-      // });
-
       const response = await instance.post(apiUrl, loginData);
 
       const responseData = response.data;
@@ -93,9 +85,7 @@ export default function Login() {
         default:
           break;
       }
-      // } catch (error) {
-      //   console.error(`Error: ${error.message}`);
-      //   notifyLoginFail(error.message);
+
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
