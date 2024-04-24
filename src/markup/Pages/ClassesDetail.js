@@ -97,36 +97,37 @@ export default function ClassesDetail() {
 									<div className="col-lg-4 col-md-12 col-sm-12" style={{ maxHeight: '600px', overflowY: 'auto' }}>
 										<h5 className='orange'>Select class for course</h5>
 										{courseDetails && courseDetails.classes && courseDetails.classes.length > 0 ? (
-											courseDetails.classes.map((classDetail) => {
-												// Refactor dates to DD/MM/YYYY
-												const startDate = new Date(classDetail.dayStart).toLocaleDateString("en-GB");
-												const endDate = new Date(classDetail.dayEnd).toLocaleDateString("en-GB");
+											courseDetails.classes
+												.filter(classDetail => classDetail.classStatus !== "Closed") // Filter out closed classes
+												.map((classDetail) => {
+													// Ensure slot times are available before slicing
+													const startTime = classDetail.slotStart ? classDetail.slotStart.slice(0, 5) : "N/A";
+													const endTime = classDetail.slotEnd ? classDetail.slotEnd.slice(0, 5) : "N/A";
 
-												// Refactor times to HH:mm
-												const startTime = classDetail.slotStart.slice(0, 5);
-												const endTime = classDetail.slotEnd.slice(0, 5);
+													// Refactor dates to DD/MM/YYYY
+													const startDate = classDetail.dayStart ? new Date(classDetail.dayStart).toLocaleDateString("en-GB") : "Date Not Available";
+													const endDate = classDetail.dayEnd ? new Date(classDetail.dayEnd).toLocaleDateString("en-GB") : "Date Not Available";
 
-												return (
-													<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '3px solid #FF8A00' : '3px solid  #7F7C7C', borderRadius: '8px' }}>
-														<div className='ps-4 pt-2'>
-															<p>Class: <span style={{ color: '#F15C58', fontWeight: 'bold' }}>{classDetail.classCode}</span></p>
-															<p>Date start: <span style={{ fontWeight: 'bold' }}>{startDate} - {endDate}</span></p>
-															<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>{classDetail.days.join(', ')}</span></p>
-															<p>Slot time: <span style={{ fontWeight: 'bold' }}>({startTime} - {endTime})</span></p>
-															<div className="teacher-info">
-																<p>Teacher: <span style={{
-																	fontWeight: 'bold',
-																	fontFamily: '"Noto Sans", "Arial", sans-serif', // Choose a font that supports Vietnamese characters
-																}}>{classDetail.teacher}</span></p>
+													return (
+														<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '3px solid #FF8A00' : '3px solid  #7F7C7C', borderRadius: '8px' }}>
+															<div className='ps-4 pt-2'>
+																<p>Class: <span style={{ color: '#F15C58', fontWeight: 'bold' }}>{classDetail.classCode}</span></p>
+																<p>Date start: <span style={{ fontWeight: 'bold' }}>{startDate} - {endDate}</span></p>
+																<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>{classDetail.days.join(', ')}</span></p>
+																<p>Slot time: <span style={{ fontWeight: 'bold' }}>({startTime} - {endTime})</span></p>
+																<div className="teacher-info">
+																	<p>Teacher: <span style={{
+																		fontWeight: 'bold',
+																		fontFamily: '"Noto Sans", "Arial", sans-serif',
+																	}}>{classDetail.teacher}</span></p>
+																</div>
 															</div>
 														</div>
-													</div>
-												);
-											})
+													);
+												})
 										) : (
 											<p>This course does not have any class yet.</p>
 										)}
-
 
 									</div>
 								</div>
