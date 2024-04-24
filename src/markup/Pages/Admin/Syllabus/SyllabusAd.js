@@ -776,7 +776,7 @@ export default function SyllabusAd() {
                   onClick={handleSaveChanges}
                   type="button"
                 >
-                  Post course
+                  CREATE SYLLABUS
                 </ButtonMui>
               </div>
             </div>

@@ -118,17 +118,18 @@ export default function Register() {
   return (
     <div
       style={{
-        backgroundImage: `url(${background})`,
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundPosition: "center center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
+        display: 'flex', // Added this
+      flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
+      justifyContent: 'center', // This will center the content vertically
+      alignItems: 'center', // This will center the content horizontally
+      backgroundImage: `url(${background})`,
+      minHeight: "100vh",
+      backgroundPosition: "center center",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="register-container">
+      <div className="register-container col-lg-4 col-md-8 col-sm-12">
         <h2 className="text-center" style={{ color: "#FF8A00" }}>
           Register
         </h2>

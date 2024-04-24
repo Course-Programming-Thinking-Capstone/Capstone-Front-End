@@ -476,7 +476,7 @@ export default function StaffClassDetail() {
               ref={secondAccordionButtonRef}
             >
               <div class="accordion-body">
-                <div className="p-5">
+                <div className="px-5 pt-2">
                   <div className="d-flex">
                     <p className="blue">Slot duration</p>
                     <span className="ms-5">
@@ -1256,7 +1256,7 @@ export default function StaffClassDetail() {
               <p className="blue mb-0">Current class student list</p>
               <div
                 class="table-responsive"
-                style={{ height: "400px", overflowY: "scroll" }}
+                style={{ height: "300px", overflowY: "scroll" }}
               >
                 <table class="table table-bordered">
                   <thead>

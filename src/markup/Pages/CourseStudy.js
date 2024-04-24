@@ -4,6 +4,7 @@ import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 import Footer from '../Layout/Footer';
 import background from './../../images/background/courseBackground.jpg';
+import quiz from './../../images/gallery/Rectangle 23.png';
 import instance from '../../helper/apis/baseApi/baseApi';
 
 export default function CourseStudy() {
@@ -106,7 +107,7 @@ export default function CourseStudy() {
                 {sectionDetails.lessons.map((lesson) => (
                     <div key={lesson.id} className='document d-flex' onClick={() => handleContentClick('lesson', lesson.id)} style={{ backgroundColor: selectedContent?.id === lesson.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
                         {lesson.isComplete ? (
-                            <i style={{color:'#FF8A00'}} className="fa-solid fa-circle-check"></i>
+                            <i style={{ color: '#FF8A00' }} className="fa-solid fa-circle-check"></i>
                         ) : lesson.type === 'Video' ? (
                             <i className="fa-regular fa-circle-play"></i>
                         ) : (
@@ -167,12 +168,19 @@ export default function CourseStudy() {
                 );
 
             default:
-                return <div className='pt-5 px-5'>
-                    <h3>{detailedContent.title}</h3>
-                    <p>Total Questions: {detailedContent.totalQuestion}</p>
-                    <p>Number of attempt: {detailedContent.numberOfAttempt}</p>
-                    <p>Time: {detailedContent.duration} minutes</p>
-                    <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
+                return <div className='pt-5 px-5 mt-5'>
+                    <h3 className='text-center'>{detailedContent.title}</h3>
+                    <div className="d-flex justify-content-around mt-5">
+                        <div>
+                            <p className='ms-5'>Total Questions: {detailedContent.totalQuestion}</p>
+                            <p className='ms-5'>Number of attempt: {detailedContent.numberOfAttempt}</p>
+                            <p className='ms-5'>Time: {detailedContent.duration} minutes</p>
+                        </div>
+                        <div className="mt-5">
+                            <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
+                        </div>
+                    </div>
+
                 </div>;
         }
     };

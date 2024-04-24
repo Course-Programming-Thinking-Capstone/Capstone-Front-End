@@ -136,8 +136,8 @@ const SuccessOrder = ({ orderDetail }) => {
           <p className="mt-3 ms-2">Pay with momo e-wallet</p>
         </div>
       </div>
-      <div className="d-flex justify-content-between mt-3">
-        <div style={{ width: "45%" }} className="py-2 px-3">
+      <div className="d-flex justify-content-between mt-2">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -149,7 +149,7 @@ const SuccessOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4">
+          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
@@ -181,7 +181,7 @@ const SuccessOrder = ({ orderDetail }) => {
             >
               Student account will send to
             </p>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
               <div
                 className="text-center py-1 mt-3 px-2"
                 style={{ borderRadius: "8px", border: "1px solid #ff8a00" }}
@@ -191,7 +191,7 @@ const SuccessOrder = ({ orderDetail }) => {
             </div>
           </div>
         </div>
-        <div style={{ width: "45%" }} className="py-2 px-3">
+        <div style={{ width: "49%" }} className="py-2 ">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -203,10 +203,10 @@ const SuccessOrder = ({ orderDetail }) => {
           >
             Order information
           </p>
-          <div className="px-4">
+          <div className="px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             <div className="d-flex justify-content-between mb-2">
               <span>Course</span>
-              <span>{orderDetail.courseName}</span>
+              <span className="ms-3">{orderDetail.courseName}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
               <span>Price</span>
@@ -224,7 +224,9 @@ const SuccessOrder = ({ orderDetail }) => {
             <div className="d-flex justify-content-between mb-2">
               <span>Total</span>
               <span className="orange">
-                {formatPrice(orderDetail.totalPrice)}
+                <p style={{ fontWeight: 'bold' }}>
+                  {formatPrice(orderDetail.totalPrice)}
+                </p>
               </span>
             </div>
           </div>
@@ -471,21 +473,21 @@ const PendingOrder = ({ orderDetail }) => {
 
   const buttonStyle = isChecked
     ? {
-        backgroundColor: "#F15C58",
-        color: "white",
-        borderRadius: "8px",
-        border: "none",
-        height: "40px",
-        width: "200px",
-      }
+      backgroundColor: "#F15C58",
+      color: "white",
+      borderRadius: "8px",
+      border: "none",
+      height: "40px",
+      width: "200px",
+    }
     : {
-        backgroundColor: "gray",
-        color: "white",
-        borderRadius: "8px",
-        border: "none",
-        height: "40px",
-        width: "200px",
-      };
+      backgroundColor: "gray",
+      color: "white",
+      borderRadius: "8px",
+      border: "none",
+      height: "40px",
+      width: "200px",
+    };
 
   return (
     <div
@@ -603,8 +605,8 @@ const PendingOrder = ({ orderDetail }) => {
           <p className="mt-3 ms-2">Pay with momo e-wallet</p>
         </div>
       </div>
-      <div className="d-flex justify-content-between mt-3">
-        <div style={{ width: "45%" }} className="py-2 px-3">
+      <div className="d-flex justify-content-between">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -616,11 +618,11 @@ const PendingOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className="px-4">
+          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
-                className="d-flex justify-content-center align-items-center mt-3"
+                className="d-flex justify-content-center align-items-center pt-3 pb-2"
               >
                 <div
                   className="text-center py-1"
@@ -632,19 +634,21 @@ const PendingOrder = ({ orderDetail }) => {
                 >
                   {student.studentName}
                 </div>
-                {student.userName === null && (
-                  <div className="ms-2">
-                    <i
-                      onClick={() => handleShow(student.studentId)}
-                      style={{
-                        fontSize: "18px",
-                        color: "#1A9CB7",
-                        cursor: "pointer",
-                      }}
-                      className="fa-solid fa-pen-to-square"
-                    ></i>
-                  </div>
-                )}
+                <div >
+                  {student.userName === null && (
+                    <div className="ms-2">
+                      <i
+                        onClick={() => handleShow(student.studentId)}
+                        style={{
+                          fontSize: "18px",
+                          color: "#1A9CB7",
+                          cursor: "pointer",
+                        }}
+                        className="fa-solid fa-pen-to-square"
+                      ></i>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
 
@@ -901,9 +905,9 @@ const PendingOrder = ({ orderDetail }) => {
             >
               Student account will send to
             </p>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center pb-3" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
               <div
-                className="text-center py-1 mt-3 px-2"
+                className="text-center py-1 mt-3 px-2 "
                 style={{ borderRadius: "8px", border: "1px solid #ff8a00" }}
                 v
               >
@@ -912,7 +916,7 @@ const PendingOrder = ({ orderDetail }) => {
             </div>
           </div>
         </div>
-        <div style={{ width: "45%" }} className="py-2 px-3">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -924,7 +928,7 @@ const PendingOrder = ({ orderDetail }) => {
           >
             Order information
           </p>
-          <div className="px-4">
+          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             <div className="d-flex justify-content-between mb-2">
               <span>Course</span>
               <span>{orderDetail.courseName}</span>
@@ -944,8 +948,10 @@ const PendingOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between mb-2">
               <span>Total</span>
-              <span className="orange">
-                {formatPrice(orderDetail.totalPrice)}
+              <span>
+                <p className="orange" style={{ fontWeight: 'bold' }}>
+                  {formatPrice(orderDetail.totalPrice)}
+                </p>
               </span>
             </div>
           </div>
@@ -968,7 +974,7 @@ const PendingOrder = ({ orderDetail }) => {
           </p>
         </div>
       </div>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end pb-4">
         <button
           style={buttonStyle}
           disabled={!isChecked}
@@ -1110,8 +1116,8 @@ const RefundedOrder = ({ orderDetail }) => {
           <p className="mt-3 ms-2">Pay with momo e-wallet</p>
         </div>
       </div>
-      <div className="d-flex justify-content-between mt-3">
-        <div style={{ width: "45%" }} className="py-2 px-3">
+      <div className="d-flex justify-content-between mt-2">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -1123,7 +1129,7 @@ const RefundedOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4">
+          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
@@ -1155,7 +1161,7 @@ const RefundedOrder = ({ orderDetail }) => {
             >
               Student account will send to
             </p>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center pb-2 " style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
               <div
                 className="text-center py-1 mt-3 px-2"
                 style={{ borderRadius: "8px", border: "1px solid #ff8a00" }}
@@ -1166,7 +1172,7 @@ const RefundedOrder = ({ orderDetail }) => {
             </div>
           </div>
         </div>
-        <div style={{ width: "45%" }} className="py-2 px-3">
+        <div style={{ width: "49%" }} className="py-2 pb-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -1178,7 +1184,7 @@ const RefundedOrder = ({ orderDetail }) => {
           >
             Order information
           </p>
-          <div className="px-4">
+          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             <div className="d-flex justify-content-between mb-2">
               <span>Course</span>
               <span>{orderDetail.courseName}</span>
@@ -1198,8 +1204,10 @@ const RefundedOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between mb-2">
               <span>Total</span>
-              <span className="orange">
-                {formatPrice(orderDetail.totalPrice)}
+              <span>
+                <p className="orange" style={{ fontWeight: 'bold' }}>
+                  {formatPrice(orderDetail.totalPrice)}
+                </p>
               </span>
             </div>
           </div>
@@ -1398,8 +1406,8 @@ const RequestOrder = ({ orderDetail }) => {
           <p className="mt-3 ms-2">Pay with momo e-wallet</p>
         </div>
       </div>
-      <div className="d-flex justify-content-between mt-3">
-        <div style={{ width: "45%" }} className="py-2 px-3">
+      <div className="d-flex justify-content-between mt-2">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -1411,7 +1419,7 @@ const RequestOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4">
+          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
@@ -1443,7 +1451,7 @@ const RequestOrder = ({ orderDetail }) => {
             >
               Student account will send to
             </p>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
               <div
                 className="text-center py-1 mt-3 px-2"
                 style={{ borderRadius: "8px", border: "1px solid #ff8a00" }}
@@ -1454,7 +1462,7 @@ const RequestOrder = ({ orderDetail }) => {
             </div>
           </div>
         </div>
-        <div style={{ width: "45%" }} className="py-2 px-3">
+        <div style={{ width: "49%" }} className="py-2">
           <p
             style={{
               backgroundColor: "#ff8a00",
@@ -1466,7 +1474,7 @@ const RequestOrder = ({ orderDetail }) => {
           >
             Order information
           </p>
-          <div className="px-4">
+          <div className="px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             <div className="d-flex justify-content-between mb-2">
               <span>Course</span>
               <span>{orderDetail.courseName}</span>
@@ -1486,14 +1494,16 @@ const RequestOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between mb-2">
               <span>Total</span>
-              <span className="orange">
-                {formatPrice(orderDetail.totalPrice)}
+              <span>
+                <p className="orange mb-0" style={{ fontWeight: 'bold' }}>
+                  {formatPrice(orderDetail.totalPrice)}
+                </p>
               </span>
             </div>
           </div>
         </div>
       </div>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end my-3">
         <button
           style={{
             backgroundColor: "#F15C58",

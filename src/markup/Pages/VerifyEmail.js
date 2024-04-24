@@ -11,16 +11,17 @@ export default function VerifyEmail() {
     }
     return (
         <div style={{
+            display: 'flex', // Added this
+            flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
+            justifyContent: 'center', // This will center the content vertically
+            alignItems: 'center', // This will center the content horizontally
             backgroundImage: `url(${background})`,
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundPosition: 'center center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat'
+            minHeight: "100vh",
+            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
         }}>
-            <div className="verify">
+            <div className="verify col-lg-4 col-md-8 col-sm-12">
                 <h3 className='text-center' style={{ color: '#FF8A00' }}>Verify your email address</h3>
 
                 <div className="d-flex justify-content-center">

@@ -44,7 +44,7 @@ thead.staff-order-table-th {
   border: none;
 }
 
-.staff-order-content-table, .table-responsive {
+.staff-order-content-table, .staff-order {
   height: 65vh !important;
   overflow: auto !important;
 }
