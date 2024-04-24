@@ -1,10 +1,10 @@
 import axios from "axios";
 
 //api test
-const url = "https://kidpro.azurewebsites.net/";
+// const url = "https://kidpro.azurewebsites.net/";
 
 //api production
-// const url = "https://kidproproduction.azurewebsites.net/";
+const url = "https://kidproproduction.azurewebsites.net/";
 
 // const url = "https://localhost:7200/";
 
