@@ -11,7 +11,32 @@ export default function CoursesPlan() {
     const { courseId } = useParams();
     console.log("Course ID:", courseId);
     const [courseDetails, setCourseDetails] = useState(null);
+    const [linkGame, setLinkGame] = useState(null);
+
     const [isLoading, setIsLoading] = useState(null);
+
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchLinkGame = async () => {
+            try {
+                const response = await instance.get(`api/v1/coursegames/available`);
+                const data = response.data;
+                if (data.length > 0) {
+                    setLinkGame(data[0].url); // Assuming you want to set the URL of the first game
+                } else {
+                    console.log("No games available");
+                }
+                console.log('Course detail data:', data);
+            } catch (error) {
+                console.error('Error fetching game:', error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchLinkGame();
+    }, []);
+
 
     useEffect(() => {
         setIsLoading(true);
@@ -149,15 +174,29 @@ export default function CoursesPlan() {
                                     <hr />
                                     <p>{courseDetails && courseDetails.description}</p>
                                     <div>
-                                        {courseDetails && courseDetails.sections.map((section) => (
+                                        {courseDetails && courseDetails.sections.map((section, index) => (
                                             <CollapsibleQuestion
                                                 key={section.id}
                                                 id={`${section.id}`}
-                                                title={`Section: ${section.name}`}
+                                                title={`Section ${index + 1}: ${section.name}`}
                                                 lessons={section.lessons}
                                                 quizzes={section.quizzes}
                                             />
                                         ))}
+
+                                        <div className='d-flex justify-content-center mt-2'>
+                                            <button onClick={() => linkGame && window.open(linkGame, '_blank')}
+                                                style={{ backgroundColor: 'FF8A00', width: '200px', }}>
+                                                <div className="d-flex justify-content-center align-items-center px-2 py-1">
+                                                    <div className='d-flex justify-content-center align-items-center '>
+                                                        <p className='mt-1' style={{ color: 'white', fontSize: '16px' }}>
+                                                            <i class="fa-solid fa-gamepad"></i>
+                                                        </p>
+                                                        <p className='ms-1 mt-1' style={{ color: 'white', fontSize: '16px', fontWeight: 'bold' }}>Practice game</p>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             )
