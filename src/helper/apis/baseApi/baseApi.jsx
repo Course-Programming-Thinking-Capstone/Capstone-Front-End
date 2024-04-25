@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://www.kidpro-production.somee.com/";
+const url = "https://kidpro.azurewebsites.net/";  
 // const url = "https://localhost:7200/";
 
 const instance = axios.create({
