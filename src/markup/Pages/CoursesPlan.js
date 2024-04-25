@@ -136,39 +136,44 @@ export default function CoursesPlan() {
                 <PageTitle motherMenu="Courses" activeMenu="Courses" />
                 <div className="container">
                     <div className="plan row">
-                        <div className="col-lg-3">
-                            <table className="table table-bordered">
+                        <div className="col-lg-3" style={{ border: '3px solid #ffc887', paddingLeft: 0, paddingRight: 0, borderRadius: '10px', marginRight: 10 }}>
+                            {courseDetails && courseDetails.pictureUrl && (
+                                <img style={{ height: '212px', width: '300px', borderRadius: '8px', marginBottom: 40 }} src={courseDetails.pictureUrl} alt="" />
+                            )}
+                            <table className="table">
                                 <tbody>
                                     <tr>
-                                        <td className='title'>Age</td>
-                                        <td className='content'>Suitable for children 7 years and older</td>
+                                        <th className='title' style={{ borderRight: '1px dashed #ffc887', borderBottom: '1px dashed #ffc887', borderTop: '1px dashed #ffc887',color:'#777777' }}>Age</th>
+                                        <td className='content' style={{ borderBottom: '1px dashed #ffc887', borderTop: '1px dashed #ffc887',color:'#777777' }}>Suitable for children 7 years and older</td>
                                     </tr>
                                     <tr>
-                                        <td>Language</td>
-                                        <td className='content'>English/Vietnamese</td>
+                                        <th style={{ borderRight: '1px dashed #ffc887', borderBottom: '1px dashed #ffc887',color:'#777777' }}>Language</th>
+                                        <td className='content' style={{ borderBottom: '1px dashed #ffc887',color:'#777777' }}>English/Vietnamese</td>
                                     </tr>
                                     <tr>
-                                        <td>Graduate</td>
-                                        <td className='content'>Complete all quiz with score higher than 80</td>
+                                        <th style={{ borderRight: '1px dashed #ffc887', borderBottom: '1px dashed #ffc887',color:'#777777' }}>Graduate</th>
+                                        <td className='content' style={{ borderBottom: '1px dashed #ffc887',color:'#777777' }}>Complete all quiz with score higher than 80</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div className="plan-content col-lg-9">
+                        <div className="plan-content col-lg-8">
                             {isLoading ? (
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                             ) : (
                                 <div>
-                                    <h5>{courseDetails && courseDetails.name}</h5>
-                                    <div>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <h5>{courseDetails && courseDetails.name}</h5>
+                                    </div>
+                                    <div style={{marginTop:10}}>
                                         <ul className='d-flex justify-content-around'>
-                                            <li><i class="fa-solid fa-book-open-reader"></i>{courseDetails && courseDetails.totalSection}  Lessons</li>
-                                            <li><i class="fa-regular fa-circle-play"></i>{courseDetails && courseDetails.totalVideo}  Videos</li>
-                                            <li><i class="fa-solid fa-file-lines"></i>{courseDetails && courseDetails.totalDocument}  Documents</li>
-                                            <li><i class="fa-solid fa-pen-to-square"></i>{courseDetails && courseDetails.totalQuiz}  Quiz</li>
-                                            <li><i class="fa-solid fa-gamepad"></i>1  Game</li>
+                                            <li><i class="fa-solid fa-book-open-reader" style={{marginRight:10,fontSize:20}}></i>{courseDetails && courseDetails.totalSection} Lessons</li>
+                                            <li><i class="fa-regular fa-circle-play" style={{marginRight:10,fontSize:20}}></i>{courseDetails && courseDetails.totalVideo} Videos</li>
+                                            <li><i class="fa-solid fa-file-lines" style={{marginRight:10,fontSize:20}}></i>{courseDetails && courseDetails.totalDocument} Documents</li>
+                                            <li><i class="fa-solid fa-pen-to-square" style={{marginRight:10,fontSize:20}}></i>{courseDetails && courseDetails.totalQuiz} Quiz</li>
+                                            <li><i class="fa-solid fa-gamepad" style={{marginRight:10,fontSize:20}}></i>1 Game</li>
                                         </ul>
                                     </div>
                                     <hr />

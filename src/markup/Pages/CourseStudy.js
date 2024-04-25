@@ -49,7 +49,7 @@ export default function CourseStudy() {
                 url = `api/v1/courses/study/section/quiz/${id}`;
                 // Assume similar endpoint for quizzes if exists
             }
-            const response = await instance.get(url); // Make sure to use `await` to wait for the API call
+            const response = await instance.get(url);
             const data = response.data;
             setDetailedContent(data);
             console.log('response.data: ', data);
@@ -64,22 +64,13 @@ export default function CourseStudy() {
             const response = await instance.patch(`api/v1/courses/mark-lesson-completed?lessonId=${lessonId}`);
 
             if (response.status === 200) {
-                // Assuming the response includes the updated lesson data
-                // Update the state with the new completion status
                 const updatedLessons = sectionDetails.lessons.map((lesson) => {
                     if (lesson.id === lessonId) {
-                        // Use the updated data from the response if available
-                        // Otherwise, just set isComplete to true
                         return { ...lesson, isComplete: true };
                     }
                     return lesson;
                 });
-
-                // Update the section details with the new lessons array
                 setSectionDetails({ ...sectionDetails, lessons: updatedLessons });
-
-                // If the selectedContent is the one being marked as completed,
-                // update it as well to reflect the new state
                 if (selectedContent && selectedContent.id === lessonId) {
                     setSelectedContent((prevContent) => ({
                         ...prevContent,
@@ -132,7 +123,7 @@ export default function CourseStudy() {
         );
     };
 
-
+    const [contentType, setContentType] = useState('Video');
     const renderContent = () => {
         if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
 
@@ -142,13 +133,13 @@ export default function CourseStudy() {
                     <div className='pt-5 px-5'>
                         <iframe
                             width="100%"
-                            height="600px"
+                            height="550px"
                             src={detailedContent.resourceUrl}
                             title={detailedContent.name}
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen></iframe>
-                        <div className='d-flex justify-content-center'>
+                        <div className='d-flex justify-content-end' style={{marginTop:10}}>
                             {!detailedContent.isComplete && (
                                 <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
                             )}
@@ -159,7 +150,7 @@ export default function CourseStudy() {
                 return (
                     <div className='pt-5 px-5'>
                         <div dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
-                        <div className='d-flex justify-content-center'>
+                        <div className='d-flex justify-content-end'>
                             {!detailedContent.isComplete && (
                                 <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
                             )}
