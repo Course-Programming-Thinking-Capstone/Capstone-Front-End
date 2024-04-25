@@ -1,0 +1,58 @@
+.staff-order-container {
+  padding: 20px 40px;
+  height: 90vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-right: 3rem;
+  margin-left: 3rem;
+  background-color: #fbede1;
+}
+
+.staff-order-container .table {
+  border-collapse: collapse;
+}
+
+.staff-order-container thead {
+  border-radius: 8px !important;
+  text-align: center;
+  color: white !important;
+}
+
+.staff-order-container tr th {
+  background-color: #1a9cb7 !important;
+}
+
+.staff-order-container thead tr th {
+  color: white;
+}
+
+.staff-order-container tbody tr {
+  border-bottom: 1px solid gray;
+}
+
+.staff-order-container tbody tr td {
+  padding: 10px;
+}
+
+table.staff-order-table th {
+  border: none;
+  border-collapse: collapse;
+}
+
+th.staff-order-table-th,
+thead.staff-order-table-th {
+  border: none;
+}
+
+.staff-order-content-table, .staff-order {
+  height: 65vh !important;
+  overflow: auto !important;
+}
+
+
+.staff-order-content-table table {
+    height: 100%;
+}
+
+
+

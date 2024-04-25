@@ -2,21 +2,50 @@ import React, { useState, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import instance from '../../../../../helper/apis/baseApi/baseApi';
 
 const TeacherScheduleComponent = () => {
   const [schedule, setSchedule] = useState([]);
-  const accessToken = localStorage.getItem('accessToken');
+  const [events, setEvents] = useState([]);
 
-  const parseDate = (dateString) => {
-    const [day, month, year] = dateString.split('/').map(Number);
-    const date = new Date(year, month - 1, day);
-    date.setHours(0, 0, 0, 0); // set the date to the start of the day
-    return date;
-  };
-  
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await instance.get(`api/v1/Classes/teacher-or-student`);
+        const data = response.data;
+        console.log('API data:', data);
 
-  const transformToEvents = (data) => {
-    const dayIndices = {
+        const newEvents = data.map((item) => {
+          const occurrences = getEventOccurrences(item);
+          return occurrences.map((date) => ({
+            title: item.classCode,
+            start: `${date}T${item.slotStart}`,
+            end: `${date}T${item.slotEnd}`,
+          }));
+        }).flat();
+
+        setEvents(newEvents);
+      } catch (error) {
+        console.error("Failed to fetch schedule", error);
+      }
+    };
+
+    fetchSchedule();
+  }, []);
+
+  function getEventOccurrences(item) {
+    // Replace slashes with hyphens and parse the dates as UTC
+    const startString = item.dayStart.replace(/\//g, '-') + 'T00:00:00Z';
+    const endString = item.dayEnd.replace(/\//g, '-') + 'T23:59:59Z';
+
+    const start = new Date(startString);
+    const end = new Date(endString);
+
+    console.log('start: ', start);
+    console.log('end: ', end);
+
+    const daysOfWeekMap = {
+      'Sunday': 0, // Based on getUTCDay(), Sunday is 0
       'Monday': 1,
       'Tuesday': 2,
       'Wednesday': 3,
@@ -25,76 +54,27 @@ const TeacherScheduleComponent = () => {
       'Saturday': 6
     };
 
-    const getNextOccurrence = (date, dayIndex) => {
-      const resultDate = new Date(date);
-      let daysToAdd = dayIndex - resultDate.getDay();
-      if (daysToAdd < 0) daysToAdd += 7; // If it's past the day of the week, go to next week
-      if (daysToAdd !== 0) resultDate.setDate(resultDate.getDate() + daysToAdd); // Only add days if it's not already the correct day
-      return resultDate;
-    };
+    let dates = [];
+    while (start <= end) {
+      // Get the day of the week in UTC
+      const dayOfWeek = start.getUTCDay();
 
+      // Use the mapping to get the string representation of the day
+      const dayName = Object.keys(daysOfWeekMap).find(key => daysOfWeekMap[key] === dayOfWeek);
 
-    return data.flatMap((item) => {
-      const startDate = parseDate(item.dayStart);
-      const endDate = parseDate(item.dayEnd);
-      const events = [];
-
-      console.log('Start Date:', startDate);
-      console.log('End Date:', endDate);
-
-      item.days.forEach((day) => {
-        let currentDate = getNextOccurrence(startDate, dayIndices[day]);
-
-        while (currentDate <= endDate) {
-          const dateStr = currentDate.toISOString().split('T')[0];
-          console.log(`${day} Date:`, currentDate.toISOString());
-
-          events.push({
-            title: item.classCode,
-            start: `${dateStr}T${item.slotStart}`,
-            end: `${dateStr}T${item.slotEnd}`,
-          });
-
-          // Increment to the next occurrence for the same weekday
-          currentDate.setDate(currentDate.getDate() + 7);
-        }
-      });
-
-      return events;
-    });
-  };
-
-
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      try {
-        const response = await fetch("https://www.kidpro-production.somee.com/api/v1/Classes/teacher-or-student", {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${accessToken}`,
-            "Content-Type": "application/json"
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('API data:', data); // Check the fetched data // Check the generated events
-
-        const eventArray = transformToEvents(data);
-        console.log('eventArray: ', eventArray);
-        setSchedule(eventArray);
-
-      } catch (error) {
-        console.error("Failed to fetch schedule", error);
+      // Check if the day of week matches the days we need to create an event for
+      if (item.days.includes(dayName)) {
+        // Push the date in the format FullCalendar expects, without conversion to local time
+        dates.push(start.toISOString().split('T')[0]);
       }
-    };
+      // Add one day in UTC
+      start.setUTCDate(start.getUTCDate() + 1);
+    }
 
-    fetchSchedule();
-  }, []);
-  console.log('Final schedule state: ', schedule);
+    console.log('Occurrences:', dates); // Log to see the output
+    return dates;
+  }
+
   return (
     <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin]}
@@ -104,10 +84,9 @@ const TeacherScheduleComponent = () => {
         center: "title",
         right: "timeGridWeek,timeGridDay",
       }}
-      events={schedule}
-      hiddenDays={[0]}
-    // slotMinTime="07:00:00"
-    // slotMaxTime="23:00:00"
+      events={events}
+      slotMinTime="07:00:00"
+      slotMaxTime="23:00:00"
     />
 
   );

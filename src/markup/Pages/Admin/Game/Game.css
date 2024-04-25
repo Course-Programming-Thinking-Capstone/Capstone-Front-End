@@ -1,0 +1,7 @@
+input.game-level-detail {
+  border: solid 1px #d4d4d4;
+  border-radius: 5px;
+  width: 70%;
+  padding: 4px 8px;
+  outline: none;
+}

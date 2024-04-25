@@ -50,6 +50,22 @@ import PaymentSuccess from "./markup/Pages/PaymentSuccess";
 import CoursesPlan from "./markup/Pages/CoursesPlan";
 import { NotFound } from "./markup/Pages/NotFound/NotFound";
 import { EditText } from "./markup/Pages/TestPage/EditText";
+import ErrorPage from "./markup/Pages/ErrorPage";
+import StudentHome from "./markup/Pages/StudentHome";
+import CourseStudy from "./markup/Pages/CourseStudy";
+import Order from "./markup/Pages/Order";
+import OrderDetail from "./markup/Pages/OrderDetail";
+import StaffNotification from "./markup/Pages/Staff/StaffNotification/StaffNotification";
+import Account from "./markup/Pages/ParentAccount/Account";
+import AccountDetails from "./markup/Pages/ParentAccount/AccountDetails/AccountDetails";
+import PaymentMethods from "./markup/Pages/ParentAccount/PaymentMethods/PaymentMethods";
+import ChildProcess from "./markup/Pages/ParentAccount/ChildProcess/ChildProcess";
+import ChildProcessDetail from "./markup/Pages/ParentAccount/ChildProcess/ChildProcessDetail";
+import CourseProcess from "./markup/Pages/ParentAccount/ChildProcess/CourseProcess";
+import CourseQuiz from "./markup/Pages/CourseQuiz";
+import User from "./markup/Pages/Admin/User/User";
+import UserParents from "./markup/Pages/Admin/User/UserParents";
+import CourseResult from './markup/Pages/CourseResult';
 
 // function App() {
 // 	return (
@@ -112,6 +128,19 @@ const App = () => {
               path="/admin"
               element={<PrivateRoute page="admin" component={<Admin />} />}
             >
+              <Route index element={<Navigate to="game" replace />} />
+              <Route
+                path="user"
+                element={
+                  <PrivateRoute page="admin/user" component={<User />} />
+                }
+              />
+              <Route
+                path="parent"
+                element={
+                  <PrivateRoute page="admin/parent" component={<UserParents />} />
+                }
+              />
               <Route
                 path="game"
                 element={
@@ -144,6 +173,16 @@ const App = () => {
               path="/staff"
               element={<PrivateRoute page="staff" component={<Staff />} />}
             >
+              <Route index element={<Navigate to="staff-order" replace />} />
+              <Route
+                path="staff-notification"
+                element={
+                  <PrivateRoute
+                    page="staff/staff-notification"
+                    component={<StaffNotification />}
+                  />
+                }
+              />
               <Route
                 path="staff-order"
                 element={
@@ -281,18 +320,83 @@ const App = () => {
             />
 
             {/* Parent pages  */}
+
             <Route
-              path="/classes"
-              element={<PrivateRoute page="classes" component={<Classes />} />}
+              path="account"
+              element={<PrivateRoute page="account" component={<Account />} />}
+            >
+              <Route
+                path="account-details"
+                element={
+                  <PrivateRoute
+                    page="account/account-details"
+                    component={<AccountDetails />}
+                  />
+                }
+              />
+              <Route
+                path="payment-methods"
+                element={
+                  <PrivateRoute
+                    page="account/payment-methods"
+                    component={<PaymentMethods />}
+                  />
+                }
+              />
+              <Route
+                path="child-process"
+                element={
+                  <PrivateRoute
+                    page="account/child-process"
+                    component={<ChildProcess />}
+                  />
+                }
+              />
+            </Route>
+
+            <Route
+              path="/account/child-process-detail/:childId"
+              element={
+                <PrivateRoute
+                  page="account/child-process-detail"
+                  component={<ChildProcessDetail />}
+                />
+              }
             />
 
             <Route
-              path="/classes-details"
+              path="/account/course-process/:studentId/:courseId"
               element={
                 <PrivateRoute
-                  page="classes-details"
+                  page="account/course-process"
+                  component={<CourseProcess />}
+                />
+              }
+            />
+
+            <Route
+              path="/courses"
+              element={<PrivateRoute page="courses" component={<Classes />} />}
+            />
+
+            <Route
+              path="/classes-detail/:id"
+              element={
+                <PrivateRoute
+                  page="classes-detail"
                   component={<ClassesDetail />}
                 />
+              }
+            />
+
+            <Route
+              path="/order"
+              element={<PrivateRoute page="order" component={<Order />} />}
+            />
+            <Route
+              path="/order-detail/:orderId"
+              element={
+                <PrivateRoute page="order-detail" component={<OrderDetail />} />
               }
             />
 
@@ -303,7 +407,7 @@ const App = () => {
               }
             />
             <Route
-              path="/payment-success"
+              path="/payment-success/:orderId"
               element={
                 <PrivateRoute
                   page="payment-success"
@@ -312,23 +416,60 @@ const App = () => {
               }
             />
             {/* Student pages */}
+
             <Route
-              path="/courses-plan"
-              element={<CoursesPlan />}
-            // element={
-            //   <PrivateRoute
-            //     page="courses-plan"
-            //     component={<CoursesPlan/>}
-            //   />
-            // }
+              path="/student-home"
+              element={
+                <PrivateRoute page="student-home" component={<StudentHome />} />
+              }
+            />
+            <Route
+              path="/schedule"
+              element={
+                <PrivateRoute page="schedule" component={<Schedule />} />
+              }
+            />
+            <Route
+              path="/courses-plan/:courseId"
+              element={
+                <PrivateRoute page="courses-plan" component={<CoursesPlan />} />
+              }
+            />
+
+            <Route
+              path="/courses-study/:sectionId"
+              element={
+                <PrivateRoute
+                  page="courses-study"
+                  component={<CourseStudy />}
+                />
+              }
+            />
+            <Route
+              path="/courses-quiz/:quizId"
+              element={
+                <PrivateRoute
+                  page="courses-quiz"
+                  component={<CourseQuiz />}
+                />
+              }
+            />
+            <Route
+              path="/courses-result"
+              element={
+                <PrivateRoute
+                  page="courses-result"
+                  component={<CourseResult />}
+                />
+              }
             />
 
             {/* Test page */}
-            <Route path="/test" element={<EditText />} />
+            <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/not-found"  />} />
+            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
+            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

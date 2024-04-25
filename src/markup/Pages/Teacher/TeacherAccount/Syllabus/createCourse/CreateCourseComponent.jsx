@@ -11,7 +11,6 @@ import { getCourseByIdAsync } from "../../../../../../store/thunkApis/course/cou
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
-  Button,
   Col,
   Container,
   Form,
@@ -41,8 +40,45 @@ import {
 
 import checkButton from "../../../../../../images/course/checked button.png";
 import uncheckButton from "../../../../../../images/course/uncheck button.png";
-import { setDescription } from "../../../../../../store/slices/course/createCourseSlice";
+import {
+  setDescription,
+  swapLessonOrder,
+  swapQuizOrder,
+} from "../../../../../../store/slices/course/createCourseSlice";
 import { changeData } from "../../../../../../store/slices/course/componentNumber";
+
+//dnd kit
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import { styled } from "@mui/material/styles";
+import ButtonMui from "@mui/material/Button";
+
+import { CSS } from "@dnd-kit/utilities";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  CloudUpload,
+  DriveFolderUpload,
+  KeyboardBackspace,
+  Save,
+  Upload,
+} from "@mui/icons-material";
+
+import { Button } from "@mui/material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -63,6 +99,33 @@ const CreateCourseComponent = () => {
   const [description, setDescriptionInput] = useState(undefined);
   const [confirm, setConfirm] = useState(false);
 
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const handleFileInputChange = (event) => {
     setCoursePictureFile(event.target.files[0]);
   };
@@ -78,6 +141,18 @@ const CreateCourseComponent = () => {
   const goBack = () => {
     navigate(-1);
   };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
 
   // fetch course detail
   useEffect(() => {
@@ -117,15 +192,16 @@ const CreateCourseComponent = () => {
         //log
         console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 
+        let message;
+
         if (error.response) {
-          setMessage(error.response?.data?.message || "Undefined.");
+          message = error.response?.data?.message || "Error when load data.";
         } else {
-          setMessage(error.message || "Undefined.");
+          message = error.message || "Error when load data.";
         }
+
+        notifyApiFail(message);
       } finally {
-        if (message !== null) {
-          alert(message);
-        }
         setIsLoading(false);
       }
     };
@@ -148,6 +224,14 @@ const CreateCourseComponent = () => {
 
         setIsLoading(true);
 
+        //upload course picture
+        if (coursePictureFile != null) {
+          const pictureUrl = await updateCoursePictureApi({
+            id: createCourse.id,
+            file: coursePictureFile,
+          });
+        }
+
         const updatedData = { ...createCourse, description };
 
         await updateCourseApi({
@@ -156,34 +240,75 @@ const CreateCourseComponent = () => {
           data: updatedData,
         });
 
-        if (coursePictureFile != null) {
-          const pictureUrl = await updateCoursePictureApi({
-            id: createCourse.id,
-            file: coursePictureFile,
-          });
-        }
-
-        alert("Update success");
-        if (action === "Post") {
+        if (action === "Save") {
+          notifyApiSucess("Update sucesss.");
+        } else if (action === "Post") {
+          notifyApiSucess("Post course sucesss.");
           setTimeout(() => {
             navigate("/teacher/syllabuses");
-          }, 0);
+          }, 2000);
         }
       } catch (error) {
+        let message;
         if (error.response) {
           console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.response?.data?.message || "Undefined.");
+          message =
+            error.response?.data?.message || "Error when update course.";
         } else {
-          console.log(`Error message abc: ${JSON.stringify(error, null, 2)}`);
-          setMessage(error.message || "Undefined.");
+          console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+          message = error.message || "Error when update course.";
         }
-        alert(message);
+        notifyApiFail(message);
       } finally {
         setIsLoading(false);
       }
     };
     updateData();
   };
+
+  //dnd part
+
+  //sensor
+  const sensor = useSensors(useSensor(TouchSensor), useSensor(MouseSensor));
+
+  const handleLessonDragEnd = (event, sectionId) => {
+    const { active, over } = event;
+
+    if (active.id === over.id) {
+      return;
+    }
+
+    const originalPos = active.id;
+    const newPos = over.id;
+
+    dispatch(
+      swapLessonOrder({
+        sectionId: sectionId,
+        index1: originalPos,
+        index2: newPos,
+      })
+    );
+  };
+
+  const handleQuizDragEnd = (event, sectionId) => {
+    const { active, over } = event;
+
+    if (active.id === over.id) {
+      return;
+    }
+
+    const originalPos = active.id;
+    const newPos = over.id;
+
+    dispatch(
+      swapQuizOrder({
+        sectionId: sectionId,
+        index1: originalPos,
+        index2: newPos,
+      })
+    );
+  };
+  //dnd part
 
   return (
     <div className="create-course">
@@ -198,9 +323,11 @@ const CreateCourseComponent = () => {
           </div>
           <div>
             <Button
-              variant="outline-warning"
-              className="px-3 py-2"
-              style={{ borderRadius: "5px" }}
+              variant="contained"
+              color="warning"
+              size="small"
+              aria-label="Back"
+              startIcon={<KeyboardBackspace />}
               onClick={goBack}
             >
               Back
@@ -208,6 +335,9 @@ const CreateCourseComponent = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer />
+
       <div className="create-course-content">
         <div style={{ padding: "10px 20px" }}>
           {isLoading === true ? (
@@ -289,36 +419,67 @@ const CreateCourseComponent = () => {
                       <Accordion.Item eventKey={index}>
                         <Accordion.Header>{section.name}</Accordion.Header>
                         <Accordion.Body>
-                          {/* Content */}
-                          {section.lessons.map((lesson, lessonIndex) =>
-                            lesson.type === "Video" ? (
-                              <VideoContent
-                                sectionId={section.id}
-                                key={lessonIndex}
-                                lesson={lesson}
-                                index={lessonIndex}
-                                sectionIndex={index}
-                              />
-                            ) : (
-                              <DocumentContent
-                                sectionId={section.id}
-                                key={lessonIndex}
-                                lesson={lesson}
-                                index={lessonIndex}
-                                sectionIndex={index}
-                              />
-                            )
-                          )}
+                          {/* Dnd Content */}
+                          <DndContext
+                            collisionDetection={closestCenter}
+                            sensors={sensor}
+                            onDragEnd={(event) =>
+                              handleLessonDragEnd(event, section.id)
+                            }
+                          >
+                            <SortableContext
+                              items={section.lessons}
+                              strategy={verticalListSortingStrategy}
+                              id={`sortable-lesson-${section.id}`}
+                            >
+                              {section.lessons.map((lesson, lessonIndex) =>
+                                lesson.type === "Video" ? (
+                                  <VideoContent
+                                    sectionId={section.id}
+                                    key={lessonIndex}
+                                    lesson={lesson}
+                                    index={lessonIndex}
+                                    sectionIndex={index}
+                                  />
+                                ) : (
+                                  <DocumentContent
+                                    sectionId={section.id}
+                                    key={lessonIndex}
+                                    lesson={lesson}
+                                    index={lessonIndex}
+                                    sectionIndex={index}
+                                  />
+                                )
+                              )}
+                            </SortableContext>
+                          </DndContext>
+                          {/* Dnd Content */}
 
-                          {section.quizzes.map((quiz, quizIndex) => (
-                            <QuizContent
-                              key={quizIndex}
-                              sectionId={section.id}
-                              quiz={quiz}
-                              index={quizIndex}
-                              sectionIndex={index}
-                            />
-                          ))}
+                          {/* Dnd Content */}
+                          <DndContext
+                            collisionDetection={closestCenter}
+                            sensors={sensor}
+                            onDragEnd={(event) =>
+                              handleQuizDragEnd(event, section.id)
+                            }
+                          >
+                            <SortableContext
+                              items={section.quizzes}
+                              strategy={verticalListSortingStrategy}
+                              id={`sortable-quiz-${section.id}`}
+                            >
+                              {section.quizzes.map((quiz, quizIndex) => (
+                                <QuizContent
+                                  key={quizIndex}
+                                  sectionId={section.id}
+                                  quiz={quiz}
+                                  index={quizIndex}
+                                  sectionIndex={index}
+                                />
+                              ))}
+                            </SortableContext>
+                          </DndContext>
+                          {/* Dnd Content */}
 
                           <Container>
                             <Row>
@@ -326,6 +487,7 @@ const CreateCourseComponent = () => {
                                 <VideoComponent
                                   sectionId={section.id}
                                   index={index}
+                                  lessonIndex={section.lessons.length}
                                 />
                               </Col>
                               <Col md="4">
@@ -368,7 +530,25 @@ const CreateCourseComponent = () => {
                 {/* <label htmlFor="fileInput" className="button">
               <i className="fa-solid fa-circle-plus"></i> Upload file
             </label> */}
-                <input
+                {/* <input
+                  type="file"
+                  accept="image/jpeg, image/png"
+                  onChange={handleFileInputChange}
+                  id="fileInput"
+                /> */}
+
+                <label htmlFor="fileInput">
+                  <ButtonMui
+                    component="span"
+                    size="small"
+                    variant="contained"
+                    startIcon={<Upload />}
+                    className="mt-2"
+                  >
+                    Upload Picture
+                  </ButtonMui>
+                </label>
+                <VisuallyHiddenInput
                   type="file"
                   accept="image/jpeg, image/png"
                   onChange={handleFileInputChange}
@@ -394,8 +574,8 @@ const CreateCourseComponent = () => {
                 </p>
               </div>
               <div>
-                <div className="d-flex justify-content-end">
-                  <Button
+                <div className="d-flex justify-content-end my-2">
+                  {/* <Button
                     variant="primary"
                     className="mx-3 px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -403,8 +583,21 @@ const CreateCourseComponent = () => {
                     type="button"
                   >
                     Save Draft
-                  </Button>
-                  <Button
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="primary"
+                    aria-label="Save draft"
+                    startIcon={<Save />}
+                    onClick={() => saveCourse("Save")}
+                    type="button"
+                    className="mx-2"
+                  >
+                    Save Draft
+                  </ButtonMui>
+                  {/* <Button
                     variant="danger"
                     className="px-3 py-2"
                     style={{ borderRadius: "5px" }}
@@ -413,7 +606,20 @@ const CreateCourseComponent = () => {
                     disabled={confirm === false}
                   >
                     Post Course
-                  </Button>
+                  </Button> */}
+
+                  <ButtonMui
+                    // size="small"
+                    variant="contained"
+                    color="warning"
+                    aria-label="Save draft"
+                    startIcon={<DriveFolderUpload />}
+                    onClick={() => saveCourse("Post")}
+                    type="button"
+                    disabled={confirm === false}
+                  >
+                    Post Course
+                  </ButtonMui>
                 </div>
               </div>
             </>
@@ -427,8 +633,29 @@ const CreateCourseComponent = () => {
 export default CreateCourseComponent;
 
 const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
   return (
-    <Accordion defaultActiveKey="0" flush className="teacher-accordion ">
+    <Accordion
+      ref={setNodeRef}
+      style={style}
+      defaultActiveKey="0"
+      flush
+      className="teacher-accordion "
+    >
       <Accordion.Item eventKey={index}>
         <div className="d-flex justify-content-between align-items-center w-100">
           <Accordion.Header className="lesson-title w-100">
@@ -455,6 +682,18 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
               sectionIndex={sectionIndex}
               type={"Video"}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
 
@@ -484,8 +723,26 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
 };
 
 const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
+
   return (
     <Accordion
+      ref={setNodeRef}
+      style={style}
       defaultActiveKey="0"
       flush
       className="teacher-accordion lesson-title"
@@ -514,6 +771,18 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
               sectionIndex={sectionIndex}
               type={"Document"}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
         <Accordion.Body>
@@ -541,8 +810,26 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
 };
 
 const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isOver,
+    isDragging,
+  } = useSortable({ id: index });
+
+  const style = {
+    transition: isDragging ? transition : "",
+    transform: CSS.Transform.toString(transform),
+    borderColor: isOver ? "#FF8A00" : "#D4D4D4",
+  };
+
   return (
     <Accordion
+      ref={setNodeRef}
+      style={style}
       defaultActiveKey="0"
       flush
       className="teacher-accordion lesson-title"
@@ -572,6 +859,18 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               index={index}
               sectionIndex={sectionIndex}
             />
+            <div
+              className="create-course-drag"
+              disabled
+              title="Drag"
+              {...attributes}
+              {...listeners}
+            >
+              <i
+                className="fa-regular fa-hand"
+                style={{ fontSize: "18px" }}
+              ></i>
+            </div>
           </div>
         </div>
 
@@ -597,7 +896,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               <Col md="8">{quiz.numberOfAttempt}</Col>
             </Row>
 
-            <Row className="mb-3">
+            {/* <Row className="mb-3">
               <Col md="3">
                 <span className="blue fw-bold">Random order:</span>{" "}
               </Col>
@@ -610,7 +909,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
                 </Col>
                 <Col md="9">{quiz.numberOfQuestion}</Col>
               </Row>
-            )}
+            )} */}
 
             {quiz.questions && (
               <Row className="mb-3">

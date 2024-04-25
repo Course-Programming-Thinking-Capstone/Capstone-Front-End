@@ -434,6 +434,126 @@ export const createCourseSlice = createSlice({
       }
     },
 
+    /* Swap question. action: { sectionId, quizIndex, index1, index2 } */
+    swapQuestion: (state, action) => {
+      const { sectionId, quizIndex, index1, index2 } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        //check quiz exist
+        if (
+          state.data.sections[sectionIndex].quizzes &&
+          state.data.sections[sectionIndex].quizzes[quizIndex] !== undefined
+        ) {
+          if (!state.data.sections[sectionIndex].quizzes[quizIndex].questions) {
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions = [];
+          }
+
+          const updateQuestions = [
+            ...state.data.sections[sectionIndex].quizzes[quizIndex].questions,
+          ];
+
+          if (
+            index1 >= 0 &&
+            index2 >= 0 &&
+            updateQuestions.length > index1 &&
+            updateQuestions.length > index2 &&
+            index1 !== index2
+          ) {
+            //swap question
+            const temp = updateQuestions[index1];
+            updateQuestions[index1] = updateQuestions[index2];
+            updateQuestions[index2] = temp;
+
+            state.data.sections[sectionIndex].quizzes[quizIndex].questions = [
+              ...updateQuestions,
+            ];
+          } else {
+            state.error = { message: `Question index is not valid.` };
+          }
+        } else {
+          state.error = { message: `Quiz index ${quizIndex} not found.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /* Swap lessn. action: { sectionId, index1, index2 } */
+    swapLessonOrder: (state, action) => {
+      const { sectionId, index1, index2 } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        //check lessons exist
+        if (state.data.sections[sectionIndex].lessons) {
+          const updateLesons = [...state.data.sections[sectionIndex].lessons];
+          if (
+            index1 >= 0 &&
+            index2 >= 0 &&
+            updateLesons.length > index1 &&
+            updateLesons.length > index2 &&
+            index1 !== index2
+          ) {
+            //swap lesson
+            const temp = updateLesons[index1];
+            updateLesons[index1] = updateLesons[index2];
+            updateLesons[index2] = temp;
+
+            state.data.sections[sectionIndex].lessons = [...updateLesons];
+          } else {
+            state.error = { message: `Lesson index is not valid.` };
+          }
+        } else {
+          state.error = { message: `Lesson in section ${sectionId} is empty.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
+    /* Swap quiz. action: { sectionId, index1, index2 } */
+    swapQuizOrder: (state, action) => {
+      const { sectionId, index1, index2 } = action.payload;
+
+      const sectionIndex = state.data.sections.findIndex(
+        (section) => section.id === sectionId
+      );
+
+      if (sectionIndex !== -1) {
+        //check quizzes exist
+        if (state.data.sections[sectionIndex].quizzes) {
+          const updatedQuizzes = [...state.data.sections[sectionIndex].quizzes];
+          if (
+            index1 >= 0 &&
+            index2 >= 0 &&
+            updatedQuizzes.length > index1 &&
+            updatedQuizzes.length > index2 &&
+            index1 !== index2
+          ) {
+            //swap quiz
+            const temp = updatedQuizzes[index1];
+            updatedQuizzes[index1] = updatedQuizzes[index2];
+            updatedQuizzes[index2] = temp;
+
+            state.data.sections[sectionIndex].quizzes = [...updatedQuizzes];
+          } else {
+            state.error = { message: `Quiz index is not valid.` };
+          }
+        } else {
+          state.error = { message: `Quiz in section ${sectionId} is empty.` };
+        }
+      } else {
+        state.error = { message: `Section id ${sectionId} not found.` };
+      }
+    },
+
     setError: (state, action) => {
       state.error = action.payload;
     },
@@ -472,6 +592,9 @@ export const {
   addQuestion,
   updateQuestion,
   removeQuestion,
+  swapQuestion,
+  swapLessonOrder,
+  swapQuizOrder,
 } = createCourseSlice.actions;
 
 export default createCourseSlice.reducer;

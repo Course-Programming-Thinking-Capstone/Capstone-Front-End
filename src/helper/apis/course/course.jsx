@@ -61,3 +61,30 @@ export const getCourseById = async ({ id, action }) => {
 
   return response.data;
 };
+
+export const uploadVideoToDrive = async ({ sectionId, index, file }) => {
+  const formData = new FormData();
+  formData.append("videoFile", file);
+
+  const response = await instance.post(`api/v1/drives?sectionId=${sectionId}&index=${index}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+
+export const filterTeacherCourse = async (filter) => {
+  let nameParam = filter.name === undefined ? "" : `name=${filter.name}&`;
+  let statusParam =
+    filter.status === undefined ? "" : `status=${filter.status}&`;
+    let pageParam = filter.page === undefined ? 1 : `page=${filter.page}&`;
+  let sizeParam = filter.size === undefined ? 10 : `size=${filter.size}`;
+
+  const response = await instance.get(
+    `api/v1/courses/teacher?${nameParam}${statusParam}${pageParam}${sizeParam}`
+  );
+
+  return response.data;
+}

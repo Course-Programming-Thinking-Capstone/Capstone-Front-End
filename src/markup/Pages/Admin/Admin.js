@@ -4,17 +4,27 @@ import { useNavigate } from "react-router-dom";
 import background from "./../../../images/background/adminStaffBackground.jpg";
 import Game from "./Game/Game";
 import Syllabus from "./Syllabus/SyllabusAd";
+import "./Admin.css";
+import { useDispatch } from "react-redux";
+import { changeAdminActiveMenu } from "../../../store/slices/menu/menuSlice";
+import {
+  adminActiveMenuSelector,
+  teacherActiveMenuSelector,
+} from "../../../store/selector";
+import { useSelector } from "react-redux";
 
 export default function Admin() {
   const [activeContent, setActiveContent] = useState("");
   const [activeItem, setActiveItem] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const activeMenu = useSelector(adminActiveMenuSelector);
 
   const handleMenuItemClick = (content) => {
     setActiveContent(content);
     setActiveItem(content);
-    navigate(`/admin/${content.toLowerCase()}`);
+    dispatch(changeAdminActiveMenu({ adminActiveMenu: content }));
+    navigate(`/admin/${content?.toLowerCase()}`);
   };
 
   const handleLogout = () => {
@@ -22,44 +32,22 @@ export default function Admin() {
     navigate("/home");
   };
 
-  const renderContent = () => {
-    switch (activeContent) {
-      case "Notification":
-        return <div></div>;
-      case "Dashboard":
-        return <div></div>;
-      case "Certificate":
-        return <div>Your orders...</div>;
-      case "User":
-        return <div>Class information...</div>;
-      case "Course":
-        return <div>Course details...</div>;
-      case "Game":
-        return <Game />;
-      case "Order":
-        return <div>Course details...</div>;
-      case "Syllabus":
-        return <Syllabus />;
-      default:
-        return <div>Select a menu item to see the content</div>;
-    }
-  };
 
   const getItemClass = (itemName) => {
-    return `item d-flex justify-content-start align-items-center ${
-      activeItem === itemName ? "active" : ""
+    return `item d-flex justify-content-start align-items-center mt-3 mb-0 admin-menu-item ${
+      activeMenu === itemName ? "active" : ""
     }`;
   };
 
   return (
     <div>
       <div className="staff row">
-        <div className="menu col-lg-2">
-          <div className="logo text-center">
+        <div className="menu col-lg-2 admin-menu-container">
+          <div className="logo text-center mb-5">
             <h5>KidsPro</h5>
           </div>
           <div>
-            <div
+            {/* <div
               className={getItemClass("Notification")}
               onClick={() => handleMenuItemClick("Notification")}
             >
@@ -72,47 +60,53 @@ export default function Admin() {
             >
               <i className="fa-solid fa-chart-line"></i>
               <span>Dashboard</span>
-            </div>
+            </div> */}
             <div
               className={getItemClass("Certificate")}
-              onClick={() => handleMenuItemClick("Certificate")}
+              // onClick={() => handleMenuItemClick("Certificate")}
             >
-              <i className="fa-solid fa-medal"></i>
+              <i className="fa-solid fa-medal" style={{ fontSize: "18px" }}></i>
               <span>Certificate</span>
             </div>
             <div
               className={getItemClass("User")}
               onClick={() => handleMenuItemClick("User")}
             >
-              <i className="fa-solid fa-user"></i>
+              <i className="fa-solid fa-user" style={{ fontSize: "18px" }}></i>
               <span>User</span>
             </div>
             <div
               className={getItemClass("Course")}
-              onClick={() => handleMenuItemClick("Course")}
+              // onClick={() => handleMenuItemClick("Course")}
             >
-              <i className="fa-solid fa-book"></i>
+              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
               <span>Course</span>
             </div>
             <div
               className={getItemClass("Game")}
               onClick={() => handleMenuItemClick("Game")}
             >
-              <i className="fa-solid fa-gamepad"></i>
+              <i
+                className="fa-solid fa-gamepad"
+                style={{ fontSize: "18px" }}
+              ></i>
               <span>Game</span>
             </div>
             <div
               className={getItemClass("Order")}
-              onClick={() => handleMenuItemClick("Order")}
+              // onClick={() => handleMenuItemClick("Order")}
             >
-              <i className="fa-solid fa-cart-shopping"></i>
+              <i
+                className="fa-solid fa-cart-shopping"
+                style={{ fontSize: "18px" }}
+              ></i>
               <span>Order</span>
             </div>
             <div
               className={getItemClass("SyllabusAd")}
               onClick={() => handleMenuItemClick("SyllabusAd")}
             >
-              <i className="fa-solid fa-book"></i>
+              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
               <span>Syllabus</span>
             </div>
             {/* <div className="item" onClick={handleLogout}>
@@ -121,10 +115,13 @@ export default function Admin() {
             </div> */}
 
             <div
-              className="item d-flex justify-content-start align-items-center"
+              className="item d-flex justify-content-start align-items-center mt-3 admin-menu-item"
               onClick={handleLogout}
             >
-              <i className="fa-solid fa-right-from-bracket"></i>
+              <i
+                className="fa-solid fa-right-from-bracket "
+                style={{ fontSize: "18px" }}
+              ></i>
               <div className="mx-4">Log out</div>
             </div>
           </div>

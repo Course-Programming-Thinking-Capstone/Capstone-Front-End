@@ -22,7 +22,7 @@ import OrderDetail from './Pages/OrderDetail';
 import CoursePayment from './Pages/CoursePayment';
 import OrderCancel from './Pages/OrderCancel';
 import PaymentSuccess from './Pages/PaymentSuccess';
-import Account from './Pages/Account';
+
 import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff/Staff';
@@ -46,6 +46,17 @@ import StaffOrderDetail from './Pages/Staff/StaffOrder/StaffOrderDetail';
 import StaffModerating from './Pages/Staff/StaffModerating/StaffModerating';
 import StaffClassDetail from './Pages/Staff/StaffClassDetail/StaffClassDetail';
 import CreateCourseContent from './Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent';
+import StudentHome from './Pages/StudentHome';
+import StaffNotification from './Pages/Staff/StaffNotification/StaffNotification';
+import Account from './Pages/ParentAccount/Account';
+import AccountDetails from './Pages/ParentAccount/AccountDetails/AccountDetails';
+import PaymentMethods from './Pages/ParentAccount/PaymentMethods/PaymentMethods';
+import ChildProcess from './Pages/ParentAccount/ChildProcess/ChildProcess';
+import ChildProcessDetail from './Pages/ParentAccount/ChildProcess/ChildProcessDetail';
+import CourseProcess from './Pages/ParentAccount/ChildProcess/CourseProcess';
+import User from './Pages/Admin/User/User';
+import UserParents from './Pages/Admin/User/UserParents';
+import CourseResult from './Pages/CourseResult';
 
 
 export default function Markup() {
@@ -55,7 +66,7 @@ export default function Markup() {
 			<AuthCheck />
 			<div className="page-wraper">
 				<Routes>
-					
+
 					{/* routed */}
 					<Route path='/' exact element={<Index1 />} />
 					<Route path='/login' exact element={<Login />} />
@@ -64,22 +75,35 @@ export default function Markup() {
 					<Route path='/verify-confirm' exact element={<VerifyEmailConfirm />} />
 
 					<Route path='/classes' exact element={<Classes />} />
-					<Route path='/classes-details' exact element={<ClassesDetail />} />
+					<Route path='/classes-detail/:id' element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
 					<Route path='/not-found' exact element={<ErrorPage />} />
 
 
+					<Route path='/student-home' exact element={<StudentHome />} />
 					<Route path='/schedule' exact element={<Schedule />} />
-					<Route path='/courses-plan' exact element={<CoursesPlan />} />
-					<Route path='/courses-study' exact element={<CourseStudy />} />
-					<Route path='/courses-quiz' exact element={<CourseQuiz />} />
+					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
+					<Route path='/courses-study/:sectionId' exact element={<CourseStudy />} />
+					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
+					<Route path='/courses-result' exact element={<CourseResult />} />
+
+
+
+					<Route path='/account' exact element={<Account />} >
+						<Route path='account-details' exact element={<AccountDetails />} />
+						<Route path='payment-methods' exact element={<PaymentMethods />} />
+						<Route path='child-process' exact element={<ChildProcess />} />
+						<Route path='child-process-detail/:childId' exact element={<ChildProcessDetail />} />
+						<Route path='course-process/:studentId/:courseId' exact element={<CourseProcess />} />
+					</Route>
+
 					<Route path='/order' exact element={<Order />} />
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
 					<Route path='/payment' exact element={<CoursePayment />} />
 					<Route path='/payment-success/:orderId' exact element={<PaymentSuccess />} />
-					<Route path='/account' exact element={<Account />} />
+
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/teacher' exact element={<TeacherAccount />} />
@@ -96,6 +120,7 @@ export default function Markup() {
 					<Route path='/teacher/setting' exact element={<TeacherSetting />} />
 
 					<Route path='/staff' exact element={<Staff />} >
+						<Route path="staff-notification" element={<StaffNotification />} />
 						<Route path="staff-order" element={<StaffOrder />} />
 						<Route path="staff-order-detail/:orderId" element={<StaffOrderDetail />} />
 						<Route path="moderating" element={<StaffModerating />} />
@@ -105,6 +130,9 @@ export default function Markup() {
 
 					{/* routed */}
 					<Route path="/admin" element={<Admin />}>
+						<Route path="user" element={<User />} >
+						</Route>
+						<Route path="parent" element={<UserParents />} />
 						<Route path="game" element={<Game />} />
 						<Route path="game-data" element={<GameData />} />
 					</Route>

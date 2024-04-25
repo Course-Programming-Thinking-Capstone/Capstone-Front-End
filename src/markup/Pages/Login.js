@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import background from "./../../images/background/loginBackground.webp";
 import { loginApi } from "../../helper/apis/auth/auth";
+import instance from "../../helper/apis/baseApi/baseApi";
+import { Spinner } from "react-bootstrap";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +13,7 @@ export default function Login() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,54 +35,69 @@ export default function Login() {
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     if (!isFormValid()) return;
+
     try {
-      const loginData = { email: email, password: password };
+      setIsLoading(true);
 
-      const response = await loginApi(loginData);
-      if (response.accessToken && response.role) {
-        localStorage.setItem("accessToken", response.accessToken);
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-        //store user information
-        const user = {
-          role: response.role,
-          fullName: response.fullName,
-          pictureUrl: response.pictureUrl,
-          email: response.email,
-          id: response.id,
-        };
+      const loginData = isEmail
+        ? { email: email, password: password }
+        : { account: email, password: password };
 
-        localStorage.setItem("user", JSON.stringify(user));
+      const apiUrl = isEmail
+        ? "api/v1/authentication/login/email"
+        : "api/v1/authentication/login/account";
 
-        switch (response.role) {
-          case "Admin":
-            window.location.href = "/admin";
-            break;
-          case "Teacher":
-            window.location.href = "/teacher";
-            break;
-          case "Staff":
-            window.location.href = "/staff";
-            break;
-          // Add more cases as needed for different roles
-          default:
-            window.location.href = "/";
-            break;
-        }
-      } else {
-        throw new Error("Missing role or accessToken in the response");
+      const response = await instance.post(apiUrl, loginData);
+
+      const responseData = response.data;
+
+      const user = {
+        role: responseData.role,
+        fullName: responseData.fullName,
+        avatarUrl: responseData.avatarUrl,
+        email: responseData.email,
+        gender: responseData.gender,
+        point: responseData.point,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+
+      localStorage.setItem("accessToken", responseData.accessToken);
+
+      switch (responseData.role) {
+        case "Admin":
+          navigate("/admin");
+          break;
+        case "Staff":
+          navigate("/staff");
+          break;
+        case "Parent":
+          navigate("/home");
+          break;
+        case "Teacher":
+          navigate("/teacher/syllabuses");
+          break;
+        case "Student":
+          navigate("/student-home");
+          break;
+        default:
+          break;
       }
+
     } catch (error) {
-      // notifyLoginFail(error.message || "Login failed. Please try again.");
-
+      let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${error.response?.data?.message}`);
-        notifyLoginFail(
-          error.response?.data?.message || "Login failed. Please try again."
-        );
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.message || "Login fail.";
       } else {
-        console.log(`Error message abc: ${error.message}`);
-        notifyLoginFail(error.message || "Login failed. Please try again.");
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Login fail.";
       }
+      notifyLoginFail(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,10 +106,6 @@ export default function Login() {
     setEmailError("");
     setPasswordError("");
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Please enter a valid email address.");
-      isValid = false;
-    }
     if (password.length < 4) {
       setPasswordError("Password must be at least 4 characters long.");
       isValid = false;
@@ -102,25 +116,26 @@ export default function Login() {
   return (
     <div
       style={{
-        backgroundImage: `url(${background})`,
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundPosition: "center center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
+        display: 'flex', // Added this
+      flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
+      justifyContent: 'center', // This will center the content vertically
+      alignItems: 'center', // This will center the content horizontally
+      backgroundImage: `url(${background})`,
+      minHeight: "100vh",
+      backgroundPosition: "center center",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="login-container">
+      <div className="login-container col-lg-4 col-md-8 col-sm-12">
         <h2 className="text-center" style={{ color: "#FF8A00" }}>
-          Login form
+          Login
         </h2>
         <ToastContainer />
         <form onSubmit={handleLoginSubmit}>
           <div className="form-group">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="email"
               placeholder="Enter email"
@@ -141,8 +156,20 @@ export default function Login() {
             {passwordError && <div className="error">{passwordError}</div>}
           </div>
 
-          <div className="d-flex justify-content-center mt-5">
-            <button type="submit">Login</button>
+          <div className="d-flex justify-content-center align-items-center mt-3">
+            <button type="submit">
+              <div className="d-flex justify-content-center align-items-center">
+                {isLoading ? (
+                  <Spinner
+                    animation="border"
+                    variant="light"
+                    style={{ fontSize: "14px" }}
+                  />
+                ) : (
+                  <>Login</>
+                )}
+              </div>
+            </button>
           </div>
 
           <div className="d-flex justify-content-center mt-4">

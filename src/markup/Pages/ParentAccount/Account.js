@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import Header from '../Layout/Header'
-import Footer from '../Layout/Footer'
-import PageTitle from '../Layout/PageTitle'
-import background from './../../images/background/accountBackground.jpg';
-import demo from './../../images/gallery/demo.jpg';
-import momo from './../../images/icon/momo.png';
-import zalopay from './../../images/icon/zalopay.png';
+import Header from '../../Layout/Header'
+import Footer from '../../Layout/Footer'
+import PageTitle from '../../Layout/PageTitle'
+import background from '../../../images/background/accountBackground.jpg';
+import demo from '../../../images/gallery/demo.jpg';
+import momo from '../../../images/icon/momo.png';
+import zalopay from '../../../images/icon/zalopay.png';
+import { Outlet, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Account() {
     const [activeContent, setActiveContent] = useState('accountDetails');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const user = localStorage.getItem('user');
+    if (!user) {
+        console.log('No user found in localStorage');
+        // Optional: Redirect to login or handle the absence of user data
+    } else {
+        console.log('user: ', JSON.parse(user));
+    }
+
 
     const handleButtonClick = (contentKey) => {
         setActiveContent(contentKey);
@@ -146,8 +158,6 @@ export default function Account() {
                         <button>ADD NEW CHILDREN</button>
                     </div>
                 </div>;
-            case 'logout':
-                return <div>Logging out...</div>;
             default:
                 return <div>Select an option</div>;
         }
@@ -181,14 +191,13 @@ export default function Account() {
                                 </div>
                             </div>
                             <div className='account-menu'>
-                                <button style={isActive('accountDetails')} onClick={() => handleButtonClick('accountDetails')}><i class="fa-solid fa-user"></i>  Account Detail</button><hr />
-                                <button style={isActive('paymentMethods')} onClick={() => handleButtonClick('paymentMethods')}><i class="fa-regular fa-credit-card"></i>  Payment Methods</button><hr />
-                                <button style={isActive('childProcess')} onClick={() => handleButtonClick('childProcess')}><i class="fa-solid fa-arrows-spin"></i>  My child's process</button><hr />
-                                <button onClick={() => handleButtonClick('logout')}><i class="fa-solid fa-right-from-bracket"></i>  Logout</button><hr />
+                                <Link to="account-details"><button style={isActive('accountDetails')} onClick={() => handleButtonClick('accountDetails')}><i class="fa-solid fa-user"></i> Account Details</button></Link><hr />
+                                <Link to="payment-methods"><button style={isActive('paymentMethods')} onClick={() => handleButtonClick('paymentMethods')}><i class="fa-regular fa-credit-card"></i> Payment Methods</button></Link><hr />
+                                <Link to="child-process"><button style={isActive('childProcess')} onClick={() => handleButtonClick('childProcess')}><i class="fa-solid fa-arrows-spin"></i> My child's process</button></Link><hr />
                             </div>
                         </div>
                         <div className="col-lg-7 col-md-12 col-sm-12">
-                            {renderContent()}
+                            <Outlet />
                         </div>
                     </div>
                 </div>

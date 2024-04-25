@@ -1,0 +1,14 @@
+.classes-course-image {
+  height: 300px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.classes-course-image image {
+  height: 100%;
+  width: 100%;
+}
+
+.classes-course-content-body {
+  min-height: 150px;
+}

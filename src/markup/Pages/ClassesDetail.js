@@ -1,79 +1,142 @@
-import React, { Fragment, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../Layout/Header';
 import Footer from '../Layout/Footer';
 import PageTitle from '../Layout/PageTitle';
-
-
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
-
-//images
 import demo from './../../images/gallery/simp.jpg';
-import bnr1 from './../../images/line2.png';
-import gallery1 from './../../images/gallery/pic1.jpg';
-import gallery2 from './../../images/gallery/pic2.jpg';
-import gallery3 from './../../images/gallery/pic3.jpg';
-import gallery4 from './../../images/gallery/pic4.jpg';
-import gallery5 from './../../images/gallery/pic5.jpg';
-import gallery7 from './../../images/gallery/pic7.jpg';
-import gallery8 from './../../images/gallery/pic8.jpg';
-import gallery9 from './../../images/gallery/pic9.jpg';
+import { toast, ToastContainer } from 'react-toastify';
+import instance from './../../helper/apis/baseApi/baseApi';
 
 export default function ClassesDetail() {
 	const navigate = useNavigate();
+	const { id } = useParams();
+	const [courseDetails, setCourseDetails] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [selectedClassId, setSelectedClassId] = useState(null);
 
-	const BuyCourse = () => {
-		navigate('/payment');
+	useEffect(() => {
+		const fetchCourseDetails = async () => {
+			try {
+				setIsLoading(true);
+				const response = await instance.get(`api/v1/courses/${id}`);
+				const data = response.data;
+
+				console.log('courseDetail: ', data);
+				setCourseDetails(data);
+			} catch (error) {
+				console.error('There was a problem with the fetch operation:', error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchCourseDetails();
+	}, [id]);
+
+	const handleClassClick = (classId) => {
+		setSelectedClassId(classId);
 	};
 
+	const BuyCourse = () => {
+		if (!selectedClassId) {
+			// Display error toast because class isn't selected
+			toast.error("Please choose your class", {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeButton: false,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
+			return;
+		}
+
+		// Navigate to /payment with courseId and classId in the state
+		navigate('/payment', { state: { courseId: courseDetails.id, classId: selectedClassId } });
+	};
+
+
+
 	return (
-		<Fragment>
+		<div>
 			<Header />
+			<ToastContainer />
 			<div className="page-content">
 				<PageTitle motherMenu="Classes Detail" activeMenu="Classes Detail" />
-				<div className="content-block">
-					<div className="section-full bg-white content-inner" style={{ backgroundImage: "url(" + bnr1 + ")", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center" }}>
-						<div className="container">
-							<div className="row">
-								<div className="col-lg-8 col-md-12 col-sm-12 m-b15">
-									<div className="classes-details">
-										<div className="class-media">
-											<img src={demo} alt="" />
-										</div>
-										<div className="class-info">
-											<div className="dlab-post-title ">
-												<h2 className="post-title m-t0">Tôi là simp chúa</h2>
-												<p>Tôi phải tốt nghiệp sớm để kịp đi đám cưới nyc</p>
+
+				{isLoading ? (
+					<div className="d-flex justify-content-center align-items-center" style={{ width: '100%', height: '200px' }}>
+						<div className="spinner-border text-primary" role="status">
+							<span className="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				) : (
+					<div className="content-block">
+						<div className="section-full bg-white content-inner">
+							<div className="container">
+								<div className="row">
+									<div className="col-lg-8 col-md-12 col-sm-12 m-b15">
+										<div className="classes-details">
+											<div className="class-media">
+												<img src={courseDetails.pictureUrl} alt="" />
 											</div>
+											<div className="class-info">
+												<div className="dlab-post-title ">
+													<h2 className="post-title m-t0">{courseDetails.name}</h2>
+													<p>{courseDetails.description}</p>
+												</div>
+											</div>
+											<button style={{ width: '50%', backgroundColor: '#EF7E54', textAlign: 'center', color: 'white', padding: '15px 0', border: 'none', borderRadius: '4px', marginTop: '15px', fontWeight: 'bold' }} onClick={BuyCourse}>
+												BUY NOW
+											</button>
 										</div>
-										<button style={{ width: '50%', backgroundColor: '#EF7E54', textAlign: 'center', color: 'white', padding: '15px 0', border: 'none', borderRadius: '4px', marginTop: '15px', fontWeight: 'bold' }} onClick={BuyCourse}>
-											BUY NOW
-										</button>
 									</div>
-								</div>
-								<div className="col-lg-4 col-md-12 col-sm-12">
-									<h5 className='orange'>Select class for course</h5>
-									<div className="details-tbl widget">
-										<div className='ps-4 pt-2' style={{ border: '1px solid #7F7C7C', borderRadius:'8px' }}>
-											<p>Class: <span style={{ color: '#F15C58' }}>VNR202</span></p>
-											<p>Date start: <span style={{ fontWeight: 'bold' }}>2/2/2024 - 2/6/2024</span></p>
-											<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>Monday - Tuesday</span></p>
-											<p>Slot time: <span style={{ fontWeight: 'bold' }}>8:00 AM - 8:50 AM</span></p>
-											<p>Teacher: <span style={{ fontWeight: 'bold' }}>Nguyen Ngoc Lam</span></p>
-										</div>
+									<div className="col-lg-4 col-md-12 col-sm-12" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+										<h5 className='orange'>Select class for course</h5>
+										{courseDetails && courseDetails.classes && courseDetails.classes.length > 0 ? (
+											courseDetails.classes
+												.filter(classDetail => classDetail.classStatus !== "Closed") // Filter out closed classes
+												.map((classDetail) => {
+													// Ensure slot times are available before slicing
+													const startTime = classDetail.slotStart ? classDetail.slotStart.slice(0, 5) : "N/A";
+													const endTime = classDetail.slotEnd ? classDetail.slotEnd.slice(0, 5) : "N/A";
+
+													// Refactor dates to DD/MM/YYYY
+													const startDate = classDetail.dayStart ? new Date(classDetail.dayStart).toLocaleDateString("en-GB") : "Date Not Available";
+													const endDate = classDetail.dayEnd ? new Date(classDetail.dayEnd).toLocaleDateString("en-GB") : "Date Not Available";
+
+													return (
+														<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '3px solid #FF8A00' : '3px solid  #7F7C7C', borderRadius: '8px' }}>
+															<div className='ps-4 pt-2'>
+																<p>Class: <span style={{ color: '#F15C58', fontWeight: 'bold' }}>{classDetail.classCode}</span></p>
+																<p>Date start: <span style={{ fontWeight: 'bold' }}>{startDate} - {endDate}</span></p>
+																<p>Study day: <span className='blue' style={{ fontWeight: 'bold' }}>{classDetail.days.join(', ')}</span></p>
+																<p>Slot time: <span style={{ fontWeight: 'bold' }}>({startTime} - {endTime})</span></p>
+																<div className="teacher-info">
+																	<p>Teacher: <span style={{
+																		fontWeight: 'bold',
+																		fontFamily: '"Noto Sans", "Arial", sans-serif',
+																	}}>{classDetail.teacher}</span></p>
+																</div>
+															</div>
+														</div>
+													);
+												})
+										) : (
+											<p>This course does not have any class yet.</p>
+										)}
 
 									</div>
-
-
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				)}
 			</div>
 			<Footer />
-		</Fragment>
+		</div>
 	)
 }

@@ -3,7 +3,10 @@ import { syllabusDetailSelector } from "../../../../../../store/selector";
 import { useEffect, useState } from "react";
 import { getSyllabusByIdAsync } from "../../../../../../store/thunkApis/syllabuses/syllabusesThunk";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Col, Container, Placeholder, Row } from "react-bootstrap";
+import { Col, Container, Placeholder, Row } from "react-bootstrap";
+import "./SyllalusInformation.css";
+import { KeyboardBackspace } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 export const SyllabusInformationComponent = () => {
   const location = useLocation();
@@ -54,10 +57,21 @@ export const SyllabusInformationComponent = () => {
             <i className="fa-solid fa-book"></i>
           </div>
           <div>
-            <Button
+            {/* <Button
               variant="outline-warning"
               className="px-3 py-2"
               style={{ borderRadius: "5px" }}
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button> */}
+
+            <Button
+              variant="contained"
+              color="warning"
+              size="small"
+              aria-label="Back"
+              startIcon={<KeyboardBackspace />}
               onClick={() => navigate(-1)}
             >
               Back
@@ -101,7 +115,7 @@ export const SyllabusInformationComponent = () => {
             </>
           ) : (
             <>
-              <Container className="px-0">
+              <Container className="px-0 syllabus-information-content">
                 <Row>
                   <Col md="3">
                     <p className="blue fw-bold">Course title</p>
@@ -182,12 +196,22 @@ export const SyllabusInformationComponent = () => {
                   </Col>
                 </Row>
               </Container>
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end mb-3">
                 <Link to={`/teacher/syllabuses/create-course`}>
-                  <Button
+                  {/* <Button
                     variant="danger"
                     className="px-3 py-2"
                     style={{ borderRadius: "5px" }}
+                  >
+                    Create course
+                  </Button> */}
+
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    // size="small"
+                    aria-label="Create course"
+                    // startIcon={<KeyboardBackspace />}
                   >
                     Create course
                   </Button>

@@ -9,7 +9,7 @@ export const UnauthenticatedPages = [
 
 //Lưu đường dẫn các trang public. Mọi người dùng đều có thể truy cập 
 //(cả đã đăng nhập và chưa đăng nhập)
-export const PublicPages = ["home", "classes", "classes-details", "courses-plan"];
+export const PublicPages = ["home", "classes", "courses", "classes-details"];
 
 //Lưu đường dẫn các trang chung cho user đã đăng nhập. VD trang xem thông tin account.
 export const CommonAuthenticatedPages = [];
@@ -18,10 +18,10 @@ export const CommonAuthenticatedPages = [];
 export const ErrorPages = ["not-found"];
 
 //Lưu đường dẫn các trang mà admin được truy cập
-export const AdminPages = ["admin", "admin/game", "admin/game-data", "admin/syllabusad"];
+export const AdminPages = ["admin", "admin/user", "admin/parent", "admin/game", "admin/game-data", "admin/syllabusad"];
 
 //Lưu đường dẫn các trang mà staff được truy cập
-export const StaffPages = ["staff", "staff/moderating", "staff/staff-order", "staff/staff-order-detail", "staff/class"];
+export const StaffPages = ["staff", "staff/staff-notification", "staff/moderating", "staff/staff-order", "staff/staff-order-detail", "staff/class"];
 
 //Lưu đường dẫn các trang mà teacher được truy cập
 export const TeacherPages = [
@@ -38,10 +38,10 @@ export const TeacherPages = [
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
-export const ParentPages = ["classes", "classes-details", "payment", "payment-success"];
+export const ParentPages = ["classes", "account", "account/account-details", "account/payment-methods", "account/child-process", "account/child-process-detail", "account/course-process", "courses", "classes-detail", "payment", "payment-success", "order", "order-detail"];
 
 //Lưu đường dẫn các trang mà student được truy cập
-export const StudentPages = [];
+export const StudentPages = ["student-home", "schedule", "courses-plan", "courses-study", "courses-quiz", "courses-result"];
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {

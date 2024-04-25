@@ -32,10 +32,14 @@ import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
 import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import { CreateLevel } from "./CreateGameLevel";
+import "./Game.css";
+import { ToastContainer, toast } from "react-toastify";
+import { Delete, Save } from "@mui/icons-material";
+import { Backdrop, CircularProgress } from "@mui/material";
+import ButtonMui from "@mui/material/Button";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
-  const accessToken = localStorage.getItem("accessToken");
   const [viewGameData, setViewGameData] = useState(false);
   const [gameLevels, setGameLevels] = useState([]);
   const [viewLevelDetail, setViewLevelDetail] = useState(false);
@@ -47,6 +51,33 @@ export default function Game() {
   const [isLoading, setIsLoading] = useState(false);
   const [arr, setArr] = useState([]);
   const [modeId, setModeId] = useState();
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyApiSucess = (message) =>
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleLevelDetailInputNumberChange = (event) => {
     let value = parseInt(event.target.value);
@@ -115,12 +146,12 @@ export default function Game() {
 
       fetchGameModes();
     }
-  }, [viewGameData, accessToken]);
+  }, [viewGameData]);
 
   //Show message error
   useEffect(() => {
     if (message) {
-      alert(`Error: ${message}`);
+      notifyApiFail(`Error: ${message}`);
       setMessage(null);
     }
   }, [message]);
@@ -129,6 +160,7 @@ export default function Game() {
     if (typeof modeId === "undefined") return;
 
     try {
+      setIsLoading(true);
       const levels = await getLevelDetailByModeIdApi({ modeId: modeId });
 
       setModeId(modeId);
@@ -144,6 +176,8 @@ export default function Game() {
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -332,7 +366,7 @@ export default function Game() {
 
         await updateGameLevelApi({ data: updateData });
 
-        alert("Update success");
+        notifyApiSucess("Update success");
       } catch (error) {
         let errorMessage = null;
         if (error.response) {
@@ -430,160 +464,184 @@ export default function Game() {
   //make these draggable
   if (viewLevelDetail) {
     return (
-      <div
-        className="level-detail mt-4 pt-3 pb-5 px-5 mb-1 mx-3"
-        style={{ backgroundColor: "white", borderRadius: "8px" }}
-      >
-        <div className="d-flex justify-content-between">
-          <div className="mb-3">
-            <h5>Level Detail</h5>
-            {/* <p>Level ID: {currentLevelDetail.id}</p> */}
-          </div>
-          <div>
-            <button
-              onClick={() => setViewLevelDetail(false)}
-              className="admin-back"
-            >
-              <div className="d-flex jutify-content-between align-items-center">
-                <img src={arrowLeft} alt="Arrow Left Icon" />
-                <p className="mb-0 mx-2">Back</p>
-              </div>
-            </button>
-          </div>
-        </div>
-        <div className="d-flex justify-content-between">
-          <div className="d-flex justify-content-start">
-            <div>
-              <p className="mb-1">Level index</p>
-              <input
-                type="number"
-                name="levelIndex"
-                value={currentLevelDetail.levelIndex + 1}
-                required
-                min={1}
-                max={100}
-                onChange={handleLevelDetailInputNumberChange}
-              />
+      <>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isUpdateLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+
+        <div className="level-detail">
+          <div className="d-flex justify-content-between">
+            <div className="mb-3">
+              <h5>Level Detail</h5>
+              {/* <p>Level ID: {currentLevelDetail.id}</p> */}
             </div>
             <div>
-              <p className="mb-1">Coin earn</p>
-              <input
-                type="number"
-                name="coinReward"
-                value={currentLevelDetail.coinReward}
-                required
-                min={0}
-                max={100}
-                onChange={handleLevelDetailInputNumberChange}
-              />
-            </div>
-            <div>
-              <p className="mb-1">Game earn</p>
-              <input
-                type="number"
-                name="gemReward"
-                value={currentLevelDetail.gemReward}
-                required
-                min={0}
-                max={100}
-                onChange={handleLevelDetailInputNumberChange}
-              />
+              <button
+                onClick={() => setViewLevelDetail(false)}
+                className="admin-back"
+              >
+                <div className="d-flex jutify-content-between align-items-center">
+                  <img src={arrowLeft} alt="Arrow Left Icon" />
+                  <p className="mb-0 mx-2">Back</p>
+                </div>
+              </button>
             </div>
           </div>
-          <div>
-            <button
+
+          <ToastContainer />
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <Container className="w-75 mx-0">
+              <Row>
+                <Col md="4">
+                  <p className="mb-1 blue fw-bold">Level index</p>
+                  <input
+                    className="game-level-detail"
+                    type="number"
+                    name="levelIndex"
+                    value={currentLevelDetail.levelIndex + 1}
+                    required
+                    min={1}
+                    max={100}
+                    onChange={handleLevelDetailInputNumberChange}
+                  />
+                </Col>
+                <Col md="4">
+                  <p className="mb-1 blue fw-bold">Coin earn</p>
+                  <input
+                    className="game-level-detail"
+                    type="number"
+                    name="coinReward"
+                    value={currentLevelDetail.coinReward}
+                    required
+                    min={0}
+                    max={100}
+                    onChange={handleLevelDetailInputNumberChange}
+                  />
+                </Col>
+                <Col md="4">
+                  <p className="mb-1 blue fw-bold">Game earn</p>
+                  <input
+                    className="game-level-detail"
+                    type="number"
+                    name="gemReward"
+                    value={currentLevelDetail.gemReward}
+                    required
+                    min={0}
+                    max={100}
+                    onChange={handleLevelDetailInputNumberChange}
+                  />
+                </Col>
+              </Row>
+            </Container>
+            <div>
+              {/* <button
               className="add"
               onClick={() => handleRemoveLevel(currentLevelDetail.id)}
             >
               Delete level
-            </button>
-          </div>
-        </div>
-        <div className="mt-3 d-flex">
-          <DndContext
-            onDragEnd={handleDragEnd}
-            collisionDetection={closestCorners}
-            sensors={sensor}
-          >
-            <div className="map" style={{ width: "65%" }}>
-              <LevelGrid />
+            </button> */}
+
+              <button
+                className="add"
+                onClick={() => handleRemoveLevel(currentLevelDetail.id)}
+              >
+                <div className="d-flex jutify-content-between align-items-center">
+                  <Delete fontSize="small" />
+                  <p className="mb-0 mx-1">Delete Level</p>
+                </div>
+              </button>
             </div>
-            <div className="map-item" style={{ width: "30%" }}>
-              <div className="d-flex justify-content-center">
-                <div>
-                  {/* Make these draggable */}
-                  <div className="d-flex">
-                    {isVStartExist == false && (
+          </div>
+          <div className="mt-3 d-flex">
+            <DndContext
+              onDragEnd={handleDragEnd}
+              collisionDetection={closestCorners}
+              sensors={sensor}
+            >
+              <div className="map" style={{ width: "70%" }}>
+                <LevelGrid />
+              </div>
+              <div className="map-item" style={{ width: "30%" }}>
+                <div className="d-flex justify-content-center align-items-center">
+                  <div>
+                    {/* Make these draggable */}
+                    <div className="d-flex">
+                      {isVStartExist == false && (
+                        <Draggable
+                          id={1}
+                          child={
+                            <img
+                              src={start}
+                              style={{ width: "100%", height: "auto" }}
+                              alt=""
+                            />
+                          }
+                          resetChild={null}
+                          typeId={0}
+                        />
+                      )}
+
                       <Draggable
-                        id={1}
+                        id={2}
                         child={
                           <img
-                            src={start}
+                            src={street}
                             style={{ width: "100%", height: "auto" }}
                             alt=""
                           />
                         }
                         resetChild={null}
-                        typeId={0}
+                        typeId={1}
                       />
-                    )}
+                    </div>
+                    <div className="d-flex">
+                      <Draggable
+                        id={3}
+                        child={
+                          <img
+                            src={end}
+                            style={{ width: "100%", height: "auto" }}
+                            alt=""
+                          />
+                        }
+                        resetChild={null}
+                        typeId={2}
+                      />
 
-                    <Draggable
-                      id={2}
-                      child={
-                        <img
-                          src={street}
-                          style={{ width: "100%", height: "auto" }}
-                          alt=""
-                        />
-                      }
-                      resetChild={null}
-                      typeId={1}
-                    />
+                      <Draggable
+                        id={4}
+                        child={
+                          <img
+                            src={rock}
+                            style={{ width: "100%", height: "auto" }}
+                            alt=""
+                          />
+                        }
+                        resetChild={null}
+                        typeId={3}
+                      />
+                    </div>
                   </div>
-                  <div className="d-flex">
-                    <Draggable
-                      id={3}
-                      child={
-                        <img
-                          src={end}
-                          style={{ width: "100%", height: "auto" }}
-                          alt=""
-                        />
-                      }
-                      resetChild={null}
-                      typeId={2}
-                    />
-
-                    <Draggable
-                      id={4}
-                      child={
-                        <img
-                          src={rock}
-                          style={{ width: "100%", height: "auto" }}
-                          alt=""
-                        />
-                      }
-                      resetChild={null}
-                      typeId={3}
-                    />
-                  </div>
-                  <button
-                    className="my-3 admin-save"
+                </div>
+                <div className="d-flex justify-content-end align-items-center mt-5">
+                  <ButtonMui
+                    variant="contained"
+                    color="primary"
+                    aria-label="Save"
+                    startIcon={<Save />}
                     onClick={handleUpdateLevel}
                   >
-                    {isUpdateLoading === false ? (
-                      <>Save</>
-                    ) : (
-                      <Spinner animation="border" size="sm" variant="warning" />
-                    )}
-                  </button>
+                    Save
+                  </ButtonMui>
                 </div>
               </div>
-            </div>
-          </DndContext>
+            </DndContext>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -600,7 +658,7 @@ export default function Game() {
 
   return (
     <div className="game-setting">
-      <div className="game-setting-content">
+      <div className="game-setting-content my-0">
         {viewGameData ? (
           <div className="header">
             <div className="d-flex justify-content-between">
@@ -699,8 +757,14 @@ export default function Game() {
           </div>
         ) : (
           <div className="row">
-            {isLoading && isLoading === true ? (
-              <CustomSpinner />
+            {isLoading ? (
+              <div className="d-flex justify-content-center py-5">
+                <Spinner
+                  animation="border"
+                  variant="success"
+                  className="custom-spinner"
+                />
+              </div>
             ) : (
               enhancedModes.map(({ typeName, src, totalLevel, id }) => (
                 <div

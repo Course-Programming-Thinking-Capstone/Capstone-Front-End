@@ -1,119 +1,180 @@
-import React, { Fragment, Component } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import Header from '../Layout/Header';
-import Footer from '../Layout/Footer';
-import PageTitle from '../Layout/PageTitle';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Header from "../Layout/Header";
+import Footer from "../Layout/Footer";
+import PageTitle from "../Layout/PageTitle";
+import ReactPaginate from "react-paginate";
+import { formatPrice } from "../../helper/utils/NumberUtil";
+import "./Classes.css";
+import instance from "../../helper/apis/baseApi/baseApi";
+import { Pagination, PaginationItem, Stack } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
-//images
-import background from './../../images/background/allCourseBackground.jpg';
-import bnr1 from './../../images/line2.png';
-import clsimg1 from './../../images/classes/pic1.jpg';
-import clsimg2 from './../../images/classes/pic2.jpg';
-import clsimg3 from './../../images/classes/pic3.jpg';
-import clsimg4 from './../../images/classes/pic4.jpg';
-import clsimg5 from './../../images/classes/pic5.jpg';
-import clsimg6 from './../../images/classes/pic6.jpg';
-import classes from './../../images/classes/codingClass.png';
+export default function Classes() {
+  const [courses, setCourses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-const classesBlog = [
-	{ images: clsimg1, title: 'Art Drawing Classes' },
-	{ images: clsimg4, title: 'The Answer To Everything.' },
-	{ images: clsimg3, title: 'The Miracle Of Education.' },
-	{ images: clsimg5, title: 'Ten Things To Know About' },
-	{ images: clsimg2, title: 'The Story Of Education' },
-	{ images: clsimg6, title: 'The Shocking Revelation' },
-];
+  const fetchCourses = async (page = 1) => {
+    setIsLoading(true);
+    try {
+      const response = await instance.get(
+        `api/v1/courses?status=Active&page=${page}&size=6`
+      );
 
-class Classes extends Component {
-	render() {
-		return (
-			<Fragment>
-				<Header />
-				<div className="course">
-					<PageTitle motherMenu="Classes" activeMenu="Classes" />
+      const data = response.data;
 
-					<div>
-						<div className="all-course">
-							<div className='d-flex justify-content-center'>
-								<div className='search d-flex'>
-									<input type="text" placeholder='What do you want to learn?' />
-									<div className='search-button'>
-										<i class="fa-solid fa-magnifying-glass"></i>
-									</div>
-								</div>
-							</div>
-							<div className="container">
-								<div className="all-course-header">
-									<h5>Free courses</h5>
-									<h4>Suitable for children from 7 years old</h4>
-									<p>Build a basic programming foundation</p>
-								</div>
-								<div className="row sp40">
-									{classesBlog.map((data, index) => (
-										<div className="col-lg-4 col-md-6 col-sm-6" key={index}>
-											<div className="class-item">
-												<div className="class-media">
-													<img src={classes} alt="" />
-													<p>
-														<span>Class Time:</span>
-														08:00 am - 10:00 am
-													</p>
-												</div>
-												<div className="class-info">
-													<h4><Link to={"/classes-details"}>{data.title}</Link></h4>
-													<p>Learn what programming is, technology is very
-														interesting</p>
-													<ul className="schedule">
-														<li className="bg-blue class-size"><span>Class Size</span> <span>30 - 40</span> </li>
-														<li className="bg-green years-old"><span>Years Old</span> <span>5 - 6</span> </li>
-														<li className="bg-orange tution"><span>Teacher</span> <span>LamNN</span> </li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
+      console.log("data: ", data);
+      setCourses(data.results);
+      setPageCount(data.totalPages);
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-								<div className="all-course-header">
-									<h5>Free courses</h5>
-									<h4>Suitable for children from 7 years old</h4>
-									<p>Build a basic programming foundation</p>
-								</div>
+  useEffect(() => {
+    fetchCourses(currentPage);
+  }, [currentPage]);
 
-								<div className="row sp40">
-									{classesBlog.map((data, index) => (
-										<div className="col-lg-4 col-md-6 col-sm-6" key={index}>
-											<div className="class-item">
-												<div className="class-media">
-													<img src={classes} alt="" />
-													<p>
-														<span>Class Time:</span>
-														08:00 am - 10:00 am
-													</p>
-												</div>
-												<div className="class-info">
-													<h4><Link to={"/classes-details"}>{data.title}</Link></h4>
-													<p>Learn what programming is, technology is very
-														interesting</p>
-													<ul className="schedule">
-														<li className="bg-blue class-size"><span>Class Size</span> <span>30 - 40</span> </li>
-														<li className="bg-green years-old"><span>Years Old</span> <span>5 - 6</span> </li>
-														<li className="bg-orange tution"><span>Teacher</span> <span>LamNN</span> </li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected + 1;
+    setCurrentPage(selectedPage);
+  };
 
-							</div>
-						</div>
-					</div>
-				</div>
-				<Footer />
-			</Fragment>
-		)
-	}
+  const navigateToCourseDetail = (courseId) => {
+    navigate(`/classes-detail/${courseId}`); // Use navigate with the course ID
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="course">
+        <PageTitle motherMenu="Courses" activeMenu="Courses" />
+
+        <div>
+          <div className="all-course">
+            <div className="d-flex justify-content-center align-items-center">
+              <div className="search d-flex">
+                <input type="text" placeholder="What do you want to learn?" />
+                <div className="search-button d-flex justify-content-center align-items-center p-0">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </div>
+            </div>
+            <div className="container">
+              <div className="all-course-header">
+                <h5>Courses</h5>
+                <h4>Suitable for children from 5 years old</h4>
+                <p>Build a basic programming foundation</p>
+              </div>
+
+              <div className="row sp40">
+                {isLoading ? (
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{ width: "100%", height: "100px" }}
+                  >
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                ) : (
+                  courses.map((course, index) => (
+                    <div
+                      className="col-lg-4 col-md-6 col-sm-6"
+                      key={index}
+                      onClick={() => navigateToCourseDetail(course.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="class-item">
+                        <div className="class-media classes-course-image">
+                          <img
+                            src={course.pictureUrl}
+                            className="classes-course-image"
+                          />
+                        </div>
+                        <div className="class-info">
+                          <div className="classes-course-content-body">
+                            <h5>
+                              {course.name.length > 40
+                                ? `${course.name.substring(0, 40)}...`
+                                : course.name}{" "}
+                            </h5>
+                            <p>
+                              {course.description.length > 70
+                                ? `${course.description.substring(0, 70)}...`
+                                : course.description}
+                            </p>
+                          </div>
+
+                          <div
+                            className="text-center p-2"
+                            style={{
+                              backgroundColor: "#FFA63D",
+                              color: "white",
+                              borderRadius: "8px",
+                            }}
+                          >
+                            {course.price === 0
+                              ? "Free"
+                              : formatPrice(course.price)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              {/* <div className="d-flex justify-content-center">
+                <ReactPaginate
+                  previousLabel={"← Previous"}
+                  nextLabel={"Next →"}
+                  breakLabel={"..."}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"}
+                />
+              </div> */}
+
+              <Stack
+                spacing={2}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={2}
+              >
+                <Pagination
+                  size="large"
+                  count={pageCount <= 0 ? 1 : pageCount}
+                  // count={10}
+                  color="warning"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBack,
+                        next: ArrowForward,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
 }
-export default Classes;

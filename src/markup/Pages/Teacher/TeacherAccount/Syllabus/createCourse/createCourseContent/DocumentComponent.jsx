@@ -21,6 +21,7 @@ const DocumentComponent = ({ sectionId, index }) => {
   //useState
   const [show, setShow] = useState(false);
   const [quillDocument, setQuillDocument] = useState("");
+  const [documentError, setDocumentError] = useState(undefined);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -76,14 +77,26 @@ const DocumentComponent = ({ sectionId, index }) => {
 
   //edit text
 
+  const handleQuillDocumentChange = (value) => {
+    if (value !== undefined && value.trim() !== "") {
+      setDocumentError(undefined);
+    }
+
+    setQuillDocument(value);
+  };
+
   //handle submit
   const handleSubmit = (values) => {
+    if (quillDocument === undefined || quillDocument.trim() === "") {
+      setDocumentError("Document content is required.");
+      return;
+    }
+
     const { lessonName, duration } = values;
 
-    const document = {
+    const addData = {
       name: lessonName.trim(),
       duration: duration,
-      // content: content.trim(),
       content: quillDocument,
       type: "Document",
     };
@@ -93,7 +106,7 @@ const DocumentComponent = ({ sectionId, index }) => {
       documentNumber: componentNumber[index].documentNumber + 1,
     };
 
-    dispatch(addDocument({ sectionId: sectionId, document: document }));
+    dispatch(addDocument({ sectionId: sectionId, document: addData }));
 
     dispatch(
       changeComponentNumber({
@@ -119,7 +132,7 @@ const DocumentComponent = ({ sectionId, index }) => {
       .min(1, "Duration must larger than 0 minute")
       .max(100, "Duration can not exceed 100 minute.")
       .integer(),
-    content: yup.string().required("Content is required"),
+    // content: yup.string().required("Content is required"),
   });
   //form validation
 
@@ -211,30 +224,6 @@ const DocumentComponent = ({ sectionId, index }) => {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  {/* <Form.Group
-                    as={Col}
-                    md="12"
-                    controlId="validationContent"
-                    className="mb-3"
-                  >
-                    <Form.Label className="create-course-form-lable">
-                      Content
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Document content"
-                      name="content"
-                      value={values.content}
-                      onChange={handleChange}
-                      isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
-                      className="create-course-input"
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.content}
-                    </Form.Control.Feedback>
-
-                  </Form.Group> */}
-
                   <Col md="12">
                     <Form.Label className="create-course-form-lable">
                       Content
@@ -243,12 +232,15 @@ const DocumentComponent = ({ sectionId, index }) => {
                       <ReactQuill
                         theme="snow"
                         value={quillDocument}
-                        onChange={(value) => setQuillDocument(value)}
+                        onChange={handleQuillDocumentChange}
                         modules={modules}
                         formats={formats}
                         style={{ whiteSpace: "pre-wrap" }}
                       />
                     </div>
+                    {documentError && (
+                      <p className="text-danger">{documentError}</p>
+                    )}
                   </Col>
                 </Row>
               </Form>
@@ -286,11 +278,20 @@ export const UpdateDocumentComponent = ({
 
   const [show, setShow] = useState(false);
   const [quillDocument, setQuillDocument] = useState(document.content);
+  const [documentError, setDocumentError] = useState(undefined);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   //edit text
+
+  const handleQuillDocumentChange = (value) => {
+    if (value !== undefined && value.trim() !== "") {
+      setDocumentError(undefined);
+    }
+
+    setQuillDocument(value);
+  };
 
   const modules = {
     toolbar: [
@@ -343,7 +344,11 @@ export const UpdateDocumentComponent = ({
 
   //handle submit
   const handleSubmit = (values) => {
-    const { lessonName, duration, content } = values;
+    if (quillDocument === undefined || quillDocument.trim() === "") {
+      setDocumentError("Document content is required.");
+      return;
+    }
+    const { lessonName, duration } = values;
 
     const updateData = {
       name: lessonName.trim(),
@@ -376,7 +381,7 @@ export const UpdateDocumentComponent = ({
       .min(1, "Duration must larger than 0 minute")
       .max(100, "Duration can not exceed 100 minute.")
       .integer(),
-    content: yup.string().required("Content is required"),
+    // content: yup.string().required("Content is required"),
   });
   //form validation
 
@@ -388,7 +393,7 @@ export const UpdateDocumentComponent = ({
         title="Edit"
         style={{ color: "#ff8a00" }}
       >
-        <i class="fa-regular fa-pen-to-square fa-lg mx-1"></i>
+        <i className="fa-regular fa-pen-to-square fa-lg mx-1"></i>
       </button>
 
       <Modal
@@ -408,7 +413,7 @@ export const UpdateDocumentComponent = ({
             initialValues={{
               lessonName: document.name,
               duration: document.duration,
-              content: document.content,
+              // content: document.content,
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -462,29 +467,6 @@ export const UpdateDocumentComponent = ({
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  {/* <Form.Group
-                    as={Col}
-                    md="12"
-                    controlId="validationContent"
-                    className="mb-3"
-                  >
-                    <Form.Label className="create-course-form-lable">
-                      Content
-                    </Form.Label>
-                    <Form.Control
-                      type="url"
-                      placeholder="Document content"
-                      name="content"
-                      value={values.content}
-                      onChange={handleChange}
-                      isInvalid={touched.content && !!errors.content} // Set isInvalid based on validation errors
-                      className="create-course-input"
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.content}
-                    </Form.Control.Feedback>
-                  </Form.Group> */}
-
                   <Col md="12">
                     <Form.Label className="create-course-form-lable">
                       Content
@@ -499,6 +481,9 @@ export const UpdateDocumentComponent = ({
                         style={{ whiteSpace: "pre-wrap" }}
                       />
                     </div>
+                    {documentError && (
+                      <p className="text-danger">{documentError}</p>
+                    )}
                   </Col>
                 </Row>
               </Form>

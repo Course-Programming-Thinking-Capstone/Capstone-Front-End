@@ -17,10 +17,10 @@ export const DraggableTest = (props) => {
     : undefined;
 
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
       {/* {props.children} */}
       {props.title}
-    </button>
+    </div>
   );
 };
 
@@ -56,10 +56,10 @@ export const Draggable = (props) => {
       };
 
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
       {/* {props.children} */}
       {props.child}
-    </button>
+    </div>
   );
 };
 

@@ -1,25 +1,38 @@
 import { useEffect, useState } from "react";
-import simp from "./../../../../../images/gallery/simp.jpg";
+import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
-import {
-  filterSyllabusesAsync,
-  filterTeacherSyllabusesAsync,
-} from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
-import { Link } from "react-router-dom";
+import { filterTeacherSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
+import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
   formatDateV1,
 } from "../../../../../helper/utils/DateUtil";
+
+import { CustomPagination } from "../../../../Layout/Components/Pagination";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
+//css
+import "./SyllabusComponent.css";
+import ReactPaginate from "react-paginate";
 import {
-  CustomPagination,
-  PaginationCustom,
-} from "../../../../Layout/Components/Pagination";
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Tooltip,
+} from "@mui/material";
+import { Alarm, CalendarMonth, Visibility } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
+import ButtonMui from "@mui/material/Button";
 
 const SyllabusComponent = () => {
   //useDispath
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //set information message
   const [message, setMessage] = useState(undefined);
@@ -29,6 +42,37 @@ const SyllabusComponent = () => {
   //syllabus list
   const syllabuses = useSelector(syllabusesSelector);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = async () => {
+    try {
+      setIsLoading(true);
+
+      setPage(1);
+
+      await dispatch(
+        filterTeacherSyllabusesAsync({
+          sortCreatedDate: "desc",
+          name: query,
+          page: 1,
+          size: 4,
+        })
+      );
+    } catch (error) {
+      if (error.response) {
+        console.log(`Error response: ${error.response?.data?.message}`);
+        setMessage(error.response?.data?.message || "Undefined.");
+      } else {
+        console.log(`Error message abc: ${error.message}`);
+        setMessage(error.message || "Undefined.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // fetch syllabuses list
   useEffect(() => {
@@ -41,7 +85,7 @@ const SyllabusComponent = () => {
             sortCreatedDate: "desc",
             name: query,
             page: page,
-            size: 3,
+            size: 4,
           })
         );
       } catch (error) {
@@ -57,11 +101,11 @@ const SyllabusComponent = () => {
       }
     };
     fetchData();
-  }, [dispatch, page, query]);
+  }, [dispatch, page]);
 
   const renderComponent = () => {
     return (
-      <div className="syllabus">
+      <div className="syllabus teacher-syllabus-container">
         <div className="header">
           <div className="d-flex justify-content-start align-items-center mb-3">
             <div>
@@ -73,81 +117,139 @@ const SyllabusComponent = () => {
         </div>
         <div className="syllabus-content">
           <div>
-            <div className="search d-flex justify-content-center">
-              <input type="text" placeholder="Search course" />
-              <div
-                className="text-center"
-                style={{
-                  height: "30px",
-                  border: "1px solid #988E8E66",
-                  borderLeft: "none",
-                  width: "5%",
-                  paddingTop: "5px",
-                  borderRadius: "0 10px 10px 0",
-                }}
+            <div className="d-flex justify-content-between align-items-center mt-3 syllabus-content-search mb-3">
+              <input
+                type="text"
+                placeholder="Search syllabus"
+                className="syllabus-content-search-input"
+                name={query}
+                onChange={handleQueryChange}
+              />
+              {/* <button
+                type="button"
+                className="syllabus-content-search-button"
+                onClick={handleSearchSubmit}
               >
                 <i className="fa-solid fa-magnifying-glass"></i>
-              </div>
+              </button> */}
+
+              <Tooltip title="Search" arrow className="p-1">
+                <IconButton
+                  color="primary"
+                  aria-label="Search"
+                  onClick={handleSearchSubmit}
+                >
+                  <SearchIcon color="action" />
+                </IconButton>
+              </Tooltip>
             </div>
 
-            <div className="px-3 pb-3" style={{ minHeight: "60vh" }}>
-              <div style={{ height: "50vh" }}>
+            <div className="px-4 pb-3">
+              <div className="teacher-syllabus-content">
                 {isLoading ? (
-                  // <div className="d-flex justify-content-center">
-                  //   <div className="spinner-border text-primary" role="status">
-                  //     <span className="visually-hidden">Loading...</span>
-                  //   </div>
-                  // </div>
                   <div className="d-flex justify-content-center py-5">
-                    <Spinner animation="border" variant="success" />
+                    <Spinner
+                      animation="border"
+                      variant="success"
+                      className="custom-spinner"
+                    />
                   </div>
                 ) : (
-                  syllabuses.results.map((syllabus, index) => (
-                    <div key={index} className="syllabus-item">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex justify-content-start">
-                          <img className="img-responsive" src={simp} alt="" />
-                          <div className="ms-3">
-                            <p className="mb-1 mt-2">{syllabus.name}</p>
-                            <p className="mb-1 title blue">
-                              Create date:{" "}
-                              {formatDateV1(
-                                convertUtcToLocalTime(syllabus.createdDate)
-                              )}
-                            </p>
+                  <>
+                    {syllabuses && syllabuses.totalRecords === 0 ? (
+                      <p className="mt-3 text-center">There are no syllabus</p>
+                    ) : (
+                      syllabuses.results.map((syllabus, index) => (
+                        <div key={index} className="syllabus-content-item mt-2">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex justify-content-start align-items-center">
+                              <img
+                                className="img-responsive syllabus-content-item-image"
+                                src={syllabusPicture}
+                                alt="Syllabus picture"
+                                title="Syllabus picture"
+                              />
+                              <div className="ms-3">
+                                <p className="my-1">{syllabus.name}</p>
+                                <p className="mb-1 d-flex align-items-center">
+                                  <CalendarMonth fontSize="small" />{" "}
+                                  <span className="title mx-1">
+                                    {formatDateV1(
+                                      convertUtcToLocalTime(
+                                        syllabus.createdDate
+                                      )
+                                    )}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                            <div>
+                              <Link
+                                to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
+                                style={{
+                                  display: "inline-block",
+                                  backgroundColor: "#EF7E54",
+                                  border: "none",
+                                  borderRadius: "10px",
+                                  color: "white",
+                                  textDecoration: "none",
+                                  textAlign: "center",
+                                  padding: "6px 30px",
+                                }}
+                              >
+                                View
+                              </Link>
+
+                              {/* <ButtonMui
+                                size="small"
+                                variant="contained"
+                                color="warning"
+                                aria-label="View detail"
+                                endIcon={<Visibility />}
+                                onClick={() =>
+                                  navigate(
+                                    `/teacher/syllabuses/detail?id=${syllabus.id}`
+                                  )
+                                }
+                                type="button"
+                              >
+                                View
+                              </ButtonMui> */}
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <Link
-                            to={`/teacher/syllabuses/detail?id=${syllabus.id}`}
-                            className="mt-3"
-                            style={{
-                              display: "inline-block",
-                              width: "100px",
-                              backgroundColor: "#EF7E54",
-                              border: "none",
-                              borderRadius: "10px",
-                              color: "white",
-                              textDecoration: "none",
-                              textAlign: "center",
-                              lineHeight: "36px",
-                            }}
-                          >
-                            View
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))
+                      ))
+                    )}
+                  </>
                 )}
               </div>
 
               {/* Paging */}
-              <CustomPagination
-                page={page}
-                setPage={setPage}
-                totalPage={syllabuses.totalPages}
-              />
+
+              <Stack
+                spacing={2}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={2}
+              >
+                <Pagination
+                  count={syllabuses.totalPages <= 0 ? 1 : syllabuses.totalPages}
+                  color="primary"
+                  page={page}
+                  onChange={(event, value) => setPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+              {/* </div> */}
             </div>
           </div>
         </div>

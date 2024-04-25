@@ -47,3 +47,4 @@ export const filterTeacherSyllabus = async (filter) => {
 
   return response.data;
 };
+
