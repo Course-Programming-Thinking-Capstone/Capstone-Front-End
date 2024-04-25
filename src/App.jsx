@@ -66,6 +66,7 @@ import CourseQuiz from "./markup/Pages/CourseQuiz";
 import User from "./markup/Pages/Admin/User/User";
 import UserParents from "./markup/Pages/Admin/User/UserParents";
 import CourseResult from './markup/Pages/CourseResult';
+import AdminModerating from "./markup/Pages/Admin/Moderating/AdminModerating";
 
 // function App() {
 // 	return (
@@ -128,6 +129,12 @@ const App = () => {
               path="/admin"
               element={<PrivateRoute page="admin" component={<Admin />} />}
             >
+              <Route
+                path="course"
+                element={
+                  <PrivateRoute page="admin/course" component={<AdminModerating />} />
+                }
+              />
               <Route index element={<Navigate to="game" replace />} />
               <Route
                 path="user"

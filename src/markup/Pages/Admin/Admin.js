@@ -62,6 +62,13 @@ export default function Admin() {
               <span>Dashboard</span>
             </div> */}
             <div
+              className={getItemClass("Course")}
+              onClick={() => handleMenuItemClick("Course")}
+            >
+              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
+              <span>Course</span>
+            </div>
+            <div
               className={getItemClass("Certificate")}
               // onClick={() => handleMenuItemClick("Certificate")}
             >
@@ -74,13 +81,6 @@ export default function Admin() {
             >
               <i className="fa-solid fa-user" style={{ fontSize: "18px" }}></i>
               <span>User</span>
-            </div>
-            <div
-              className={getItemClass("Course")}
-              // onClick={() => handleMenuItemClick("Course")}
-            >
-              <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
-              <span>Course</span>
             </div>
             <div
               className={getItemClass("Game")}
@@ -109,10 +109,6 @@ export default function Admin() {
               <i className="fa-solid fa-book" style={{ fontSize: "18px" }}></i>
               <span>Syllabus</span>
             </div>
-            {/* <div className="item" onClick={handleLogout}>
-              <i className="fa-solid fa-book"></i>
-              <span>Log out</span>
-            </div> */}
 
             <div
               className="item d-flex justify-content-start align-items-center mt-3 admin-menu-item"

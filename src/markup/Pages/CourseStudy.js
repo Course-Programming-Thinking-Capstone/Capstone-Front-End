@@ -15,6 +15,7 @@ export default function CourseStudy() {
     const navigate = useNavigate();
 
 
+
     useEffect(() => {
         const fetchSectionDetails = async () => {
             try {
@@ -132,9 +133,9 @@ export default function CourseStudy() {
         );
     };
 
-
     const renderContent = () => {
         if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
+        const linkVideo = detailedContent.resourceUrl;
 
         switch (detailedContent.type) {
             case 'Video':
@@ -143,7 +144,7 @@ export default function CourseStudy() {
                         <iframe
                             width="100%"
                             height="600px"
-                            src={detailedContent.resourceUrl}
+                            src={linkVideo}
                             title={detailedContent.name}
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

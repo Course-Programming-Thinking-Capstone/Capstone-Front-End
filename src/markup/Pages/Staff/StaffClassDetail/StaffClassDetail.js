@@ -21,29 +21,36 @@ export default function StaffClassDetail() {
   const [classIdForStudentForm, setClassIdForStudentForm] = useState(null);
   const [classIdForForm, setClassIdForForm] = useState(null);
 
-  const CustomInput = forwardRef(({ value, onClick }, ref) => (
-    <div
-      className="date-picker-custom-input d-flex justify-content-between p-1"
-      onClick={onClick}
-      ref={ref}
-      style={{
+  const CustomInput = forwardRef(({ value, onClick, placeholder }, ref) => {
+    // Format date to a readable format
+    const formatDate = (date) => {
+      if (!date) return '';
+      const d = new Date(date);
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    };
+
+    return (
+      <button onClick={onClick} ref={ref} style={{
         border: "1px solid #F69E4A",
         width: "150px",
         height: "30px",
         borderRadius: "8px",
-      }}
-    >
-      <div>{formatDate(value)}</div>
-      <div>
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '5px 10px'
+      }}>
+        <span>{value ? formatDate(value) : placeholder}</span>
         <i className="fa-regular fa-calendar-days" />
-      </div>
-    </div>
-  ));
+      </button>
+    );
+  });
 
   const CreateClass = ({ onBack, onNext }) => {
     const [classCode, setClassCode] = useState("");
-    const [openDay, setOpenDay] = useState("");
-    const [closeDay, setCloseDay] = useState("");
+    const [date, setDate] = useState(null);
+    const [openDay, setOpenDay] = useState(null);
+    const [closeDay, setCloseDay] = useState(null);
     const today = new Date().toISOString().split("T")[0];
     const [courses, setCourses] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState("");
@@ -408,9 +415,11 @@ export default function StaffClassDetail() {
                       <DatePicker
                         selected={openDay}
                         onChange={(date) => setOpenDay(date)}
-                        minDate={today}
-                        enableTabLoop={false}
-                        customInput={<CustomInput />}
+                        minDate={new Date()}
+                        showYearDropdown
+                        showMonthDropdown
+                        dropdownMode="select"
+                        customInput={<CustomInput placeholder="Select a date" />}
                       />
                     </div>
                     <i
@@ -423,8 +432,10 @@ export default function StaffClassDetail() {
                         selected={closeDay}
                         onChange={(date) => setCloseDay(date)}
                         minDate={openDay || today}
-                        enableTabLoop={false}
-                        customInput={<CustomInput />}
+                        showYearDropdown
+                        showMonthDropdown
+                        dropdownMode="select"
+                        customInput={<CustomInput placeholder="Select a date" />}
                       />
                     </div>
                   </div>
@@ -550,8 +561,24 @@ export default function StaffClassDetail() {
     };
 
     const handleAddTeacherClick = () => {
-      setClassIdForTeacherForm(classId); // Set the classId for the TeacherForm
-      setView("addTeacher");
+      // Check if the schedule is set by verifying if 'classDetails' has schedule-related data
+      if (!classDetails || !classDetails.studyDay || classDetails.studyDay.length === 0 || !classDetails.slotNumber) {
+        // If schedule is not set, show an error toast
+        toast.error("You need to create a schedule for the class first", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        // If schedule exists, proceed with setting the classId and changing the view
+        setClassIdForTeacherForm(classId);
+        setView("addTeacher");
+      }
     };
 
     // Calculate the students to be displayed on the current page
