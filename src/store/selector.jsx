@@ -24,3 +24,6 @@ export const componentNumberSelector = (state) => state.componentNumber.data;
 
 //get number of unread notification 
 export const numberOfUnreadNotification = (state) => state.notification.data.numberOfUnread;
+
+//get classes
+export const classesSelector = (state) => state.classes.data;

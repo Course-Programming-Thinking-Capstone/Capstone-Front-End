@@ -38,12 +38,7 @@ export default function TeacherAccount({ child }) {
 
     const fetchNumberOfUnreadNotification = async () => {
       try {
-        //log
-        console.log(`Fetch number of unread notification`)
         await dispatch(getNumberOfUnReadNotificationAsync());
-
-        //log
-        console.log(`numberOfUnreadNotificationData: ${numberOfUnreadNotificationData}`)
 
       } catch (error) {
         let message = "";
