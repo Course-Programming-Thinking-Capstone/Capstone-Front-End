@@ -9,7 +9,7 @@ const TeacherNotificationComponent = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await instance.get('api/v1/notifications/teacher?page=1&size=5');
+        const response = await instance.get('api/v1/notifications/account?page=1&size=5');
         setNotifications(response.data.results);
         setUnreadCount(response.data.results.filter(n => !n.isRead).length);
       } catch (error) {
@@ -60,7 +60,7 @@ const TeacherNotificationComponent = () => {
               <h5 className="mb">NOTIFICATIONS</h5>
               <hr />
             </div>
-            <i class="fa-solid fa-bell"></i>
+            <i className="fa-solid fa-bell"></i>
           </div>
           <div>
             <button onClick={markAllAsRead} className="btn btn-primary">
@@ -88,11 +88,11 @@ const TeacherNotificationComponent = () => {
           </div>
           <div className="right">
             <p>
-              <i class="fa-regular fa-clock"></i> 09-02-2024 at 9:30 AM
+              <i className="fa-regular fa-clock"></i> 09-02-2024 at 9:30 AM
             </p>
             <i
               style={{ marginTop: "10px", color: "red", float: "right" }}
-              class="fa-solid fa-circle-xmark"
+              className="fa-solid fa-circle-xmark"
             ></i>
           </div>
         </div>

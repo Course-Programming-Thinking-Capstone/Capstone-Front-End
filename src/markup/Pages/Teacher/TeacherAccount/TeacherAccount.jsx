@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import background from "./../../../../images/background/teacherBackground.jpg";
 import demo from "./../../../../images/gallery/demo.jpg";
 import defaultAvatar from "./../../../../images/gallery/default-user.jpg";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { teacherActiveMenuSelector } from "../../../../store/selector";
+import { numberOfUnreadNotification, teacherActiveMenuSelector } from "../../../../store/selector";
 import { Image } from "react-bootstrap";
 
 //css
 import "./TeacherAccount.css";
 import { Badge } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useDispatch } from "react-redux";
+import { getNumberOfUnReadNotificationAsync } from "../../../../store/thunkApis/notification/notificationsThunk";
 
 export default function TeacherAccount({ child }) {
   //retrieve user information
   const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
 
   const teacherActiveMenu = useSelector(teacherActiveMenuSelector);
   const navigate = useNavigate();
@@ -24,9 +27,38 @@ export default function TeacherAccount({ child }) {
     return menuItem === teacherActiveMenu
       ? { backgroundColor: "#F69E4A", color: "white" }
       : {
-          /*color: "#212121CC"*/
-        }; // Example: light grey background for active menu
+        /*color: "#212121CC"*/
+      }; // Example: light grey background for active menu
   };
+
+  //get number of unread notification
+  const numberOfUnreadNotificationData = useSelector(numberOfUnreadNotification);
+
+  useEffect(() => {
+
+    const fetchNumberOfUnreadNotification = async () => {
+      try {
+        //log
+        console.log(`Fetch number of unread notification`)
+        await dispatch(getNumberOfUnReadNotificationAsync());
+
+        //log
+        console.log(`numberOfUnreadNotificationData: ${numberOfUnreadNotificationData}`)
+
+      } catch (error) {
+        let message = "";
+        if (error.response) {
+          message = error.response?.data?.message || "Something wrong.";
+        } else {
+          message = error.message || "Something wrong.";
+        }
+        //log
+        console.log(`Error when fetch number of unread notification: ${message}`);
+      }
+    }
+
+    fetchNumberOfUnreadNotification();
+  }, [dispatch]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -52,8 +84,8 @@ export default function TeacherAccount({ child }) {
                 <Image
                   src={
                     user.pictureUrl &&
-                    user.pictureUrl !== null &&
-                    user.pictureUrl !== ""
+                      user.pictureUrl !== null &&
+                      user.pictureUrl !== ""
                       ? user?.pictureUrl
                       : defaultAvatar
                   }
@@ -82,7 +114,7 @@ export default function TeacherAccount({ child }) {
                   className="link-item d-flex justify-content-start align-items-center"
                   style={getMenuItemStyle("notification")}
                 >
-                  <Badge color="error" overlap="circular" badgeContent={3} max={99}>
+                  <Badge color="error" overlap="circular" badgeContent={numberOfUnreadNotificationData} max={99}>
                     <NotificationsIcon />
                   </Badge>
                   <div className="mx-4">Notification</div>
@@ -95,7 +127,7 @@ export default function TeacherAccount({ child }) {
                 >
                   <i
                     className="fa-solid fa-book-open py-0"
-                    // style={{ width: "19px", height: "auto" }}
+                  // style={{ width: "19px", height: "auto" }}
                   ></i>
                   <div className="mx-4">My courses</div>
                 </Link>
