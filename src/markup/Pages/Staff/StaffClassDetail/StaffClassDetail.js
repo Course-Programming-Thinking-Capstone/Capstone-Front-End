@@ -65,6 +65,7 @@ export default function StaffClassDetail() {
       Thursday: false,
       Friday: false,
       Saturday: false,
+      Sunday: false
     });
     const [isCreatingClass, setIsCreatingClass] = useState(false);
     const [isCreatingSchedule, setIsCreatingSchedule] = useState(false);
@@ -149,7 +150,7 @@ export default function StaffClassDetail() {
           theme: "colored",
         });
       } catch (error) {
-        toast.error(error.message, {
+        toast.error("Class code has been existed", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -177,7 +178,7 @@ export default function StaffClassDetail() {
         .map(([day]) => day);
     };
 
-    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3);
+    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3); 
     const secondRowDays = Object.entries(checkedDays)?.slice(3);
 
     const [selectedSlotId, setSelectedSlotId] = useState(null);
@@ -861,6 +862,17 @@ export default function StaffClassDetail() {
                       style={{ fontSize: "18px" }}
                     >
                       Sa
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Sunday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      S
                     </p>
                   </div>
                 </div>
