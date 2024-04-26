@@ -22,7 +22,7 @@ export default function CoursesPlan() {
                 const response = await instance.get(`api/v1/coursegames/available`);
                 const data = response.data;
                 if (data.length > 0) {
-                    setLinkGame(data[0].url); // Assuming you want to set the URL of the first game
+                    setLinkGame(data[0].url);
                 } else {
                     console.log("No games available");
                 }
@@ -45,7 +45,6 @@ export default function CoursesPlan() {
                 console.error('Course ID is undefined!');
                 return;
             }
-
             try {
                 const response = await instance.get(`api/v1/courses/study/${courseId}`);
                 const data = response.data;

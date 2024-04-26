@@ -13,52 +13,52 @@ export default function CourseStudy() {
     const [sectionDetails, setSectionDetails] = useState(null);
     const [detailedContent, setDetailedContent] = useState(null);
     const navigate = useNavigate();
-
-
+    const [selectedContentType, setSelectedContentType] = useState(null);
+    const [selectedContentId, setSelectedContentId] = useState(null);
     useEffect(() => {
         const fetchSectionDetails = async () => {
             try {
                 const response = await instance.get(`api/v1/courses/study/section/${sectionId}`);
-                // Assume the API returns the entire section data needed
                 const data = response.data;
-                console.log(' listData: ', data);
-
-                setSelectedContent(data);
                 setSectionDetails(data);
+                if (!selectedContentType && data && data.lessons && data.lessons.length > 0) {
+                    setSelectedContentType('lesson');
+                    setSelectedContentId(data.lessons[0].id);
+                    fetchContentData('lesson', data.lessons[0].id);
+                }
             } catch (error) {
                 console.error('Failed to fetch section details:', error);
             }
         };
 
         fetchSectionDetails();
-    }, [sectionId]);
+    }, [sectionId, selectedContentType]);
 
     const pageStyle = {
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
     };
-
-    const handleContentClick = async (type, id) => {
+    const fetchContentData = async (type, id) => {
         try {
             let url;
-            console.log(id);
             if (type === 'lesson') {
                 url = `api/v1/courses/study/section/lesson/${id}`;
             } else if (type === 'quiz') {
                 url = `api/v1/courses/study/section/quiz/${id}`;
-                // Assume similar endpoint for quizzes if exists
             }
             const response = await instance.get(url);
             const data = response.data;
             setDetailedContent(data);
-            console.log('response.data: ', data);
-            setSelectedContent({ type, id });
         } catch (error) {
-            console.error('Error fetching details:', error);
+            console.error('Error fetching content details:', error);
         }
     };
-
+    const handleContentClick = async (type, id) => {
+        setSelectedContentType(type);
+        setSelectedContentId(id);
+        fetchContentData(type, id);
+    };
     const markLessonAsCompleted = async (lessonId) => {
         try {
             const response = await instance.patch(`api/v1/courses/mark-lesson-completed?lessonId=${lessonId}`);
@@ -82,8 +82,6 @@ export default function CourseStudy() {
             console.error('Error marking lesson as completed:', error);
         }
     };
-
-
     const renderSidebar = () => {
         if (!sectionDetails) {
             return (
@@ -92,26 +90,34 @@ export default function CourseStudy() {
                 </div>
             );
         }
-
         return (
             <>
                 {sectionDetails.lessons.map((lesson) => (
-                    <div key={lesson.id} className='document d-flex' onClick={() => handleContentClick('lesson', lesson.id)} style={{ backgroundColor: selectedContent?.id === lesson.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
+                    <div key={lesson.id} className='document d-flex' onClick={() => handleContentClick('lesson', lesson.id)}
+                        style={{
+                            backgroundColor: selectedContentId === lesson.id && selectedContentType === 'lesson' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px",
+                            color: selectedContentId === lesson.id && selectedContentType === 'lesson' ? 'orange' : 'black',
+                            fontSize: selectedContentId === lesson.id && selectedContentType === 'lesson' ? '35px' : '25px',
+                            fontWeight: selectedContentId === lesson.id && selectedContentType === 'lesson' ? 'bolder' : 'normal'
+                        }}>
                         {lesson.isComplete ? (
                             <i style={{ color: '#FF8A00' }} className="fa-solid fa-circle-check"></i>
-                        ) : lesson.type === 'Video' ? (
-                            <i className="fa-regular fa-circle-play"></i>
                         ) : (
-                            <i className="fa-solid fa-book"></i>
+                            <i className="fa-regular fa-circle-play"></i>
                         )}
                         <div className='document-content'>
                             <p>{lesson.name}</p>
-                            <span>{lesson.type} - {lesson.duration}min</span>
+                            <span>{lesson.type} - {lesson.duration} min</span>
                         </div>
                     </div>
                 ))}
                 {sectionDetails.quizzes.map((quiz) => (
-                    <div key={quiz.id} className='document d-flex' onClick={() => handleContentClick('quiz', quiz.id)} style={{ backgroundColor: selectedContent?.id === quiz.id ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px" }}>
+                    <div key={quiz.id} className='document d-flex' onClick={() => handleContentClick('quiz', quiz.id)} style={{
+                        backgroundColor: selectedContentId === quiz.id && selectedContentType === 'quiz' ? '#ffecb7' : 'transparent', borderRadius: "10px 0 0 10px",
+                        color: selectedContentId === quiz.id && selectedContentType === 'quiz' ? 'orange' : 'black',
+                        fontSize: selectedContentId === quiz.id && selectedContentType === 'quiz' ? '35px' : '25px',
+                        fontWeight: selectedContentId === quiz.id && selectedContentType === 'quiz' ? 'bolder' : 'normal'
+                    }}>
                         <i className="fa-solid fa-pen-to-square"></i>
                         <div className='document-content'>
                             <p>{quiz.title}</p>
@@ -122,11 +128,8 @@ export default function CourseStudy() {
             </>
         );
     };
-
-    const [contentType, setContentType] = useState('Video');
     const renderContent = () => {
         if (!detailedContent) return <div>Select a lesson or quiz to view details.</div>;
-
         switch (detailedContent.type) {
             case 'Video':
                 return (
@@ -139,7 +142,7 @@ export default function CourseStudy() {
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen></iframe>
-                        <div className='d-flex justify-content-end' style={{marginTop:10}}>
+                        <div className='d-flex justify-content-end' style={{ marginTop: 10 }}>
                             {!detailedContent.isComplete && (
                                 <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
                             )}
@@ -157,7 +160,6 @@ export default function CourseStudy() {
                         </div>
                     </div>
                 );
-
             default:
                 return <div className='pt-5 px-5 mt-5'>
                     <h3 className='text-center'>{detailedContent.title}</h3>
@@ -171,12 +173,9 @@ export default function CourseStudy() {
                             <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
                         </div>
                     </div>
-
                 </div>;
         }
     };
-
-
     return (
         <div>
             <Header />

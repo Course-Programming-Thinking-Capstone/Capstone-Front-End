@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import backgroundImage from './../../images/background/test4.jpg';
+import backgroundImage from './../../images/background/test10.jpg';
 import Footer from '../Layout/Footer';
 import Header from '../Layout/Header';
 import instance from '../../helper/apis/baseApi/baseApi';
@@ -69,13 +69,13 @@ export default function CourseQuiz() {
     };
 
     const Question = ({ question }) => (
-        <div className='quiz-question' style={{ backgroundColor: 'rgba(200, 200, 200, 0.9)', }}>
+        <div className='quiz-question' style={{ backgroundColor: 'rgba(200, 200, 200, 0.8)', }}>
             <span style={{ fontSize: '20px', marginTop: '10px', color: 'white', fontWeight: '600', }}>Question {question.id}.</span>
             <div style={{
                 display: 'flex',
-                backgroundColor: 'lightblue',
+                backgroundColor: '#a5c6d0',
                 alignItems: 'center',
-                border: '1px solid lightblue',
+                border: '1px solid #a5c6d0',
                 padding: '120px 10px',
                 width: '50%',
                 borderRadius: 10,
@@ -93,7 +93,7 @@ export default function CourseQuiz() {
                             // className='answer'
                             onClick={() => selectAnswer(question.id, option.id)}
                             style={{
-                                backgroundColor: selectedAnswers[question.id] === option.id ? 'rgba(255, 138, 0, 1)' : 'lightblue',
+                                backgroundColor: selectedAnswers[question.id] === option.id ? 'rgb(243 151 43)' : 'lightblue',
                                 color: selectedAnswers[question.id] === option.id ? 'white' : 'black',
                                 border: selectedAnswers[question.id] === option.id ? '1px solid rgba(255, 138, 0, 1)' : '1px solid lightblue',
                                 boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
@@ -111,7 +111,7 @@ export default function CourseQuiz() {
     return (
         <div>
             {/* <Header /> */}
-            <div className="quiz-header">
+            <div className="quiz-header" style={{backgroundColor:'ghostwhite'}}>
                 <div className="container">
                     <div className="row align-items-center">
                         {/* <div className='d-flex justify-content-center col-lg-1 col-md-1 d-sm-none d-md-block'>
