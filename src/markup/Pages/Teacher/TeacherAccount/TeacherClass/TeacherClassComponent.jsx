@@ -1,6 +1,71 @@
+import { useDispatch } from "react-redux";
 import demo from "./../../../../../images/gallery/demo.jpg";
+import { useSelector } from "react-redux";
+import { classesSelector } from "../../../../../store/selector";
+import { useEffect, useState } from "react";
+import { getAccountClassAsync } from "../../../../../store/thunkApis/class/classThunk";
+import { getAccountCLass, getCLassById } from "../../../../../helper/apis/class/class";
 
 const TeacherClassComponent = () => {
+
+  const dispatch = useDispatch();
+
+  // const classes = useSelector(classesSelector);
+
+  //useState
+  const [selectedClassIndex, setSelectedClassIndex] = useState(0);
+  const [classes, setClasses] = useState([]);
+  const [currentClass, setCurrentClass] = useState(null);
+
+  const handleSelectedClassChange = async (event) => {
+    const changeIndex = event.target.value;
+
+    if (classes != null) {
+      const currentId = classes[changeIndex]?.classId;
+      const data = await getCLassById(currentId);
+      setCurrentClass(data);
+    }
+
+    setSelectedClassIndex(changeIndex);
+  }
+
+  const fetchData = async () => {
+    try {
+
+      //log
+      console.log("Call fetch teacher class.");
+
+      let data = await getAccountCLass();
+
+      //set classes
+      setClasses(data);
+
+      if (data != null && data.length > 0) {
+        const currentId = data[0]?.classId;
+        data = await getCLassById(currentId);
+        setCurrentClass(data);
+      }
+
+
+    } catch (error) {
+      let message = "";
+      if (error.response) {
+        message = error.response?.data?.message || "Something wrong.";
+      } else {
+        message = error.message || "Something wrong.";
+      }
+      //log
+      console.log(`Error when fetch classes of teacher notification: ${message}`);
+    }
+  }
+
+  useEffect(() => {
+
+    fetchData();
+
+  }, [dispatch])
+
+
   return (
     <div className="teacher-classes">
       <div className="header">
@@ -23,10 +88,11 @@ const TeacherClassComponent = () => {
               <p style={{ color: "#FF8A00" }} className="mb">
                 CLASS
               </p>
-              <select style={{ marginLeft: "15px" }} name="" id="">
-                <option value="">Class 1</option>
-                <option value="">Class 2</option>
-                <option value="">Class 3</option>
+              <select style={{ marginLeft: "15px" }} onChange={handleSelectedClassChange}>
+                {classes !== null && classes?.map((element, index) => (
+                  <option key={index} value={index}>{element?.classCode}</option>
+                ))
+                }
               </select>
             </div>
           </div>
@@ -44,7 +110,7 @@ const TeacherClassComponent = () => {
                     padding: "0px 5px",
                   }}
                 >
-                  What is programming?
+                  {currentClass != null && currentClass?.courseName}
                 </span>
               </div>
               <div
@@ -54,43 +120,46 @@ const TeacherClassComponent = () => {
                 <p style={{ color: "#F15C58" }} className="mb">
                   Number of students
                 </p>
-                <span>10</span>
+                <span>{currentClass !== null && currentClass.totalStudent}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-borderless">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Image</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Age</th>
-                <th>Gender</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="item">
-                <td>1</td>
-                <td>
-                  <img
-                    className="img-responsive"
-                    style={{ height: "50px", width: "50px" }}
-                    src={demo}
-                    alt=""
-                  />
-                </td>
-                <td>Pitt</td>
-                <td>35</td>
-                <td>New York</td>
-                <td>USA</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+        {currentClass && currentClass.students?.length > 0 && (
+          <div className="table-responsive">
+            <table className="table table-borderless">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Image</th>
+                  <th>Full name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentClass.students.map((student, index) =>
+                  <tr key={index} className="item">
+                    <td>{student?.studentId}</td>
+                    <td>
+                      <img
+                        className="img-responsive"
+                        style={{ height: "50px", width: "50px" }}
+                        src={student?.image ?? demo}
+                        alt="Student avatar"
+                      />
+                    </td>
+                    <td>{student?.studentName}</td>
+                    <td>{student?.dateOfBirth}</td>
+                    <td>{student?.gender}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
