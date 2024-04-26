@@ -152,7 +152,7 @@ const TeacherCourseComponent = () => {
             <h5 className="mb">My courses</h5>
             <hr />
           </div>
-          <i class="fa-solid fa-book-open"></i>
+          <i className="fa-solid fa-book-open"></i>
         </div>
       </div>
 
@@ -208,7 +208,7 @@ const TeacherCourseComponent = () => {
             <Grid container rowSpacing={1} columnSpacing={2}>
               {Array.isArray(courses?.results) &&
                 courses?.results.map((course, index) => (
-                  <Grid item md={6} lg={4}>
+                  <Grid key={index} item md={6} lg={4}>
                     <div className="teacher-course-content-item">
                       <img src={course?.pictureUrl ?? simp} alt="" />
                       <div className="teacher-course-content-item-name mt-2">

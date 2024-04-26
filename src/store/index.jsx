@@ -4,6 +4,7 @@ import syllabusesReducer from "./slices/syllabus/syllabusesSlice";
 import syllabusDetailReducer from "./slices/syllabus/syllabusDetailSlice";
 import menuReducer from "./slices/menu/menuSlice";
 import componentNumberReducer from "./slices/course/componentNumber";
+import notificationReducer from "./slices/notification/notificationSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     syllabusDetail: syllabusDetailReducer,
     menu: menuReducer,
     componentNumber: componentNumberReducer,
+    notification: notificationReducer
   },
 });

@@ -9,7 +9,7 @@ const TeacherClassComponent = () => {
             <h5 className="mb">My classes</h5>
             <hr />
           </div>
-          <i class="fa-solid fa-user"></i>
+          <i className="fa-solid fa-user"></i>
         </div>
       </div>
       <div className="teacher-classes-content py-3">
