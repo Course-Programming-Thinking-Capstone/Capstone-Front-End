@@ -153,7 +153,8 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [selectedSection, setSelectedSection] = useState(null);
     const [showQuiz, setShowQuiz] = useState(false);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
-    const [price, setPrice] = useState(10000);
+    const [price, setPrice] = useState("");
+    const [formattedPrice, setFormattedPrice] = useState("");
     const [priceError, setPriceError] = useState('');
 
     useEffect(() => {
@@ -176,13 +177,16 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     }, [courseId]);
 
     const handlePriceChange = (e) => {
-        const newPrice = Number(e.target.value);
-        setPrice(newPrice);
+        const value = e.target.value.replace(/\D/g, ''); // Remove all non-numeric characters
+        const number = value ? parseInt(value, 10) : '';
+        setPrice(number); // Update the raw price
+        const formatted = number.toLocaleString(); // Format with commas
+        setFormattedPrice(formatted); // Update the display price
 
-        if (newPrice < 10000 || newPrice > 100000000) {
+        if (number < 10000 || number > 100000000) {
             setPriceError('Price must be between 10,000 and 100,000,000.');
         } else {
-            setPriceError(''); // Clear error if the price is within the range
+            setPriceError('');
         }
     };
 
@@ -207,10 +211,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const handleApprove = () => {
         setApproveModalShow(false);
         setApproveSetting(true);
-    };
-
-    const handleOptionSelect = (option) => {
-        setSelectedOption(option);
     };
 
     const handleCourseTypeSelect = (type) => setCourseType(type);
@@ -287,56 +287,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         }
     };
 
-
-    const setupNowContent = (
-        <div style={{ padding: '15px', border: '2px solid #1A9CB7', marginTop: '20px', borderRadius: '8px' }}>
-            <p className='mb-0' style={{ color: '#1A9CB7' }}>Fee</p>
-            <div style={{ padding: '15px' }}>
-                <span style={{ fontSize: '14px' }}>Choose the type of course:</span>
-                <div onClick={() => handleCourseTypeSelect('free')} style={courseTypeStyle('free')}>
-                    <i className={courseType === 'free' ? "fa-solid fa-circle" : "fa-regular fa-circle"} style={{ color: '#1A9CB7' }}></i>
-                    <p className='mb-0 ms-3'>Free course</p>
-                </div>
-                <div onClick={() => handleCourseTypeSelect('paid')} style={courseTypeStyle('paid')}>
-                    <i className={courseType === 'paid' ? "fa-solid fa-circle" : "fa-regular fa-circle"} style={{ color: '#1A9CB7' }}></i>
-                    <p className='mb-0 ms-3'>Paid</p>
-                </div>
-                {courseType === 'paid' && (
-                    <div className='px-5' style={{ marginTop: '10px' }}>
-                        <div className="d-flex justiy-content-start">
-                            <p className='mb-1' style={{ color: '#1A9CB7' }}>Price (VND)</p>
-                            <span style={{ color: '#FF8A00' }}>*</span>
-                        </div>
-                        <p className='mb-1'>The lowest price is 10,000</p>
-                        <input
-                            type="number"
-                            placeholder='Enter price'
-                            value={price}
-                            onChange={handlePriceChange}
-                            disabled={courseType !== 'paid'}
-                            style={{ border: '1px solid #FF8A00', borderRadius: '8px', outline: 'none' }}
-                        />
-                        {priceError && <p style={{ color: 'red' }}>{priceError}</p>}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-
-    const adminSetupContent = (
-        <div className='d-flex justify-content-center my-5 py-5' style={{ border: '2px solid #1A9CB7', borderRadius: '8px' }}>
-            <p className='mb-0'>This course will be transferred to the admin for approval</p>
-        </div>
-    );
-
-    const renderSetupContent = () => {
-        if (selectedOption === 'option2') {
-            return adminSetupContent;
-        }
-        // Default to "set up now" content
-        return setupNowContent;
-    };
-
     return (
         <div className='moderating-detail' style={{
             height: '680px',
@@ -379,40 +329,38 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                     centered
                 >
                     <Modal.Body style={{ padding: '20px 40px' }}>
-                        <div className='d-flex justify-content-between'>
-                            <div
-                                onClick={() => handleOptionSelect('option1')}
-                                className='d-flex justify-content-around'
-                                style={{
-                                    cursor: 'pointer',
-                                    padding: '15px 20px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    width: '35%',
-                                    borderRadius: '10px',
-                                    border: selectedOption === 'option1' ? '2px solid #1A9CB7' : 'none'
-                                }}>
-                                {selectedOption === 'option1' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
-                                <p className='mb-0' style={{ marginLeft: '5px', color: '#FF8A00' }}>Set up now</p>
-                            </div>
-                            <div
-                                onClick={() => handleOptionSelect('option2')}
-                                className='d-flex justify-content-around'
-                                style={{
-                                    cursor: 'pointer',
-                                    padding: '15px 20px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    width: '35%',
-                                    borderRadius: '10px',
-                                    border: selectedOption === 'option2' ? '2px solid #1A9CB7' : 'none'
-                                }}>
-                                {selectedOption === 'option2' ? <i style={{ color: '#1A9CB7' }} className="fa-solid fa-circle"></i> : <i style={{ color: '#1A9CB7' }} className="fa-regular fa-circle"></i>}
-                                <p className='mb-0' style={{ marginLeft: '5px', color: '#FF8A00' }}>Admin set up</p>
+                        <div style={{ padding: '15px', border: '2px solid #1A9CB7', marginTop: '20px', borderRadius: '8px' }}>
+                            <p className='mb-0' style={{ color: '#1A9CB7' }}>Fee</p>
+                            <div style={{ padding: '15px' }}>
+                                <span style={{ fontSize: '14px' }}>Choose the type of course:</span>
+                                <div onClick={() => handleCourseTypeSelect('free')} style={courseTypeStyle('free')}>
+                                    <i className={courseType === 'free' ? "fa-solid fa-circle" : "fa-regular fa-circle"} style={{ color: '#1A9CB7' }}></i>
+                                    <p className='mb-0 ms-3'>Free course</p>
+                                </div>
+                                <div onClick={() => handleCourseTypeSelect('paid')} style={courseTypeStyle('paid')}>
+                                    <i className={courseType === 'paid' ? "fa-solid fa-circle" : "fa-regular fa-circle"} style={{ color: '#1A9CB7' }}></i>
+                                    <p className='mb-0 ms-3'>Paid</p>
+                                </div>
+                                {courseType === 'paid' && (
+                                    <div className='px-5' style={{ marginTop: '10px' }}>
+                                        <div className="d-flex justiy-content-start">
+                                            <p className='mb-1' style={{ color: '#1A9CB7' }}>Price (VND)</p>
+                                            <span style={{ color: '#FF8A00' }}>*</span>
+                                        </div>
+                                        <p className='mb-1'>The lowest price is 10,000</p>
+                                        <input
+                                            type="text" // Changed to text to handle formatted input
+                                            placeholder='Enter price'
+                                            value={formattedPrice}
+                                            onChange={handlePriceChange}
+                                            disabled={courseType !== 'paid'}
+                                            style={{ border: '1px solid #FF8A00', borderRadius: '8px', outline: 'none' }}
+                                        />
+                                        {priceError && <p style={{ color: 'red' }}>{priceError}</p>}
+                                    </div>
+                                )}
                             </div>
                         </div>
-
-                        {renderSetupContent()}
 
                         <div className="d-flex justify-content-end mt-3">
                             <button className='me-3' onClick={() => { setApproveSetting(false) }} style={{ height: '35px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '10px', border: 'none' }} >Close</button>
@@ -620,7 +568,7 @@ export default function AdminModerating() {
         const fetchCourses = async () => {
             setIsLoading(true);
             try {
-                const response = await instance.get(`api/v1/courses?status=Pending&action=manage&page=${currentPageCourseMod + 1}&size=${itemsPerPage}`);
+                const response = await instance.get(`api/v1/courses?status=Waiting&action=manage&page=${currentPageCourseMod + 1}&size=${itemsPerPage}`);
                 const data = response.data || {};
                 console.log('courses data: ', data);
                 setCourses(data.results || []);

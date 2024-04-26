@@ -155,6 +155,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [price, setPrice] = useState(10000);
     const [priceError, setPriceError] = useState('');
+    const [formattedPrice, setFormattedPrice] = useState("");
 
     useEffect(() => {
         const fetchCourseDetails = async () => {
@@ -176,13 +177,16 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     }, [courseId]);
 
     const handlePriceChange = (e) => {
-        const newPrice = Number(e.target.value);
-        setPrice(newPrice);
+        const value = e.target.value.replace(/\D/g, ''); // Remove all non-numeric characters
+        const number = value ? parseInt(value, 10) : '';
+        setPrice(number); // Update the raw price
+        const formatted = number.toLocaleString(); // Format with commas
+        setFormattedPrice(formatted); // Update the display price
 
-        if (newPrice < 10000 || newPrice > 100000000) {
+        if (number < 10000 || number > 100000000) {
             setPriceError('Price must be between 10,000 and 100,000,000.');
         } else {
-            setPriceError(''); // Clear error if the price is within the range
+            setPriceError('');
         }
     };
 
@@ -235,34 +239,35 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     });
 
     const approveCourse = async () => {
-        if (!courseType) {
-            // If no course type is selected
-            toast.error("Please select a course type (Free or Paid).", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeButton: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-            return; // Stop the function execution
-        }
-
-        if (courseType === 'paid' && (!price || price < 10000 || price > 100000000)) {
-            // If it's a paid course but the price is not set or out of bounds
-            toast.error("Please enter a valid price between 10,000 and 100,000,000.", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeButton: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-            return; // Stop the function execution
+        if (selectedOption !== 'option2') { // This means normal user setup is active
+            if (!courseType) {
+                toast.error("Please select a course type (Free or Paid).", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                return; // Stop the function execution if no course type is selected
+            }
+    
+            if (courseType === 'paid' && (!price || price < 10000 || price > 100000000)) {
+                // If it's a paid course but the price is not set or out of bounds
+                toast.error("Please enter a valid price between 10,000 and 100,000,000.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeButton: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                return; // Stop the function execution
+            }
         }
 
         const isFree = courseType === 'free';
@@ -286,7 +291,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             // Handle the error
         }
     };
-
 
     const setupNowContent = (
         <div style={{ padding: '15px', border: '2px solid #1A9CB7', marginTop: '20px', borderRadius: '8px' }}>

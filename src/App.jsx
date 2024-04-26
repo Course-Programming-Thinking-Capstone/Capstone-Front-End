@@ -67,6 +67,7 @@ import User from "./markup/Pages/Admin/User/User";
 import UserParents from "./markup/Pages/Admin/User/UserParents";
 import CourseResult from './markup/Pages/CourseResult';
 import AdminModerating from "./markup/Pages/Admin/Moderating/AdminModerating";
+import StaffCourse from "./markup/Pages/Staff/StaffCourse/StaffCourse";
 
 // function App() {
 // 	return (
@@ -216,6 +217,15 @@ const App = () => {
                   <PrivateRoute
                     page="staff/class"
                     component={<StaffClassDetail />}
+                  />
+                }
+              />
+              <Route
+                path="course"
+                element={
+                  <PrivateRoute
+                    page="staff/course"
+                    component={<StaffCourse />}
                   />
                 }
               />

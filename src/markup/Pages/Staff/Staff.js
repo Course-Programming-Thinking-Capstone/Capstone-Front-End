@@ -108,7 +108,7 @@ export default function Staff() {
             </div>
             <div
               className={getItemClass("Course")}
-            //   onClick={() => handleMenuItemClick("Course")}
+              onClick={() => handleMenuItemClick("Course")}
             >
               <i class="fa-solid fa-book"></i>
               <span>Course</span>

@@ -58,6 +58,7 @@ import User from './Pages/Admin/User/User';
 import UserParents from './Pages/Admin/User/UserParents';
 import CourseResult from './Pages/CourseResult';
 import AdminModerating from './Pages/Admin/Moderating/AdminModerating';
+import StaffCourse from './Pages/Staff/StaffCourse/StaffCourse';
 
 
 export default function Markup() {
@@ -126,6 +127,7 @@ export default function Markup() {
 						<Route path="staff-order-detail/:orderId" element={<StaffOrderDetail />} />
 						<Route path="moderating" element={<StaffModerating />} />
 						<Route path="class" element={<StaffClassDetail />} />
+						<Route path="course" element={<StaffCourse />} />
 
 					</Route>
 
