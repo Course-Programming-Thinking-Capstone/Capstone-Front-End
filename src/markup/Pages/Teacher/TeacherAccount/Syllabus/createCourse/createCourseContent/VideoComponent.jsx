@@ -1,4 +1,4 @@
-import { Modal, Col, Form, Row, Spinner } from "react-bootstrap";
+import { Modal, Col, Form, Row, Spinner, FormLabel } from "react-bootstrap";
 import * as formik from "formik";
 import * as yup from "yup";
 import { useState } from "react";
@@ -16,8 +16,9 @@ import "./../CreateCourse.css";
 import { useSelector } from "react-redux";
 import { componentNumberSelector } from "../../../../../../../store/selector";
 import { changeComponentNumber } from "../../../../../../../store/slices/course/componentNumber";
-import { uploadVideoToDrive } from "../../../../../../../helper/apis/course/course";
+import { uploadVideoToCloud, uploadVideoToDrive } from "../../../../../../../helper/apis/course/course";
 import { ToastContainer, toast } from "react-toastify";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
 const VideoComponent = ({ sectionId, index, lessonIndex }) => {
   const dispatch = useDispatch();
@@ -25,10 +26,10 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
 
   const [show, setShow] = useState(false);
   const [videoFile, setVideoFile] = useState(undefined);
-  const [message, setMessage] = useState(null);
-  const [fileMesage, setFileMessage] = useState(undefined);
+  const [fileMesage, setFileMessage] = useState(null);
   const [videoDuration, setVideoDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [server, setServer] = useState("cloud");
 
   //notification
   const notifyApiFail = (message) =>
@@ -44,42 +45,56 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
       theme: "colored",
     });
 
-  const notifyApiSucess = (message) =>
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  // const notifyApiSucess = (message) =>
+  //   toast.success(message, {
+  //     position: "top-right",
+  //     autoClose: 5000,
+  //     hideProgressBar: false,
+  //     closeButton: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "colored",
+  //   });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleServerChange = (event) => {
+    const changeValue = event.target.value;
+    setServer(changeValue);
+  }
 
   const handleFileInputChange = async (event) => {
     const fileUpdate = event.target.files[0];
 
     try {
-      const videoElement = document.createElement("video");
-      videoElement.id = `videoSection${sectionId}`; // Set the correct ID for the video element
-      const videoUrl = URL.createObjectURL(fileUpdate);
-      videoElement.src = videoUrl;
+      if (fileUpdate) {
 
-      videoElement.onloadedmetadata = () => {
-        const durationInSeconds = videoElement.duration;
-        if (!isNaN(durationInSeconds)) {
-          const durationInMinutes = Math.floor(durationInSeconds / 60) + 1;
-          setVideoDuration(durationInMinutes);
-        } else {
-          setVideoDuration(0);
-        }
-      };
+        const videoElement = document.createElement("video");
+        videoElement.id = `videoSection${sectionId}`; // Set the correct ID for the video element
+        const videoUrl = URL.createObjectURL(fileUpdate);
+        videoElement.src = videoUrl;
 
-      await videoElement.load();
+        videoElement.onloadedmetadata = () => {
+          const durationInSeconds = videoElement.duration;
+          if (!isNaN(durationInSeconds)) {
+            let durationInMinutes = Math.floor(durationInSeconds / 60);
+            if (durationInMinutes <= 0) {
+              durationInMinutes = 1;
+            }
+            setVideoDuration(durationInMinutes);
+          } else {
+            setVideoDuration(0);
+          }
+        };
+
+        await videoElement.load();
+        setFileMessage(null);
+      } else {
+        setFileMessage("File is empty.");
+      }
     } catch (error) {
       console.error("Error occurred while extracting video duration:", error);
       setVideoDuration(0);
@@ -92,22 +107,40 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
   const handleSubmit = async (values) => {
     try {
       setIsLoading(true);
-
-      //log
-      console.log(`Lesson index when upload video: ${lessonIndex}`);
+      const { lessonName } = values;
 
       if (!videoFile) {
         setFileMessage("File is empty.");
         return;
       }
 
-      const resourceUrl = await uploadVideoToDrive({
-        sectionId: sectionId,
-        index: lessonIndex,
-        file: videoFile,
-      });
+      let resourceUrl = undefined;
 
-      const { lessonName } = values;
+      switch (server) {
+        case "drive":
+          {
+            resourceUrl = await uploadVideoToDrive({
+              sectionId: sectionId,
+              index: lessonIndex,
+              file: videoFile,
+            });
+            break;
+          }
+        case "cloud":
+          {
+            await uploadVideoToCloud({
+              sectionId: sectionId,
+              videoName: lessonName.trim(),
+              file: videoFile
+            });
+            break;
+          }
+        default:
+          {
+            setFileMessage("Please choose a server.");
+            return;
+          }
+      }
 
       const video = {
         name: lessonName.trim(),
@@ -239,7 +272,7 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
                       as={Col}
                       md="12"
                       controlId="validationVideo"
-                      className="mb-3"
+
                     >
                       <Form.Label className="create-course-form-lable">
                         Video File
@@ -257,6 +290,20 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
                         <p className="text-danger">{fileMesage}</p>
                       )}
                     </Form.Group>
+
+                    <FormLabel id="uploadServer" className="create-course-form-lable">Server</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="uploadServer"
+                      name="server"
+                      value={server}
+                      onChange={handleServerChange}
+
+                    >
+                      <FormControlLabel value="cloud" control={<Radio />} label="Cloud" />
+                      <FormControlLabel value="drive" control={<Radio />} label="Google drive" />
+
+                    </RadioGroup>
                   </Row>
                 </Form>
               )}
@@ -292,11 +339,12 @@ const VideoComponent = ({ sectionId, index, lessonIndex }) => {
 export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
   const dispatch = useDispatch();
 
+
   const [show, setShow] = useState(false);
   const [videoFile, setVideoFile] = useState(undefined);
-  const [message, setMessage] = useState(null);
   const [videoDuration, setVideoDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [server, setServer] = useState("cloud");
 
   //notification
   const notifyApiFail = (message) =>
@@ -312,21 +360,13 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
       theme: "colored",
     });
 
-  const notifyApiSucess = (message) =>
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleServerChange = (event) => {
+    const changeValue = event.target.value;
+    setServer(changeValue);
+  }
 
   const handleFileInputChange = async (event) => {
     const fileUpdate = event.target.files[0];
@@ -340,7 +380,10 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
       videoElement.onloadedmetadata = () => {
         const durationInSeconds = videoElement.duration;
         if (!isNaN(durationInSeconds)) {
-          const durationInMinutes = Math.floor(durationInSeconds / 60) + 1;
+          let durationInMinutes = Math.floor(durationInSeconds / 60);
+          if (durationInMinutes <= 0) {
+            durationInMinutes = 1;
+          }
           setVideoDuration(durationInMinutes);
         } else {
           setVideoDuration(0);
@@ -363,16 +406,37 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
 
       let updateResourceUrl = document.resourceUrl;
       let updateDuration = document.duration;
-      if (videoFile) {
-        updateResourceUrl = await uploadVideoToDrive({
-          sectionId: sectionId,
-          index: lessonIndex,
-          file: videoFile,
-        });
 
+      const { lessonName } = values;
+
+      if (videoFile) {
+        switch (server) {
+          case "drive":
+            {
+              updateResourceUrl = await uploadVideoToDrive({
+                sectionId: sectionId,
+                index: lessonIndex,
+                file: videoFile,
+              });
+              break;
+            }
+          case "cloud":
+            {
+              await uploadVideoToCloud({
+                sectionId: sectionId,
+                videoName: lessonName.trim(),
+                file: videoFile
+              });
+              updateResourceUrl = undefined;
+              break;
+            }
+          default:
+            {
+              break;
+            }
+        }
         updateDuration = videoDuration;
       }
-      const { lessonName } = values;
 
       const updateData = {
         name: lessonName.trim(),
@@ -501,6 +565,19 @@ export const UpdateVideoComponent = ({ sectionId, lessonIndex, video }) => {
                         />
                       </div>
                     </Form.Group>
+
+                    <FormLabel id="uploadServer" className="create-course-form-lable">Server</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="uploadServer"
+                      name="server"
+                      value={server}
+                      onChange={handleServerChange}
+                    >
+                      <FormControlLabel value="cloud" control={<Radio />} label="Cloud" />
+                      <FormControlLabel value="drive" control={<Radio />} label="Google drive" />
+
+                    </RadioGroup>
                   </Row>
                 </Form>
               )}

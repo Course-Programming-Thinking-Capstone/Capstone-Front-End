@@ -26,6 +26,7 @@ import DocumentComponent, {
   UpdateDocumentComponent,
 } from "./createCourseContent/DocumentComponent";
 import {
+  getCloudVideoUrl,
   updateCourseApi,
   updateCoursePictureApi,
 } from "../../../../../../helper/apis/course/course";
@@ -53,14 +54,11 @@ import {
   MouseSensor,
   TouchSensor,
   closestCenter,
-  closestCorners,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
-  rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -71,7 +69,6 @@ import ButtonMui from "@mui/material/Button";
 import { CSS } from "@dnd-kit/utilities";
 import { ToastContainer, toast } from "react-toastify";
 import {
-  CloudUpload,
   DriveFolderUpload,
   KeyboardBackspace,
   Save,
@@ -87,13 +84,16 @@ const CreateCourseComponent = () => {
   const navigate = useNavigate();
 
   const courseId = useSelector(createCourseIdSelector);
+
+  if (!courseId || courseId === 0) {
+    navigate('/teacher/syllabuses');
+  }
   // console.log(`CourseId: ${courseId}`);\
 
   //useRef
   const checkConfirmRef = useRef(null);
 
   //use state
-  const [message, setMessage] = useState(null);
   const [coursePictureFile, setCoursePictureFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescriptionInput] = useState(undefined);
@@ -160,10 +160,12 @@ const CreateCourseComponent = () => {
       try {
         setIsLoading(true);
         const response = await dispatch(getCourseByIdAsync(courseId, "manage"));
-        setDescriptionInput(response.payload.description);
+
+        //maybe bug
+        setDescriptionInput(response?.payload?.description);
 
         //init data for component number
-        const initSectionNumber = await response.payload.sections.map(
+        const initSectionNumber = await response?.payload?.sections?.map(
           (section) => {
             let videoNumber = 0;
             let documentNumber = 0;
@@ -188,9 +190,8 @@ const CreateCourseComponent = () => {
         );
 
         dispatch(changeData(initSectionNumber));
+
       } catch (error) {
-        //log
-        console.log(`Error: ${JSON.stringify(error, null, 2)}`);
 
         let message;
 
@@ -396,7 +397,7 @@ const CreateCourseComponent = () => {
                   type="text"
                   id="description"
                   placeholder={`Description`}
-                  value={description}
+                  value={description || ""}
                   onChange={handleDescriptionChange}
                   className="mb-3 form-control"
                   maxLength={1000}
@@ -440,6 +441,7 @@ const CreateCourseComponent = () => {
                                     lesson={lesson}
                                     index={lessonIndex}
                                     sectionIndex={index}
+                                    notifyApiFail={notifyApiFail}
                                   />
                                 ) : (
                                   <DocumentContent
@@ -517,7 +519,7 @@ const CreateCourseComponent = () => {
                     <a
                       href={createCourse.pictureUrl}
                       title="Course picture"
-                      target="_blank"
+                      target="_blank" rel="noreferrer"
                     >
                       Click to view picture
                     </a>
@@ -527,15 +529,6 @@ const CreateCourseComponent = () => {
                   Max size <span className="orange">10Mb</span>. The required
                   type image is <span className="orange">JPG, PNG</span>.
                 </p>
-                {/* <label htmlFor="fileInput" className="button">
-              <i className="fa-solid fa-circle-plus"></i> Upload file
-            </label> */}
-                {/* <input
-                  type="file"
-                  accept="image/jpeg, image/png"
-                  onChange={handleFileInputChange}
-                  id="fileInput"
-                /> */}
 
                 <label htmlFor="fileInput">
                   <ButtonMui
@@ -575,15 +568,6 @@ const CreateCourseComponent = () => {
               </div>
               <div>
                 <div className="d-flex justify-content-end my-2">
-                  {/* <Button
-                    variant="primary"
-                    className="mx-3 px-3 py-2"
-                    style={{ borderRadius: "5px" }}
-                    onClick={() => saveCourse("Save")}
-                    type="button"
-                  >
-                    Save Draft
-                  </Button> */}
 
                   <ButtonMui
                     // size="small"
@@ -597,16 +581,6 @@ const CreateCourseComponent = () => {
                   >
                     Save Draft
                   </ButtonMui>
-                  {/* <Button
-                    variant="danger"
-                    className="px-3 py-2"
-                    style={{ borderRadius: "5px" }}
-                    onClick={() => saveCourse("Post")}
-                    type="button"
-                    disabled={confirm === false}
-                  >
-                    Post Course
-                  </Button> */}
 
                   <ButtonMui
                     // size="small"
@@ -632,7 +606,7 @@ const CreateCourseComponent = () => {
 
 export default CreateCourseComponent;
 
-const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
+const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail }) => {
   const {
     attributes,
     listeners,
@@ -643,11 +617,43 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
     isDragging,
   } = useSortable({ id: index });
 
+  //log
+  console.log(`SectionId: ${sectionId}`)
+
   const style = {
     transition: isDragging ? transition : "",
     transform: CSS.Transform.toString(transform),
     borderColor: isOver ? "#FF8A00" : "#D4D4D4",
   };
+
+  //get video function
+
+  const getVideoUrl = async () => {
+    if (lesson.resourceUrl !== undefined && lesson.resourceUrl !== null) {
+      const videoUrl = lesson.resourceUrl
+      window.open(videoUrl, "_blank");
+      return;
+    }
+
+    const videoName = lesson.name;
+    try {
+      const videoUrl = await getCloudVideoUrl({ videoName: videoName, sectionId: sectionId });
+      window.open(videoUrl, "_blank");
+      return;
+    } catch (error) {
+      let message;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        message =
+          error.response?.data?.message || "Error when update course.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        message = error.message || "Error when update course.";
+      }
+      notifyApiFail(message);
+    }
+  }
+
   return (
     <Accordion
       ref={setNodeRef}
@@ -710,7 +716,7 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex }) => {
                 <span className="blue fw-bold">Video:</span>{" "}
               </Col>
               <Col md="9">
-                <a href={lesson.resourceUrl} target="blank">
+                <a href="#" onClick={getVideoUrl}>
                   Click to view Video
                 </a>
               </Col>
