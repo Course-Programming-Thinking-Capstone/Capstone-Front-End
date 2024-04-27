@@ -178,7 +178,7 @@ export default function StaffClassDetail() {
         .map(([day]) => day);
     };
 
-    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3); 
+    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3);
     const secondRowDays = Object.entries(checkedDays)?.slice(3);
 
     const [selectedSlotId, setSelectedSlotId] = useState(null);
@@ -1486,6 +1486,7 @@ export default function StaffClassDetail() {
           progress: undefined,
           theme: "colored",
         });
+        navigateToView("classContent", classId);
       } catch (error) {
         console.error("Failed to add teacher to class:", error);
         toast.error("Failed to add teacher to class", {

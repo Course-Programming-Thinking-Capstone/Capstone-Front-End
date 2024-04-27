@@ -68,6 +68,25 @@ export default function CourseQuiz() {
         }
     };
 
+    function startCountdown(duration) {
+        var timer = duration, minutes, seconds;
+        var interval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+    
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+            // Update the display element with the current time
+            document.getElementById('time').textContent = minutes + ":" + seconds;
+    
+            if (--timer < 0) {
+                clearInterval(interval);
+                document.getElementById('time').textContent = "00:00";
+            }
+        }, 1000);
+    }
+
     const Question = ({ question }) => (
         <div className='quiz-question'>
             <span style={{ fontSize: '14px', marginTop: '10px' }}>Question {question.id}</span>

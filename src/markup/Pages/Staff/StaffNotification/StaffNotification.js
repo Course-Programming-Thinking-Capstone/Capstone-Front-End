@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Paginate from 'react-paginate';
 import instance from '../../../../helper/apis/baseApi/baseApi';
+import {
+    Chip,
+    Grid,
+    IconButton,
+    Pagination,
+    PaginationItem,
+    Stack,
+    Tab,
+    Tabs,
+    Tooltip,
+} from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
-export default function StaffNotification({setUnreadCount}) {
+export default function StaffNotification({ setUnreadCount }) {
     const [notifications, setNotifications] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +40,6 @@ export default function StaffNotification({setUnreadCount}) {
         fetchNotifications();
     }, [currentPage]);
 
-
     const handlePageClick = (data) => {
         setCurrentPage(data.selected + 1); // react-paginate is zero-indexed
     };
@@ -37,18 +48,16 @@ export default function StaffNotification({setUnreadCount}) {
         const selectedNotification = notifications[index];
         if (selectedNotification.isRead) return; // Prevent marking again if already read
 
-        // Send the update to the server
         try {
-            await instance.patch(`api/v1/notifications/account/${id}`); // Ensure this endpoint is correct
-            // Update locally for immediate feedback
+            await instance.patch(`api/v1/notifications/account/${id}`);
             const updatedNotifications = notifications.map((notification, notificationIndex) => {
                 if (notificationIndex === index) {
-                    return { ...notification, isRead: true }; // Update the isRead property
+                    return { ...notification, isRead: true };
                 }
                 return notification;
             });
             setNotifications(updatedNotifications);
-            setUnreadCount(prevCount => prevCount - 1); // Decrement unread count
+            setUnreadCount(prevCount => Math.max(0, prevCount - 1)); // Decrement unread count safely
         } catch (error) {
             console.error('Error updating notification read status:', error);
         }
@@ -88,12 +97,12 @@ export default function StaffNotification({setUnreadCount}) {
                     </div>
                 </div>
             </div>
-            <div>
+            <div style={{minHeight:'470px'}}>
                 {notifications.map((notification, index) => (
                     <div
                         className={`item ${notification.isRead ? 'read' : ''}`}
                         key={notification.id} // It's better to use id instead of index for key
-                        style={{ backgroundColor: notification.isRead ? '#ccc' : '#FCEFC9', borderRadius: '0 8px 8px 0' }}
+                        style={{ backgroundColor: notification.isRead ? '#ccc' : '#FCEFC9', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}
                         onClick={() => markAsRead(notification.id, index)}
                     >
                         <div className="d-flex justify-content-between">
@@ -123,18 +132,30 @@ export default function StaffNotification({setUnreadCount}) {
             <div className='d-flex justify-content-center mt-4'>
                 {notifications.length > 0 && (
                     <div className="pagination-container">
-                        <Paginate
-                            previousLabel={'previous'}
-                            nextLabel={'next'}
-                            breakLabel={'...'}
-                            breakClassName={'break-me'}
-                            pageCount={pageCount}
-                            marginPagesDisplayed={2}
-                            pageRangeDisplayed={5}
-                            onPageChange={handlePageClick}
-                            containerClassName={'pagination'}
-                            activeClassName={'active'}
-                        />
+                        <Stack
+                            spacing={2}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            my={2}
+                        >
+                            <Pagination
+                                count={pageCount <= 0 ? 1 : pageCount}
+                                // count={10}
+                                color="primary"
+                                page={currentPage}
+                                onChange={(event, value) => setCurrentPage(value)}
+                                renderItem={(item) => (
+                                    <PaginationItem
+                                        slots={{
+                                            previous: ArrowBack,
+                                            next: ArrowForward,
+                                        }}
+                                        {...item}
+                                    />
+                                )}
+                            />
+                        </Stack>
                     </div>
                 )}
             </div>

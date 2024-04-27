@@ -9,6 +9,8 @@ import instance from '../../../../helper/apis/baseApi/baseApi';
 import ReactPaginate from 'react-paginate';
 import { convertUtcToLocalTime, formatDateV1 } from '../../../../helper/utils/DateUtil';
 import { ToastContainer, toast } from 'react-toastify';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -156,6 +158,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     const [price, setPrice] = useState("");
     const [formattedPrice, setFormattedPrice] = useState("");
     const [priceError, setPriceError] = useState('');
+    const [backdropOpen, setBackdropOpen] = useState(false);
 
     useEffect(() => {
         const fetchCourseDetails = async () => {
@@ -235,6 +238,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     });
 
     const approveCourse = async () => {
+        setBackdropOpen(true);
         if (!courseType) {
             // If no course type is selected
             toast.error("Please select a course type (Free or Paid).", {
@@ -275,15 +279,12 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         console.log('payload: ', payload);
 
         try {
-
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
-            setTimeout(() => {
-
-                window.location.reload();
-            }, 2000)
         } catch (error) {
             console.error("Failed to approve course: ", JSON.stringify(error, null, 2));
             // Handle the error
+        } finally {
+            setBackdropOpen(false); // Close the backdrop regardless of the result
         }
     };
 
@@ -321,6 +322,13 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                     </Modal.Body>
                 </Modal>
                 <ToastContainer />
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={backdropOpen}
+                    onClick={() => setBackdropOpen(false)} // Optionally close on click, or remove this to disable manual close
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
 
                 <Modal
                     show={modalApproveSetting}

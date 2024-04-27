@@ -48,7 +48,7 @@ export default function StaffCourse() {
 
   //useState
   const [query, setQuery] = useState("");
-  const [courseStatus, setCourseStatus] = useState();
+  const [courseStatus, setCourseStatus] = useState(null);
   const [page, setPage] = useState(1);
   const [tabValue, setTabValue] = useState("All");
   const [courses, setCourses] = useState({});
@@ -60,7 +60,7 @@ export default function StaffCourse() {
 
   const handleTabValueChange = (event, newValue) => {
     if (newValue === "All") {
-      setCourseStatus(undefined);
+      setCourseStatus(null);
     } else {
       setCourseStatus(newValue);
     }
@@ -102,10 +102,8 @@ export default function StaffCourse() {
     switch (status) {
       case "Active":
         return { backgroundColor: "#1A9CB7", color: "white" };
-      case "Draft":
+      case "Waiting":
         return { backgroundColor: "#FF8A00", color: "white" };
-      case "Pending":
-        return { backgroundColor: "#EF7E54", color: "white" };
       case "Denied":
         return { backgroundColor: "#F15C58", color: "white" };
       default:
@@ -119,10 +117,12 @@ export default function StaffCourse() {
       try {
         setIsLoading(true);
 
-        const response = await instance.get(`api/v1/courses?action=manage`);
+        const statusParam = courseStatus === null ? '' : `&status=${courseStatus}`;
+
+        const response = await instance.get(`api/v1/courses?action=manage&page=${page}&size=6${statusParam}`);
         const data = response.data;
 
-        setCourses(data.results);
+        setCourses(data);
         console.log(courses);
       } catch (error) {
         let message = "";
@@ -166,8 +166,7 @@ export default function StaffCourse() {
         >
           <Tab value={"All"} label="All Course" />
           <Tab value={"Active"} label="Active" />
-          <Tab value={"Draft"} label="Draft" />
-          <Tab value={"Pending"} label="Wating for approve" />
+          <Tab value={"Waiting"} label="Waiting" />
           <Tab value={"Denied"} label="Denied" />
         </Tabs>
 
@@ -200,12 +199,12 @@ export default function StaffCourse() {
                 className="custom-spinner"
               />
             </div>
-          ) : courses && courses.totalRecords === 0 ? (
+          ) : courses && courses?.totalRecords === 0 ? (
             <p className="mt-3 text-center">There are no courses</p>
           ) : (
             <Grid container rowSpacing={1} columnSpacing={2}>
-              {Array.isArray(courses) &&
-                courses.map((course, index) => (
+              {Array.isArray(courses?.results) &&
+                courses.results.map((course, index) => (
                   <Grid key={index} item md={6} lg={4}>
                     <div className="teacher-course-content-item">
                       <img src={course?.pictureUrl ?? simp} alt="" />
