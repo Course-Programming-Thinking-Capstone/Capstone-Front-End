@@ -978,7 +978,8 @@
   margin-top: 30px;
   background-color: #fbede1;
   padding: 20px 40px;
-  min-height: 90vh;
+  height: 90vh;
+  overflow: auto;
   border-radius: 5px;
 }
 
@@ -1180,11 +1181,6 @@
   color: #1a9cb7;
 }
 
-.teacher-setting-content {
-  margin-top: 20px;
-  padding: 20px 35px;
-  background-color: white;
-}
 
 .teacher-setting-content .setting-menu hr {
   margin-top: 10px !important;
@@ -1278,22 +1274,22 @@ textarea.form-control {
   background-color: #fbede1;
 }
 
-.syllabus-content, .teacher-course-content, .teacher-classes-content {
+.syllabus-content, .teacher-course-content, .teacher-classes-content, .teacher-setting-content {
   background-color: white;
   padding-top: 10px;
   border-radius: 20px;
-  min-height: 75vh;
+  min-height: 80vh;
 }
 
-.syllabus-content .blue, .teacher-course-content .blue, .teacher-classes-content .blue {
+.syllabus-content .blue, .teacher-course-content .blue, .teacher-classes-content .blue, .teacher-setting-content .blue {
   color: #1a9cb7;
 }
 
-.syllabus-content .search, .teacher-course-content .search, .teacher-classes-content .search {
+.syllabus-content .search, .teacher-course-content .search, .teacher-classes-content .search, .teacher-setting-content .search {
   margin-top: 20px;
 }
 
-.syllabus-content .search input, .teacher-course-content .search input, .teacher-classes-content .search input{
+.syllabus-content .search input, .teacher-course-content .search input, .teacher-classes-content .search input, .teacher-setting-content .search input{
   border: 1px solid #988e8e66;
   border-radius: 10px 0 0 10px;
   border-right: none;

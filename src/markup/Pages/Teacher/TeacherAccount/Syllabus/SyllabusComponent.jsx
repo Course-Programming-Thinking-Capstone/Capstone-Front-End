@@ -3,21 +3,19 @@ import syllabusPicture from "../../../../../images/gallery/syllabus_image.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { syllabusesSelector } from "../../../../../store/selector";
 import { filterTeacherSyllabusesAsync } from "../../../../../store/thunkApis/syllabuses/syllabusesThunk";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import {
   convertUtcToLocalTime,
   formatDateV1,
 } from "../../../../../helper/utils/DateUtil";
 
-import { CustomPagination } from "../../../../Layout/Components/Pagination";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 //css
 import "./SyllabusComponent.css";
-import ReactPaginate from "react-paginate";
 import {
   IconButton,
   Pagination,
@@ -25,17 +23,14 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import { Alarm, CalendarMonth, Visibility } from "@mui/icons-material";
+import { CalendarMonth } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
-import ButtonMui from "@mui/material/Button";
 
 const SyllabusComponent = () => {
   //useDispath
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   //set information message
-  const [message, setMessage] = useState(undefined);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState(undefined);
 
@@ -64,10 +59,8 @@ const SyllabusComponent = () => {
     } catch (error) {
       if (error.response) {
         console.log(`Error response: ${error.response?.data?.message}`);
-        setMessage(error.response?.data?.message || "Undefined.");
       } else {
         console.log(`Error message abc: ${error.message}`);
-        setMessage(error.message || "Undefined.");
       }
     } finally {
       setIsLoading(false);
@@ -91,10 +84,8 @@ const SyllabusComponent = () => {
       } catch (error) {
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.message}`);
-          setMessage(error.response?.data?.message || "Undefined.");
         } else {
           console.log(`Error message abc: ${error.message}`);
-          setMessage(error.message || "Undefined.");
         }
       } finally {
         setIsLoading(false);
@@ -125,13 +116,6 @@ const SyllabusComponent = () => {
                 name={query}
                 onChange={handleQueryChange}
               />
-              {/* <button
-                type="button"
-                className="syllabus-content-search-button"
-                onClick={handleSearchSubmit}
-              >
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </button> */}
 
               <Tooltip title="Search" arrow className="p-1">
                 <IconButton
@@ -166,7 +150,7 @@ const SyllabusComponent = () => {
                               <img
                                 className="img-responsive syllabus-content-item-image"
                                 src={syllabusPicture}
-                                alt="Syllabus picture"
+                                alt="Syllabus"
                                 title="Syllabus picture"
                               />
                               <div className="ms-3">
@@ -199,22 +183,6 @@ const SyllabusComponent = () => {
                               >
                                 View
                               </Link>
-
-                              {/* <ButtonMui
-                                size="small"
-                                variant="contained"
-                                color="warning"
-                                aria-label="View detail"
-                                endIcon={<Visibility />}
-                                onClick={() =>
-                                  navigate(
-                                    `/teacher/syllabuses/detail?id=${syllabus.id}`
-                                  )
-                                }
-                                type="button"
-                              >
-                                View
-                              </ButtonMui> */}
                             </div>
                           </div>
                         </div>

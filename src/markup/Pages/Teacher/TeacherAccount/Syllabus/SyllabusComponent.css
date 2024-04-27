@@ -52,6 +52,7 @@ ul.pagination.custom-pagination {
 }
 
 .teacher-syllabus-content {
+  height: 55vh;
   min-height: 340px;
 }
 

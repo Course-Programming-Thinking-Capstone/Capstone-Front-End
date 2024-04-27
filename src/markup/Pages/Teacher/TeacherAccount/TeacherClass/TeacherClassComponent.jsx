@@ -1,10 +1,8 @@
 import { useDispatch } from "react-redux";
 import demo from "./../../../../../images/gallery/demo.jpg";
-import { useSelector } from "react-redux";
-import { classesSelector } from "../../../../../store/selector";
 import { useEffect, useState } from "react";
-import { getAccountClassAsync } from "../../../../../store/thunkApis/class/classThunk";
 import { getAccountCLass, getCLassById } from "../../../../../helper/apis/class/class";
+import { convertGenderEnumToString } from "../../../../../helper/utils/EnumUtil";
 
 const TeacherClassComponent = () => {
 
@@ -88,7 +86,7 @@ const TeacherClassComponent = () => {
               <p style={{ color: "#FF8A00" }} className="mb">
                 CLASS
               </p>
-              <select style={{ marginLeft: "15px" }} onChange={handleSelectedClassChange}>
+              <select style={{ marginLeft: "15px" }} onChange={handleSelectedClassChange} value={selectedClassIndex}>
                 {classes !== null && classes?.map((element, index) => (
                   <option key={index} value={index}>{element?.classCode}</option>
                 ))
@@ -98,7 +96,7 @@ const TeacherClassComponent = () => {
           </div>
           <div className="col-lg-6 col-md-12 col-sm-12">
             <div className="right">
-              <div className="d-flex">
+              <div className="d-flex justify-content-start align-items-center">
                 <p style={{ color: "#F15C58" }} className="mb">
                   Course
                 </p>
@@ -114,7 +112,7 @@ const TeacherClassComponent = () => {
                 </span>
               </div>
               <div
-                className="d-flex"
+                className="d-flex justify-content-start align-items-center"
                 style={{ paddingRight: "50px", marginTop: "15px" }}
               >
                 <p style={{ color: "#F15C58" }} className="mb">
@@ -132,7 +130,7 @@ const TeacherClassComponent = () => {
             <table className="table table-borderless">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>Order</th>
                   <th>Image</th>
                   <th>Full name</th>
                   <th>Age</th>
@@ -142,7 +140,7 @@ const TeacherClassComponent = () => {
               <tbody>
                 {currentClass.students.map((student, index) =>
                   <tr key={index} className="item">
-                    <td>{student?.studentId}</td>
+                    <td>{index + 1}</td>
                     <td>
                       <img
                         className="img-responsive"
@@ -153,7 +151,7 @@ const TeacherClassComponent = () => {
                     </td>
                     <td>{student?.studentName}</td>
                     <td>{student?.dateOfBirth}</td>
-                    <td>{student?.gender}</td>
+                    <td>{student?.gender != null ? convertGenderEnumToString(student.gender) : ""}</td>
                   </tr>
                 )}
               </tbody>
