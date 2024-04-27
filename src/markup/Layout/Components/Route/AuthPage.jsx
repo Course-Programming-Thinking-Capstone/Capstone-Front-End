@@ -21,7 +21,7 @@ export const ErrorPages = ["not-found"];
 export const AdminPages = ["admin", "admin/course", "admin/user", "admin/parent", "admin/game", "admin/game-data", "admin/syllabusad"];
 
 //Lưu đường dẫn các trang mà staff được truy cập
-export const StaffPages = ["staff", "staff/staff-notification", "staff/moderating", "staff/staff-order", "staff/staff-order-detail", "staff/class"];
+export const StaffPages = ["staff", "staff/staff-notification", "staff/moderating", "staff/staff-order", "staff/staff-order-detail", "staff/class", "staff/course"];
 
 //Lưu đường dẫn các trang mà teacher được truy cập
 export const TeacherPages = [

@@ -30,6 +30,7 @@ export default function Staff() {
       }`;
   };
 
+
   useEffect(() => {
     const pathSegments = location.pathname.split("/");
     let activePath = pathSegments[2]?.toLowerCase(); // Convert path segment to lowercase
@@ -51,17 +52,17 @@ export default function Staff() {
     setActiveItem(activeMenu);
   }, [location]);
 
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await instance.get('api/v1/notifications/account/number-of-unread');
-        console.log('response: ', response);
-        setUnreadCount(response.data);
-      } catch (error) {
-        console.error('Error fetching unread notifications count:', error);
-      }
-    };
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await instance.get('api/v1/notifications/account/number-of-unread');
+      setUnreadCount(response.data);  // Ensure this is getting an integer
+      console.log('Initial unread count fetched:', response.data);
+    } catch (error) {
+      console.error('Error fetching unread notifications count:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchUnreadCount();
   }, []);
 
@@ -108,7 +109,7 @@ export default function Staff() {
             </div>
             <div
               className={getItemClass("Course")}
-            //   onClick={() => handleMenuItemClick("Course")}
+              onClick={() => handleMenuItemClick("Course")}
             >
               <i class="fa-solid fa-book"></i>
               <span>Course</span>

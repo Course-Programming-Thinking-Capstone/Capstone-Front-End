@@ -302,6 +302,9 @@ export default function CoursePayment() {
                     onChange={(date) => setNewChildDOB(date)}
                     enableTabLoop={false}
                     maxDate={new Date()}
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
                     customInput={<CustomInput />}
                   />
                 </div>
