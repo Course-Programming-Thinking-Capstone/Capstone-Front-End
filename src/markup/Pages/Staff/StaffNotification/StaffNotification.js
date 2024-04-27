@@ -40,9 +40,17 @@ export default function StaffNotification({ setUnreadCount }) {
         fetchNotifications();
     }, [currentPage]);
 
-    const handlePageClick = (data) => {
-        setCurrentPage(data.selected + 1); // react-paginate is zero-indexed
-    };
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-indexed
+        const year = date.getFullYear();
+
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
 
     const markAsRead = async (id, index) => {
         const selectedNotification = notifications[index];
@@ -97,17 +105,16 @@ export default function StaffNotification({ setUnreadCount }) {
                     </div>
                 </div>
             </div>
-            <div style={{minHeight:'470px'}}>
+            <div style={{ minHeight: '470px' }}>
                 {notifications.map((notification, index) => (
                     <div
                         className={`item ${notification.isRead ? 'read' : ''}`}
-                        key={notification.id} // It's better to use id instead of index for key
+                        key={notification.id}
                         style={{ backgroundColor: notification.isRead ? '#ccc' : '#FCEFC9', borderRadius: '0 8px 8px 0', cursor: 'pointer' }}
                         onClick={() => markAsRead(notification.id, index)}
                     >
                         <div className="d-flex justify-content-between">
                             <div className="left d-flex justify-content-start">
-                                <img alt="" />
                                 <div style={{ marginLeft: "20px" }}>
                                     <div className="d-flex justify-content-start">
                                         <p style={{ fontSize: "18px", fontWeight: 500 }}>
@@ -121,13 +128,12 @@ export default function StaffNotification({ setUnreadCount }) {
                             </div>
                             <div className="right" style={{ width: '15%' }}>
                                 <p>
-                                    <i class="fa-regular fa-clock"></i> {notification.date}
+                                    <i class="fa-regular fa-clock"></i> {formatDate(notification.date)}
                                 </p>
                             </div>
                         </div>
                     </div>
                 ))}
-
             </div>
             <div className='d-flex justify-content-center mt-4'>
                 {notifications.length > 0 && (

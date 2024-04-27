@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import background from "./../../images/background/loginBackground.webp";
 import CenterSliderHome3 from "../Element/CenterSliderHome3";
 import instance from "../../helper/apis/baseApi/baseApi";
@@ -9,9 +9,8 @@ function useQuery() {
 }
 
 export default function VerifyEmailConfirm() {
-  const query = useQuery();
-  const email = query.get("Email");
-  const token = query.get("Token");
+  const { email, token } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!email || !token) {
@@ -21,14 +20,8 @@ export default function VerifyEmailConfirm() {
 
     const verifyEmail = async () => {
       try {
-        const response = await instance.get(
-          `api/v1/authentication/confirm/check/Email=${encodeURIComponent(
-            email
-          )}&Token=${token}`
-        );
-
-        const data = response.data;
-        console.log(data);
+        const response = await instance.get(`api/v1/authentication/confirm/check/Email=${encodeURIComponent(email)}&Token=${token}`);
+        console.log(response.data);
       } catch (error) {
         console.error("There was an error!", error);
       }
@@ -37,20 +30,25 @@ export default function VerifyEmailConfirm() {
     verifyEmail();
   }, [email, token]);
 
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <div
       style={{
+        display: 'flex', // Added this
+        flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
+        justifyContent: 'center', // This will center the content vertically
+        alignItems: 'center', // This will center the content horizontally
         backgroundImage: `url(${background})`,
         minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         backgroundPosition: "center center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="verify">
+      <div className="verify col-lg-4 col-md-8 col-sm-12">
         <h3 className="text-center" style={{ color: "#FF8A00" }}>
           Your account has been activated, please login to our web for further
           service
@@ -63,6 +61,7 @@ export default function VerifyEmailConfirm() {
               borderRadius: "8px",
               color: "white",
             }}
+            onClick={navigateToLogin}
           >
             Login now
           </button>

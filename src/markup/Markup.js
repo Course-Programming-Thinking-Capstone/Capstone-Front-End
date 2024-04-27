@@ -74,7 +74,7 @@ export default function Markup() {
 					<Route path='/login' exact element={<Login />} />
 					<Route path='/register' exact element={<Register />} />
 					<Route path='/verify' exact element={<VerifyEmail />} />
-					<Route path='/verify-confirm' exact element={<VerifyEmailConfirm />} />
+					<Route path="/verify-confirm/Email=:email&Token=:token" element={<VerifyEmailConfirm />} />
 
 					<Route path='/classes' exact element={<Classes />} />
 					<Route path='/classes-detail/:id' element={<ClassesDetail />} />
