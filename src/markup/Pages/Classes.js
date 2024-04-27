@@ -1,33 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import PageTitle from "../Layout/PageTitle";
-import ReactPaginate from "react-paginate";
 import { formatPrice } from "../../helper/utils/NumberUtil";
 import "./Classes.css";
 import instance from "../../helper/apis/baseApi/baseApi";
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { getCoursesApi } from "../../helper/apis/course/course";
 
 export default function Classes() {
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState(undefined);
   const navigate = useNavigate();
 
-  const fetchCourses = async (page = 1) => {
+
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  }
+
+  const handleSearchSubmit = async () => {
     setIsLoading(true);
     try {
-      const response = await instance.get(
-        `api/v1/courses?status=Active&page=${page}&size=6`
-      );
 
-      const data = response.data;
+      setCurrentPage(1);
+      const data = await getCoursesApi({ status: "Active", page: 1, size: 6, name: query });
 
-      console.log("data: ", data);
+      setCourses(data.results);
+      setPageCount(data.totalPages);
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const fetchCourses = async () => {
+    setIsLoading(true);
+    try {
+
+      const data = await getCoursesApi({ status: "Active", page: currentPage, size: 6, name: query });
+
       setCourses(data.results);
       setPageCount(data.totalPages);
     } catch (error) {
@@ -38,13 +55,8 @@ export default function Classes() {
   };
 
   useEffect(() => {
-    fetchCourses(currentPage);
+    fetchCourses();
   }, [currentPage]);
-
-  const handlePageClick = (data) => {
-    const selectedPage = data.selected + 1;
-    setCurrentPage(selectedPage);
-  };
 
   const navigateToCourseDetail = (courseId) => {
     navigate(`/classes-detail/${courseId}`); // Use navigate with the course ID
@@ -60,8 +72,8 @@ export default function Classes() {
           <div className="all-course">
             <div className="d-flex justify-content-center align-items-center">
               <div className="search d-flex">
-                <input type="text" placeholder="What do you want to learn?" />
-                <div className="search-button d-flex justify-content-center align-items-center p-0">
+                <input type="text" placeholder="What do you want to learn?" value={query} onChange={handleQueryChange} />
+                <div className="search-button d-flex justify-content-center align-items-center p-0" onClick={handleSearchSubmit}>
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
               </div>
@@ -84,7 +96,7 @@ export default function Classes() {
                     </div>
                   </div>
                 ) : (
-                  courses.map((course, index) => (
+                  courses?.map((course, index) => (
                     <div
                       className="col-lg-4 col-md-6 col-sm-6"
                       key={index}
@@ -94,19 +106,20 @@ export default function Classes() {
                       <div className="class-item">
                         <div className="class-media classes-course-image">
                           <img
-                            src={course.pictureUrl}
+                            src={course?.pictureUrl}
                             className="classes-course-image"
+                            alt="Course cover"
                           />
                         </div>
                         <div className="class-info">
                           <div className="classes-course-content-body">
                             <h5>
-                              {course.name.length > 40
+                              {course?.name?.length > 40
                                 ? `${course.name.substring(0, 40)}...`
-                                : course.name}{" "}
+                                : course?.name}{" "}
                             </h5>
                             <p>
-                              {course.description.length > 70
+                              {course?.description?.length > 70
                                 ? `${course.description.substring(0, 70)}...`
                                 : course.description}
                             </p>
@@ -130,20 +143,6 @@ export default function Classes() {
                   ))
                 )}
               </div>
-              {/* <div className="d-flex justify-content-center">
-                <ReactPaginate
-                  previousLabel={"← Previous"}
-                  nextLabel={"Next →"}
-                  breakLabel={"..."}
-                  pageCount={pageCount}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={handlePageClick}
-                  containerClassName={"pagination"}
-                  subContainerClassName={"pages pagination"}
-                  activeClassName={"active"}
-                />
-              </div> */}
 
               <Stack
                 spacing={2}
