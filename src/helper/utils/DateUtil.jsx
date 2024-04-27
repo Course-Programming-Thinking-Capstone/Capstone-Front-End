@@ -55,6 +55,19 @@ export const formatDateV1 = (date) => {
   return result;
 };
 
+//format to "DD/MM/YYYY HH:mm:ss"
+export const formatDateV2 = (date) => {
+  const dayString = String(date.getDate()).padStart(2, "0");
+  const monthString = String(date.getMonth() + 1).padStart(2, "0");
+  const yearString = date.getFullYear();
+  const hoursString = String(date.getHours()).padStart(2, "0");
+  const minuteString = String(date.getMinutes()).padStart(2, "0");
+  const secondString = String(date.getSeconds()).padStart(2, "0");
+
+  const result = `${dayString}/${monthString}/${yearString} ${hoursString}:${minuteString}:${secondString}`;
+  return result;
+};
+
 //format day "yyyy/MM/dd" to "dd/MM/yyyy"
 export const formatDayV1 = (inputDate) => {
   if (!inputDate) return "";
@@ -71,7 +84,29 @@ export const formatTimeV1 = (input) => {
   var parts = input.split(":");
   var hour = parts[0];
   var minute = parts[1];
-  var second = parts[2];
 
   return hour + ":" + minute;
 };
+
+//date of birth "yyyy/MM/dd"
+export const calculateAgeV1 = (dateOfBirth) => {
+  if (dateOfBirth === null) {
+    return null;
+  }
+
+  const part = dateOfBirth.split("/");
+  const year = part[0];
+  const month = part[1];
+  const day = part[2];
+
+  const today = new Date();
+
+  let age = today.getFullYear() - year;
+  const monthDifference = today.getMonth() - month;
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < day)) {
+    age--;
+  }
+
+  return age;
+}

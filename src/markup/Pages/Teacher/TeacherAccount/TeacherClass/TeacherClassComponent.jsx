@@ -3,6 +3,7 @@ import demo from "./../../../../../images/gallery/demo.jpg";
 import { useEffect, useState } from "react";
 import { getAccountCLass, getCLassById } from "../../../../../helper/apis/class/class";
 import { convertGenderEnumToString } from "../../../../../helper/utils/EnumUtil";
+import { calculateAgeV1 } from "../../../../../helper/utils/DateUtil";
 
 const TeacherClassComponent = () => {
 
@@ -150,7 +151,7 @@ const TeacherClassComponent = () => {
                       />
                     </td>
                     <td>{student?.studentName}</td>
-                    <td>{student?.dateOfBirth}</td>
+                    <td>{calculateAgeV1(student?.dateOfBirth) ?? ""}</td>
                     <td>{student?.gender != null ? convertGenderEnumToString(student.gender) : ""}</td>
                   </tr>
                 )}
