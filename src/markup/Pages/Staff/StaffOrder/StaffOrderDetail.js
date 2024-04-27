@@ -1622,6 +1622,7 @@ export default function StaffOrderDetail() {
         const data = response.data;
 
         setOrderDetail(data);
+        console.log("success");
       } catch (err) {
         setError(err.message);
       } finally {

@@ -4,13 +4,27 @@ import { formatPrice } from "../../../../helper/utils/NumberUtil";
 import { getOrderList } from "../../../../helper/apis/order/order";
 import { ToastContainer, toast } from "react-toastify";
 import "../../../../markup/Pages/Staff/StaffOrder/StaffOrder.css";
-import { Tab, Tabs } from "@mui/material";
+import {
+  Chip,
+  Grid,
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Tab,
+  Tabs,
+  Tooltip,
+} from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 export default function StaffOrder() {
   const [orders, setOrders] = useState([]);
   const [ordersTotal, setOrdersTotal] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("Success");
   const [loading, setLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
 
   const navigate = useNavigate();
 
@@ -64,9 +78,10 @@ export default function StaffOrder() {
     setLoading(true);
     const fetchOrders = async () => {
       try {
-        const data = await getOrderList({ status: selectedStatus });
+        const data = await getOrderList({ pageNumber: currentPage, status: selectedStatus });
         setOrders(data.order);
         setOrdersTotal(data.orderTotal);
+        setPageCount(data.totalPage);
       } catch (error) {
         let message = "";
         if (error.response) {
@@ -83,64 +98,9 @@ export default function StaffOrder() {
     };
 
     fetchOrders();
-  }, [selectedStatus]);
+  }, [selectedStatus, currentPage]);
   return (
     <div className="staff-order-container" style={{ borderRadius: "15px" }}>
-      {/* <div className="d-flex justify-content between">
-        <div className="staff-order-menu d-flex justify-content-start">
-          <div
-            className={selectedStatus === "Success" ? "active" : ""}
-            onClick={() => setSelectedStatus("Success")}
-          >
-            <p
-              style={{ fontSize: "18px", fontWeight: "bold" }}
-              className="mb-1"
-            >
-              Success
-            </p>
-            <hr className="mt-0" />
-          </div>
-          <div
-            style={{ marginLeft: "25px" }}
-            className={selectedStatus === "Pending" ? "active" : ""}
-            onClick={() => setSelectedStatus("Pending")}
-          >
-            <p
-              className="mb-1"
-              style={{ fontSize: "18px", fontWeight: "bold" }}
-            >
-              Pending
-            </p>
-            <hr className="mt-0" />
-          </div>
-          <div
-            style={{ marginLeft: "25px" }}
-            className={selectedStatus === "Refunded" ? "active" : ""}
-            onClick={() => setSelectedStatus("Refunded")}
-          >
-            <p
-              className="mb-1"
-              style={{ fontSize: "18px", fontWeight: "bold" }}
-            >
-              Refunded
-            </p>
-            <hr className="mt-0" />
-          </div>
-          <div
-            style={{ marginLeft: "25px" }}
-            className={selectedStatus === "RequestRefund" ? "active" : ""}
-            onClick={() => setSelectedStatus("RequestRefund")}
-          >
-            <p
-              className="mb-1"
-              style={{ fontSize: "18px", fontWeight: "bold" }}
-            >
-              Request Refund
-            </p>
-            <hr className="mt-0" />
-          </div>
-        </div>
-      </div> */}
       <Tabs
         value={selectedStatus}
         onChange={(event, newValue) => setSelectedStatus(newValue)}
@@ -156,7 +116,6 @@ export default function StaffOrder() {
           sx={{ fontSize: "1rem" }}
         />
       </Tabs>
-
       <ToastContainer />
       <div className="staff-order-content">
         <div className="d-flex justify-content-between">
@@ -268,6 +227,36 @@ export default function StaffOrder() {
               )}
             </tbody>
           </table>
+        </div>
+        <div className='d-flex justify-content-center mt-4'>
+          {orders.length > 0 && (
+            <div className="pagination-container">
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={1}
+              >
+                <Pagination
+                  count={pageCount <= 0 ? 1 : pageCount}
+                  // count={10}
+                  color="primary"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBack,
+                        next: ArrowForward,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </div>
+          )}
         </div>
       </div>
     </div>
