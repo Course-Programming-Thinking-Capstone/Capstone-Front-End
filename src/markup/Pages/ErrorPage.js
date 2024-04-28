@@ -20,14 +20,14 @@ class ErrorPage extends Component{
 									<h2 className="error-head">The Link You Folowed Probably Broken, or the page has been removed...</h2>
 									<div className="m-b30">
 										<div className="subscribe-form p-a0">
-											<form>
+											{/* <form>
 												<div className="input-group">
 													<input name="text" className="form-control radius-no bg-black" placeholder="Type and hit Enter..." type="text" />
 													<span className="input-group-btn">
 														<button type="submit" className="btn radius-no white"><img src={search} alt="" /></button>
 													</span> 
 												</div>
-											</form>
+											</form> */}
 										</div>
 									</div>
 									<Link to={"/"} className="btn radius-xl btn-lg">Return to Home</Link>

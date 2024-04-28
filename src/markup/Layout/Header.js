@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 // images
 import logo from "./../../images/logo.png";
 import LanguageSwitcher from "../Element/LanguageSwitcher";
+import { colors } from "@mui/material";
 
 const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -62,7 +63,7 @@ const Header = () => {
   return (
     <Fragment>
       <header className="site-header header mo-left">
-        <div className="top-bar">
+        {/* <div className="top-bar">
           <div className="container">
             <div className="d-flex justify-content-between">
               <div className="dlab-topbar-left">
@@ -81,25 +82,23 @@ const Header = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div
-          className={`sticky-header main-bar-wraper navbar-expand-lg ${
-            headerFix ? "is-fixed" : ""
-          }`}
+          className={`sticky-header main-bar-wraper navbar-expand-lg ${headerFix ? "is-fixed" : ""
+            }`}
         >
           <div className="main-bar clearfix ">
             <div className="container clearfix">
               <div className="logo-header mostion">
                 <Link to={"/"} className="dez-page">
-                  <h1 style={{ marginBottom: "0px" }}>KidsPro</h1>
+                <h1 style={{ marginBottom: "0px", color: "#ff8a00" }}>KidsPro</h1>
                 </Link>
               </div>
 
               <button
-                className={`navbar-toggler navicon justify-content-end ${
-                  sidebarOpen ? "open" : "collapsed"
-                }`}
+                className={`navbar-toggler navicon justify-content-end ${sidebarOpen ? "open" : "collapsed"
+                  }`}
                 type="button"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
@@ -109,9 +108,8 @@ const Header = () => {
               </button>
 
               <div
-                className={`header-nav navbar-collapse collapse myNavbar justify-content-end ${
-                  sidebarOpen ? "show" : ""
-                }`}
+                className={`header-nav navbar-collapse collapse myNavbar justify-content-end ${sidebarOpen ? "show" : ""
+                  }`}
               >
                 <div className="logo-header mostion">
                   <Link to={"/"} className="dez-page">

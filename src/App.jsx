@@ -1,5 +1,4 @@
 import React from "react";
-import Markup from "./markup/Markup";
 
 import "react-18-image-lightbox/style.css";
 import "lightgallery/css/lightgallery.css";
@@ -38,7 +37,6 @@ import Staff from "./markup/Pages/Staff/Staff";
 import StaffOrder from "./markup/Pages/Staff/StaffOrder/StaffOrder";
 import StaffOrderDetail from "./markup/Pages/Staff/StaffOrder/StaffOrderDetail";
 import TeacherSchedule from "./markup/Pages/Teacher/TeacherAccount/TeacherSchedule/TeacherSchedule";
-import { DragAndDropComponent } from "./markup/Pages/Admin/Game/TextDnd";
 import StaffClassDetail from "./markup/Pages/Staff/StaffClassDetail/StaffClassDetail";
 import SyllabusAd from "./markup/Pages/Admin/Syllabus/SyllabusAd";
 import CreateCourseContent from "./markup/Pages/Teacher/TeacherAccount/Syllabus/createCourse/CreateCourseContent";
@@ -401,40 +399,6 @@ const App = () => {
               }
             />
 
-
-            <Route
-              path="account"
-              element={<PrivateRoute page="account" component={<Account />} />}
-            >
-              <Route
-                path="account-details"
-                element={
-                  <PrivateRoute
-                    page="account/account-details"
-                    component={<AccountDetails />}
-                  />
-                }
-              />
-              <Route
-                path="payment-methods"
-                element={
-                  <PrivateRoute
-                    page="account/payment-methods"
-                    component={<PaymentMethods />}
-                  />
-                }
-              />
-              <Route
-                path="child-process"
-                element={
-                  <PrivateRoute
-                    page="account/child-process"
-                    component={<ChildProcess />}
-                  />
-                }
-              />
-            </Route>
-
             <Route
               path="/account/child-process-detail/:childId"
               element={
@@ -446,42 +410,17 @@ const App = () => {
             />
 
             <Route
-              path="/account/course-process/:studentId/:courseId"
-              element={
-                <PrivateRoute
-                  page="account/course-process"
-                  component={<CourseProcess />}
-                />
-              }
-            />
-
-            <Route
-              path="/courses"
-              element={<PrivateRoute page="courses" component={<Classes />} />}
               path="/courses"
               element={<PrivateRoute page="courses" component={<Classes />} />}
             />
 
             <Route
               path="/classes-detail/:id"
-              path="/classes-detail/:id"
               element={
                 <PrivateRoute
-                  page="classes-detail"
                   page="classes-detail"
                   component={<ClassesDetail />}
                 />
-              }
-            />
-
-            <Route
-              path="/order"
-              element={<PrivateRoute page="order" component={<Order />} />}
-            />
-            <Route
-              path="/order-detail/:orderId"
-              element={
-                <PrivateRoute page="order-detail" component={<OrderDetail />} />
               }
             />
 
@@ -503,7 +442,6 @@ const App = () => {
               }
             />
             <Route
-              path="/payment-success/:orderId"
               path="/payment-success/:orderId"
               element={
                 <PrivateRoute
@@ -565,38 +503,6 @@ const App = () => {
               }
             />
             <Route
-              path="/courses-plan/:courseId"
-              element={
-                <PrivateRoute page="courses-plan" component={<CoursesPlan />} />
-              }
-            />
-
-            <Route
-              path="/courses-study/:sectionId"
-              element={
-                <PrivateRoute
-                  page="courses-study"
-                  component={<CourseStudy />}
-                />
-              }
-            />
-            <Route
-              path="/courses-quiz/:quizId"
-              element={
-                <PrivateRoute
-                  page="courses-quiz"
-                  component={<CourseQuiz />}
-                />
-              }
-            />
-            <Route
-              path="/courses-result"
-              element={
-                <PrivateRoute
-                  page="courses-result"
-                  component={<CourseResult />}
-                />
-              }
               path="/courses-result"
               element={
                 <PrivateRoute
@@ -608,13 +514,11 @@ const App = () => {
 
             {/* Test page */}
             <Route path="/test" element={<CourseStudy />} />
-            <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
-            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
-            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
-            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
+            <Route path="/not-found" element={<ErrorPage />} />
+            {/* <Route path="/not-found" element={<NotFound />} /> */}
+            <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </div>
       </BrowserRouter>
