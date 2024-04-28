@@ -216,10 +216,8 @@ const SuccessOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span>Total</span>
-              <span className="orange">
-                <p style={{ fontWeight: 'bold' }}>
-                  {formatPrice(orderDetail.totalPrice)}
-                </p>
+              <span className="orange" style={{ fontWeight: 'bold' }}>
+                {formatPrice(orderDetail?.totalPrice)}
               </span>
             </div>
           </div>
@@ -933,10 +931,8 @@ const PendingOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span>Total</span>
-              <span>
-                <p className="orange" style={{ fontWeight: 'bold' }}>
-                  {formatPrice(orderDetail.totalPrice)}
-                </p>
+              <span className="orange" style={{ fontWeight: 'bold' }}>
+                {formatPrice(orderDetail?.totalPrice)}
               </span>
             </div>
           </div>
@@ -1178,10 +1174,8 @@ const RefundedOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span>Total</span>
-              <span>
-                <p className="orange" style={{ fontWeight: 'bold' }}>
-                  {formatPrice(orderDetail.totalPrice)}
-                </p>
+              <span className="orange" style={{ fontWeight: 'bold' }}>
+                {formatPrice(orderDetail?.totalPrice)}
               </span>
             </div>
           </div>
@@ -1459,10 +1453,8 @@ const RequestOrder = ({ orderDetail }) => {
             <hr />
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span>Total</span>
-              <span>
-                <p className="orange mb-0" style={{ fontWeight: 'bold' }}>
-                  {formatPrice(orderDetail.totalPrice)}
-                </p>
+              <span className="orange" style={{ fontWeight: 'bold' }}>
+                {formatPrice(orderDetail?.totalPrice)}
               </span>
             </div>
           </div>
