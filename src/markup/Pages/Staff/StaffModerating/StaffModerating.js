@@ -340,10 +340,25 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         };
         try {
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
-
+            if (response.status === 200) { // Check if the HTTP status code is 200 OK
+                toast.success("Approve course successfully", {
+                    position: "top-right",
+                    autoClose: 2000, // Toast will auto close after 2 seconds
+                    hideProgressBar: true,
+                    onClose: () => {
+                        onBack();
+                    }
+                });
+            } else {
+                throw new Error('Failed to update status');
+            }
         } catch (error) {
             console.error("Failed to approve course: ", JSON.stringify(error, null, 2));
-            // Handle the error
+            toast.error("Failed to approve course", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+            });
         } finally {
             setBackdropOpen(false); // Close the backdrop regardless of the result
         }
@@ -633,24 +648,25 @@ export default function StaffModerating() {
 
     const handleBack = () => {
         setShowDetail(false);
+        fetchCourses();
+    };
+
+    const fetchCourses = async () => {
+        setIsLoading(true)
+        try {
+            const response = await instance.get(`api/v1/courses?status=Pending&action=manage`);
+            const data = response.data
+
+            setCourses(data);
+            setTotalPages(Math.ceil(data.total / itemsPerPage));
+        } catch (error) {
+            console.error("Failed to fetch courses", error);
+        } finally {
+            setIsLoading(false)
+        }
     };
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            setIsLoading(true)
-            try {
-                const response = await instance.get(`api/v1/courses?status=Pending&action=manage`);
-                const data = response.data
-
-                setCourses(data);
-                setTotalPages(Math.ceil(data.total / itemsPerPage));
-            } catch (error) {
-                console.error("Failed to fetch courses", error);
-            } finally {
-                setIsLoading(false)
-            }
-        };
-
         fetchCourses();
     }, []);
 
