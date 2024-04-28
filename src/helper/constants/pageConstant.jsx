@@ -1,0 +1,1 @@
+export const notFoundPage = "/not-found";
