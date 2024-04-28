@@ -132,6 +132,8 @@ export default function Staff() {
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             height: "100vh",
+            paddingTop: "5vh",
+            paddingBottom: "5vh",
             overflow: "hidden",
           }}
         >
