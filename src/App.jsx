@@ -210,16 +210,6 @@ const App = () => {
                   />
                 }
               />
-              <Route index element={<Navigate to="staff-order" replace />} />
-              <Route
-                path="staff-notification"
-                element={
-                  <PrivateRoute
-                    page="staff/staff-notification"
-                    component={<StaffNotification />}
-                  />
-                }
-              />
               <Route
                 path="staff-order"
                 element={

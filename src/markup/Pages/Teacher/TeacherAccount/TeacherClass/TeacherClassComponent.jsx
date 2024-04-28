@@ -16,6 +16,9 @@ const TeacherClassComponent = () => {
   const [classes, setClasses] = useState([]);
   const [currentClass, setCurrentClass] = useState(null);
 
+  const [isClassesLoading, setIsClassesLoading] = useState(false);
+  const [isClassDetailLoading, setIsClassDetailLoading] = useState(false);
+
   const handleSelectedClassChange = async (event) => {
     const changeIndex = event.target.value;
 
@@ -30,9 +33,6 @@ const TeacherClassComponent = () => {
 
   const fetchData = async () => {
     try {
-
-      //log
-      console.log("Call fetch teacher class.");
 
       let data = await getAccountCLass();
 
@@ -85,7 +85,7 @@ const TeacherClassComponent = () => {
               style={{ marginTop: "25px" }}
             >
               <p style={{ color: "#FF8A00" }} className="mb">
-                CLASS
+                Class
               </p>
               <select style={{ marginLeft: "15px" }} onChange={handleSelectedClassChange} value={selectedClassIndex}>
                 {classes !== null && classes?.map((element, index) => (
@@ -124,7 +124,6 @@ const TeacherClassComponent = () => {
             </div>
           </div>
         </div>
-
 
         {currentClass && currentClass.students?.length > 0 && (
           <div className="table-responsive">

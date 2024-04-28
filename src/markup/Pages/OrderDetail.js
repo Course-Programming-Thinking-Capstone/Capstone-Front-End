@@ -7,15 +7,35 @@ import background from "./../../images/background/orderBackground.jpg";
 import momo from "./../../images/icon/momo.png";
 import demo from "./../../images/gallery/simp.jpg";
 import PageTitle from "../Layout/PageTitle";
-import instance from "../../helper/apis/baseApi/baseApi";
+import { getOrderDetailById } from "../../helper/apis/order/order";
+import { ToastContainer, toast } from "react-toastify";
+import { Spinner } from "react-bootstrap";
+import { notFoundPage } from "../../helper/constants/pageConstant";
 
 export default function OrderDetail() {
+  const navigate = useNavigate();
   const { orderId } = useParams();
-  console.log("orderId: ", orderId);
+
+  if (!orderId) {
+    navigate(notFoundPage);
+  }
 
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const PendingOrder = () => {
     const OrderCancel = () => {
@@ -23,9 +43,10 @@ export default function OrderDetail() {
     };
     return (
       <div className="container">
+        <ToastContainer />
         <div className="order-item">
-          <div className="header d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
+          <div className="header d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-start align-items-center">
               <p>Order code: </p>
               <p>{orderDetails.orderCode}</p>
             </div>
@@ -33,10 +54,10 @@ export default function OrderDetail() {
               Pending
             </span>
           </div>
-          <div className="content d-flex">
+          <div className="content d-flex align-items-center">
             <img src={demo} alt="" />
             <p>{orderDetails.courseName}</p>
-            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} đ</p>
+            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} VND</p>
             <p>Quantity purchased: {orderDetails.quantityPurchased}</p>
             <span
               className="text-center p-1"
@@ -56,7 +77,7 @@ export default function OrderDetail() {
             <p>Transaction Code: {orderDetails.transactionCode}</p>
             <p>Order Date: {orderDetails.orderDate}</p>
           </div>
-          <div className="col-lg-6 col-md-6 col-sm-6 d-flex">
+          <div className="col-lg-6 col-md-6 col-sm-6 d-flex align-items-center">
             <img src={momo} alt="" style={{ height: "50px", width: "50px" }} />
             <p className="ms-3 mt-2">Pay with momo e-wallet</p>
           </div>
@@ -64,14 +85,14 @@ export default function OrderDetail() {
         <div className="order-info row">
           <div className="order-select col-lg-6">
             <div className="order-select-content">
-              <div className="d-flex justify-content-start">
+              <div className="d-flex justify-content-start align-items-center">
                 <p>Number of children selected:</p>
                 <p> {orderDetails.numberChildren}</p>
               </div>
 
               {orderDetails.students &&
                 orderDetails.students.map((student, index) => (
-                  <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center align-items-center">
                     <div
                       key={index}
                       className="item text-center"
@@ -83,9 +104,9 @@ export default function OrderDetail() {
                 ))}
 
               <p className="mt-2 mb-3">Child's account will send to:</p>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <div
-                  className="d-flex justify-content-center"
+                  className="d-flex justify-content-center align-items-center"
                   style={{
                     width: "60%",
                     border: "1px solid #1A9CB7",
@@ -107,24 +128,24 @@ export default function OrderDetail() {
           <div className="order-info-content col-lg-6 col-md-12 col-sm-12">
             <div>
               <h5>Order information</h5>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Course</p>
                 <p>{orderDetails.courseName}</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Price</p>
-                <p>{orderDetails.price} đ</p>
+                <p>{orderDetails.price} VND</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Discount</p>
-                <p>0 đ</p>
+                <p>0 VND</p>
               </div>
               <hr />
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Total</p>
-                <p>{orderDetails.totalPrice} đ</p>
+                <p>{orderDetails.totalPrice} VND</p>
               </div>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <button onClick={OrderCancel}>CANCEL ORDER</button>
               </div>
             </div>
@@ -142,8 +163,8 @@ export default function OrderDetail() {
     return (
       <div className="container">
         <div className="order-item">
-          <div className="header d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
+          <div className="header d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-start align-items-center">
               <p>Order code: </p>
               <p>{orderDetails.orderCode}</p>
             </div>
@@ -151,10 +172,10 @@ export default function OrderDetail() {
               Success
             </span>
           </div>
-          <div className="content d-flex">
+          <div className="content d-flex align-items-center">
             <img src={demo} alt="" />
             <p>{orderDetails.courseName}</p>
-            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} đ</p>
+            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} VND</p>
             <p>Quantity purchased: {orderDetails.quantityPurchased}</p>
           </div>
         </div>
@@ -171,14 +192,14 @@ export default function OrderDetail() {
         <div className="order-info row">
           <div className="order-select col-lg-6">
             <div className="order-select-content">
-              <div className="d-flex justify-content-start">
+              <div className="d-flex justify-content-start align-items-center">
                 <p>Number of children selected:</p>
                 <p> {orderDetails.numberChildren}</p>
               </div>
 
               {orderDetails.students &&
                 orderDetails.students.map((student, index) => (
-                  <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center align-items-center" >
                     <div
                       key={index}
                       className="item text-center"
@@ -190,9 +211,9 @@ export default function OrderDetail() {
                 ))}
 
               <p>Child's account will send to:</p>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <div
-                  className="d-flex justify-content-center"
+                  className="d-flex justify-content-center align-items-center"
                   style={{
                     width: "60%",
                     border: "1px solid #1A9CB7",
@@ -214,24 +235,24 @@ export default function OrderDetail() {
           <div className="order-info-content col-lg-6 col-md-12 col-sm-12">
             <div>
               <h5>Order information</h5>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Course</p>
                 <p>{orderDetails.courseName}</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Price</p>
-                <p>{orderDetails.price} đ</p>
+                <p>{orderDetails.price} VND</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Discount</p>
-                <p>0 đ</p>
+                <p>0 VND</p>
               </div>
               <hr />
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Total</p>
-                <p>{orderDetails.totalPrice} đ</p>
+                <p>{orderDetails.totalPrice} VND</p>
               </div>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <button
                   style={{ backgroundColor: "#FF8A00" }}
                   onClick={Repurchase}
@@ -250,8 +271,8 @@ export default function OrderDetail() {
     return (
       <div className="container">
         <div className="order-item">
-          <div className="header d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
+          <div className="header d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-start align-items-center">
               <p>Order code: </p>
               <p>{orderDetails.orderCode}</p>
             </div>
@@ -259,10 +280,10 @@ export default function OrderDetail() {
               RequestRefund
             </span>
           </div>
-          <div className="content d-flex">
+          <div className="content d-flex align-items-center">
             <img src={demo} alt="" />
             <p>{orderDetails.courseName}</p>
-            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} đ</p>
+            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} VND</p>
             <p>Quantity purchased: {orderDetails.quantityPurchased}</p>
             <span
               className="text-center"
@@ -283,7 +304,7 @@ export default function OrderDetail() {
             <p>Transaction Code: {orderDetails.transactionCode}</p>
             <p>Order Date: {orderDetails.orderDate}</p>
           </div>
-          <div className="col-lg-6 col-md-6 col-sm-6 d-flex">
+          <div className="col-lg-6 col-md-6 col-sm-6 d-flex align-items-center">
             <img src={momo} alt="" style={{ height: "50px", width: "50px" }} />
             <p>Pay with momo e-wallet</p>
           </div>
@@ -291,14 +312,14 @@ export default function OrderDetail() {
         <div className="order-info row">
           <div className="order-select col-lg-6">
             <div className="order-select-content">
-              <div className="d-flex justify-content-start">
+              <div className="d-flex justify-content-start align-items-center">
                 <p>Number of children selected:</p>
                 <p> {orderDetails.numberChildren}</p>
               </div>
 
               {orderDetails.students &&
                 orderDetails.students.map((student, index) => (
-                  <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center align-items-center">
                     <div
                       key={index}
                       className="item text-center"
@@ -310,9 +331,9 @@ export default function OrderDetail() {
                 ))}
 
               <p>Child's account will send to:</p>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <div
-                  className="d-flex justify-content-center"
+                  className="d-flex justify-content-center align-items-center"
                   style={{
                     width: "60%",
                     border: "1px solid #1A9CB7",
@@ -334,22 +355,22 @@ export default function OrderDetail() {
           <div className="order-info-content col-lg-6 col-md-12 col-sm-12">
             <div>
               <h5>Order information</h5>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Course</p>
                 <p>{orderDetails.courseName}</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Price</p>
-                <p>{orderDetails.price} đ</p>
+                <p>{orderDetails.price} VND</p>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Discount</p>
-                <p>0 đ</p>
+                <p>0 VND</p>
               </div>
               <hr />
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <p>Total</p>
-                <p>{orderDetails.totalPrice} đ</p>
+                <p>{orderDetails.totalPrice} VND</p>
               </div>
             </div>
           </div>
@@ -382,12 +403,23 @@ export default function OrderDetail() {
       setLoading(true);
 
       try {
-        const response = await instance.get(`api/v1/orders/detail/${orderId}`);
-        const data = response.data;
+        const data = await getOrderDetailById(orderId);
+        if (!data)
+          throw new Error("Order empty");
 
         setOrderDetails(data);
       } catch (error) {
-        console.error("Error fetching order details:", error);
+        // let message;
+
+        // if (error.response) {
+        //   message = error.response?.data?.message || "Something wrong.";
+        // } else {
+        //   message = error.message || "Something wrong.";
+        // }
+
+        // notifyApiFail(message);
+
+        navigate(notFoundPage);
       } finally {
         setLoading(false);
       }
@@ -408,14 +440,16 @@ export default function OrderDetail() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {orderDetails ? (
-          renderOrderDetail()
-        ) : (
-          <div className="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
+        {loading && !orderDetails ? (
+          <div className="d-flex justify-content-center py-5">
+            <Spinner
+              animation="border"
+              variant="success"
+              className="custom-spinner"
+            />
           </div>
+        ) : (
+          renderOrderDetail()
         )}
       </div>
 

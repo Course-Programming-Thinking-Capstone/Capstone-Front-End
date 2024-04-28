@@ -5,6 +5,7 @@ import { getOrderList } from "../../../../helper/apis/order/order";
 import { ToastContainer, toast } from "react-toastify";
 import "../../../../markup/Pages/Staff/StaffOrder/StaffOrder.css";
 import {
+  Button,
   Chip,
   Grid,
   IconButton,
@@ -15,7 +16,7 @@ import {
   Tabs,
   Tooltip,
 } from "@mui/material";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Visibility } from "@mui/icons-material";
 
 export default function StaffOrder() {
   const [orders, setOrders] = useState([]);
@@ -24,7 +25,7 @@ export default function StaffOrder() {
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [query, setQuery] = useState(undefined)
 
   const navigate = useNavigate();
 
@@ -74,11 +75,55 @@ export default function StaffOrder() {
     }
   };
 
+  const getStatusElement = (status) => {
+    let label;
+    let color;
+
+    switch (status) {
+      case "Success":
+        {
+          label = "Success";
+          color = "#1A9CB7";
+          break;
+        }
+      case "Pending":
+        {
+          label = "Pending";
+          color = "#FF8A00";
+          break;
+        }
+      case "Refunded":
+        {
+          label = "Refunded";
+          color = "#2C44D8";
+          break;
+        }
+      case "RequestRefund":
+        {
+          label = "Request Refund";
+          color = "#F11616";
+          break;
+        }
+      default:
+        {
+          label = "";
+          color = "#6c757d";
+          break;
+        }
+    }
+
+    return (
+      <div className="d-flex justify-content-center align-items-center mt-2">
+        <Chip label={`${label}`} sx={{ backgroundColor: `${color}`, color: "white", fontSize: "0.9rem" }} />
+      </div>
+    )
+  }
+
   useEffect(() => {
     setLoading(true);
     const fetchOrders = async () => {
       try {
-        const data = await getOrderList({ pageNumber: currentPage, status: selectedStatus });
+        const data = await getOrderList({ pageNumber: currentPage, status: selectedStatus, pageSize: 3 });
         setOrders(data.order);
         setOrdersTotal(data.orderTotal);
         setPageCount(data.totalPage);
@@ -183,28 +228,21 @@ export default function StaffOrder() {
                   <React.Fragment key={order.orderId}>
                     {/* Row for parentName and orderCode */}
                     <tr>
-                      <td style={{ width: "50%" }}>
+                      <td style={{ width: "45%" }}>
                         <div>
                           <p className="mb-1"><span className="blue fw-bold">Parent:</span> {order.parentName}</p>
                           <p className="mb-1"><span className="blue fw-bold">Course:</span> {order.courseName}</p>
                           <p className="mb-1"><span className="blue fw-bold">Quantity:</span> {order.quantity}</p>
                         </div>
                       </td>
-                      <td className="text-center mt-2" style={{ width: "10%" }}>
+                      <td className="text-center mt-2" style={{ width: "15%" }}>
                         <p className="mt-2 mb-0">
                           {formatPrice(order.totalPrice)}
                         </p>
                       </td>
                       <td className="text-center mt-2" style={{ width: "15%" }}>
-                        <p
-                          style={{
-                            color: getStatusColor(order.orderStatus),
-                            fontWeight: "bold",
-                          }}
-                          className="mt-2 mb-0"
-                        >
-                          {order.orderStatus}
-                        </p>
+                        {/* Get status element */}
+                        {getStatusElement(order?.orderStatus)}
                       </td>
                       <td className="text-center" style={{ width: "25%" }}>
                         <p className="mb-1">Order code: {order.orderCode}</p>
