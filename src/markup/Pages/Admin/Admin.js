@@ -2,14 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import background from "./../../../images/background/adminStaffBackground.jpg";
-import Game from "./Game/Game";
-import Syllabus from "./Syllabus/SyllabusAd";
 import "./Admin.css";
 import { useDispatch } from "react-redux";
 import { changeAdminActiveMenu } from "../../../store/slices/menu/menuSlice";
+import "./Admin.css";
 import {
   adminActiveMenuSelector,
-  teacherActiveMenuSelector,
 } from "../../../store/selector";
 import { useSelector } from "react-redux";
 
@@ -34,9 +32,8 @@ export default function Admin() {
 
 
   const getItemClass = (itemName) => {
-    return `item d-flex justify-content-start align-items-center mt-3 mb-0 admin-menu-item ${
-      activeMenu === itemName ? "active" : ""
-    }`;
+    return `item d-flex justify-content-start align-items-center mt-3 mb-0 admin-menu-item ${activeMenu === itemName ? "active" : ""
+      }`;
   };
 
   return (
@@ -70,7 +67,7 @@ export default function Admin() {
             </div>
             <div
               className={getItemClass("Certificate")}
-              // onClick={() => handleMenuItemClick("Certificate")}
+            // onClick={() => handleMenuItemClick("Certificate")}
             >
               <i className="fa-solid fa-medal" style={{ fontSize: "18px" }}></i>
               <span>Certificate</span>
@@ -94,7 +91,7 @@ export default function Admin() {
             </div>
             <div
               className={getItemClass("Order")}
-              // onClick={() => handleMenuItemClick("Order")}
+            // onClick={() => handleMenuItemClick("Order")}
             >
               <i
                 className="fa-solid fa-cart-shopping"
