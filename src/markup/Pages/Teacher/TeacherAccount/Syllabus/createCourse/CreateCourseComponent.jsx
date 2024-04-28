@@ -64,7 +64,6 @@ import {
 } from "@dnd-kit/sortable";
 
 import { styled } from "@mui/material/styles";
-import ButtonMui from "@mui/material/Button";
 
 import { CSS } from "@dnd-kit/utilities";
 import { ToastContainer, toast } from "react-toastify";
@@ -548,7 +547,7 @@ const CreateCourseComponent = () => {
                       title="Course picture"
                       target="_blank" rel="noreferrer"
                     >
-                      Click to view picture
+                      View picture
                     </a>
                   )}
                 </div>
@@ -560,7 +559,7 @@ const CreateCourseComponent = () => {
                 <div className="">
                   <div className="d-flex justify-content-start align-items-center">
                     <label htmlFor="fileInput">
-                      <ButtonMui
+                      <Button
                         component="span"
                         size="small"
                         variant="contained"
@@ -568,7 +567,7 @@ const CreateCourseComponent = () => {
                         className="mt-2"
                       >
                         Upload Picture
-                      </ButtonMui>
+                      </Button>
                     </label>
                     <p className="mx-3 my-0">{fileName !== null ? formatFileName(fileName) : "Choose file"}</p>
                   </div>
@@ -601,7 +600,7 @@ const CreateCourseComponent = () => {
               <div>
                 <div className="d-flex justify-content-end my-2">
 
-                  <ButtonMui
+                  <Button
                     // size="small"
                     variant="contained"
                     color="primary"
@@ -612,9 +611,9 @@ const CreateCourseComponent = () => {
                     className="mx-2"
                   >
                     Save Draft
-                  </ButtonMui>
+                  </Button>
 
-                  <ButtonMui
+                  <Button
                     // size="small"
                     variant="contained"
                     color="warning"
@@ -625,7 +624,7 @@ const CreateCourseComponent = () => {
                     disabled={confirm === false}
                   >
                     Post Course
-                  </ButtonMui>
+                  </Button>
                 </div>
               </div>
             </>
@@ -649,14 +648,14 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
     isDragging,
   } = useSortable({ id: index });
 
-  //log
-  console.log(`SectionId: ${sectionId}`)
-
   const style = {
     transition: isDragging ? transition : "",
     transform: CSS.Transform.toString(transform),
     borderColor: isOver ? "#FF8A00" : "#D4D4D4",
   };
+
+  //log
+  console.log(`Transform: ${CSS.Transform.toString(transform)}`);
 
   //get video function
 
@@ -728,7 +727,7 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
               {...listeners}
             >
               <i
-                className="fa-regular fa-hand"
+                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>
@@ -749,7 +748,7 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
               </Col>
               <Col md="9">
                 <a href="#" onClick={getVideoUrl}>
-                  Click to view Video
+                  View Video
                 </a>
               </Col>
             </Row>
@@ -817,7 +816,7 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
               {...listeners}
             >
               <i
-                className="fa-regular fa-hand"
+                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>
@@ -905,7 +904,7 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               {...listeners}
             >
               <i
-                className="fa-regular fa-hand"
+                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>

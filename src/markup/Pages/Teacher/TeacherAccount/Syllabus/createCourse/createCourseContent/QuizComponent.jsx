@@ -1,5 +1,5 @@
 import { Modal, Col, Form, Row } from "react-bootstrap";
-import { FieldArray, Formik, useFormikContext } from "formik";
+import { FieldArray, Formik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -23,7 +23,6 @@ import {
   DndContext,
   MouseSensor,
   TouchSensor,
-  closestCenter,
   closestCorners,
   useSensor,
   useSensors,
@@ -179,7 +178,7 @@ export const AddQuizComponent = ({ sectionId, index }) => {
               title: "Quiz",
               description: undefined,
               duration: 10,
-              numberOfAttempt: 3,
+              numberOfAttempt: undefined,
               numberOfQuestion: undefined,
             }}
           >
@@ -985,21 +984,13 @@ const QuestionItem = ({
   handleRemoveOption,
   remove,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: option.id });
-  const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
 
   const style = {
     transition: isDragging ? transition : "",
     transform: CSS.Transform.toString(transform),
-  };
-
-  const handleButtonMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleButtonMouseUp = () => {
-    setIsDragging(false);
   };
 
   return (
@@ -1093,15 +1084,13 @@ const QuestionItem = ({
 
       <Col md={1} className="px-0">
         <div
-          onMouseDown={handleButtonMouseDown}
-          onMouseUp={handleButtonMouseUp}
           className="create-course-modal-drag"
           disabled
           title="Drag"
           {...attributes}
           {...listeners}
         >
-          <i className="fa-regular fa-hand" style={{ fontSize: "18px" }}></i>
+          <i className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`} style={{ fontSize: "18px" }}></i>
         </div>
       </Col>
     </Row>
@@ -1444,23 +1433,14 @@ const QuestionUpdateItem = ({
   handleRemoveOption,
   remove,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: option.id });
-  const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
 
   const style = {
     transition: isDragging ? transition : "",
     transform: CSS.Transform.toString(transform),
   };
-
-  const handleButtonMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleButtonMouseUp = () => {
-    setIsDragging(false);
-  };
-
   return (
     <Row
       /*key={index}*/ ref={setNodeRef}
@@ -1556,15 +1536,13 @@ const QuestionUpdateItem = ({
 
       <Col md={1} className="px-0">
         <div
-          onMouseDown={handleButtonMouseDown}
-          onMouseUp={handleButtonMouseUp}
           className="create-course-modal-drag"
           disabled
           title="Drag"
           {...attributes}
           {...listeners}
         >
-          <i className="fa-regular fa-hand" style={{ fontSize: "18px" }}></i>
+          <i className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`} style={{ fontSize: "18px" }}></i>
         </div>
       </Col>
     </Row>

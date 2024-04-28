@@ -5307,6 +5307,24 @@ button.add:hover {
   cursor: pointer;
 }
 
+button.save {
+  background-color: #1e65eb;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+button.save:hover {
+  background-color: #0657ec;
+  cursor: pointer;
+}
+
 button.admin-back {
   background-color: #7f7c7c;
   border: none;

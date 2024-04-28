@@ -1,7 +1,25 @@
 input.game-level-detail {
   border: solid 1px #d4d4d4;
   border-radius: 5px;
-  width: 70%;
+  width: 100%;
   padding: 4px 8px;
   outline: none;
+}
+
+.map-item .game-level-detail-draggable {
+  background-color: #fbede1;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 #fbede1;
+  width: 90%;
+  margin: auto;
+  padding: 10px;
+} 
+
+.game-level-detail-menu-container {
+  width: 70% !important;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.game-level-detail-menu-container-button {
+  width: 30%;
 }

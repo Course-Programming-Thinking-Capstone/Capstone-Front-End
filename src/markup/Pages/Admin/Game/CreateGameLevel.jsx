@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/core";
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
-import { Spinner, Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { addLevelApi } from "../../../../helper/apis/game/game";
 import { ToastContainer, toast } from "react-toastify";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
@@ -251,16 +251,16 @@ export const CreateLevel = ({
               <div className="d-flex jutify-content-between align-items-center">
                 <img src={arrowLeft} alt="Arrow Left Icon" />
                 <p className="mb-0 mx-2">Back</p>
-              </div> 
+              </div>
             </button>
           </div>
         </div>
 
         <ToastContainer />
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <Container className="w-75 mx-0">
-            <Row>
-              <Col md="4">
+        <div className="d-flex justify-content-between align-items-end mb-4">
+          <Container className="game-level-detail-menu-container">
+            <Row className="pe-3">
+              <Col md="4" className="px-0 pe-2">
                 <p className="mb-1 blue fw-bold">Level index</p>
                 <input
                   className="game-level-detail"
@@ -273,7 +273,7 @@ export const CreateLevel = ({
                   onChange={handleInputChange}
                 />
               </Col>
-              <Col md="4">
+              <Col md="4" className="px-0 pe-2">
                 <p className="mb-1 blue fw-bold">Coin earn</p>
                 <input
                   className="game-level-detail"
@@ -286,7 +286,7 @@ export const CreateLevel = ({
                   onChange={handleInputChange}
                 />
               </Col>
-              <Col md="4">
+              <Col md="4" className="px-0 pe-2">
                 <p className="mb-1 blue fw-bold">Game earn</p>
                 <input
                   className="game-level-detail"
@@ -301,6 +301,22 @@ export const CreateLevel = ({
               </Col>
             </Row>
           </Container>
+          <div className="game-level-detail-menu-container-button">
+
+            <div className="d-flex justify-content-end align-items-center">
+
+              <button
+                className="save me-2"
+                onClick={handleAddLevel}
+              >
+                <div className="d-flex jutify-content-between align-items-center">
+                  <Save fontSize="small" />
+                  <p className="mb-0 mx-1">Save</p>
+                </div>
+              </button>
+            </div>
+
+          </div>
         </div>
 
         <div className="mt-3 d-flex">
@@ -309,7 +325,7 @@ export const CreateLevel = ({
             collisionDetection={closestCorners}
             sensors={sensor}
           >
-            <div className="map" style={{ width: "65%" }}>
+            <div className="map" style={{ width: "70%" }}>
               <div className="grid-container">
                 {arr.map((a, index) => {
                   return (
@@ -326,11 +342,11 @@ export const CreateLevel = ({
               </div>
             </div>
             <div className="map-item" style={{ width: "30%" }}>
-              <div className="d-flex justify-content-center align-items-center">
-                <div>
-                  {/* Make these draggable */}
-                  <div className="d-flex">
-                    {isVStartExist == false && (
+              <div className="container-fluid game-level-detail-draggable">
+                {/* Make these draggable */}
+                <div className="row">
+                  {isVStartExist === false && (
+                    <div className="col-md-6 ">
                       <Draggable
                         id={1}
                         child={
@@ -343,8 +359,10 @@ export const CreateLevel = ({
                         resetChild={null}
                         typeId={0}
                       />
-                    )}
+                    </div>
+                  )}
 
+                  <div className="col-md-6 ">
                     <Draggable
                       id={2}
                       child={
@@ -358,7 +376,9 @@ export const CreateLevel = ({
                       typeId={1}
                     />
                   </div>
-                  <div className="d-flex">
+                </div>
+                <div className="row">
+                  <div className="col-md-6 ">
                     <Draggable
                       id={3}
                       child={
@@ -371,7 +391,9 @@ export const CreateLevel = ({
                       resetChild={null}
                       typeId={2}
                     />
+                  </div>
 
+                  <div className="col-md-6 ">
                     <Draggable
                       id={4}
                       child={
@@ -386,18 +408,6 @@ export const CreateLevel = ({
                     />
                   </div>
                 </div>
-              </div>
-
-              <div className="d-flex justify-content-end align-items-center mt-5">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  aria-label="Save"
-                  startIcon={<Save />}
-                  onClick={handleAddLevel}
-                >
-                  Save
-                </Button>
               </div>
             </div>
           </DndContext>

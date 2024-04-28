@@ -30,13 +30,12 @@ import {
 } from "@dnd-kit/core";
 import { Droppable } from "./TestDnd/Droppable";
 import { Draggable } from "./TestDnd/Draggable";
-import { Button, Spinner, Container, Row, Col } from "react-bootstrap";
+import { Spinner, Container, Row, Col } from "react-bootstrap";
 import { CreateLevel } from "./CreateGameLevel";
 import "./Game.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Delete, Save } from "@mui/icons-material";
-import { Backdrop, CircularProgress } from "@mui/material";
-import ButtonMui from "@mui/material/Button";
+import { Backdrop, CircularProgress, Button } from "@mui/material";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -492,10 +491,10 @@ export default function Game() {
           </div>
 
           <ToastContainer />
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <Container className="w-75 mx-0">
-              <Row>
-                <Col md="4">
+          <div className="d-flex justify-content-between align-items-end mb-4">
+            <Container className="game-level-detail-menu-container">
+              <Row className="pe-3">
+                <Col md="4" className="px-0 pe-2">
                   <p className="mb-1 blue fw-bold">Level index</p>
                   <input
                     className="game-level-detail"
@@ -508,7 +507,7 @@ export default function Game() {
                     onChange={handleLevelDetailInputNumberChange}
                   />
                 </Col>
-                <Col md="4">
+                <Col md="4" className="px-0 pe-2">
                   <p className="mb-1 blue fw-bold">Coin earn</p>
                   <input
                     className="game-level-detail"
@@ -521,7 +520,7 @@ export default function Game() {
                     onChange={handleLevelDetailInputNumberChange}
                   />
                 </Col>
-                <Col md="4">
+                <Col md="4" className="px-0 pe-2">
                   <p className="mb-1 blue fw-bold">Game earn</p>
                   <input
                     className="game-level-detail"
@@ -536,23 +535,40 @@ export default function Game() {
                 </Col>
               </Row>
             </Container>
-            <div>
-              {/* <button
-              className="add"
-              onClick={() => handleRemoveLevel(currentLevelDetail.id)}
-            >
-              Delete level
-            </button> */}
+            <div className="game-level-detail-menu-container-button">
 
-              <button
-                className="add"
-                onClick={() => handleRemoveLevel(currentLevelDetail.id)}
+              {/* <Button
+                variant="contained"
+                color="primary"
+                aria-label="Save"
+                startIcon={<Save />}
+                onClick={handleUpdateLevel}
               >
-                <div className="d-flex jutify-content-between align-items-center">
-                  <Delete fontSize="small" />
-                  <p className="mb-0 mx-1">Delete Level</p>
-                </div>
-              </button>
+                Save
+              </Button> */}
+              <div className="d-flex justify-content-evenly align-items-center">
+
+                <button
+                  className="save me-2"
+                  onClick={handleUpdateLevel}
+                >
+                  <div className="d-flex jutify-content-between align-items-center">
+                    <Save fontSize="small" />
+                    <p className="mb-0 mx-1">Save</p>
+                  </div>
+                </button>
+
+                <button
+                  className="add"
+                  onClick={() => handleRemoveLevel(currentLevelDetail.id)}
+                >
+                  <div className="d-flex jutify-content-between align-items-center">
+                    <Delete fontSize="small" />
+                    <p className="mb-0 mx-1">Delete Level</p>
+                  </div>
+                </button>
+              </div>
+
             </div>
           </div>
           <div className="mt-3 d-flex">
@@ -565,11 +581,12 @@ export default function Game() {
                 <LevelGrid />
               </div>
               <div className="map-item" style={{ width: "30%" }}>
-                <div className="d-flex justify-content-center align-items-center">
-                  <div>
-                    {/* Make these draggable */}
-                    <div className="d-flex">
-                      {isVStartExist == false && (
+
+                <div className="container-fluid game-level-detail-draggable">
+                  {/* Make these draggable */}
+                  <div className="row">
+                    {isVStartExist === false && (
+                      <div className="col-md-6 ">
                         <Draggable
                           id={1}
                           child={
@@ -582,8 +599,10 @@ export default function Game() {
                           resetChild={null}
                           typeId={0}
                         />
-                      )}
+                      </div>
+                    )}
 
+                    <div className="col-md-6">
                       <Draggable
                         id={2}
                         child={
@@ -597,7 +616,10 @@ export default function Game() {
                         typeId={1}
                       />
                     </div>
-                    <div className="d-flex">
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
                       <Draggable
                         id={3}
                         child={
@@ -610,7 +632,8 @@ export default function Game() {
                         resetChild={null}
                         typeId={2}
                       />
-
+                    </div>
+                    <div className="col-md-6">
                       <Draggable
                         id={4}
                         child={
@@ -626,21 +649,10 @@ export default function Game() {
                     </div>
                   </div>
                 </div>
-                <div className="d-flex justify-content-end align-items-center mt-5">
-                  <ButtonMui
-                    variant="contained"
-                    color="primary"
-                    aria-label="Save"
-                    startIcon={<Save />}
-                    onClick={handleUpdateLevel}
-                  >
-                    Save
-                  </ButtonMui>
-                </div>
               </div>
             </DndContext>
-          </div>
-        </div>
+          </div >
+        </div >
       </>
     );
   }
