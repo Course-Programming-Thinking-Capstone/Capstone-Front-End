@@ -15,8 +15,9 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import Modal from 'react-bootstrap/Modal';
 
-export default function UserParents() {
+export default function UserStaff() {
     const [parents, setParents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,8 +36,9 @@ export default function UserParents() {
     const fetchParents = async () => {
         setLoading(true);
         try {
-            const response = await instance.get(`api/v1/users/admin/account?role=Parent&page=${currentPage}&size=${pageSize}`);
+            const response = await instance.get(`api/v1/users/admin/account?role=Staff&page=${currentPage}&size=${pageSize}`);
             setParents(response.data.results);
+            console.log(parents);
             setPageCount(Math.ceil(response.data.totalRecords / pageSize));
         } catch (error) {
             console.error('Failed to fetch parent details:', error);
@@ -108,7 +110,7 @@ export default function UserParents() {
                 <div className="d-flex justify-content-between">
                     <div className="d-flex justify-content-start">
                         <div>
-                            <h5>Parents</h5>
+                            <h5>Staff</h5>
                             <hr />
                         </div>
                         <i className="fa-solid fa-user-group"></i>
@@ -120,6 +122,19 @@ export default function UserParents() {
                     </div>
                 </div>
             </div>
+            <Modal
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Body>
+                    <h4>Centered Modal</h4>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+                        consectetur ac, vestibulum at eros.
+                    </p>
+                </Modal.Body>
+            </Modal>
             <div className="table-responsive" style={{ height: '400px' }}>
                 <table className="table table-bordered">
                     <thead>
@@ -127,7 +142,7 @@ export default function UserParents() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
-                            <th>EMAIL</th>
+                            <th>GENDER</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -140,7 +155,7 @@ export default function UserParents() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
-                                <td>{parent.email}</td>
+                                <td>{parent.gender}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (

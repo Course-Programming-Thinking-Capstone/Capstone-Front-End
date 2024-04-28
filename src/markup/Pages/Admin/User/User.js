@@ -8,14 +8,14 @@ export default function User() {
     const toParent = () => {
         navigate('/admin/parent'); // Make sure the path matches your routing configuration
     };
-    const toStudents = () => {
-        navigate('/students');
+    const toStudent = () => {
+        navigate('/admin/student');
     };
     const toStaff = () => {
-        navigate('/staff');
+        navigate('/admin/staff');
     };
-    const toTeachers = () => {
-        navigate('/teachers');
+    const toTeacher = () => {
+        navigate('/admin/teacher');
     };
 
     return (
@@ -58,7 +58,7 @@ export default function User() {
                                 </div>
                             </div>
                             <div>
-                                <button style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
+                                <button onClick={toStudent} style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ export default function User() {
                                 </div>
                             </div>
                             <div>
-                                <button style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
+                                <button onClick={toStaff} style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@ export default function User() {
                                 </div>
                             </div>
                             <div>
-                                <button style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
+                                <button onClick={toTeacher} style={{ backgroundColor: '#1A9CB7', color: 'white', borderRadius: '8px', border: 'none', width: '100px', height: '30px' }}>View</button>
                             </div>
                         </div>
                     </div>

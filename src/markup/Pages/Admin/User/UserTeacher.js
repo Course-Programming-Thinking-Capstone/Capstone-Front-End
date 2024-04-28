@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-export default function UserParents() {
+export default function UserTeacher() {
     const [parents, setParents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,8 +35,9 @@ export default function UserParents() {
     const fetchParents = async () => {
         setLoading(true);
         try {
-            const response = await instance.get(`api/v1/users/admin/account?role=Parent&page=${currentPage}&size=${pageSize}`);
+            const response = await instance.get(`api/v1/users/admin/account?role=Student&page=${currentPage}&size=${pageSize}`);
             setParents(response.data.results);
+            console.log(parents);
             setPageCount(Math.ceil(response.data.totalRecords / pageSize));
         } catch (error) {
             console.error('Failed to fetch parent details:', error);
@@ -108,7 +109,7 @@ export default function UserParents() {
                 <div className="d-flex justify-content-between">
                     <div className="d-flex justify-content-start">
                         <div>
-                            <h5>Parents</h5>
+                            <h5>Students</h5>
                             <hr />
                         </div>
                         <i className="fa-solid fa-user-group"></i>
@@ -127,7 +128,7 @@ export default function UserParents() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
-                            <th>EMAIL</th>
+                            <th>GENDER</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -140,7 +141,7 @@ export default function UserParents() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
-                                <td>{parent.email}</td>
+                                <td>{parent.gender}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (

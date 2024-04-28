@@ -60,6 +60,9 @@ import UserParents from './Pages/Admin/User/UserParents';
 import CourseResult from './Pages/CourseResult';
 import AdminModerating from './Pages/Admin/Moderating/AdminModerating';
 import StaffCourse from './Pages/Staff/StaffCourse/StaffCourse';
+import UserStudent from './Pages/Admin/User/UserStudent';
+import UserStaff from './Pages/Admin/User/UserStaff';
+import UserTeacher from './Pages/Admin/User/UserTeacher';
 
 
 export default function Markup() {
@@ -109,16 +112,6 @@ export default function Markup() {
 					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
 					<Route path='/courses-result' exact element={<CourseResult />} />
 
-
-
-					<Route path='/account' exact element={<Account />} >
-						<Route path='account-details' exact element={<AccountDetails />} />
-						<Route path='payment-methods' exact element={<PaymentMethods />} />
-						<Route path='child-process' exact element={<ChildProcess />} />
-						<Route path='child-process-detail/:childId' exact element={<ChildProcessDetail />} />
-						<Route path='course-process/:studentId/:courseId' exact element={<CourseProcess />} />
-					</Route>
-
 					<Route path='/order' exact element={<Order />} />
 					<Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
 					<Route path='/order-cancel/:orderId' exact element={<OrderCancel />} />
@@ -156,8 +149,12 @@ export default function Markup() {
 					<Route path="/admin" element={<Admin />}>
 						<Route path="user" element={<User />} />
 						<Route path="course" element={<AdminModerating />} />
-						
+
 						<Route path="parent" element={<UserParents />} />
+						<Route path="student" element={<UserStudent />} />
+						<Route path="staff" element={<UserStaff />} />
+						<Route path="teacher" element={<UserTeacher />} />
+
 						<Route path="game" element={<Game />} />
 						<Route path="game-data" element={<GameData />} />
 					</Route>

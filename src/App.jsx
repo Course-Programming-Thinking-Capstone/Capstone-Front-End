@@ -66,6 +66,9 @@ import UserParents from "./markup/Pages/Admin/User/UserParents";
 import CourseResult from './markup/Pages/CourseResult';
 import AdminModerating from "./markup/Pages/Admin/Moderating/AdminModerating";
 import StaffCourse from "./markup/Pages/Staff/StaffCourse/StaffCourse";
+import UserStudent from "./markup/Pages/Admin/User/UserStudent";
+import UserStaff from "./markup/Pages/Admin/User/UserStaff";
+import UserTeacher from "./markup/Pages/Admin/User/UserTeacher";
 
 // function App() {
 // 	return (
@@ -145,6 +148,24 @@ const App = () => {
                 path="parent"
                 element={
                   <PrivateRoute page="admin/parent" component={<UserParents />} />
+                }
+              />
+              <Route
+                path="student"
+                element={
+                  <PrivateRoute page="admin/student" component={<UserStudent />} />
+                }
+              />
+              <Route
+                path="staff"
+                element={
+                  <PrivateRoute page="admin/staff" component={<UserStaff />} />
+                }
+              />
+              <Route
+                path="teacher"
+                element={
+                  <PrivateRoute page="admin/teacher" component={<UserTeacher />} />
                 }
               />
               <Route
@@ -516,9 +537,9 @@ const App = () => {
             <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            <Route path="/not-found" element={<ErrorPage />} />
+            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
             {/* <Route path="/not-found" element={<NotFound />} /> */}
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>
