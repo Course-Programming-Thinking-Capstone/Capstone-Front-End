@@ -1,39 +1,60 @@
 import instance from "../../../../../helper/apis/baseApi/baseApi";
-import demo from "./../../../../../images/gallery/demo.jpg";
 import React, { useState, useEffect } from "react";
 import {
-  Chip,
-  Grid,
-  IconButton,
   Pagination,
   PaginationItem,
   Stack,
-  Tab,
-  Tabs,
-  Tooltip,
 } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { filterAccountNotification } from "../../../../../helper/apis/notification/notification";
+import { toast } from "react-toastify";
+import { Spinner, ToastContainer } from "react-bootstrap";
+import { convertUtcToLocalTime, convertUtcToLocalTimeV2, formatDateV2 } from "../../../../../helper/utils/DateUtil";
 
 const TeacherNotificationComponent = () => {
   const [notifications, setNotifications] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  //notification
+  const notifyApiFail = (message) =>
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await instance.get(`api/v1/notifications/account?page=${currentPage}&size=4`);
-        const data = response.data;
-        console.log('data: ', data);
+        setIsLoading(true);
+        const data = await filterAccountNotification({ page: currentPage, size: 4 });
 
         if (data.results) {
           setNotifications(data.results);
-          setPageCount(data.totalPages); // Make sure totalPages is correctly accessed
+          setPageCount(data.totalPages);
         } else {
-          console.error("No data found");
+          console.error("result is empty");
         }
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        let message = "";
+        if (error.response) {
+          console.log(`Error response: ${error.response?.data?.message}`);
+          message = error.response?.data?.message || "Undefined.";
+        } else {
+          console.log(`Error message abc: ${error.message}`);
+          message = error.message || "Undefined.";
+        }
+        notifyApiFail(message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -87,8 +108,18 @@ const TeacherNotificationComponent = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
       <div style={{ minHeight: '470px' }}>
-        {notifications.map((notification, index) => (
+
+        {isLoading ? (
+          <div className="d-flex justify-content-center py-5">
+            <Spinner
+              animation="border"
+              variant="success"
+              className="custom-spinner"
+            />
+          </div>
+        ) : notifications?.map((notification, index) => (
           <div
             className={`item ${notification.isRead ? 'read' : ''}`}
             key={notification.id} // It's better to use id instead of index for key
@@ -97,7 +128,6 @@ const TeacherNotificationComponent = () => {
           >
             <div className="d-flex justify-content-between">
               <div className="left d-flex justify-content-start">
-                <img alt="" />
                 <div style={{ marginLeft: "20px" }}>
                   <div className="d-flex justify-content-start">
                     <p style={{ fontSize: "18px", fontWeight: 500 }}>
@@ -111,7 +141,7 @@ const TeacherNotificationComponent = () => {
               </div>
               <div className="right" style={{ width: '15%' }}>
                 <p>
-                  <i class="fa-regular fa-clock"></i> {notification.date}
+                  <i class="fa-regular fa-clock"></i> {notification?.date !== null ? formatDateV2(convertUtcToLocalTimeV2(notification.date)) : ""}
                 </p>
               </div>
             </div>

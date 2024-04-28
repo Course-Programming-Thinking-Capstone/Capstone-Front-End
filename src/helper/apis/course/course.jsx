@@ -34,7 +34,7 @@ export const getCoursesApi = async (filter) => {
   let statusParam =
     filter.status === undefined ? "" : `status=${filter.status}&`;
   let sortNameParam =
-    filter.sortName == undefined ? "" : `sortName=${filter.sortName}&`;
+    filter.sortName === undefined ? "" : `sortName=${filter.sortName}&`;
   let sortCreatedDateParam =
     filter.sortCreatedDate === undefined
       ? ""
