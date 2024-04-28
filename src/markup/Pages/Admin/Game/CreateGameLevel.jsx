@@ -31,13 +31,12 @@ export const CreateLevel = ({
 }) => {
   //useState
   const [input, setInput] = useState({
-    levelIndex: 1,
+    levelIndex: 0,
     coinReward: 10,
     gemReward: 10,
   });
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isVStartExist, setIsVStartExist] = useState(false);
-  const [message, setMessage] = useState(null);
 
   //notification
   const notifyApiFail = (message) =>
@@ -95,15 +94,15 @@ export const CreateLevel = ({
   const [arr, setArr] = useState(initArray);
 
   const handleInputChange = (event) => {
-    let value = parseInt(event.target.value);
+    let value = parseInt(event.target.value) ?? 1;
     let name = event.target.name;
     if (name === "levelIndex") {
-      let levelIndex = value;
-      if (levelIndex < 1) {
-        levelIndex = 1;
+      let levelIndex = value - 1;
+      if (levelIndex < 0) {
+        levelIndex = 0;
       }
-      if (levelIndex > 100) {
-        levelIndex = 100;
+      if (levelIndex > 99) {
+        levelIndex = 99;
       }
       setInput({ ...input, levelIndex: levelIndex });
     } else {
@@ -135,7 +134,7 @@ export const CreateLevel = ({
         let vStartPosition = undefined;
         arr.forEach((element) => {
           if (element.typeId !== undefined) {
-            if (element.typeId == 0) {
+            if (element.typeId === 0) {
               vStartPosition = element.id;
             } else {
               levelDetails.push({
@@ -266,7 +265,7 @@ export const CreateLevel = ({
                   className="game-level-detail"
                   type="number"
                   name="levelIndex"
-                  value={input.levelIndex}
+                  value={input.levelIndex + 1}
                   required
                   min={1}
                   max={100}

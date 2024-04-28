@@ -344,7 +344,7 @@ export default function Game() {
         let vStartPositionUpdate = undefined;
         arr.forEach((element) => {
           if (element.typeId !== undefined) {
-            if (element.typeId == 0) {
+            if (element.typeId === 0) {
               vStartPositionUpdate = element.id;
             } else {
               levelDetailsUpdate.push({
@@ -460,6 +460,11 @@ export default function Game() {
     );
   };
 
+  const handleLevelDetailBack = async () => {
+    await handleGameModeClick(modeId);
+    setViewLevelDetail(false);
+  }
+
   //make these draggable
   if (viewLevelDetail) {
     return (
@@ -479,7 +484,7 @@ export default function Game() {
             </div>
             <div>
               <button
-                onClick={() => setViewLevelDetail(false)}
+                onClick={handleLevelDetailBack}
                 className="admin-back"
               >
                 <div className="d-flex jutify-content-between align-items-center">
@@ -536,16 +541,6 @@ export default function Game() {
               </Row>
             </Container>
             <div className="game-level-detail-menu-container-button">
-
-              {/* <Button
-                variant="contained"
-                color="primary"
-                aria-label="Save"
-                startIcon={<Save />}
-                onClick={handleUpdateLevel}
-              >
-                Save
-              </Button> */}
               <div className="d-flex justify-content-evenly align-items-center">
 
                 <button
