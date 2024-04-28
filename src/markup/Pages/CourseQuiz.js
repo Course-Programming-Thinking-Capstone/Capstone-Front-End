@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import backgroundImage from './../../images/background/quizBackground.jpg';
+import backgroundImage from './../../images/background/test10.jpg';
 import Footer from '../Layout/Footer';
 import Header from '../Layout/Header';
 import instance from '../../helper/apis/baseApi/baseApi';
@@ -18,7 +18,7 @@ export default function CourseQuiz() {
             try {
                 const response = await instance.get(`api/v1/courses/study/section/quiz/${quizId}`); // Adjust the URL according to your API
                 setQuizData(response.data); // Store the fetched data in state
-                console.log('response.data: ', response.data);
+                console.log('Cong test ', response.data);
             } catch (error) {
                 console.error('Failed to fetch quiz data:', error);
             }
@@ -68,41 +68,39 @@ export default function CourseQuiz() {
         }
     };
 
-    function startCountdown(duration) {
-        var timer = duration, minutes, seconds;
-        var interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-    
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-    
-            // Update the display element with the current time
-            document.getElementById('time').textContent = minutes + ":" + seconds;
-    
-            if (--timer < 0) {
-                clearInterval(interval);
-                document.getElementById('time').textContent = "00:00";
-            }
-        }, 1000);
-    }
-
     const Question = ({ question }) => (
-        <div className='quiz-question'>
-            <span style={{ fontSize: '14px', marginTop: '10px' }}>Question {question.id}</span>
-            <h5 style={{ fontSize: '24px', marginTop: '10px' }}>{question.title}</h5>
-            <span style={{ fontSize: '14px', marginTop: '10px', color: 'rgba(255, 138, 0, 1)' }}>Choose the correct answer</span>
-            <div className="row">
+        <div className='quiz-question' style={{ backgroundColor: 'rgba(200, 200, 200, 0.8)', }}>
+            <span style={{ fontSize: '20px', marginTop: '10px', color: 'white', fontWeight: '600', }}>Question {question.id}.</span>
+            <div style={{
+                display: 'flex',
+                backgroundColor: '#a5c6d0',
+                alignItems: 'center',
+                border: '1px solid #a5c6d0',
+                padding: '120px 10px',
+                width: '50%',
+                borderRadius: 10,
+                marginBottom: 30,
+                marginLeft: '25%',
+                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+            }}>
+                <h5 style={{ fontSize: '24px', marginTop: '10px', margin: 'auto', textAlign: 'center' }}>{question.title}</h5>
+            </div>
+
+            <div className="row justify-content-center">
                 {question.options.map((option) => (
                     <div key={option.id} className="col-lg-6 col-md-6 col-sm-12" style={{ cursor: 'pointer' }}>
                         <div
-                            className='answer'
+                            // className='answer'
                             onClick={() => selectAnswer(question.id, option.id)}
                             style={{
-                                backgroundColor: selectedAnswers[question.id] === option.id ? 'rgba(255, 138, 0, 1)' : '',
+                                backgroundColor: selectedAnswers[question.id] === option.id ? 'rgb(243 151 43)' : 'lightblue',
+                                color: selectedAnswers[question.id] === option.id ? 'white' : 'black',
+                                border: selectedAnswers[question.id] === option.id ? '1px solid rgba(255, 138, 0, 1)' : '1px solid lightblue',
+                                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+                                flex: 1, justifyContent: 'center', paddingTop: 24, marginBottom: 30, borderRadius: 10
                             }}
                         >
-                            <p>{option.content}</p>
+                            <p style={{ textAlign: 'center', fontSize: 17 }}>{option.content}</p>
                         </div>
                     </div>
                 ))}
@@ -112,16 +110,20 @@ export default function CourseQuiz() {
 
     return (
         <div>
-            <Header />
-            <div className="quiz-header">
+            {/* <Header /> */}
+            <div className="quiz-header" style={{backgroundColor:'ghostwhite'}}>
                 <div className="container">
                     <div className="row align-items-center">
-                        <div className='d-flex justify-content-center col-lg-1 col-md-1 d-sm-none d-md-block'>
+                        {/* <div className='d-flex justify-content-center col-lg-1 col-md-1 d-sm-none d-md-block'>
                             <a href=""><i className="fa-solid fa-chevron-left"></i>Back</a>
-                        </div>
+                        </div> */}
                         <div className='col-lg-9 col-md-9 col-sm-10' style={{ height: '100px' }}>
-                            <h5 style={{ fontSize: '26px', fontWeight: '700', marginTop: '15px' }}>Quiz: Test your tech knowledge</h5>
-                            <p style={{ fontSize: '18px' }}>Total 3 questions</p>
+                            {quizData && (
+                                <div>
+                                    <h5 style={{ fontSize: '26px', fontWeight: '700', marginTop: '15px' }}>Quiz: {quizData.title}</h5>
+                                    <p style={{ fontSize: '18px' }}>Total {quizData.totalQuestion} questions</p>
+                                </div>
+                            )}
                         </div>
                         <div className='col-lg-2 col-md-2 col-sm-2'>
                             <p>dong ho</p>
@@ -130,7 +132,7 @@ export default function CourseQuiz() {
                 </div>
             </div>
             <ToastContainer />
-            <div className="quiz-content" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '600px' }} >
+            <div className="quiz-content" style={{ backgroundImage: `url(${backgroundImage})`, minHeight: '600px' }} >
                 <div className="container">
                     <div style={{ height: '30px' }}></div>
                     {quizData && quizData.questions.map(question => (

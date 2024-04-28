@@ -74,7 +74,7 @@ import {
   Upload,
 } from "@mui/icons-material";
 
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -253,7 +253,7 @@ const CreateCourseComponent = () => {
 
         //upload course picture
         if (coursePictureFile != null) {
-          await updateCoursePictureApi({
+          const pictureUrl = await updateCoursePictureApi({
             id: createCourse.id,
             file: coursePictureFile,
           });
@@ -653,9 +653,6 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
     transform: CSS.Transform.toString(transform),
     borderColor: isOver ? "#FF8A00" : "#D4D4D4",
   };
-
-  //log
-  console.log(`Transform: ${CSS.Transform.toString(transform)}`);
 
   //get video function
 
