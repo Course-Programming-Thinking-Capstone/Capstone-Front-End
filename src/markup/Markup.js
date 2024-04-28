@@ -23,6 +23,7 @@ import CoursePayment from './Pages/CoursePayment';
 import OrderCancel from './Pages/OrderCancel';
 import PaymentSuccess from './Pages/PaymentSuccess';
 
+
 import Verification from './Pages/Verification';
 import TeacherAccount from './Pages/Teacher/TeacherAccount/TeacherAccount';
 import Staff from './Pages/Staff/Staff';
@@ -69,6 +70,7 @@ export default function Markup() {
 			<div className="page-wraper">
 				<Routes>
 
+
 					{/* routed */}
 					<Route path='/' exact element={<Index1 />} />
 					<Route path='/login' exact element={<Login />} />
@@ -78,13 +80,30 @@ export default function Markup() {
 
 					<Route path='/classes' exact element={<Classes />} />
 					<Route path='/classes-detail/:id' element={<ClassesDetail />} />
+					<Route path='/classes-detail/:id' element={<ClassesDetail />} />
 					<Route path='/teachers' exact element={<Teachers />} />
 					<Route path="/teachers-details/:id" exact element={<TeachersDetail />} />
 					<Route path='/not-found' exact element={<ErrorPage />} />
 
 
 					<Route path='/student-home' exact element={<StudentHome />} />
+					<Route path='/student-home' exact element={<StudentHome />} />
 					<Route path='/schedule' exact element={<Schedule />} />
+					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
+					<Route path='/courses-study/:sectionId' exact element={<CourseStudy />} />
+					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
+					<Route path='/courses-result' exact element={<CourseResult />} />
+
+
+
+					<Route path='/account' exact element={<Account />} >
+						<Route path='account-details' exact element={<AccountDetails />} />
+						<Route path='payment-methods' exact element={<PaymentMethods />} />
+						<Route path='child-process' exact element={<ChildProcess />} />
+						<Route path='child-process-detail/:childId' exact element={<ChildProcessDetail />} />
+						<Route path='course-process/:studentId/:courseId' exact element={<CourseProcess />} />
+					</Route>
+
 					<Route path='/courses-plan/:classId' exact element={<CoursesPlan />} />
 					<Route path='/courses-study/:sectionId' exact element={<CourseStudy />} />
 					<Route path='/courses-quiz/:quizId' exact element={<CourseQuiz />} />
@@ -106,6 +125,7 @@ export default function Markup() {
 					<Route path='/payment' exact element={<CoursePayment />} />
 					<Route path='/payment-success/:orderId' exact element={<PaymentSuccess />} />
 
+
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/verification' exact element={<Verification />} />
 					<Route path='/teacher' exact element={<TeacherAccount />} />
@@ -122,6 +142,7 @@ export default function Markup() {
 					<Route path='/teacher/setting' exact element={<TeacherSetting />} />
 
 					<Route path='/staff' exact element={<Staff />} >
+						<Route path="staff-notification" element={<StaffNotification />} />
 						<Route path="staff-notification" element={<StaffNotification />} />
 						<Route path="staff-order" element={<StaffOrder />} />
 						<Route path="staff-order-detail/:orderId" element={<StaffOrderDetail />} />
