@@ -75,7 +75,7 @@ import {
   Upload,
 } from "@mui/icons-material";
 
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -98,7 +98,6 @@ const CreateCourseComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescriptionInput] = useState(undefined);
   const [confirm, setConfirm] = useState(false);
-  const [fileName, setFileName] = useState(null);
 
   //notification
   const notifyApiFail = (message) =>
@@ -127,30 +126,8 @@ const CreateCourseComponent = () => {
       theme: "colored",
     });
 
-  const formatFileName = (fileName) => {
-    const maxLength = 20;
-
-    if (fileName && fileName.length > maxLength) {
-      const extension = fileName.split('.').pop();
-      const truncatedName = fileName.substr(0, maxLength - (extension.length + 4));
-      return `${truncatedName}...${extension}`;
-    }
-
-    return fileName;
-  };
-
   const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      setFileName(file.name);
-    } else {
-      setFileName(null);
-    }
-    if (!createCourse?.pictureUrl && !file) {
-      setConfirm(false);
-    }
-    setCoursePictureFile(file);
+    setCoursePictureFile(event.target.files[0]);
   };
 
   const handleDescriptionChange = (event) => {
@@ -158,11 +135,7 @@ const CreateCourseComponent = () => {
   };
 
   const handleConfirmChange = () => {
-    if (!createCourse?.pictureUrl && !coursePictureFile) {
-      setConfirm(false);
-    } else {
-      setConfirm(!confirm);
-    }
+    setConfirm(!confirm);
   };
 
   const goBack = () => {
@@ -254,7 +227,7 @@ const CreateCourseComponent = () => {
 
         //upload course picture
         if (coursePictureFile != null) {
-          await updateCoursePictureApi({
+          const pictureUrl = await updateCoursePictureApi({
             id: createCourse.id,
             file: coursePictureFile,
           });
@@ -557,22 +530,17 @@ const CreateCourseComponent = () => {
                   type image is <span className="orange">JPG, PNG</span>.
                 </p>
 
-                <div className="">
-                  <div className="d-flex justify-content-start align-items-center">
-                    <label htmlFor="fileInput">
-                      <ButtonMui
-                        component="span"
-                        size="small"
-                        variant="contained"
-                        startIcon={<Upload />}
-                        className="mt-2"
-                      >
-                        Upload Picture
-                      </ButtonMui>
-                    </label>
-                    <p className="mx-3 my-0">{fileName !== null ? formatFileName(fileName) : "Choose file"}</p>
-                  </div>
-                </div>
+                <label htmlFor="fileInput">
+                  <ButtonMui
+                    component="span"
+                    size="small"
+                    variant="contained"
+                    startIcon={<Upload />}
+                    className="mt-2"
+                  >
+                    Upload Picture
+                  </ButtonMui>
+                </label>
                 <VisuallyHiddenInput
                   type="file"
                   accept="image/jpeg, image/png"

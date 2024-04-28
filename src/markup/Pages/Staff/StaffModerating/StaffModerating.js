@@ -11,11 +11,17 @@ import { convertUtcToLocalTime, formatDateV1 } from '../../../../helper/utils/Da
 import { ToastContainer, toast } from 'react-toastify';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { getCloudVideoUrl } from '../../../../helper/apis/course/course';
 
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
-    const handleSelectLesson = (lesson) => {
+
+    const [currentLessonVideoUrl, setCurrentLessonVideoUrl] = useState(null);
+    const handleSelectLesson = async (lesson) => {
+        if (lesson.type === 'Video') {
+            await getVideoUrl(lesson);
+        }
         setSelectedLesson(lesson);
     };
     const getDriveFileID = (url) => {
@@ -31,22 +37,74 @@ const ModeratingLesson = ({ onBack, section }) => {
         return iconMap[type] || 'fa-solid fa-file';
     }
 
+    useEffect(() => {
+        if (section?.lessons[0]?.type === "Video") {
+            getVideoUrl(section?.lessons[0]);
+        }
+    }, [])
+
+    //notification
+    const notifyApiFail = (message) =>
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeButton: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+
+    //get video function
+
+    const getVideoUrl = async (lesson) => {
+        //log
+        console.log(`Call get Video url`)
+        if (lesson) {
+            if (lesson?.resourceUrl !== undefined && lesson?.resourceUrl !== null) {
+                const videoUrl = lesson?.resourceUrl
+                setCurrentLessonVideoUrl(videoUrl);
+                return;
+            }
+            const videoName = lesson?.name;
+            try {
+                const videoUrl = await getCloudVideoUrl({ videoName: videoName, sectionId: section?.id });
+
+                setCurrentLessonVideoUrl(videoUrl);
+            } catch (error) {
+                let message;
+                if (error.response) {
+                    console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+                    message =
+                        error.response?.data?.message || "Error when get lesson.";
+                } else {
+                    console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+                    message = error.message || "Error when get lesson.";
+                }
+                notifyApiFail(message);
+            }
+        }
+    }
+
     const renderLessonContent = () => {
+
         if (!selectedLesson) return <p>Select a lesson to see the content.</p>;
         return (
             <div>
-                {selectedLesson.type === 'Video' && selectedLesson.resourceUrl && (
+                {selectedLesson.type === 'Video' && (
                     <div style={{ marginLeft: 170, marginTop: 5 }}>
                         <iframe
                             title="Embedded Video"
                             width="800"
                             height="340"
-                            src={`https://drive.google.com/file/d/${getDriveFileID(selectedLesson.resourceUrl)}/preview`}
+                            src={currentLessonVideoUrl}
                             // frameborder="0"
                             allowFullScreen
+
                         // style={{ border: '2px solid white' }} 
                         ></iframe>
-                        <p style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5 }}>{selectedLesson.name}</p>
                     </div>
                 )}
                 {selectedLesson.type === 'Document' && (
@@ -67,28 +125,29 @@ const ModeratingLesson = ({ onBack, section }) => {
 
     return (
         <div>
+            <ToastContainer />
             <div className="mx-5" style={{ backgroundColor: 'white', borderRadius: 20, borderStyle: 'solid', border: 'none', marginTop: 30, height: 700, overflowY: 'auto' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 47, paddingTop: 20, paddingRight: 30 }}>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div>
                             <h5 className='mb' >Lesson {section.order}:<span style={{ marginLeft: 8 }}>{section.name}</span></h5>
                         </div>
-                        <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-book-open-reader"></i>
+                        <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} className="fa-solid fa-book-open-reader"></i>
                     </div>
                     <div>
-                        <button onClick={onBack} style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', padding: '5px 5px' }} ><i class="fa-solid fa-chevron-left" style={{ paddingRight: 5 }}></i>Back</button>
+                        <button onClick={onBack} style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', padding: '5px 5px' }} ><i className="fa-solid fa-chevron-left" style={{ paddingRight: 5 }}></i>Back</button>
                     </div>
                 </div>
                 <div>
-                    {section.lessons.map((lesson) => (
+                    {section?.lessons?.map((lesson, index) => (
                         <div
+                            key={index}
                             style={{
                                 cursor: 'pointer', backgroundColor: selectedLesson && selectedLesson.id === lesson.id ? '#FED37E' : 'transparent', width: 600, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: '10px 0px 10px 130px'
                                 , color: selectedLesson && selectedLesson.id === lesson.id ? '#f8f8f8' : 'black',
                                 fontWeight: selectedLesson && selectedLesson.id === lesson.id ? 'bold' : 'normal', fontSize: 16
                             }}
                             className={`d-flex justify-content-start mt-2 ${selectedLesson && selectedLesson.id === lesson.id ? 'selected-lesson' : ''}`}
-                            key={lesson.id}
                             onClick={() => handleSelectLesson(lesson)}
                         >
                             <i style={{ fontSize: '19px', marginTop: '12px' }} className={getIconBasedOnType(lesson.type)} />
@@ -166,9 +225,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             try {
                 const response = await instance.get(`api/v1/courses/${courseId}`);
                 const data = response.data
-
-                //log
-                console.log(`Course details data: ${JSON.stringify(data, null, 2)}`)
                 setCourseDetails(data); // Assuming the API returns the details directly
             } catch (error) {
                 console.error("Failed to fetch course details", error);
@@ -282,7 +338,6 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             isAdminSetup,
             price: isFree ? 0 : price, // Use the state variable price
         };
-        console.log('payload: ', payload);
         try {
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
 
@@ -462,12 +517,12 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                                 <h5 className='mb'>Course Detail</h5>
                                 <hr />
                             </div>
-                            <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} class="fa-solid fa-bell"></i>
+                            <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} className="fa-solid fa-bell"></i>
                         </div>
                         <div className="d-flex justify-content-end">
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i class="fa-solid fa-chevron-left" style={{ marginRight: 5 }}></i>Back</button>
-                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i class="fa-solid fa-x" style={{ marginRight: 5 }}></i> Refuse</button>
-                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: 5, borderColor: '#FF8A00', borderStyle: 'solid', borderWidth: 2 }}><i class="fa-solid fa-check" style={{ marginRight: 5 }}></i>Approve</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }} onClick={onBack} ><i className="fa-solid fa-chevron-left" style={{ marginRight: 5 }}></i>Back</button>
+                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px' }}><i className="fa-solid fa-x" style={{ marginRight: 5 }}></i> Refuse</button>
+                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: 5, borderColor: '#FF8A00', borderStyle: 'solid', borderWidth: 2 }}><i className="fa-solid fa-check" style={{ marginRight: 5 }}></i>Approve</button>
                         </div>
                     </div>
                 </div>
@@ -479,19 +534,19 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         <h4 className='title blue mb-1' style={{ margin: '12px 0px 12px 0px' }}>{courseDetails && courseDetails.name}</h4>
                         <div className="d-flex justify-content-between" style={{ padding: '12px 150px', fontSize: '18px' }}>
                             <div className="d-flex">
-                                <i class="fa-solid fa-book mt-1"></i>
+                                <i className="fa-solid fa-book mt-1"></i>
                                 <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalLesson} lessons</p>
                             </div>
                             <div className="d-flex">
-                                <i class="fa-solid fa-circle-play mt-1"></i>
+                                <i className="fa-solid fa-circle-play mt-1"></i>
                                 <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalVideo} videos</p>
                             </div>
                             <div className="d-flex">
-                                <i class="fa-solid fa-book-open mt-1"></i>
+                                <i className="fa-solid fa-book-open mt-1"></i>
                                 <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalDocument} documents</p>
                             </div>
                             <div className="d-flex">
-                                <i class="fa-solid fa-pen-to-square mt-1"></i>
+                                <i className="fa-solid fa-pen-to-square mt-1"></i>
                                 <p className='mb-0 ms-1'>{courseDetails && courseDetails.totalQuiz} quiz</p>
                             </div>
                         </div>
@@ -527,15 +582,15 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         ))}
                     </div>
 
-                    <div class="accordion mt-5" id="collapseQuiz" style={{ marginBottom: 10 }}>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOneHundred">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
+                    <div className="accordion mt-5" id="collapseQuiz" style={{ marginBottom: 10 }}>
+                        <div className="accordion-item">
+                            <h2 className="accordion-header" id="headingOneHundred">
+                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHundred" aria-expanded="true" aria-controls="collapseOneHundred">
                                     Quiz
                                 </button>
                             </h2>
-                            <div id="collapseOneHundred" class="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
-                                <div class="accordion-body">
+                            <div id="collapseOneHundred" className="accordion-collapse collapse show" aria-labelledby="headingOneHundred" data-bs-parent="#accordionQuiz">
+                                <div className="accordion-body">
                                     {courseDetails && courseDetails.sections && courseDetails.sections.map((section, sectionIndex) => (
                                         <div className='ms-3' key={section.id}>
                                             {section.quizzes && section.quizzes.map((quiz, quizIndex) => (
@@ -612,13 +667,13 @@ export default function StaffModerating() {
                             <h5 className='mb'>MODERATING</h5>
                             <hr />
                         </div>
-                        <i class="fa-solid fa-bell"></i>
+                        <i className="fa-solid fa-bell"></i>
                     </div>
                 </div>
                 {isLoading ? (
                     <div className='d-flex justify-content-center py-5'>
-                        <div class="spinner-border text-primary" role="status" style={{}}>
-                            <span class="visually-hidden">Loading...</span>
+                        <div className="spinner-border text-primary" role="status" style={{}}>
+                            <span className="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 ) : (Array.isArray(courses.results) && courses.results.map((course, index) => (
@@ -637,7 +692,7 @@ export default function StaffModerating() {
                             </div>
                             <div className='right'>
                                 <div className="d-flex">
-                                    <i class="fa-regular fa-clock mt-1"></i>
+                                    <i className="fa-regular fa-clock mt-1"></i>
                                     {/* <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p> */}
                                     <p className='ms-1'>{formatDateV1(convertUtcToLocalTime(course.createdDate))}</p>
 

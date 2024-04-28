@@ -202,16 +202,18 @@
   padding: 8px 8px 8px 8px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: black;
   display: block;
   transition: 0.3s;
 }
 
 .study .document:hover {
-  color: black;
+  color: orange;
   background-color: #ffecb7;
   border-radius: 10px 0 0 10px;
   cursor: pointer;
+  font-size: 35px;
+  font-weight: bold;
 }
 
 .study .document i {
@@ -988,6 +990,11 @@
   height: 90vh;
 }
 
+.syllabus {
+  overflow: auto;
+  height: 90vh;
+}
+
 .teacher-notification .header h5,
 .teacher-course .header h5,
 .teacher-classes .header h5,
@@ -1027,7 +1034,8 @@
 }
 
 .create-course,
-.syllabus-detail, 
+.syllabus-detail,
+.teacher-course .syllabus-detail,
 .teacher-course {
   height: 90vh;
   margin-bottom: 30px;
@@ -1162,6 +1170,8 @@
   max-height: 300px;
   overflow-y: auto;
 }
+
+.table-bordered thead th,
 .table-borderless thead th,
 .table-bordered thead th {
   background-color: #1a9cb7;
@@ -1180,7 +1190,6 @@
 .teacher-setting .active-menu-item {
   color: #1a9cb7;
 }
-
 
 .teacher-setting-content .setting-menu hr {
   margin-top: 10px !important;
@@ -1274,22 +1283,34 @@ textarea.form-control {
   background-color: #fbede1;
 }
 
-.syllabus-content, .teacher-course-content, .teacher-classes-content, .teacher-setting-content {
+.syllabus-content,
+.teacher-course-content,
+.teacher-classes-content,
+.teacher-setting-content {
   background-color: white;
   padding-top: 10px;
   border-radius: 20px;
   min-height: 80vh;
 }
 
-.syllabus-content .blue, .teacher-course-content .blue, .teacher-classes-content .blue, .teacher-setting-content .blue {
+.syllabus-content .blue,
+.teacher-course-content .blue,
+.teacher-classes-content .blue,
+.teacher-setting-content .blue {
   color: #1a9cb7;
 }
 
-.syllabus-content .search, .teacher-course-content .search, .teacher-classes-content .search, .teacher-setting-content .search {
+.syllabus-content .search,
+.teacher-course-content .search,
+.teacher-classes-content .search,
+.teacher-setting-content .search {
   margin-top: 20px;
 }
 
-.syllabus-content .search input, .teacher-course-content .search input, .teacher-classes-content .search input, .teacher-setting-content .search input{
+.syllabus-content .search input,
+.teacher-course-content .search input,
+.teacher-classes-content .search input,
+.teacher-setting-content .search input {
   border: 1px solid #988e8e66;
   border-radius: 10px 0 0 10px;
   border-right: none;
@@ -1299,7 +1320,7 @@ textarea.form-control {
   width: 70%;
 }
 
-.syllabus-content .syllabus-item{
+.syllabus-content .syllabus-item {
   margin-top: 20px;
   border: 1px solid #d9d9d9;
   padding: 10px 20px;
@@ -1354,6 +1375,28 @@ textarea.form-control {
   margin-top: 20px !important;
 }
 /* Course ends */
+
+.notification-badge {
+  position: absolute;
+  z-index: 1000;
+  top: -5px;
+  right: 80px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.fa-bell {
+  position: relative;
+  font-size: 24px; /* Adjust size as needed */
+}
+
+.item.read {
+  background-color: #ccc; /* Or any other color to indicate it's read */
+}
 
 .notification-badge {
   position: absolute;
@@ -1454,6 +1497,7 @@ textarea.form-control {
 
 .moderating-lesson .selected-lesson {
   color: #1a9cb7; /* Light grey color, you can choose any color you like */
+  color: #1a9cb7; /* Light grey color, you can choose any color you like */
 }
 
 .staff-notification .header i,
@@ -1506,10 +1550,6 @@ textarea.form-control {
   border-radius: 8px;
 }
 
-.moderating-detail-content {
-  /* padding: 10px 25px; */
-}
-
 .moderating-detail-content img {
   height: 300px;
   width: 100%;
@@ -1557,6 +1597,7 @@ textarea.form-control {
 }
 
 .staff-order-content .table-responsive {
+  /* max-height: 400px; */
   /* max-height: 400px; */
   overflow-y: auto;
 }
@@ -1623,6 +1664,21 @@ textarea.form-control {
   padding: 20px;
   background-color: white;
   border-radius: 10px;
+  height: 100vh;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+
+.level-detail {
+  height: 90vh;
+  overflow: auto;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
 }
 
 .create-syllabus {
@@ -1636,6 +1692,7 @@ textarea.form-control {
 
 .create-syllabus .point i {
   font-size: 20px;
+  color: #1a9cb7;
   color: #1a9cb7;
 }
 
@@ -1661,8 +1718,11 @@ textarea.form-control {
 
 .game-setting-content {
   /* margin-top: 30px; */
+  /* margin-top: 30px; */
   background-color: #fbede1;
   padding: 20px 40px;
+  height: 90vh;
+  overflow: auto;
   height: 90vh;
   overflow: auto;
   border-radius: 5px;
@@ -1678,11 +1738,13 @@ textarea.form-control {
 }
 
 .game-setting .header h5,
+.admin-user .header h5 .game-setting .header h5,
 .admin-user .header h5 {
   font-size: 22px;
 }
 
 .game-setting .header hr,
+.admin-user .header hr .game-setting .header hr,
 .admin-user .header hr {
   width: 50%;
   color: #ff8a00;
@@ -1691,6 +1753,7 @@ textarea.form-control {
 }
 
 .game-setting .header i,
+.admin-user .header i .game-setting .header i,
 .admin-user .header i {
   color: #ff8a00;
   margin-left: 10px;
@@ -1743,9 +1806,11 @@ textarea.form-control {
   width: 60px; /* Width of grid items */
   height: 60px; /* Height of grid items */
   border: 1px solid grey; /* Border for grid items */
+  border: 1px solid grey; /* Border for grid items */
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
   border-radius: 5px;
 }
 
@@ -5291,6 +5356,7 @@ select:-internal-autofill-selected {
 
 button.add {
   background-color: #ef7e54;
+  background-color: #ef7e54;
   border: none;
   border-radius: 5px;
   color: white;
@@ -5309,6 +5375,7 @@ button.add:hover {
 
 button.admin-back {
   background-color: #7f7c7c;
+  background-color: #7f7c7c;
   border: none;
   border-radius: 5px;
   color: white;
@@ -5326,6 +5393,7 @@ button.admin-back:hover {
 }
 
 button.admin-save {
+  background-color: #2a7fff;
   background-color: #2a7fff;
   border: none;
   border-radius: 5px;
@@ -5348,6 +5416,8 @@ button.admin-save:hover {
   padding: 4px 8px;
 
   border: 1px solid #d4d4d4;
+
+  border: 1px solid #d4d4d4;
   border-radius: 5px;
 }
 
@@ -5367,11 +5437,13 @@ button.admin-save:hover {
   padding: 10px;
 }
 
-
 /* .teacher-accordion .section-title button{
   font-weight: bold;
 } */
 
+.teacher-accordion .lesson-title button {
+  color: #ef7e54;
+}
 .teacher-accordion .lesson-title button {
   color: #ef7e54;
   font-weight: bold;
@@ -5380,7 +5452,10 @@ button.admin-save:hover {
 button.teacher-button {
   background-color: white;
   border: 1px solid #ff8a00;
+  background-color: white;
+  border: 1px solid #ff8a00;
   border-radius: 5px;
+  color: #ff8a00;
   color: #ff8a00;
   text-align: center;
   text-decoration: none;
@@ -5391,12 +5466,15 @@ button.teacher-button {
 
 button.teacher-button:hover {
   background-color: #f7cc9c;
+  background-color: #f7cc9c;
 }
 
 button.teacher-button-remove {
   /* border: 1px solid #FF8A00; */
   border: none;
   border-radius: 50%;
+  background-color: white;
+  color: #ef7e54;
   background-color: white;
   color: #ef7e54;
   text-align: center;
