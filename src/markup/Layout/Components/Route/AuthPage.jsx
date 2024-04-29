@@ -1,10 +1,10 @@
 // lưu đường dẫn các trang chưa xác thực như login, register. Khi người dùng 
 // đã đăng nhập thì không được truy cập lại các trang này
 export const UnauthenticatedPages = [
-  "login",
-  "register",
-  "verify",
-  "verify-confirm",
+    "login",
+    "register",
+    "verify",
+    "verify-confirm",
 ];
 
 //Lưu đường dẫn các trang public. Mọi người dùng đều có thể truy cập 
@@ -25,16 +25,16 @@ export const StaffPages = ["staff", "staff/staff-notification", "staff/moderatin
 
 //Lưu đường dẫn các trang mà teacher được truy cập
 export const TeacherPages = [
-  "teacher",
-  "teacher/schedule",
-  "teacher/notification",
-  "teacher/courses",
-  "teacher/classes",
-  "teacher/syllabuses",
-  "teacher/syllabuses/detail",
-  "teacher/syllabuses/create-course",
-  "teacher/quizzes",
-  "teacher/setting",
+    "teacher",
+    "teacher/schedule",
+    "teacher/notification",
+    "teacher/courses",
+    "teacher/classes",
+    "teacher/syllabuses",
+    "teacher/syllabuses/detail",
+    "teacher/syllabuses/create-course",
+    "teacher/quizzes",
+    "teacher/setting",
 ];
 
 //Lưu đường dẫn các trang mà parent được truy cập
@@ -45,9 +45,9 @@ export const StudentPages = ["student-home", "schedule", "courses-plan", "course
 
 //Thông tin các role có trên hệ thống
 export const UserRole = {
-  AdminRole: "Admin",
-  ParentRole: "Parent",
-  StaffRole: "Staff",
-  TeacherRole: "Teacher",
-  StudentRole: "Student"
+    AdminRole: "Admin",
+    ParentRole: "Parent",
+    StaffRole: "Staff",
+    TeacherRole: "Teacher",
+    StudentRole: "Student"
 }

@@ -13,8 +13,12 @@ import {
   Tabs,
 } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { adminOrderDetailPage } from "../../../../helper/constants/pageConstant";
 
-export default function StaffOrder() {
+//css
+import "./AdminOrder.css";
+
+export default function AdminOrder() {
   const [orders, setOrders] = useState([]);
   const [ordersTotal, setOrdersTotal] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("Success");
@@ -25,7 +29,7 @@ export default function StaffOrder() {
   const navigate = useNavigate();
 
   const handleViewDetail = (orderId) => {
-    navigate(`/staff/staff-order-detail/${orderId}`);
+    navigate(`${adminOrderDetailPage}${orderId}`);
   };
 
   //notification
@@ -98,10 +102,10 @@ export default function StaffOrder() {
         let message;
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.message}`);
-          message = error.response?.data?.message || "Undefined.";
+          message = error.response?.data?.message || "Something wrong.";
         } else {
           console.log(`Error message abc: ${error.message}`);
-          message = error.message || "Undefined.";
+          message = error.message || "Something wrong.";
         }
         notifyApiFail(message);
       } finally {
@@ -112,7 +116,7 @@ export default function StaffOrder() {
     fetchOrders();
   }, [selectedStatus, currentPage]);
   return (
-    <div className="staff-order-container" style={{ borderRadius: "15px" }}>
+    <div className="admin-order-container" style={{ borderRadius: "15px" }}>
       <Tabs
         value={selectedStatus}
         onChange={(event, newValue) => {setSelectedStatus(newValue); setCurrentPage(1)}}

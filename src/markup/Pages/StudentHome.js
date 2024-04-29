@@ -58,7 +58,7 @@ export default function StudentHome() {
                                             <p style={{ fontWeight: '500', fontSize: 20, marginBottom: 10 }}>Class Code: {course.classCode}</p>
                                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                                 <p style={{ fontWeight: '500', fontSize: 20, marginBottom: 10 }}>Teacher: </p>
-                                                <p style={{ fontWeight: '500', fontSize: 20, marginBottom: 10, marginLeft: 10 }}>{course.teacher}</p>
+                                                <p style={{ fontWeight: '500', fontSize: 20, marginBottom: 10, marginLeft: 10 }}>{course.teacherName}</p>
                                             </div>
                                             <p style={{ fontWeight: '500', fontSize: 20, marginBottom: 10 }}>{course.courseName}</p>
                                             <div class="progress" style={{backgroundColor:'lightblue'}}>

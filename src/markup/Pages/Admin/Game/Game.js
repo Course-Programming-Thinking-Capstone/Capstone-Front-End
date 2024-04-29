@@ -36,6 +36,8 @@ import "./Game.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Delete, Save } from "@mui/icons-material";
 import { Backdrop, CircularProgress, Button } from "@mui/material";
+import {changeAdminActiveMenu} from "../../../../store/slices/menu/menuSlice";
+import { useDispatch } from "react-redux";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -51,6 +53,9 @@ export default function Game() {
   const [arr, setArr] = useState([]);
   const [modeId, setModeId] = useState();
 
+  const dispatch = useDispatch();
+
+
   //notification
   const notifyApiFail = (message) =>
     toast.error(message, {
@@ -64,6 +69,9 @@ export default function Game() {
       progress: undefined,
       theme: "colored",
     });
+
+  //change active menu:
+  dispatch(changeAdminActiveMenu({adminActiveMenu: "Game"}));
 
   const notifyApiSucess = (message) =>
     toast.success(message, {

@@ -1,0 +1,45 @@
+.admin-order-container {
+  padding: 10px 40px;
+  height: 90vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-right: 3rem;
+  margin-left: 3rem;
+  background-color: #fbede1;
+  overflow: auto;
+}
+
+.admin-order-container .table {
+  border-collapse: collapse;
+}
+
+.admin-order-container thead {
+  border-radius: 8px !important;
+  text-align: center;
+  color: white !important;
+}
+
+.admin-order-container tr th {
+  background-color: #1a9cb7 !important;
+}
+
+.admin-order-container thead tr th {
+  color: white;
+}
+
+.admin-order-container tbody tr {
+  border-bottom: 1px solid gray;
+}
+
+.admin-order-container tbody tr td {
+  padding: 10px;
+}
+
+.admin-order-detail {
+  background-color: white;
+  height: 90vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  overflow: auto ;
+  border-radius: 10px;
+}

@@ -548,12 +548,13 @@ export default function StaffClassDetail() {
     const [currentPage, setCurrentPage] = useState(0);
     const studentsPerPage = 3;
 
+    console.log('currentPage: ', currentPage);
     const pageCount = Math.ceil(
       classDetails?.students.length / studentsPerPage
     );
 
-    const handlePageClick = (selectedItem) => {
-      setCurrentPage(selectedItem.selected);
+    const handlePageClick = (event, value) => {
+      setCurrentPage(value - 1); // Adjust page index since MUI uses 1-based indexing
     };
 
     const handleAddStudentClick = () => {
@@ -964,18 +965,30 @@ export default function StaffClassDetail() {
               </table>
             </div>
             <div className="d-flex justify-content-center">
-              <ReactPaginate
-                previousLabel={"previous"}
-                nextLabel={"next"}
-                breakLabel={"..."}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                subContainerClassName={"pages pagination"}
-                activeClassName={"active"}
-              />
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={1}
+              >
+                <Pagination
+                  count={pageCount <= 0 ? 1 : pageCount}
+                  // count={10}
+                  color="primary"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBack,
+                        next: ArrowForward,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
             </div>
           </div>
         </div>
@@ -993,6 +1006,23 @@ export default function StaffClassDetail() {
     const studentsPerPage = 5;
     const pagesVisited = pageNumber * studentsPerPage;
     const [enrolledStudents, setEnrolledStudents] = useState([]);
+
+    const [searchPageNumber, setSearchPageNumber] = useState(0);
+    const [enrolledPageNumber, setEnrolledPageNumber] = useState(0);
+
+    const searchPagesVisited = searchPageNumber * studentsPerPage;
+    const enrolledPagesVisited = enrolledPageNumber * studentsPerPage;
+
+    const searchPageCount = Math.ceil(searchResults.length / studentsPerPage);
+    const enrolledPageCount = Math.ceil(enrolledStudents.length / studentsPerPage);
+
+    const changeSearchPage = ({ selected }) => {
+      setSearchPageNumber(selected);
+    };
+
+    const changeEnrolledPage = ({ selected }) => {
+      setEnrolledPageNumber(selected);
+    };
 
     const pageCount = Math.ceil(searchResults.length / studentsPerPage);
     const changePage = ({ selected }) => {
@@ -1278,24 +1308,28 @@ export default function StaffClassDetail() {
                 </table>
               </div>
               <div className="d-flex justify-content-center">
-                <ReactPaginate
-                  previousLabel={"Previous"}
-                  nextLabel={"Next"}
-                  pageCount={pageCount}
-                  onPageChange={changePage}
-                  containerClassName={"pagination"}
-                  previousLinkClassName={"pagination__link"}
-                  nextLinkClassName={"pagination__link"}
-                  disabledClassName={"pagination__link--disabled"}
-                  activeClassName={"pagination__link--active"}
-                />
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  my={1}
+                >
+                  <Pagination
+                    count={searchPageCount <= 0 ? 1 : searchPageCount}
+                    color="primary"
+                    page={searchPageNumber + 1}
+                    onChange={(event, value) => setSearchPageNumber(value - 1)}
+                  // rest of your props
+                  />
+                </Stack>
               </div>
             </div>
             <div style={{ width: "45%", marginTop: "47px" }}>
               <p className="blue mb-0">Current class student list</p>
               <div
                 class="table-responsive"
-                style={{ height: "300px", overflowY: "scroll" }}
+                style={{ height: "270px", overflowY: "scroll" }}
               >
                 <table class="table table-bordered">
                   <thead>
@@ -1343,6 +1377,21 @@ export default function StaffClassDetail() {
                   </tbody>
                 </table>
               </div>
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={1}
+              >
+                <Pagination
+                  count={enrolledPageCount <= 0 ? 1 : enrolledPageCount}
+                  color="primary"
+                  page={enrolledPageNumber + 1}
+                  onChange={(event, value) => setEnrolledPageNumber(value - 1)}
+                // rest of your props
+                />
+              </Stack>
               <div className="d-flex justify-content-end">
                 <button
                   style={{
@@ -1868,22 +1917,6 @@ export default function StaffClassDetail() {
                   </div>
                 ))}
             </div>
-            {/* <div className="d-flex justify-content-center">
-              {totalPages > 0 && ( // Conditional rendering
-                <ReactPaginate
-                  previousLabel={"previous"}
-                  nextLabel={"next"}
-                  breakLabel={"..."}
-                  pageCount={totalPages} // Make sure this is a valid number
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={handlePageClick}
-                  containerClassName={"pagination"}
-                  subContainerClassName={"pages pagination"}
-                  activeClassName={"active"}
-                />
-              )}
-            </div> */}
 
             <Stack
               spacing={2}

@@ -69,6 +69,8 @@ import StaffCourse from "./markup/Pages/Staff/StaffCourse/StaffCourse";
 import UserStudent from "./markup/Pages/Admin/User/UserStudent";
 import UserStaff from "./markup/Pages/Admin/User/UserStaff";
 import UserTeacher from "./markup/Pages/Admin/User/UserTeacher";
+import AdminOrder from "./markup/Pages/Admin/Order/AdminOrder";
+import AdminOrderDetail from "./markup/Pages/Admin/Order/AdminOrderDetail";
 import Dashboard from "./markup/Pages/Admin/Dashboard/Dashboard";
 
 // function App() {
@@ -200,6 +202,24 @@ const App = () => {
                   />
                 }
               />
+                <Route
+                    path="order"
+                    element={
+                        <PrivateRoute
+                            page="admin/order"
+                            component={<AdminOrder />}
+                        />
+                    }
+                />
+                <Route
+                    path="order-detail/:orderId"
+                    element={
+                        <PrivateRoute
+                            page="admin/order-detail"
+                            component={<AdminOrderDetail />}
+                        />
+                    }
+                />
             </Route>
 
             {/* Staff pages */}
