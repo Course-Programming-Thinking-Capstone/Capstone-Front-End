@@ -28,7 +28,7 @@ export default function Order() {
       const statusQueryParam = activeItem.replace(" ", "");
 
       try {
-        
+
         const response = await instance.get(`api/v1/orders?status=${statusQueryParam}`);
         const data = response.data;
         setOrders(data.order); // Assuming the API returns an array of orders
@@ -75,6 +75,8 @@ export default function Order() {
           return { backgroundColor: "#FF8A00", color: "white" };
         case "Success":
           return { backgroundColor: "#28a745", color: "white" };
+        case "Process":
+          return { backgroundColor: "#1A9CB7", color: "white" };
         case "RequestRefund":
           return { backgroundColor: "#F11616", color: "white" };
         case "Refunded":
@@ -125,7 +127,7 @@ export default function Order() {
       >
         <div className="container">
           <div className="order-menu row">
-            {["Pending", "Success", "Request refund", "Refunded"].map(
+            {["Process", "Pending", "Success", "Request refund", "Refunded"].map(
               (item, index) => (
                 <div
                   key={index}

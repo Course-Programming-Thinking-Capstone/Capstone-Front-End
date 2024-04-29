@@ -11,6 +11,7 @@ import { getOrderDetailById } from "../../helper/apis/order/order";
 import { ToastContainer, toast } from "react-toastify";
 import { Spinner } from "react-bootstrap";
 import { notFoundPage } from "../../helper/constants/pageConstant";
+import instance from "../../helper/apis/baseApi/baseApi";
 
 export default function OrderDetail() {
   const navigate = useNavigate();
@@ -36,6 +37,146 @@ export default function OrderDetail() {
       progress: undefined,
       theme: "colored",
     });
+
+  const ProcessOrder = () => {
+    const [isOrderProcessing, setIsOrderProcessing] = useState(false);
+    console.log(orderDetails);
+
+    const BuyCourse = async () => {
+      setIsOrderProcessing(true);
+
+      try {
+
+        const response = await instance.post(`api/v1/payment/momo/${orderDetails.orderId}`);
+
+
+        let responseData = response.data;
+
+        console.log("Payment initiated successfully", responseData);
+
+        window.location.href = responseData.payUrl; 
+      } catch (error) {
+        console.error("There was a problem with the process:", error.message);
+        setIsOrderProcessing(false);
+      }
+    };
+
+    return (
+      <div className="container">
+        <ToastContainer />
+        <div className="order-item">
+          <div className="header d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-start align-items-center">
+              <p>Order code: </p>
+              <p>{orderDetails.orderCode}</p>
+            </div>
+            <span style={{ backgroundColor: "#1A9CB7", color: "white" }}>
+              Process
+            </span>
+          </div>
+          <div className="content d-flex align-items-center">
+            <img src={demo} alt="" />
+            <p>{orderDetails.courseName}</p>
+            <p style={{ color: "#FF8A00" }}>Price: {orderDetails.price} VND</p>
+            <p>Quantity purchased: {orderDetails.quantityPurchased}</p>
+          </div>
+        </div>
+        <div className="order-id row">
+          <div className="col-lg-6 col-md-6 col-sm-6">
+            <p>Transaction Code: {orderDetails.transactionCode}</p>
+            <p>Order Date: {orderDetails.orderDate}</p>
+          </div>
+          <div className="col-lg-6 col-md-6 col-sm-6 d-flex align-items-center">
+            <img src={momo} alt="" style={{ height: "50px", width: "50px" }} />
+            <p className="ms-3 mt-2">Pay with momo e-wallet</p>
+          </div>
+        </div>
+        <div className="order-info row">
+          <div className="order-select col-lg-6">
+            <div className="order-select-content">
+              <div className="d-flex justify-content-start align-items-center">
+                <p>Number of children selected:</p>
+                <p> {orderDetails.numberChildren}</p>
+              </div>
+
+              {orderDetails.students &&
+                orderDetails.students.map((student, index) => (
+                  <div className="d-flex justify-content-center align-items-center">
+                    <div
+                      key={index}
+                      className="item text-center"
+                      style={index > 0 ? { marginTop: "10px" } : {}}
+                    >
+                      <p className="mb">{student.studentName}</p>
+                    </div>
+                  </div>
+                ))}
+
+              <p className="mt-2 mb-3">Child's account will send to:</p>
+              <div className="d-flex justify-content-center align-items-center">
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{
+                    width: "60%",
+                    border: "1px solid #1A9CB7",
+                    borderRadius: "5px",
+                    padding: "5px 0",
+                  }}
+                >
+                  <i
+                    style={{ color: "#FF8A00", fontSize: "20px" }}
+                    class="fa-regular fa-envelope"
+                  ></i>
+                  <p style={{ marginLeft: "5px" }} className="mb">
+                    {orderDetails.parentEmail}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="order-info-content col-lg-6 col-md-12 col-sm-12">
+            <div>
+              <h5>Order information</h5>
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Course</p>
+                <p>{orderDetails.courseName}</p>
+              </div>
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Price</p>
+                <p>{orderDetails.price} VND</p>
+              </div>
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Discount</p>
+                <p>0 VND</p>
+              </div>
+              <hr />
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Total</p>
+                <p>{orderDetails.totalPrice} VND</p>
+              </div>
+              <div className="d-flex justify-content-center align-items-center">
+                <button onClick={BuyCourse} style={{ backgroundColor: '#1A9CB7' }}>
+                  {isOrderProcessing ? (
+                    <div
+                      className="spinner-border text-light"
+                      role="status"
+                    >
+                      <span className="visually-hidden">
+                        Loading...
+                      </span>
+                    </div>
+                  ) : (
+                    "FINISH PAYMENT"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+  }
 
   const PendingOrder = () => {
     const OrderCancel = () => {
@@ -385,6 +526,8 @@ export default function OrderDetail() {
 
   const renderOrderDetail = () => {
     switch (orderDetails?.status) {
+      case "Process":
+        return <ProcessOrder orderDetails={orderDetails} />;
       case "Pending":
         return <PendingOrder orderDetails={orderDetails} />;
       case "Success":
@@ -409,16 +552,6 @@ export default function OrderDetail() {
 
         setOrderDetails(data);
       } catch (error) {
-        // let message;
-
-        // if (error.response) {
-        //   message = error.response?.data?.message || "Something wrong.";
-        // } else {
-        //   message = error.message || "Something wrong.";
-        // }
-
-        // notifyApiFail(message);
-
         navigate(notFoundPage);
       } finally {
         setLoading(false);
