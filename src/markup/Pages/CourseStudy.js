@@ -50,6 +50,7 @@ export default function CourseStudy() {
             const response = await instance.get(url);
             const data = response.data;
             setDetailedContent(data);
+            console.log("cong tets:", data);
         } catch (error) {
             console.error('Error fetching content details:', error);
         }
@@ -85,9 +86,12 @@ export default function CourseStudy() {
     const renderSidebar = () => {
         if (!sectionDetails) {
             return (
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                <div className="d-flex justify-content-center " style={{ height: '89vh' }}>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
                 </div>
+
             );
         }
         return (
@@ -133,7 +137,7 @@ export default function CourseStudy() {
         switch (detailedContent.type) {
             case 'Video':
                 return (
-                    <div className='pt-5 px-5'>
+                    <div className='pt-5 px-5' style={{marginTop:45}}>
                         <iframe
                             width="100%"
                             height="550px"
@@ -152,7 +156,7 @@ export default function CourseStudy() {
             case 'Document':
                 return (
                     <div className='pt-5 px-5'>
-                        <div dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
+                        <div style={{fontSize:20,marginTop:40}} dangerouslySetInnerHTML={{ __html: detailedContent.content }}></div>
                         <div className='d-flex justify-content-end'>
                             {!detailedContent.isComplete && (
                                 <button className='button' onClick={() => markLessonAsCompleted(detailedContent.id)}>Mark as completed</button>
@@ -161,19 +165,30 @@ export default function CourseStudy() {
                     </div>
                 );
             default:
-                return <div className='pt-5 px-5 mt-5'>
-                    <h3 className='text-center'>{detailedContent.title}</h3>
-                    <div className="d-flex justify-content-around mt-5">
-                        <div>
-                            <p className='ms-5'>Total Questions: {detailedContent.totalQuestion}</p>
-                            <p className='ms-5'>Number of attempt: {detailedContent.numberOfAttempt}</p>
-                            <p className='ms-5'>Time: {detailedContent.duration} minutes</p>
-                        </div>
-                        <div className="mt-5">
-                            <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
+                return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+                    <div style={{
+                        border: '1px solid rgba(200, 200, 200, 0.3 ', width: '50%', borderRadius: 10, paddingTop: '10px', paddingBottom: '10px', boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                        backgroundColor: 'rgba(200, 200, 200, 0.3)',
+                    }}>
+                        <h3 className='text-center'>{detailedContent.title}</h3>
+                        <div >
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 70 }}>
+                                <div>
+                                    <p style={{ fontSize: 20, color: 'orange', fontWeight: 'bolder' }}>Total: {detailedContent.totalQuestion} Questions</p>
+                                    <p style={{ fontSize: 20, color: 'orange', fontWeight: 'bolder', marginTop: 50 }}>Time: {detailedContent.duration} minutes</p>
+                                </div>
+                                <div>
+                                    <p style={{ fontSize: 20, color: 'orange', fontWeight: 'bolder' }}>Retake: {detailedContent.numberOfAttempt} times</p>
+                                    <p style={{ fontSize: 20, color: 'orange', fontWeight: 'bolder', marginTop: 50 }}>Total Score: {detailedContent.totalScore} đ </p>
+                                </div>
+                            </div>
+                            <div className="d-flex flex-column align-items-center mt-5">
+                                <button className='button' onClick={() => navigate(`/courses-quiz/${detailedContent.id}`)}>Start Quiz</button>
+                            </div>
                         </div>
                     </div>
-                </div>;
+                </div>
+
         }
     };
     return (
