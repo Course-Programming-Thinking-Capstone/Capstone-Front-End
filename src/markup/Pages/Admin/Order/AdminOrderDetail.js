@@ -815,7 +815,7 @@ const PendingOrder = ({ orderDetail }) => {
                     style={{ fontSize: "18px", cursor: "pointer" }}
                     onClick={toggleCheck}
                 ></i>
-                <p className="mb-1 ms-2">
+                <p className="mb-0 ms-2">
                     Have created enough accounts for children and sent accounts to parents via the selected method
                 </p>
             </div>
