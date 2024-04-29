@@ -248,7 +248,7 @@ export default function StaffOrder() {
                         <p className="mb-1">Order code: {order.orderCode}</p>
                         <button
                           onClick={() => handleViewDetail(order.orderId)}
-                          className="mt-2"
+                          className="mt-2 py-1 px-2"
                           style={{
                             backgroundColor: "#FFA63D",
                             color: "white",
