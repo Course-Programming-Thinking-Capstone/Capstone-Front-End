@@ -78,15 +78,18 @@ export default function CoursesPlan() {
         navigate(`/courses-study/${sectionId}`);
     }
 
-    const CollapsibleQuestion = ({ id, title, lessons, quizzes }) => {
+    const CollapsibleQuestion = ({ id, title, lessons, quizzes, isBlocked }) => {
         const [isOpen, setIsOpen] = useState(false);
 
         const toggleCollapse = (e) => {
             e.preventDefault();
+            if (isBlocked) return; // Prevent toggling if the section is blocked
             setIsOpen(!isOpen);
         };
 
         const linkClass = isOpen ? "link-open" : "link-closed";
+        const linkStyle = isBlocked ? { cursor: 'not-allowed', color: '#ccc' } : {};
+        const lockIcon = isBlocked ? <i className="fa-solid fa-lock"></i> : null;
 
         return (
             <div className='mt-2'>
@@ -94,9 +97,15 @@ export default function CoursesPlan() {
                     href={`#${id}`}
                     className={`btn btn-primary ${linkClass}`}
                     onClick={toggleCollapse}
+                    style={linkStyle}
                 >
-                    <i className="fa-solid fa-chevron-right"></i> {title}
-                </a><br />
+                    <div className='d-flex justify-content-between'>
+                        {title}
+                        {lockIcon}
+                    </div>
+                </a>
+
+                <br />
                 <div id={id} style={{ display: isOpen ? 'block' : 'none' }} className="collapse">
                     <div className='d-flex justify-content-between'>
                         <div className='content'>
@@ -127,6 +136,7 @@ export default function CoursesPlan() {
             </div>
         );
     };
+
 
     return (
         <div>
@@ -183,6 +193,7 @@ export default function CoursesPlan() {
                                                 title={`Section ${index + 1}: ${section.name}`}
                                                 lessons={section.lessons}
                                                 quizzes={section.quizzes}
+                                                isBlocked={section.isBlock}
                                             />
                                         ))}
 
