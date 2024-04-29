@@ -1427,9 +1427,7 @@ export default function StaffOrderDetail() {
                 const data = await getOrderDetailById(orderId);
                 if (data) {
                     setOrderDetail(data);
-                } else {
-                    throw Error("Empty response");
-                }
+                } else throw Error();
             } catch (err) {
                 navigate(notFoundPage);
             } finally {

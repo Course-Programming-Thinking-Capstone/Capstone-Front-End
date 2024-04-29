@@ -5,18 +5,14 @@ import { getOrderList } from "../../../../helper/apis/order/order";
 import { ToastContainer, toast } from "react-toastify";
 import "../../../../markup/Pages/Staff/StaffOrder/StaffOrder.css";
 import {
-  Button,
   Chip,
-  Grid,
-  IconButton,
   Pagination,
   PaginationItem,
   Stack,
   Tab,
   Tabs,
-  Tooltip,
 } from "@mui/material";
-import { ArrowBack, ArrowForward, Visibility } from "@mui/icons-material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 export default function StaffOrder() {
   const [orders, setOrders] = useState([]);
@@ -25,7 +21,6 @@ export default function StaffOrder() {
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [query, setQuery] = useState(undefined)
 
   const navigate = useNavigate();
 
@@ -46,34 +41,6 @@ export default function StaffOrder() {
       progress: undefined,
       theme: "colored",
     });
-
-  const notifyApiSucess = (message) =>
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Success":
-        return "#1A9CB7";
-      case "Pending":
-        return "#FF8A00";
-      case "Refunded":
-        return "#2C44D8";
-      case "RequestRefund":
-        return "#F11616";
-      default:
-        return "#6c757d";
-    }
-  };
 
   const getStatusElement = (status) => {
     let label;
@@ -128,7 +95,7 @@ export default function StaffOrder() {
         setOrdersTotal(data.orderTotal);
         setPageCount(data.totalPage);
       } catch (error) {
-        let message = "";
+        let message;
         if (error.response) {
           console.log(`Error response: ${error.response?.data?.message}`);
           message = error.response?.data?.message || "Undefined.";
@@ -205,7 +172,7 @@ export default function StaffOrder() {
           </div>
         </div>
         <div class="table-responsive mt-3 staff-order-content-table">
-          <table class="table table-bordered staff-order-table mt-0 ">
+          <table className="table table-bordered staff-order-table mt-0 ">
             <thead className="staff-order-table-th">
               <tr style={{ backgroundColor: "#1A9CB7" }}>
                 <th className="staff-order-table-th">Information</th>
