@@ -13,7 +13,7 @@ import instance from "../../../../helper/apis/baseApi/baseApi";
 import { getOrderDetailById } from "../../../../helper/apis/order/order";
 import { adminOrderPage, notFoundPage } from "../../../../helper/constants/pageConstant";
 import defaultCoverImage from "../../../../images/course/default-cover-image.png";
-import { Backdrop, Button, Chip, CircularProgress } from "@mui/material";
+import { Backdrop, Button, Chip, CircularProgress, Stack } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import { LoadingSpinner } from "../../../Layout/Components/LoadingSpinner";
 
@@ -31,54 +31,49 @@ const SuccessOrder = ({ orderDetail }) => {
                     class="fa-solid fa-user orange"
                 ></i>
                 <p className="mb-0 ms-3">
-                    Parent:{" "}
+                    <span className="staff-order-detail-title">Parent: </span>{orderDetail.parentName}
                 </p>
-                <span className="mb-0 ms-3">
-                    {orderDetail.parentName}
-                </span>
             </div>
 
             <Chip label="Success" color="primary" sx={{ backgroundColor: "#1A9CB7", fontSize: "14px" }} />
         </div>
         <div
-            className="mt-3 py-2 px-3"
+            className="mt-3 p-2"
             style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
         >
-            <div className="d-flex justify-content-start align-items-center">
-                <p className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                    Order code{" "}
-                </p>
-                <span className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                    {orderDetail.orderCode}
-                </span>
-            </div>
-            <hr className="my-1" />
-            <div className="container-fluid w-100" style={{ fontSize: "16px" }}>
-                <div className="row">
-                    <div className="col-md-2">
+            <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
+                <Stack direction={"row"} spacing={2} justifyContent={"flex-start"} alignItems={"center"}
+                    sx={{ fontSize: "16px" }}>
+                    <div >
                         <img
                             src={orderDetail?.pictureUrl ?? defaultCoverImage}
                             style={{ height: "80px", width: "80px", borderRadius: "5px" }}
-                            alt="Default course"
+                            alt={orderDetail.courseName}
                         />
                     </div>
-                    <div className="col-md-6">
-                        <p className="mb-2">{orderDetail.courseName}</p>
+                    <Stack direction={"column"} spacing={2} alignItems={"flex-start"} justifyContent={"space-between"} >
+                        <p className="mb-2"><span className="staff-order-detail-title">Course name:{" "}</span>{orderDetail.courseName}</p>
                         <p className="mb-0">
-                            Class:{" "}
+                            <span className="staff-order-detail-title">Class:{" "}</span>
                             <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
                                 {orderDetail.classCode}
                             </span>
                         </p>
-                    </div>
-                    <div className="col-md-2">
+                    </Stack>
+                    {/* <div className="col-md-2">
                         Quantity: <span>{orderDetail.quantityPurchased}</span>
                     </div>
                     <div className="col-md-2 orange fw-bold">
                         {formatPrice(orderDetail.totalPrice)}
-                    </div>
+                    </div> */}
+                </Stack>
+                <div >
+                    <p className="mb-0" style={{ fontSize: "18px" }}>
+                        <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
+                    </p>
                 </div>
-            </div>
+            </Stack>
+
         </div>
         <div
             className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
@@ -86,10 +81,10 @@ const SuccessOrder = ({ orderDetail }) => {
         >
             <div style={{ width: "60%" }}>
                 <p className="mb-1">
-                    Transaction code: <span>{orderDetail.transactionCode}</span>
+                    <span className="staff-order-detail-title">Transaction code:</span> <span>{orderDetail.transactionCode}</span>
                 </p>
                 <p className="mb-1">
-                    Order date:{" "}
+                    <span className="staff-order-detail-title">Order date:</span>
                     <span>
                         {" "}
                         {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}{" "}
@@ -168,24 +163,24 @@ const SuccessOrder = ({ orderDetail }) => {
                 </p>
                 <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
                     <div className="d-flex justify-content-between align-items-start mb-2">
-                        <span className="me-3">Course</span>
+                        <span className="me-3 staff-order-detail-title">Course</span>
                         <span>{orderDetail.courseName}</span>
                     </div>
                     <div className="d-flex justify-content-between align-items-start mb-2">
-                        <span>Price</span>
+                        <span className="staff-order-detail-title">Price</span>
                         <span>{formatPrice(orderDetail.price)}</span>
                     </div>
                     <div className="d-flex justify-content-between align-items-start mb-2">
-                        <span>Quantity</span>
+                        <span className="staff-order-detail-title">Quantity</span>
                         <span>{orderDetail.quantityPurchased}</span>
                     </div>
                     <div className="d-flex justify-content-between align-items-start mb-2">
-                        <span>Discount</span>
+                        <span className="staff-order-detail-title">Discount</span>
                         <span>0</span>
                     </div>
                     <hr />
                     <div className="d-flex justify-content-between align-items-center">
-                        <span>Total</span>
+                        <span className="staff-order-detail-title">Total</span>
                         <span className="orange" style={{ fontWeight: 'bold' }}>
                             {formatPrice(orderDetail?.totalPrice)}
                         </span>
@@ -439,55 +434,50 @@ const PendingOrder = ({ orderDetail }) => {
                         class="fa-solid fa-user orange"
                     ></i>
                     <p className="mb-0 ms-3">
-                        Parent:{" "}
+                        <span className="staff-order-detail-title">Parent: </span>{orderDetail.parentName}
                     </p>
-                    <span className="mb-0 ms-3">
-                        {orderDetail.parentName}
-                    </span>
                 </div>
 
                 <Chip label="Pending" color="primary" sx={{ backgroundColor: "#FF8A00", fontSize: "14px" }} />
             </div>
 
             <div
-                className="mt-3 py-2 px-3"
+                className="mt-3 p-2"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
-                <div className="d-flex justify-content-start align-items-center">
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        Order code{" "}
-                    </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        {orderDetail.orderCode}
-                    </span>
-                </div>
-                <hr className="my-1" />
-                <div className="d-flex" style={{ fontSize: "16px" }}>
-                    <img
-                        className="ms-3"
-                        src={orderDetail?.pictureUrl ?? defaultCoverImage}
-                        style={{ height: "80px", width: "80px", borderRadius: "5px" }}
-                        alt="Order detail"
-                    />
-                    <div className="ms-4">
-                        <p className="mb-2">{orderDetail.courseName}</p>
-                        <p className="mb-0">
-                            Class:{" "}
-                            <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
-                                {orderDetail.classCode}
-                            </span>
+                <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
+                    <Stack direction={"row"} spacing={2} justifyContent={"flex-start"} alignItems={"center"}
+                        sx={{ fontSize: "16px" }}>
+                        <div >
+                            <img
+                                src={orderDetail?.pictureUrl ?? defaultCoverImage}
+                                style={{ height: "80px", width: "80px", borderRadius: "5px" }}
+                                alt={orderDetail.courseName}
+                            />
+                        </div>
+                        <Stack direction={"column"} spacing={2} alignItems={"flex-start"} justifyContent={"space-between"} >
+                            <p className="mb-2"><span className="staff-order-detail-title">Course name:{" "}</span>{orderDetail.courseName}</p>
+                            <p className="mb-0">
+                                <span className="staff-order-detail-title">Class:{" "}</span>
+                                <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
+                                    {orderDetail.classCode}
+                                </span>
+                            </p>
+                        </Stack>
+                        {/* <div className="col-md-2">
+                        Quantity: <span>{orderDetail.quantityPurchased}</span>
+                    </div>
+                    <div className="col-md-2 orange fw-bold">
+                        {formatPrice(orderDetail.totalPrice)}
+                    </div> */}
+                    </Stack>
+                    <div >
+                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                            <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>
-                    <p style={{ marginLeft: "130px" }}>
-                        Quantity: <span>{orderDetail.quantityPurchased}</span>
-                    </p>
-                    <p
-                        className="orange"
-                        style={{ marginLeft: "130px", fontWeight: "bold" }}
-                    >
-                        {formatPrice(orderDetail.totalPrice)}
-                    </p>
-                </div>
+                </Stack>
+
             </div>
             <div
                 className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
@@ -495,10 +485,10 @@ const PendingOrder = ({ orderDetail }) => {
             >
                 <div style={{ width: "60%" }}>
                     <p className="mb-1">
-                        Transaction code: <span>{orderDetail.transactionCode}</span>
+                        <span className="staff-order-detail-title">Transaction code:</span> <span>{orderDetail.transactionCode}</span>
                     </p>
                     <p className="mb-1">
-                        Order date:{" "}
+                        <span className="staff-order-detail-title">Order date:</span>
                         <span>
                             {" "}
                             {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}{" "}
@@ -794,24 +784,24 @@ const PendingOrder = ({ orderDetail }) => {
                     </p>
                     <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span className="me-3">Course</span>
+                            <span className="me-3 staff-order-detail-title">Course</span>
                             <span>{orderDetail.courseName}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Price</span>
+                            <span className="staff-order-detail-title">Price</span>
                             <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Quantity</span>
+                            <span className="staff-order-detail-title">Quantity</span>
                             <span>{orderDetail.quantityPurchased}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Discount</span>
+                            <span className="staff-order-detail-title">Discount</span>
                             <span>0</span>
                         </div>
                         <hr />
                         <div className="d-flex justify-content-between align-items-center">
-                            <span>Total</span>
+                            <span className="staff-order-detail-title">Total</span>
                             <span className="orange" style={{ fontWeight: 'bold' }}>
                                 {formatPrice(orderDetail?.totalPrice)}
                             </span>
@@ -858,55 +848,50 @@ const RefundedOrder = ({ orderDetail }) => {
                         class="fa-solid fa-user orange"
                     ></i>
                     <p className="mb-0 ms-3">
-                        Parent:{" "}
+                        <span className="staff-order-detail-title">Parent: </span>{orderDetail.parentName}
                     </p>
-                    <span className="mb-0 ms-3">
-                        {orderDetail.parentName}
-                    </span>
                 </div>
 
                 <Chip label="Refunded" color="primary" sx={{ backgroundColor: "#2C44D8", fontSize: "14px" }} />
             </div>
 
             <div
-                className="mt-3 py-2 px-3"
+                className="mt-3 p-2"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
-                <div className="d-flex justify-content-start">
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        Order code{" "}
-                    </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        {orderDetail.orderCode}
-                    </span>
-                </div>
-                <hr className="my-1" />
-                <div className="d-flex" style={{ fontSize: "16px" }}>
-                    <img
-                        className="ms-3"
-                        src={orderDetail?.pictureUrl ?? defaultCoverImage}
-                        style={{ height: "80px", width: "80px", borderRadius: "5px" }}
-                        alt="Order detail"
-                    />
-                    <div className="ms-4">
-                        <p className="mb-2">{orderDetail.courseName}</p>
-                        <p className="mb-0">
-                            Class:{" "}
-                            <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
-                                {orderDetail.classCode}
-                            </span>
+                <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
+                    <Stack direction={"row"} spacing={2} justifyContent={"flex-start"} alignItems={"center"}
+                        sx={{ fontSize: "16px" }}>
+                        <div >
+                            <img
+                                src={orderDetail?.pictureUrl ?? defaultCoverImage}
+                                style={{ height: "80px", width: "80px", borderRadius: "5px" }}
+                                alt={orderDetail.courseName}
+                            />
+                        </div>
+                        <Stack direction={"column"} spacing={2} alignItems={"flex-start"} justifyContent={"space-between"} >
+                            <p className="mb-2"><span className="staff-order-detail-title">Course name:{" "}</span>{orderDetail.courseName}</p>
+                            <p className="mb-0">
+                                <span className="staff-order-detail-title">Class:{" "}</span>
+                                <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
+                                    {orderDetail.classCode}
+                                </span>
+                            </p>
+                        </Stack>
+                        {/* <div className="col-md-2">
+                        Quantity: <span>{orderDetail.quantityPurchased}</span>
+                    </div>
+                    <div className="col-md-2 orange fw-bold">
+                        {formatPrice(orderDetail.totalPrice)}
+                    </div> */}
+                    </Stack>
+                    <div >
+                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                            <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>
-                    <p style={{ marginLeft: "130px" }}>
-                        Quantity: <span>{orderDetail.quantityPurchased}</span>
-                    </p>
-                    <p
-                        className="orange"
-                        style={{ marginLeft: "130px", fontWeight: "bold" }}
-                    >
-                        {formatPrice(orderDetail.totalPrice)}
-                    </p>
-                </div>
+                </Stack>
+
             </div>
             <div
                 className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
@@ -914,10 +899,10 @@ const RefundedOrder = ({ orderDetail }) => {
             >
                 <div style={{ width: "60%" }}>
                     <p className="mb-1">
-                        Transaction code: <span>{orderDetail.transactionCode}</span>
+                        <span className="staff-order-detail-title">Transaction code:</span> <span>{orderDetail.transactionCode}</span>
                     </p>
                     <p className="mb-1">
-                        Order date:{" "}
+                        <span className="staff-order-detail-title">Order date:</span>
                         <span>
                             {" "}
                             {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}{" "}
@@ -996,24 +981,24 @@ const RefundedOrder = ({ orderDetail }) => {
                     </p>
                     <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span className="me-3">Course</span>
+                            <span className="me-3 staff-order-detail-title">Course</span>
                             <span>{orderDetail.courseName}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Price</span>
+                            <span className="staff-order-detail-title">Price</span>
                             <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Quantity</span>
+                            <span className="staff-order-detail-title">Quantity</span>
                             <span>{orderDetail.quantityPurchased}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Discount</span>
+                            <span className="staff-order-detail-title">Discount</span>
                             <span>0</span>
                         </div>
                         <hr />
                         <div className="d-flex justify-content-between align-items-center">
-                            <span>Total</span>
+                            <span className="staff-order-detail-title">Total</span>
                             <span className="orange" style={{ fontWeight: 'bold' }}>
                                 {formatPrice(orderDetail?.totalPrice)}
                             </span>
@@ -1147,11 +1132,8 @@ const RequestOrder = ({ orderDetail }) => {
                         class="fa-solid fa-user orange"
                     ></i>
                     <p className="mb-0 ms-3">
-                        Parent:{" "}
+                        <span className="staff-order-detail-title">Parent: </span>{orderDetail.parentName}
                     </p>
-                    <span className="mb-0 ms-3">
-                        {orderDetail.parentName}
-                    </span>
                 </div>
 
                 <Chip label="Request Refund" color="primary" sx={{ backgroundColor: "#F11616", fontSize: "14px" }} />
@@ -1160,44 +1142,42 @@ const RequestOrder = ({ orderDetail }) => {
             <ToastContainer />
 
             <div
-                className="mt-3 py-2 px-3"
+                className="mt-3 p-2"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
-                <div className="d-flex justify-content-start align-items-center">
-                    <p className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        Order code{" "}
-                    </p>
-                    <span className="mb-0 ms-3 mt-2" style={{ fontSize: "18px" }}>
-                        {orderDetail.orderCode}
-                    </span>
-                </div>
-                <hr className="my-1" />
-                <div className="d-flex" style={{ fontSize: "16px" }}>
-                    <img
-                        className="ms-3"
-                        src={orderDetail?.pictureUrl ?? defaultCoverImage}
-                        style={{ height: "80px", width: "80px", borderRadius: "5px" }}
-                        alt="Order detail"
-                    />
-                    <div className="ms-4">
-                        <p className="mb-2">{orderDetail.courseName}</p>
-                        <p className="mb-0">
-                            Class:{" "}
-                            <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
-                                {orderDetail.classCode}
-                            </span>
+                <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
+                    <Stack direction={"row"} spacing={2} justifyContent={"flex-start"} alignItems={"center"}
+                        sx={{ fontSize: "16px" }}>
+                        <div >
+                            <img
+                                src={orderDetail?.pictureUrl ?? defaultCoverImage}
+                                style={{ height: "80px", width: "80px", borderRadius: "5px" }}
+                                alt={orderDetail.courseName}
+                            />
+                        </div>
+                        <Stack direction={"column"} spacing={2} alignItems={"flex-start"} justifyContent={"space-between"} >
+                            <p className="mb-2"><span className="staff-order-detail-title">Course name:{" "}</span>{orderDetail.courseName}</p>
+                            <p className="mb-0">
+                                <span className="staff-order-detail-title">Class:{" "}</span>
+                                <span style={{ fontWeight: "bold", color: "#E53E5C" }}>
+                                    {orderDetail.classCode}
+                                </span>
+                            </p>
+                        </Stack>
+                        {/* <div className="col-md-2">
+                        Quantity: <span>{orderDetail.quantityPurchased}</span>
+                    </div>
+                    <div className="col-md-2 orange fw-bold">
+                        {formatPrice(orderDetail.totalPrice)}
+                    </div> */}
+                    </Stack>
+                    <div >
+                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                            <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>
-                    <p style={{ marginLeft: "130px" }}>
-                        Quantity: <span>{orderDetail.quantityPurchased}</span>
-                    </p>
-                    <p
-                        className="orange"
-                        style={{ marginLeft: "130px", fontWeight: "bold" }}
-                    >
-                        {formatPrice(orderDetail.totalPrice)}
-                    </p>
-                </div>
+                </Stack>
+
             </div>
             <div
                 className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
@@ -1205,10 +1185,10 @@ const RequestOrder = ({ orderDetail }) => {
             >
                 <div style={{ width: "60%" }}>
                     <p className="mb-1">
-                        Transaction code: <span>{orderDetail.transactionCode}</span>
+                        <span className="staff-order-detail-title">Transaction code:</span> <span>{orderDetail.transactionCode}</span>
                     </p>
                     <p className="mb-1">
-                        Order date:{" "}
+                        <span className="staff-order-detail-title">Order date:</span>
                         <span>
                             {" "}
                             {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}{" "}
@@ -1287,24 +1267,24 @@ const RequestOrder = ({ orderDetail }) => {
                     </p>
                     <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span className="me-3">Course</span>
+                            <span className="me-3 staff-order-detail-title">Course</span>
                             <span>{orderDetail.courseName}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Price</span>
+                            <span className="staff-order-detail-title">Price</span>
                             <span>{formatPrice(orderDetail.price)}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Quantity</span>
+                            <span className="staff-order-detail-title">Quantity</span>
                             <span>{orderDetail.quantityPurchased}</span>
                         </div>
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                            <span>Discount</span>
+                            <span className="staff-order-detail-title">Discount</span>
                             <span>0</span>
                         </div>
                         <hr />
                         <div className="d-flex justify-content-between align-items-center">
-                            <span>Total</span>
+                            <span className="staff-order-detail-title">Total</span>
                             <span className="orange" style={{ fontWeight: 'bold' }}>
                                 {formatPrice(orderDetail?.totalPrice)}
                             </span>
