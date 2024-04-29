@@ -1,11 +1,10 @@
 .staff-order-container {
   padding: 10px 40px;
   height: 90vh;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
   margin-right: 3rem;
   margin-left: 3rem;
   background-color: #fbede1;
+  overflow: auto;
 }
 
 .staff-order-container .table {
@@ -44,15 +43,20 @@ thead.staff-order-table-th {
   border: none;
 }
 
-.staff-order-content-table, .staff-order {
+.staff-order-content-table,
+.staff-order {
   height: 55vh !important;
   overflow: auto !important;
 }
 
 
 .staff-order-content-table table {
-    height: 100%;
+  height: 100%;
 }
 
-
-
+.staff-order-detail {
+  background-color: white;
+  height: 90vh;
+  overflow: auto ;
+  border-radius: 10px;
+}

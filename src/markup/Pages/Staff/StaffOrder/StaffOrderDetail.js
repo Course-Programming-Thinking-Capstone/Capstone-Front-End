@@ -17,6 +17,7 @@ import { notFoundPage } from "../../../../helper/constants/pageConstant";
 import defaultCoverImage from "../../../../images/course/default-cover-image.png";
 import { Button, Chip } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
+import { LoadingSpinner } from "../../../Layout/Components/LoadingSpinner";
 
 const SuccessOrder = ({ orderDetail }) => {
   const navigate = useNavigate();
@@ -25,25 +26,7 @@ const SuccessOrder = ({ orderDetail }) => {
     navigate(-1);
   };
   return (
-    <div
-      className="staff-order-detail mt-3 mx-5 py-3 px-5"
-      style={{ backgroundColor: "white", height: "690px", overflow: "scroll" }}
-    >
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="orange mb-1">Order detail</h2>
-        <div>
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            aria-label="Back"
-            startIcon={<KeyboardBackspace />}
-            onClick={handleBackClick}
-          >
-            Back
-          </Button>
-        </div>
-      </div>
+    <>
       <div
         className="d-flex justify-content-between align-items-center py-2 px-3"
         style={{
@@ -109,7 +92,7 @@ const SuccessOrder = ({ orderDetail }) => {
         </div>
       </div>
       <div
-        className="d-flex mt-3 py-2 px-3"
+        className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
         style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
       >
         <div style={{ width: "60%" }}>
@@ -120,13 +103,15 @@ const SuccessOrder = ({ orderDetail }) => {
             Order date:{" "}
             <span>
               {" "}
-              {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}
+              {formatDateV1(
+                convertUtcToLocalTimeV2(orderDetail.orderDate)
+              )}{" "}
             </span>
           </p>
         </div>
-        <div className="d-flex" style={{ width: "40%" }}>
+        <div className="d-flex justify-content-center align-items-center" style={{ width: "40%" }}>
           <img style={{ height: "55px", width: "55px" }} src={momo} alt="Momo" />
-          <p className="mt-3 ms-2">Pay with momo e-wallet</p>
+          <p className="ms-2 mb-0">Pay with momo e-wallet</p>
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-start mt-2">
@@ -142,14 +127,14 @@ const SuccessOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
                 className="d-flex justify-content-center align-items-center"
               >
                 <div
-                  className="text-center py-1 mt-3"
+                  className="text-center my-2"
                   style={{
                     width: "50%",
                     borderRadius: "8px",
@@ -192,29 +177,29 @@ const SuccessOrder = ({ orderDetail }) => {
               fontSize: "17px",
               borderRadius: "8px 8px 0px 0px",
             }}
-            className="mb-1 ps-3 py-1"
+            className="mb-0 ps-3 py-1"
           >
             Order information
           </p>
-          <div className="px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span>Course</span>
-              <span className="ms-3">{orderDetail.courseName}</span>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="me-3">Course</span>
+              <span>{orderDetail.courseName}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Price</span>
               <span>{formatPrice(orderDetail.price)}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Quantity</span>
               <span>{orderDetail.quantityPurchased}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Discount</span>
               <span>0</span>
             </div>
             <hr />
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-center">
               <span>Total</span>
               <span className="orange" style={{ fontWeight: 'bold' }}>
                 {formatPrice(orderDetail?.totalPrice)}
@@ -223,7 +208,8 @@ const SuccessOrder = ({ orderDetail }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
+
   );
 };
 
@@ -481,27 +467,10 @@ const PendingOrder = ({ orderDetail }) => {
     };
 
   return (
-    <div
-      className="staff-order-detail mt-3 mx-5 py-3 px-5"
-      style={{ backgroundColor: "white", height: "690px", overflow: "scroll" }}
-    >
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="orange mb-1">Order detail</h2>
-        <div>
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            aria-label="Back"
-            startIcon={<KeyboardBackspace />}
-            onClick={handleBackClick}
-          >
-            Back
-          </Button>
-        </div>
-      </div>
 
 
+
+    <>
       <div
         className="d-flex justify-content-between align-items-center py-2 px-3"
         style={{
@@ -544,7 +513,7 @@ const PendingOrder = ({ orderDetail }) => {
           <img
             className="ms-3"
             src={orderDetail?.pictureUrl ?? defaultCoverImage}
-            style={{ height: "80px", width: "80px" }}
+            style={{ height: "80px", width: "80px", borderRadius: "5px" }}
             alt="Order detail"
           />
           <div className="ms-4">
@@ -568,7 +537,7 @@ const PendingOrder = ({ orderDetail }) => {
         </div>
       </div>
       <div
-        className="d-flex mt-3 py-2 px-3"
+        className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
         style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
       >
         <div style={{ width: "60%" }}>
@@ -579,13 +548,15 @@ const PendingOrder = ({ orderDetail }) => {
             Order date:{" "}
             <span>
               {" "}
-              {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}
+              {formatDateV1(
+                convertUtcToLocalTimeV2(orderDetail.orderDate)
+              )}{" "}
             </span>
           </p>
         </div>
-        <div className="d-flex" style={{ width: "40%" }}>
+        <div className="d-flex justify-content-center align-items-center" style={{ width: "40%" }}>
           <img style={{ height: "55px", width: "55px" }} src={momo} alt="Momo" />
-          <p className="mt-3 ms-2">Pay with momo e-wallet</p>
+          <p className="ms-2 mb-0">Pay with momo e-wallet</p>
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-start">
@@ -601,14 +572,14 @@ const PendingOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
                 className="d-flex justify-content-center align-items-center pt-3 pb-2"
               >
                 <div
-                  className="text-center py-1"
+                  className="text-center my-2"
                   style={{
                     width: "50%",
                     borderRadius: "8px",
@@ -907,29 +878,29 @@ const PendingOrder = ({ orderDetail }) => {
               fontSize: "17px",
               borderRadius: "8px 8px 0px 0px",
             }}
-            className="mb-1 ps-3 py-1"
+            className="mb-0 ps-3 py-1"
           >
             Order information
           </p>
-          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span>Course</span>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="me-3">Course</span>
               <span>{orderDetail.courseName}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Price</span>
               <span>{formatPrice(orderDetail.price)}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Quantity</span>
               <span>{orderDetail.quantityPurchased}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Discount</span>
               <span>0</span>
             </div>
             <hr />
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-center">
               <span>Total</span>
               <span className="orange" style={{ fontWeight: 'bold' }}>
                 {formatPrice(orderDetail?.totalPrice)}
@@ -969,7 +940,7 @@ const PendingOrder = ({ orderDetail }) => {
           )}
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -981,25 +952,8 @@ const RefundedOrder = ({ orderDetail }) => {
   };
 
   return (
-    <div
-      className="staff-order-detail mt-3 mx-5 py-3 px-5"
-      style={{ backgroundColor: "white", height: "690px", overflow: "scroll" }}
-    >
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="orange mb-1">Order detail</h2>
-        <div>
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            aria-label="Back"
-            startIcon={<KeyboardBackspace />}
-            onClick={handleBackClick}
-          >
-            Back
-          </Button>
-        </div>
-      </div>
+
+    <>
 
       <div
         className="d-flex justify-content-between align-items-center py-2 px-3"
@@ -1043,7 +997,7 @@ const RefundedOrder = ({ orderDetail }) => {
           <img
             className="ms-3"
             src={orderDetail?.pictureUrl ?? defaultCoverImage}
-            style={{ height: "80px", width: "80px" }}
+            style={{ height: "80px", width: "80px", borderRadius: "5px" }}
             alt="Order detail"
           />
           <div className="ms-4">
@@ -1067,7 +1021,7 @@ const RefundedOrder = ({ orderDetail }) => {
         </div>
       </div>
       <div
-        className="d-flex mt-3 py-2 px-3"
+        className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
         style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
       >
         <div style={{ width: "60%" }}>
@@ -1077,13 +1031,16 @@ const RefundedOrder = ({ orderDetail }) => {
           <p className="mb-1">
             Order date:{" "}
             <span>
-              {formatDateV1(convertUtcToLocalTimeV2(orderDetail.orderDate))}
+              {" "}
+              {formatDateV1(
+                convertUtcToLocalTimeV2(orderDetail.orderDate)
+              )}{" "}
             </span>
           </p>
         </div>
-        <div className="d-flex" style={{ width: "40%" }}>
+        <div className="d-flex justify-content-center align-items-center" style={{ width: "40%" }}>
           <img style={{ height: "55px", width: "55px" }} src={momo} alt="Momo" />
-          <p className="mt-3 ms-2">Pay with momo e-wallet</p>
+          <p className="ms-2 mb-0">Pay with momo e-wallet</p>
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-start mt-2">
@@ -1099,14 +1056,14 @@ const RefundedOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
                 className="d-flex justify-content-center align-items-center"
               >
                 <div
-                  className="text-center py-1 mt-3"
+                  className="text-center my-2"
                   style={{
                     width: "50%",
                     borderRadius: "8px",
@@ -1150,29 +1107,29 @@ const RefundedOrder = ({ orderDetail }) => {
               fontSize: "17px",
               borderRadius: "8px 8px 0px 0px",
             }}
-            className="mb-1 ps-3 py-1"
+            className="mb-0 ps-3 py-1"
           >
             Order information
           </p>
-          <div className="px-4" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span>Course</span>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="me-3">Course</span>
               <span>{orderDetail.courseName}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Price</span>
               <span>{formatPrice(orderDetail.price)}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Quantity</span>
               <span>{orderDetail.quantityPurchased}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Discount</span>
               <span>0</span>
             </div>
             <hr />
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-center">
               <span>Total</span>
               <span className="orange" style={{ fontWeight: 'bold' }}>
                 {formatPrice(orderDetail?.totalPrice)}
@@ -1181,7 +1138,8 @@ const RefundedOrder = ({ orderDetail }) => {
           </div>
         </div>
       </div>
-    </div>
+
+    </>
   );
 };
 
@@ -1256,26 +1214,8 @@ const RequestOrder = ({ orderDetail }) => {
   };
 
   return (
-    <div
-      className="staff-order-detail mt-3 mx-5 py-3 px-5"
-      style={{ backgroundColor: "white", height: "690px", overflow: "scroll" }}
-    >
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="orange mb-1">Order detail</h2>
-        <div>
+    <>
 
-          <Button
-            variant="contained"
-            color="warning"
-            size="small"
-            aria-label="Back"
-            startIcon={<KeyboardBackspace />}
-            onClick={handleBackClick}
-          >
-            Back
-          </Button>
-        </div>
-      </div>
 
       <div
         className="d-flex justify-content-between align-items-center py-2 px-3"
@@ -1319,7 +1259,7 @@ const RequestOrder = ({ orderDetail }) => {
           <img
             className="ms-3"
             src={orderDetail?.pictureUrl ?? defaultCoverImage}
-            style={{ height: "80px", width: "80px" }}
+            style={{ height: "80px", width: "80px", borderRadius: "5px" }}
             alt="Order detail"
           />
           <div className="ms-4">
@@ -1343,7 +1283,7 @@ const RequestOrder = ({ orderDetail }) => {
         </div>
       </div>
       <div
-        className="d-flex mt-3 py-2 px-3"
+        className="d-flex justify-content-between align-items-center mt-3 py-2 px-3"
         style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
       >
         <div style={{ width: "60%" }}>
@@ -1360,9 +1300,9 @@ const RequestOrder = ({ orderDetail }) => {
             </span>
           </p>
         </div>
-        <div className="d-flex" style={{ width: "40%" }}>
+        <div className="d-flex justify-content-center align-items-center" style={{ width: "40%" }}>
           <img style={{ height: "55px", width: "55px" }} src={momo} alt="Momo" />
-          <p className="mt-3 ms-2">Pay with momo e-wallet</p>
+          <p className="ms-2 mb-0">Pay with momo e-wallet</p>
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-start mt-2">
@@ -1378,14 +1318,14 @@ const RequestOrder = ({ orderDetail }) => {
           >
             Number of students selected: <span></span>
           </p>
-          <div className=" px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
             {orderDetail.students.map((student) => (
               <div
                 key={student.studentId}
                 className="d-flex justify-content-center align-items-center"
               >
                 <div
-                  className="text-center py-1 mt-3"
+                  className="text-center my-2"
                   style={{
                     width: "50%",
                     borderRadius: "8px",
@@ -1429,29 +1369,29 @@ const RequestOrder = ({ orderDetail }) => {
               fontSize: "17px",
               borderRadius: "8px 8px 0px 0px",
             }}
-            className="mb-1 ps-3 py-1"
+            className="mb-0 ps-3 py-1"
           >
             Order information
           </p>
-          <div className="px-4 pb-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span>Course</span>
+          <div className="px-4 py-2" style={{ backgroundColor: '#eceace', borderRadius: '0px 0px 8px 8px' }}>
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="me-3">Course</span>
               <span>{orderDetail.courseName}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Price</span>
               <span>{formatPrice(orderDetail.price)}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Quantity</span>
               <span>{orderDetail.quantityPurchased}</span>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-start mb-2">
               <span>Discount</span>
               <span>0</span>
             </div>
             <hr />
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-center">
               <span>Total</span>
               <span className="orange" style={{ fontWeight: 'bold' }}>
                 {formatPrice(orderDetail?.totalPrice)}
@@ -1560,7 +1500,8 @@ const RequestOrder = ({ orderDetail }) => {
           </div>
         </Modal.Body>
       </Modal>
-    </div>
+
+      </>
   );
 };
 
@@ -1574,7 +1515,7 @@ export default function StaffOrderDetail() {
   }
 
   const [orderDetail, setOrderDetail] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -1598,33 +1539,51 @@ export default function StaffOrderDetail() {
     fetchOrderDetail();
   }, [orderId]);
 
-  if (loading) return;
-  <div class="d-flex justify-content-center align-items-center">
-    <div
-      class="spinner-border text-warning"
-      role="status"
-      style={{ width: "100px", height: "100px" }}
-    >
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!orderDetail) return <div>No order details found</div>;
+  // if (error) return <div>Error: {error}</div>;
+  // if (!orderDetail) return <div>No order details found</div>;
 
   return (
+
     <div>
-      {orderDetail.status === "Success" && (
-        <SuccessOrder orderDetail={orderDetail} />
-      )}
-      {orderDetail.status === "Pending" && (
-        <PendingOrder orderDetail={orderDetail} />
-      )}
-      {orderDetail.status === "Refunded" && (
-        <RefundedOrder orderDetail={orderDetail} />
-      )}
-      {orderDetail.status === "RequestRefund" && (
-        <RequestOrder orderDetail={orderDetail} />
-      )}
+      <div
+        className="staff-order-detail py-3 px-5 mx-3"
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="orange mb-1">Order detail</h2>
+          <div>
+            <Button
+              variant="contained"
+              color="warning"
+              size="small"
+              aria-label="Back"
+              startIcon={<KeyboardBackspace />}
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
+          </div>
+        </div>
+
+        {(loading && orderDetail === null) ? (<LoadingSpinner />) : (
+          <>
+            {
+              orderDetail.status === "Success" && (
+                <SuccessOrder orderDetail={orderDetail} />
+              )
+            }
+            {orderDetail.status === "Pending" && (
+              <PendingOrder orderDetail={orderDetail} />
+            )}
+            {orderDetail.status === "Refunded" && (
+              <RefundedOrder orderDetail={orderDetail} />
+            )}
+            {orderDetail.status === "RequestRefund" && (
+              <RequestOrder orderDetail={orderDetail} />
+            )}
+          </>
+        )
+        }
+      </div>
     </div>
   );
 }
