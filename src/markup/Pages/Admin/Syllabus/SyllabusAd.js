@@ -18,7 +18,6 @@ import {
 import {
   SortableContext,
   arrayMove,
-  rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -30,7 +29,6 @@ import {
   convertUtcToLocalTime,
   formatDateV1,
 } from "../../../../helper/utils/DateUtil";
-import { CustomPagination } from "../../../Layout/Components/Pagination";
 import {
   createSyllabus,
   filterSyllabus,
@@ -48,21 +46,26 @@ import {
   Stack,
 } from "@mui/material";
 import {
-  AddCircleOutline,
   ArrowBack,
   ArrowForward,
   CalendarMonth,
   CreateNewFolder,
-  KeyboardBackspace,
 } from "@mui/icons-material";
 import ButtonMui from "@mui/material/Button";
 import { getAvailableCourseGame } from "../../../../helper/apis/game/game";
+import { useDispatch } from "react-redux";
+import { changeAdminActiveMenu } from "../../../../store/slices/menu/menuSlice";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  //dispatch
+  const dispatch = useDispatch();
+
+  dispatch(changeAdminActiveMenu({adminActiveMenu: "SyllabusAd"}));
 
   useEffect(() => {
     const filtered = options.filter((option) =>
