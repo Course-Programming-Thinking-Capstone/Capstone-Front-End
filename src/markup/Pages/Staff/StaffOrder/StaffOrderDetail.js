@@ -38,7 +38,7 @@ const SuccessOrder = ({ orderDetail }) => {
             <Chip label="Success" color="primary" sx={{ backgroundColor: "#1A9CB7", fontSize: "14px" }} />
         </div>
         <div
-            className="mt-3 p-2"
+            className="mt-3 p-2 pe-4"
             style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
         >
             <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
@@ -68,7 +68,7 @@ const SuccessOrder = ({ orderDetail }) => {
                     </div> */}
                 </Stack>
                 <div >
-                    <p className="mb-0" style={{ fontSize: "18px" }}>
+                    <p className="mb-0" style={{ fontSize: "16px" }}>
                         <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                     </p>
                 </div>
@@ -442,7 +442,7 @@ const PendingOrder = ({ orderDetail }) => {
             </div>
 
             <div
-                className="mt-3 p-2"
+                className="mt-3 p-2 pe-4"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
                 <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
@@ -472,7 +472,7 @@ const PendingOrder = ({ orderDetail }) => {
                     </div> */}
                     </Stack>
                     <div >
-                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                        <p className="mb-0" style={{ fontSize: "16px" }}>
                             <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>
@@ -856,7 +856,7 @@ const RefundedOrder = ({ orderDetail }) => {
             </div>
 
             <div
-                className="mt-3 p-2"
+                className="mt-3 p-2 pe-4"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
                 <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
@@ -886,7 +886,7 @@ const RefundedOrder = ({ orderDetail }) => {
                     </div> */}
                     </Stack>
                     <div >
-                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                        <p className="mb-0" style={{ fontSize: "16px" }}>
                             <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>
@@ -1131,7 +1131,7 @@ const RequestOrder = ({ orderDetail }) => {
             <ToastContainer />
 
             <div
-                className="mt-3 p-2"
+                className="mt-3 p-2 pe-4"
                 style={{ backgroundColor: "#eceace", borderRadius: "8px" }}
             >
                 <Stack direction={"row"} spacing={2} justifyContent={"space-between"} alignItems={"flex-start"}>
@@ -1160,8 +1160,8 @@ const RequestOrder = ({ orderDetail }) => {
                         {formatPrice(orderDetail.totalPrice)}
                     </div> */}
                     </Stack>
-                    <div >
-                        <p className="mb-0" style={{ fontSize: "18px" }}>
+                    <div>
+                        <p className="mb-0" style={{ fontSize: "16px" }}>
                             <span className="staff-order-detail-title">Order code:</span>  {orderDetail.orderCode}
                         </p>
                     </div>

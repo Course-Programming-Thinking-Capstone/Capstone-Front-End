@@ -18,6 +18,7 @@ import { filterTeacherCourse } from "../../../../../src/helper/apis/course/cours
 import { Spinner, ToastContainer } from "react-bootstrap";
 import { toast } from "react-toastify";
 import instance from "../../../../helper/apis/baseApi/baseApi";
+import "./StaffCourse.css";
 
 export default function StaffCourse() {
   const notifyApiFail = (message) =>
@@ -143,7 +144,7 @@ export default function StaffCourse() {
   }, [page, courseStatus]);
 
   return (
-    <div className="teacher-course teacher-course-container mx-5">
+    <div className="teacher-course staff-course-container mx-5 mx-0">
       <div className="header">
         <div className="d-flex justify-content-start mb-3">
           <div>
