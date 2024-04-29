@@ -91,7 +91,7 @@ export default function Admin() {
             </div>
             <div
               className={getItemClass("Order")}
-            // onClick={() => handleMenuItemClick("Order")}
+            onClick={() => handleMenuItemClick("Order")}
             >
               <i
                 className="fa-solid fa-cart-shopping"
