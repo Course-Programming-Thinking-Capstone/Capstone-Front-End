@@ -50,14 +50,14 @@ export default function Admin() {
             >
               <i className="fa-solid fa-bell"></i>
               <span>Notification</span>
-            </div>
+            </div> */}
             <div
               className={getItemClass("Dashboard")}
               onClick={() => handleMenuItemClick("Dashboard")}
             >
               <i className="fa-solid fa-chart-line"></i>
               <span>Dashboard</span>
-            </div> */}
+            </div>
             <div
               className={getItemClass("Course")}
               onClick={() => handleMenuItemClick("Course")}

@@ -63,6 +63,7 @@ import StaffCourse from './Pages/Staff/StaffCourse/StaffCourse';
 import UserStudent from './Pages/Admin/User/UserStudent';
 import UserStaff from './Pages/Admin/User/UserStaff';
 import UserTeacher from './Pages/Admin/User/UserTeacher';
+import Dashboard from './Pages/Admin/Dashboard/Dashboard';
 
 
 export default function Markup() {
@@ -148,6 +149,8 @@ export default function Markup() {
 					{/* routed */}
 					<Route path="/admin" element={<Admin />}>
 						<Route path="user" element={<User />} />
+						<Route path="dashboard" element={<Dashboard />} />
+
 						<Route path="course" element={<AdminModerating />} />
 
 						<Route path="parent" element={<UserParents />} />

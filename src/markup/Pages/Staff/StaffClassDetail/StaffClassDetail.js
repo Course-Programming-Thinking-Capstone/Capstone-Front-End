@@ -1743,6 +1743,7 @@ export default function StaffClassDetail() {
 
       console.log("data: ", data);
       setClassData(data.classes);
+      console.log(classData);
       setTotalPages(data.totalPage);
     } catch (error) {
       console.error("Failed to fetch class data", error);
@@ -1841,10 +1842,10 @@ export default function StaffClassDetail() {
                         <p>Class Code: {classItem.classCode}</p>
                         <div className="d-flex justify-content-start">
                           <p className="mb-1">
-                            Start date: {formatDate(classItem.dayStart)}
+                            Start date: {formatDate(classItem.openClass)}
                           </p>
                           <p className="mb-1 ms-3">
-                            End date: {formatDate(classItem.dayEnd)}
+                            End date: {formatDate(classItem.closeClass)}
                           </p>
                         </div>
                       </div>
