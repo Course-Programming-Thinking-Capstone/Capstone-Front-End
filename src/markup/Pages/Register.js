@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import background from "./../../images/background/loginBackground.webp";
 import instance from "../../helper/apis/baseApi/baseApi";
 import { Spinner } from "react-bootstrap";
+import { register } from "../../helper/apis/auth/auth";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -45,21 +46,45 @@ export default function Register() {
       theme: "colored",
     });
 
+  const checkPasswordFormat = (input) => {
+    var regex = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
+    return regex.test(input);
+  }
+
   const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     if (!isFormValid()) return;
     try {
-      const response = await registerUser(
-        username,
-        password,
-        email,
-        reEnteredPassword
-      );
-      notifyRegisterSuccess();
+      setIsLoading(true);
+      // const response = await registerUser(
+      //   username,
+      //   password,
+      //   email,
+      //   reEnteredPassword
+      // );
+
+      // const response = await instance.post(
+      //   `api/v1/authentication/register/email`,
+      //   { email, fullName: username, password, rePassword: reEnteredPassword }
+      // );
+
+      const data = await register({ email: email, fullName: username, password: password, rePassword: reEnteredPassword });
+
+      navigate("/verify");
+      return data;
     } catch (error) {
-      notifyRegisterFail(
-        error.message || "Registration failed. Please try again."
-      );
+      let errorMessage;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.message || "Register fail.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Register fail.";
+      }
+
+      notifyRegisterFail(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,20 +103,25 @@ export default function Register() {
       setUsernameError("Username must be at least 3 characters long.");
       isValid = false;
     }
-    if (password.length < 4) {
-      setPasswordError("Password must be at least 4 characters long.");
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      isValid = false;
+    } else if (!checkPasswordFormat(password)) {
+      setPasswordError("Password must contain both letters and numbers.");
       isValid = false;
     }
     if (password !== reEnteredPassword) {
       setRePasswordError("Passwords do not match.");
       isValid = false;
     }
+
+
+
     return isValid;
   };
 
   const registerUser = async (username, password, email, rePassword) => {
     try {
-      setIsLoading(true);
       const response = await instance.post(
         `api/v1/authentication/register/email`,
         { email, fullName: username, password, rePassword }
@@ -104,14 +134,12 @@ export default function Register() {
       let errorMessage = null;
       if (error.response) {
         console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        errorMessage = error.response?.data?.message || "Login fail.";
+        errorMessage = error.response?.data?.message || "Register fail.";
       } else {
         console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
-        errorMessage = error.message || "Login fail.";
+        errorMessage = error.message || "Register fail.";
       }
       notifyRegisterFail(errorMessage);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -119,14 +147,14 @@ export default function Register() {
     <div
       style={{
         display: 'flex', // Added this
-      flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
-      justifyContent: 'center', // This will center the content vertically
-      alignItems: 'center', // This will center the content horizontally
-      backgroundImage: `url(${background})`,
-      minHeight: "100vh",
-      backgroundPosition: "center center",
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
+        flexDirection: 'column', // Added this, use 'row' if you want horizontal layout
+        justifyContent: 'center', // This will center the content vertically
+        alignItems: 'center', // This will center the content horizontally
+        backgroundImage: `url(${background})`,
+        minHeight: "100vh",
+        backgroundPosition: "center center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <div className="register-container col-lg-4 col-md-8 col-sm-12">
