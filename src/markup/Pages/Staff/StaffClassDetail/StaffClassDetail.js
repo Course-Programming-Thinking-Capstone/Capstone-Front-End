@@ -150,7 +150,8 @@ export default function StaffClassDetail() {
           theme: "colored",
         });
       } catch (error) {
-        toast.error("Class code has been existed", {
+        const backendMessage = error.response?.data?.message || "Class creation failed. Please try again.";
+        toast.error(backendMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -466,7 +467,7 @@ export default function StaffClassDetail() {
               </div>
             </div>
           </div>
-          <div class="accordion-item">
+          <div class="accordion-item" style={{ overflow: 'scroll' }}>
             <h2 class="accordion-header" id="headingTwo">
               <button
                 className="accordion-button collapsed"
@@ -486,6 +487,7 @@ export default function StaffClassDetail() {
               aria-labelledby="headingTwo"
               data-bs-parent="#accordionExample"
               ref={secondAccordionButtonRef}
+              
             >
               <div class="accordion-body">
                 <div className="px-5 pt-2">

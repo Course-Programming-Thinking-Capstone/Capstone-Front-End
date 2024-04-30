@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import "./Dashboard.css";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 Chart.register(ArcElement, Tooltip, Legend);
 
@@ -61,7 +62,8 @@ export default function Dashboard() {
     const [coursesData, setCoursesData] = useState([]);
     const [accountsData, setAccountsData] = useState([]);
     const [newUsers, setNewUsers] = useState([]);
-    const [monthlyEarning, setMonthlyEarning] = useState({});
+    const [monthlyEarning, setMonthlyEarning] = useState([]);
+    const [incomeByMonth, setIncomeByMonth] = useState([]);
 
     useEffect(() => {
         const currentMonth = "January";
@@ -72,11 +74,14 @@ export default function Dashboard() {
                     `api/v1/dashboard?month=${month}`
                 );
                 const data = response.data;
+                console.log('data: ', data);
+
                 setOrdersData(data.orders);
                 setCoursesData(data.courses);
                 setAccountsData(data.account);
                 setNewUsers(data.newUserThisMonth);
                 setMonthlyEarning(data.monthlyEarning);
+                setIncomeByMonth(data.incomeByMonth);
 
             } catch (error) {
 
@@ -124,27 +129,27 @@ export default function Dashboard() {
     };
 
     const getTotalAccounts = (accounts) => {
-        const allAccount = accounts.find(account => account.status === "AllAccount");
+        const allAccount = accounts.find(account => account.status === "All Accounts");
         return allAccount ? allAccount.total : 0;
     };
 
     const renderMonthlyEarnings = (earnings) => {
-        // // Check if earnings have at least one entry
-        // if (earnings.length === 0) return null;
+        // Ensure earnings is an array and has entries
+        if (!Array.isArray(earnings) || earnings.length === 0) return null;
 
-        // // Access the data from the first entry of the earnings array
-        // const thisMonth = earnings.find(e => e.status === "ThisMonth");
-        // const lastMonth = earnings.find(e => e.status === "LastMonth");
-        // const increase = earnings.find(e => e.status === "Increase");
+        const thisMonth = earnings.find(e => e.status === "ThisMonth");
+        const lastMonth = earnings.find(e => e.status === "LastMonth");
+        const increase = earnings.find(e => e.status === "Increase");
 
         return (
             <div>
-                {/* <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total}</span></p> */}
-                {/* <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total}</span></p> */}
-                {/* <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total}%</span></p> */}
+                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total}</span></p>
+                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total}</span></p>
+                <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total}%</span></p>
             </div>
         );
     };
+
 
     const totalAccounts = getTotalAccounts(accountsData);
 
@@ -210,13 +215,22 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className='row'>
-                    <div className='col-lg-6 col-md-6 col-sm-12'>
+                    <div className='col-lg-3 col-md-12 col-sm-12'>
                         <h5>MONTHLY EARNING</h5>
                         <div>
                             {renderMonthlyEarnings(monthlyEarning)}
                         </div>
                     </div>
-                    <div className='col-lg-6 col-md-6 col-sm-12'>
+                    <div className='col-lg-9 col-md-12 col-sm-12'>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={incomeByMonth.map(item => ({ ...item, total: Number(item.total) }))} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                                <Line type="monotone" dataKey="total" stroke="#8884d8" />
+                                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                                <XAxis dataKey="status" />
+                                <YAxis tickFormatter={value => new Intl.NumberFormat('en', { notation: 'compact' }).format(value)} />
+                                <Tooltip formatter={value => new Intl.NumberFormat('en').format(value)} />
+                            </LineChart>
+                        </ResponsiveContainer>
 
                     </div>
                 </div>
