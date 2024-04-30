@@ -128,19 +128,19 @@ export default function Dashboard() {
     };
 
     const renderMonthlyEarnings = (earnings) => {
-        // Check if earnings have at least one entry
-        if (earnings.length === 0) return null;
+        // // Check if earnings have at least one entry
+        // if (earnings.length === 0) return null;
 
-        // Access the data from the first entry of the earnings array
-        const thisMonth = earnings.find(e => e.status === "ThisMonth");
-        const lastMonth = earnings.find(e => e.status === "LastMonth");
-        const increase = earnings.find(e => e.status === "Increase");
+        // // Access the data from the first entry of the earnings array
+        // const thisMonth = earnings.find(e => e.status === "ThisMonth");
+        // const lastMonth = earnings.find(e => e.status === "LastMonth");
+        // const increase = earnings.find(e => e.status === "Increase");
 
         return (
             <div>
-                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total}</span></p>
-                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total}</span></p>
-                <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total}%</span></p>
+                {/* <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total}</span></p> */}
+                {/* <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total}</span></p> */}
+                {/* <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total}%</span></p> */}
             </div>
         );
     };

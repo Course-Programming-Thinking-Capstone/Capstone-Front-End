@@ -675,8 +675,8 @@ export default function StaffModerating() {
     }
 
     return (
-        <div className='mx-5' style={{ backgroundColor: 'white', borderRadius: 30, minHeight: '650px' }}>
-            <div className='staff-moderating' >
+        <div className='mx-5' style={{ backgroundColor: 'white', borderRadius: "15px", height: "90vh" }}>
+            <div className='staff-moderating my-0' >
                 <div className="header">
                     <div className="d-flex justify-content-start">
                         <div>
@@ -720,23 +720,24 @@ export default function StaffModerating() {
                         </div>
                     </div>
                 )))}
-            </div>
-            <div className="d-flex justify-content-center">
-                <ReactPaginate
-                    previousLabel={'previous'}
-                    nextLabel={'next'}
-                    breakLabel={'...'}
-                    pageCount={totalPages}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination'}
-                    subContainerClassName={'pages pagination'}
-                    activeClassName={'active'}
-                    forcePage={currentPage}
-                />
+                <div className="d-flex justify-content-center">
+                    <ReactPaginate
+                        previousLabel={'previous'}
+                        nextLabel={'next'}
+                        breakLabel={'...'}
+                        pageCount={totalPages}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination'}
+                        subContainerClassName={'pages pagination'}
+                        activeClassName={'active'}
+                        forcePage={currentPage}
+                    />
 
+                </div>
             </div>
+
         </div>
     );
 }

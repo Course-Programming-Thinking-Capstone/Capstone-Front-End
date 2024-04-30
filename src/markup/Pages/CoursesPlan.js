@@ -94,7 +94,7 @@ export default function CoursesPlan() {
 
     const CollapsibleQuestion = ({ id, title, lessons, quizzes, isBlock }) => {
         const [isOpen, setIsOpen] = useState(false);
-        console.log("isLock:", isBlock);
+
         const toggleCollapse = (e) => {
             e.preventDefault();
             setIsOpen(!isOpen);
