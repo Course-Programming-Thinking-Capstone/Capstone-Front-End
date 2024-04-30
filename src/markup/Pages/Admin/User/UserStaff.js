@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
+import arrowLeft from "../../../../images/icon/arrow-left.png";
 
 export default function UserStaff() {
     const [parents, setParents] = useState([]);
@@ -104,7 +105,7 @@ export default function UserStaff() {
     };
 
     return (
-        <div className='admin-user my-5 mx-5 pt-3 px-5' style={{ backgroundColor: 'white', height: '550px' }}>
+        <div className='admin-user-container admin-user'>
             <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
             <div className="header">
                 <div className="d-flex justify-content-between">
@@ -116,8 +117,14 @@ export default function UserStaff() {
                         <i className="fa-solid fa-user-group"></i>
                     </div>
                     <div>
-                        <button onClick={goBack} style={{ backgroundColor: '#7F7C7C', borderRadius: '8px', border: 'none', color: 'white' }}>
-                            Back
+                        <button
+                            onClick={goBack}
+                            className="admin-back"
+                        >
+                            <div className="d-flex jutify-content-between align-items-center">
+                                <img src={arrowLeft} alt="Arrow Left Icon" />
+                                <p className="mb-0 mx-2">Back</p>
+                            </div>
                         </button>
                     </div>
                 </div>

@@ -664,13 +664,13 @@ export default function StaffClassDetail() {
     const [selectedSlotId, setSelectedSlotId] = useState(null);
 
     const renderRow = (days) => (
-      <div className="d-flex justify-content-start">
+      <div className="d-flex justify-content-around">
         {days.map(([day, isChecked]) => (
           <div
             key={day}
             className="d-flex"
             onClick={() => toggleDay(day)}
-            style={{ width: "180px" }}
+            style={{ width: "200px" }}
           >
             <i
               style={{ fontSize: "25px", color: "#1A9CB7", cursor: "pointer" }}

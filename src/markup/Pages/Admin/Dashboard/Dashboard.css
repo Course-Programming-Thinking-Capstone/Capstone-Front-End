@@ -1,0 +1,7 @@
+.admin-dashboard-container {
+    border-radius: 15px;
+    height: 90vh;
+    overflow: auto;
+    margin: 5vh 3rem;
+    background-color: white;
+}

@@ -516,7 +516,7 @@ export default function SyllabusAd() {
           <CircularProgress color="inherit" />
         </Backdrop>
         <div className="syllabus-ad-admin-syllabus-container admin-syllabus">
-          <div className="create-syllabus my-0">
+          <div className="create-syllabusad create-syllabus">
             <div className="header">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex justify-content-start align-items-center">

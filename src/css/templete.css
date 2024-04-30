@@ -1662,7 +1662,7 @@ textarea.form-control {
   margin-right: 3rem;
   padding: 20px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 15px;
   height: 100vh;
   padding-top: 5vh;
   padding-bottom: 5vh;
@@ -1677,7 +1677,7 @@ textarea.form-control {
   margin-right: 3rem;
   padding: 20px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 .create-syllabus {

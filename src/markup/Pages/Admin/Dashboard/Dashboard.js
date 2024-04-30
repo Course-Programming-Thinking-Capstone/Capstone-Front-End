@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import "./Dashboard.css";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 Chart.register(ArcElement, Tooltip, Legend);
@@ -154,7 +155,7 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className='admin-dashboard my-5 mx-5 px-5 py-3' style={{ height: '85vh', backgroundColor: 'white', overflow: 'scroll' }}>
+            <div className='admin-dashboard admin-dashboard-container px-5 py-3' >
                 <div className="header">
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex justify-content-start align-items-center">

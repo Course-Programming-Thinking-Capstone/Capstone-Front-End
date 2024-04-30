@@ -123,3 +123,12 @@ textarea.syllabus-ad-create-syllabus-input {
 .syllabus-ad-create-syllabus-button:hover {
   background-color: #f14542;
 }
+
+.create-syllabusad {
+  height: 90vh;
+  overflow: auto;
+  border-radius: 15px;
+  background-color: #fbede1;
+  padding: 2rem;
+  margin: 0px;
+}
