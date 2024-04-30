@@ -23,3 +23,12 @@ input.game-level-detail {
 .game-level-detail-menu-container-button {
   width: 30%;
 }
+
+.game-setting.game-setting-container {
+  padding-left: 3rem ;
+  padding-right: 3rem;
+}
+
+.game-setting-content {
+  border-radius: 15px !important;
+}

@@ -12,7 +12,7 @@ import {
     Tabs,
     Tooltip,
 } from "@mui/material";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Height } from "@mui/icons-material";
 
 export default function StaffNotification({ setUnreadCount }) {
     const [notifications, setNotifications] = useState([]);
@@ -88,7 +88,7 @@ export default function StaffNotification({ setUnreadCount }) {
     };
 
     return (
-        <div className="staff-notification m-5" style={{ backgroundColor: 'white' }}>
+        <div className="staff-notification mx-5 my-0" style={{ backgroundColor: 'white', borderRadius: "15px", height: "90vh", overflow: "auto" }}>
             <div className="header">
                 <div className="d-flex justify-content-between">
                     <div className="d-flex justify-content-start">

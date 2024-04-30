@@ -60,3 +60,7 @@ thead.staff-order-table-th {
   overflow: auto ;
   border-radius: 10px;
 }
+
+.staff-order-detail-title {
+  color: #ff8a00;
+}

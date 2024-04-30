@@ -91,18 +91,18 @@ export default function TeacherAccount({ child }) {
                 />
               </div>
               <h5 className="text-center mt-2">{user.fullName}</h5>
-              <div className="info d-flex justify-content-center">
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <p className="mb text-center">10</p>
-                    <span>Student</span>
-                  </div>
-                  <div>
-                    <p className="mb text-center">8</p>
-                    <span>Course</span>
-                  </div>
-                </div>
-              </div>
+              {/*<div className="info d-flex justify-content-center">*/}
+              {/*  <div className="d-flex justify-content-between">*/}
+              {/*    <div>*/}
+              {/*      <p className="mb text-center">10</p>*/}
+              {/*      <span>Student</span>*/}
+              {/*    </div>*/}
+              {/*    <div>*/}
+              {/*      <p className="mb text-center">8</p>*/}
+              {/*      <span>Course</span>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
               <div className="menu-content">
                 <Link
                   to="/teacher/notification"
