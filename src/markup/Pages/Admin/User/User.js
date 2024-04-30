@@ -1,5 +1,6 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import "./User.css";
 
 export default function User() {
     const navigate = useNavigate(); // Invoke useNavigate() to get the navigate function
@@ -19,7 +20,7 @@ export default function User() {
     };
 
     return (
-        <div className='admin-user my-5 mx-5 pt-3 px-5' style={{ backgroundColor: 'white', height: '650px' }}>
+        <div className='admin-user-container admin-user'>
             <div className="header">
                 <div className="d-flex justify-content-start">
                     <div>

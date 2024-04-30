@@ -13,6 +13,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Pagination, PaginationItem, Stack } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import "./AdminModerating.css";
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -604,7 +605,7 @@ export default function AdminModerating() {
     }
 
     return (
-        <div className='mx-5' style={{ backgroundColor: 'white', borderRadius: 30, minHeight: '650px' }}>
+        <div className='admin-moderating-container'>
             <div className='staff-moderating' >
                 <div className="header">
                     <div className="d-flex justify-content-start">
@@ -779,8 +780,6 @@ export default function AdminModerating() {
                 )}
 
             </div>
-
-
         </div >
     );
 }
