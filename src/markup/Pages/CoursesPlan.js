@@ -6,14 +6,14 @@ import Header from './../Layout/Header';
 import PageTitle from './../Layout/PageTitle';
 import { useNavigate } from 'react-router-dom';
 import instance from '../../helper/apis/baseApi/baseApi';
-
+import HttpsIcon from '@mui/icons-material/Https';
 export default function CoursesPlan() {
     const { courseId } = useParams();
     console.log("Course ID:", courseId);
     const [courseDetails, setCourseDetails] = useState(null);
     const [linkGame, setLinkGame] = useState(null);
-
     const [isLoading, setIsLoading] = useState(null);
+    const [lock, setLock] = useState([]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -33,11 +33,8 @@ export default function CoursesPlan() {
                 setIsLoading(false);
             }
         };
-
         fetchLinkGame();
     }, []);
-
-
     useEffect(() => {
         setIsLoading(true);
         const fetchCourseDetails = async () => {
@@ -48,9 +45,11 @@ export default function CoursesPlan() {
             try {
                 const response = await instance.get(`api/v1/courses/study/${courseId}`);
                 const data = response.data;
-
-                console.log('Course detail data:', data); // Check the fetched data
+                console.log('Course detail data:', data);
                 setCourseDetails(data);
+                const sectionIds = data.sections.map(section => section.id);
+                console.log('Section IDs:', sectionIds);
+                fetchCheckStudy(sectionIds);
             } catch (error) {
                 console.error('Error fetching course details:', error.message);
             } finally {
@@ -60,7 +59,22 @@ export default function CoursesPlan() {
 
         fetchCourseDetails();
     }, [courseId]);
-
+    const fetchCheckStudy = async (sectionIds) => {
+        try {
+            const response = await instance.post(`api/v1/courses/check-study`, sectionIds);
+            const check = response.data;
+            if (check) {
+                console.log("test:", check);
+                setLock(check)
+            } else {
+                console.log("No games available");
+            }
+            console.log('Course detail data:', check);
+        } catch (error) {
+            console.error('Error fetching game:', error.message);
+        }
+    };
+    console.log("test1:", lock);
     const LessonIcon = ({ type }) => {
         switch (type) {
             case 'Video':
@@ -78,34 +92,34 @@ export default function CoursesPlan() {
         navigate(`/courses-study/${sectionId}`);
     }
 
-    const CollapsibleQuestion = ({ id, title, lessons, quizzes, isBlocked }) => {
+    const CollapsibleQuestion = ({ id, title, lessons, quizzes, isBlock }) => {
         const [isOpen, setIsOpen] = useState(false);
 
         const toggleCollapse = (e) => {
             e.preventDefault();
-            if (isBlocked) return; // Prevent toggling if the section is blocked
             setIsOpen(!isOpen);
         };
 
         const linkClass = isOpen ? "link-open" : "link-closed";
-        const linkStyle = isBlocked ? { cursor: 'not-allowed', color: '#ccc' } : {};
-        const lockIcon = isBlocked ? <i className="fa-solid fa-lock"></i> : null;
 
+        const handleClick = (e) => {
+            if (!isBlock) {
+                e.preventDefault();
+                setIsOpen(!isOpen);
+            }
+        };
         return (
             <div className='mt-2'>
                 <a
                     href={`#${id}`}
                     className={`btn btn-primary ${linkClass}`}
-                    onClick={toggleCollapse}
-                    style={linkStyle}
+                    onClick={handleClick}
+                    style={{ position: 'relative', display: 'inline-block' }}
                 >
-                    <div className='d-flex justify-content-between'>
-                        {title}
-                        {lockIcon}
-                    </div>
-                </a>
+                    <i className="fa-solid fa-chevron-right"></i> {title}
+                    {isBlock && <HttpsIcon sx={{ color: 'orange', position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)' }} />}
+                </a><br />
 
-                <br />
                 <div id={id} style={{ display: isOpen ? 'block' : 'none' }} className="collapse">
                     <div className='d-flex justify-content-between'>
                         <div className='content'>
@@ -136,7 +150,6 @@ export default function CoursesPlan() {
             </div>
         );
     };
-
 
     return (
         <div>
@@ -193,7 +206,7 @@ export default function CoursesPlan() {
                                                 title={`Section ${index + 1}: ${section.name}`}
                                                 lessons={section.lessons}
                                                 quizzes={section.quizzes}
-                                                isBlocked={section.isBlock}
+                                                isBlock={lock[index]?.isBlock}
                                             />
                                         ))}
 
