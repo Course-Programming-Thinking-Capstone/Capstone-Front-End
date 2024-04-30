@@ -39,11 +39,14 @@ import { useNavigate } from "react-router-dom";
 import {
   Backdrop,
   CircularProgress,
+  FormGroup,
+  FormHelperText,
   MenuItem,
   Pagination,
   PaginationItem,
   Select,
   Stack,
+  TextField,
 } from "@mui/material";
 import {
   ArrowBack,
@@ -65,7 +68,7 @@ function SearchableDropdown({ options, selectedValue, onChange }) {
   //dispatch
   const dispatch = useDispatch();
 
-  dispatch(changeAdminActiveMenu({adminActiveMenu: "SyllabusAd"}));
+  dispatch(changeAdminActiveMenu({ adminActiveMenu: "SyllabusAd" }));
 
   useEffect(() => {
     const filtered = options.filter((option) =>
@@ -290,15 +293,43 @@ export default function SyllabusAd() {
     const [sections, setSections] = useState([]);
     const [newSectionName, setNewSectionName] = useState("");
 
-    const [courseName, setCourseName] = useState("");
-    const [courseTarget, setCourseTarget] = useState("");
+    const [courseName, setCourseName] = useState("Syllabus");
+    const [courseTarget, setCourseTarget] = useState("Course target");
     const [selectedTeacherId, setSelectedTeacherId] = useState(null);
     const [courseGameId, setCourseGameId] = useState(-1);
 
-    const [activePassCondition, setActivePassCondition] = useState(null);
-    const [activeCourseSlot, setActiveCourseSlot] = useState(null);
-    const [activeSlotTime, setActiveSlotTime] = useState(null);
+    const [activePassCondition, setActivePassCondition] = useState(80);
+    const [activeCourseSlot, setActiveCourseSlot] = useState(30);
+    const [activeSlotTime, setActiveSlotTime] = useState(30);
     const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
+
+    const handleActiveCourseSlotChange = (event) => {
+      let value = event.target.value;
+
+      if (value !== null && value !== "" && (value <= 0 || value > 50)) {
+        if (value <= 0) {
+          value = 1;
+        } else {
+          value = 50;
+        }
+      }
+
+      setActiveCourseSlot(value);
+    }
+
+    const handleActiveSlotTimeChange = (event) => {
+      let value = event.target.value;
+
+      //log
+      if (value !== null && value !== "" && (value <= 5 || value > 50)) {
+        if (value <= 5) {
+          value = 5;
+        } else {
+          value = 50;
+        }
+      }
+      setActiveSlotTime(value);
+    }
 
     const notifyCreateFail = () =>
       toast.error("Create syllabus failed", {
@@ -507,41 +538,45 @@ export default function SyllabusAd() {
             <hr />
 
             <ToastContainer containerId={2} />
-            <div>
+            <FormGroup onSubmit={handleSaveChanges}>
               <div>
                 <div className="d-flex justify-content-start fw-bold my-3">
                   <p className="mb-0 blue ">Course title</p>
                   <span className="orange">*</span>
                 </div>
                 <input
-                  className="syllabus-ad-create-syllabus-input mb-3 w-100"
+                  className="syllabus-ad-create-syllabus-input w-100"
                   type="text"
                   placeholder="Title"
                   value={courseName}
                   onChange={(e) => setCourseName(e.target.value)}
+                  required
                 />
 
-                <div className="d-flex justify-content-start fw-bold mb-3">
+                {/* Error message for course title */}
+                {!courseName && (
+                  <FormHelperText error>Please enter a course title</FormHelperText>
+                )}
+
+                <div className="d-flex justify-content-start fw-bold mt-3">
                   <p className="mb-0 blue">Course target</p>
                   <span className="orange">*</span>
                 </div>
                 <textarea
-                  className="mb-3 syllabus-ad-create-syllabus-input w-100"
+                  className="mt-3 syllabus-ad-create-syllabus-input w-100"
                   name=""
                   id=""
                   rows="4"
-                  // style={{
-                  //   width: "100%",
-                  //   outline: "none",
-                  //   border: "1px solid #FF8A00",
-                  //   borderRadius: "8px",
-                  // }}
                   value={courseTarget}
                   onChange={(e) => setCourseTarget(e.target.value)}
+                  required
                 ></textarea>
+                {!courseTarget && (
+                  <FormHelperText error>Please enter a course target</FormHelperText>
+                )}
               </div>
 
-              <div className="d-flex justify-content-start fw-bold mb-3">
+              <div className="d-flex justify-content-start fw-bold mt-3 mb-3">
                 <p className="mb-0 blue">Sections</p>
                 <span className="orange">*</span>
               </div>
@@ -588,6 +623,7 @@ export default function SyllabusAd() {
                       }}
                       className="mx-4"
                       onClick={() => setModalShow(false)}
+                      type="button"
                     >
                       Cancel
                     </button>
@@ -601,6 +637,7 @@ export default function SyllabusAd() {
                         width: "100px",
                       }}
                       onClick={handleAddSection}
+                      type="button"
                     >
                       Save
                     </button>
@@ -643,11 +680,12 @@ export default function SyllabusAd() {
 
                 {/* Dnd content */}
               </div>
-              <div className="d-flex justify-content-center align-items-center mb-3">
+              <div className="d-flex justify-content-center align-items-center">
                 <div className="d-flex justify-content-between align-items-center">
                   <button
                     className="syllabus-ad-create-syllabus-button"
                     onClick={() => setModalShow(true)}
+                    type="button"
                   >
                     <i className="fa-solid fa-circle-plus mx-1"></i>
                     <span className="mx-1">Add section</span>
@@ -666,7 +704,7 @@ export default function SyllabusAd() {
                   sx={{ width: "100%", backgroundColor: "white" }}
                 >
                   <MenuItem value={-1}>
-                    <em>None</em>
+                    None
                   </MenuItem>
                   {courseGames.map((courseGame, index) => {
                     return (
@@ -686,67 +724,88 @@ export default function SyllabusAd() {
               <div className="point d-flex">
                 <div>
                   <p className="blue mb-1 fw-bold">Pass condition</p>
-                  <p className="ms-5 ">Quiz score higher</p>
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={4}
+                    className="my-2"
+                  >
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Quiz score higher</p>
+                    <div className="d-flex w-75 ms-5">
+                      {[60, 70, 80, 90].map((value) => (
+                        <div
+                          key={value}
+                          className="item d-flex"
+                          onClick={() => handleSelect("passCondition", value)}
+                        >
+                          <i
+                            className={
+                              activePassCondition === value
+                                ? "fa-solid fa-circle"
+                                : "fa-regular fa-circle"
+                            }
+                          ></i>
+                          <div>{value}%</div>
+                        </div>
+                      ))}
+                    </div>
+                  </Stack>
+                  {!activePassCondition && (
+                    <FormHelperText error>Please choose a condition</FormHelperText>
+                  )}
                   <p className="blue mb-1 fw-bold">Course slot</p>
-                  <p className="ms-5 ">Total number of slot</p>
-                  <p className="blue mb-1 fw-bold">Slot time</p>
-                  <p className="ms-5">Minutes</p>
-                </div>
-                <div className="ms-5">
-                  <div className="d-flex" style={{ marginTop: "30px" }}>
-                    {[60, 70, 80, 90].map((value) => (
-                      <div
-                        key={value}
-                        className="item d-flex"
-                        onClick={() => handleSelect("passCondition", value)}
-                      >
-                        <i
-                          className={
-                            activePassCondition === value
-                              ? "fa-solid fa-circle"
-                              : "fa-regular fa-circle"
-                          }
-                        ></i>
-                        <div>{value}%</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="d-flex" style={{ marginTop: "60px" }}>
-                    {[25, 30, 35, 40].map((value) => (
-                      <div
-                        key={value}
-                        className="item d-flex"
-                        onClick={() => handleSelect("courseSlot", value)}
-                      >
-                        <i
-                          className={
-                            activeCourseSlot === value
-                              ? "fa-solid fa-circle"
-                              : "fa-regular fa-circle"
-                          }
-                        ></i>
-                        <div>{value}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="d-flex" style={{ marginTop: "55px" }}>
-                    {[20, 30, 45, 50].map((value) => (
-                      <div
-                        key={value}
-                        className="item d-flex"
-                        onClick={() => handleSelect("slotTime", value)}
-                      >
-                        <i
-                          className={
-                            activeSlotTime === value
-                              ? "fa-solid fa-circle"
-                              : "fa-regular fa-circle"
-                          }
-                        ></i>
-                        <div>{value}</div>
-                      </div>
-                    ))}
-                  </div>
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    spacing={4}
+                    className="my-2"
+                  >
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Total number of slot*</p>
+                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                      <input
+                        type="number"
+                        step={1}
+                        value={activeCourseSlot ?? 30}
+                        required
+                        class="syllabus-ad-create-syllabus-input w-100"
+                        min={1}
+                        max={50}
+                        onChange={handleActiveCourseSlotChange}
+                      // style={{ maxWidth: "300px" }}
+                      />
+                      {!activeCourseSlot && (
+                        <FormHelperText error>Please enter a course slot</FormHelperText>
+                      )}
+                    </Stack>
+                  </Stack>
+
+                  <p className="blue mb-1 fw-bold">Slot time*</p>
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={4}
+                    className="my-2"
+                  >
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Minutes*</p>
+                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                      <input
+                        type="number"
+                        step={5}
+                        value={activeSlotTime ?? 30}
+                        required
+                        class="syllabus-ad-create-syllabus-input w-100"
+                        min={5}
+                        max={50}
+                        onChange={handleActiveSlotTimeChange}
+                      />
+                      {!activeSlotTime && (
+                        <FormHelperText error>Please enter slot time </FormHelperText>
+                      )}
+                    </Stack>
+                  </Stack>
                 </div>
               </div>
 
@@ -763,12 +822,6 @@ export default function SyllabusAd() {
               </div>
 
               <div className="d-flex justify-content-end mt-4">
-                {/* <button
-                  className="syllabus-ad-create-syllabus-button"
-                  onClick={handleSaveChanges}
-                >
-                  Post course
-                </button> */}
 
                 <ButtonMui
                   // size="small"
@@ -776,13 +829,13 @@ export default function SyllabusAd() {
                   color="error"
                   aria-label="Post course"
                   startIcon={<CreateNewFolder />}
-                  onClick={handleSaveChanges}
-                  type="button"
+                  // onClick={handleSaveChanges}
+                  type="submit"
                 >
                   CREATE SYLLABUS
                 </ButtonMui>
               </div>
-            </div>
+            </FormGroup>
           </div>
         </div>
       </>
@@ -813,13 +866,13 @@ export default function SyllabusAd() {
           <div className="d-flex justify-content-between align-items-center mx-3 mt-2">
             <div
               className="d-flex justify-content-start align-items-center"
-              // style={{
-              //   width: "30%",
-              //   border: "1px solid #EF7E54",
-              //   padding: "10px 15px",
-              //   borderRadius: "10px",
-              //   color: "white",
-              // }}
+            // style={{
+            //   width: "30%",
+            //   border: "1px solid #EF7E54",
+            //   padding: "10px 15px",
+            //   borderRadius: "10px",
+            //   color: "white",
+            // }}
             >
               {/* <div className="text-center" style={{ width: "50%" }}>
                 <h5 className="mb-0">SYLLABUS LIST</h5>

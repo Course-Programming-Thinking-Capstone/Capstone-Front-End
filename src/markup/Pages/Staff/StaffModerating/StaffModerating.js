@@ -12,6 +12,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { getCloudVideoUrl } from '../../../../helper/apis/course/course';
+import { LoadingSpinner } from '../../../Layout/Components/LoadingSpinner';
+import { Pagination, PaginationItem, Stack } from '@mui/material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import "./StaffModerating.css";
 
 
 const ModeratingLesson = ({ onBack, section }) => {
@@ -182,7 +186,7 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
                     <div key={index} style={{ marginBottom: 20 }}>
                         <div style={{ borderRadius: '10px', backgroundColor: '#FBEDE1', width: 900, marginLeft: 100, height: 450 }}>
                             <div style={{ backgroundColor: '#F6D3C8', paddingLeft: 35, fontWeight: 'bold', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 50, paddingTop: 15 }}>{question.order} .</div>
-                            <p style={{ color: '#EF7E54', fontWeight: '600', paddingLeft: 50, color: '#EF7E54', height: 0, marginTop: 5 }}>Question</p>
+                            <p style={{ color: '#EF7E54', fontWeight: '600', paddingLeft: 50, height: 0, marginTop: 5 }}>Question</p>
                             <p style={{ textAlign: 'center', height: 0 }}>{question.title}</p>
                             <div style={{ width: 800, marginLeft: 50 }}>
                                 <hr style={{ height: 3 }} />
@@ -192,7 +196,7 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
                                 <div key={optionIndex} className='d-flex' style={{ paddingLeft: 50, borderWidth: 2, borderColor: '#FBEDE1', borderStyle: 'solid', width: 800, marginLeft: 50, marginBottom: 15, borderRadius: 10, backgroundColor: 'white', alignItems: 'center', height: 50, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingRight: 10 }} >
                                     <p style={{ height: 0 }}>{option.content}</p>
                                     {option.isCorrect && (
-                                        <span style={{ marginLeft: '10px', color: 'green', borderStyle: 'solid', borderColor: 'white', borderRadius: 30, paddingLeft: 15, paddingRight: 15, backgroundColor: '#F15C58', color: 'white', fontWeight: '500', paddingTop: 5, paddingBottom: 5 }}>Correct</span>
+                                        <span style={{ marginLeft: '10px', borderStyle: 'solid', borderColor: 'white', borderRadius: 30, paddingLeft: 15, paddingRight: 15, backgroundColor: '#F15C58', color: 'white', fontWeight: '500', paddingTop: 5, paddingBottom: 5 }}>Correct</span>
                                     )}
                                 </div>
                             ))}
@@ -631,7 +635,7 @@ export default function StaffModerating() {
     const [courses, setCourses] = useState([]);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
     const [isLoading, setIsLoading] = useState(false);
@@ -656,6 +660,9 @@ export default function StaffModerating() {
         try {
             const response = await instance.get(`api/v1/courses?status=Pending&action=manage`);
             const data = response.data
+
+            //log
+            console.log(`Courses: ${JSON.stringify(data, null, 2)}`)
 
             setCourses(data);
             setTotalPages(Math.ceil(data.total / itemsPerPage));
@@ -686,41 +693,40 @@ export default function StaffModerating() {
                         <i className="fa-solid fa-bell"></i>
                     </div>
                 </div>
-                {isLoading ? (
-                    <div className='d-flex justify-content-center py-5'>
-                        <div className="spinner-border text-primary" role="status" style={{}}>
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                ) : (Array.isArray(courses.results) && courses.results.map((course, index) => (
-                    <div className="item" key={course.id || index}>
-                        <div className="d-flex justify-content-between">
-                            <div className="left d-flex justify-content-start">
-                                <img src={(course && course.pictureUrl) ? course.pictureUrl : demo} alt="" />
-                                <div style={{ marginLeft: '20px' }}>
-                                    <div className='d-flex justify-content-start'>
-                                        <p style={{ fontSize: '18px', fontWeight: 500 }}>{course.name} </p>
-                                        {/* <span>|</span> */}
-                                        {/* <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span> */}
+                <div className="staff-moderating-courses-container">
+                    {isLoading ? (
+                        <LoadingSpinner />
+                    ) : (Array.isArray(courses.results) && courses.results.map((course, index) => (
+                        <div className="item" key={course.id || index}>
+                            <div className="d-flex justify-content-between">
+                                <div className="left d-flex justify-content-start">
+                                    <img src={(course && course.pictureUrl) ? course.pictureUrl : demo} alt="" />
+                                    <div style={{ marginLeft: '20px' }}>
+                                        <div className='d-flex justify-content-start'>
+                                            <p style={{ fontSize: '18px', fontWeight: 500 }}>{course.name} </p>
+                                            {/* <span>|</span> */}
+                                            {/* <span style={{ color: '#1A9CB7' }}>Teacher: Nguyễn Ngọc Lâm</span> */}
+                                        </div>
+                                        {/* <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p> */}
                                     </div>
-                                    {/* <p style={{ marginTop: '10px', color: '#FF8A00' }} className='mb'>4 sections</p> */}
                                 </div>
-                            </div>
-                            <div className='right'>
-                                <div className="d-flex">
-                                    <i className="fa-regular fa-clock mt-1"></i>
-                                    {/* <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p> */}
-                                    <p className='ms-1'>{formatDateV1(convertUtcToLocalTime(course.createdDate))}</p>
+                                <div className='right'>
+                                    <div className="d-flex">
+                                        <i className="fa-regular fa-clock mt-1"></i>
+                                        {/* <p className='ms-1'>{new Date(course.createdDate).toLocaleString()}</p> */}
+                                        <p className='ms-1'>{formatDateV1(convertUtcToLocalTime(course.createdDate))}</p>
 
-                                </div>
-                                <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
-                                    <p >View Detail</p>
+                                    </div>
+                                    <div onClick={() => handleViewDetail(course.id)} className='text-center' style={{ marginTop: '10px', float: 'right', backgroundColor: '#FFA63D', marginRight: '15px', height: '25px', borderRadius: '10px', width: '80px', color: 'white', cursor: 'pointer' }}>
+                                        <p >View Detail</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )))}
-                <div className="d-flex justify-content-center">
+                    )))}
+                </div>
+
+                {/* <div className="d-flex justify-content-center">
                     <ReactPaginate
                         previousLabel={'previous'}
                         nextLabel={'next'}
@@ -735,7 +741,31 @@ export default function StaffModerating() {
                         forcePage={currentPage}
                     />
 
-                </div>
+                </div> */}
+
+                <Stack
+                    spacing={2}
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    my={2}
+                >
+                    <Pagination
+                        count={courses?.totalPages <= 0 ? 1 : courses.totalPages}
+                        color="primary"
+                        page={currentPage}
+                        onChange={(event, value) => setCurrentPage(value)}
+                        renderItem={(item) => (
+                            <PaginationItem
+                                slots={{
+                                    previous: ArrowBack,
+                                    next: ArrowForward,
+                                }}
+                                {...item}
+                            />
+                        )}
+                    />
+                </Stack>
             </div>
 
         </div>
