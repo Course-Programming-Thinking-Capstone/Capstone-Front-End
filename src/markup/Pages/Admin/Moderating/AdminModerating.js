@@ -11,6 +11,8 @@ import { convertUtcToLocalTime, formatDateV1 } from '../../../../helper/utils/Da
 import { ToastContainer, toast } from 'react-toastify';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Pagination, PaginationItem, Stack } from '@mui/material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 const ModeratingLesson = ({ onBack, section }) => {
     const [selectedLesson, setSelectedLesson] = useState(section.lessons[0]);
@@ -701,20 +703,29 @@ export default function AdminModerating() {
                                 </div>
                             )))}
                         </div>
-                        <div className="d-flex justify-content-center">
-                            <ReactPaginate
-                                previousLabel={'previous'}
-                                nextLabel={'next'}
-                                breakLabel={'...'}
-                                pageCount={totalPagesAllCourses} // total number of pages
-                                marginPagesDisplayed={2}
-                                pageRangeDisplayed={4}
-                                onPageChange={handlePageClickAllCourses} // handle page change
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
-                                activeClassName={'active'}
+                        <Stack
+                            spacing={2}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            my={2}
+                        >
+                            <Pagination
+                                count={totalPagesCourseMod + 1 <= 0 ? 1 : totalPagesCourseMod + 1}
+                                color="primary"
+                                page={currentPageAllCourses + 1}
+                                onChange={(event, value) => setCurrentPageAllCourses(value)}
+                                renderItem={(item) => (
+                                    <PaginationItem
+                                        slots={{
+                                            previous: ArrowBack,
+                                            next: ArrowForward,
+                                        }}
+                                        {...item}
+                                    />
+                                )}
                             />
-                        </div>
+                        </Stack>
                     </div>
                 )}
 
@@ -741,21 +752,29 @@ export default function AdminModerating() {
                                 </div>
                             ))}
                         </div>
-                        <div className="d-flex justify-content-center">
-
-                            < ReactPaginate
-                                previousLabel={'previous'}
-                                nextLabel={'next'}
-                                breakLabel={'...'}
-                                pageCount={totalPagesCourseMod} // total number of pages
-                                marginPagesDisplayed={2}
-                                pageRangeDisplayed={5}
-                                onPageChange={handlePageClickCourseMod} // handle page change
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
-                                activeClassName={'active'}
+                        <Stack
+                            spacing={2}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            my={2}
+                        >
+                            <Pagination
+                                count={totalPagesCourseMod + 1 <= 0 ? 1 : totalPagesCourseMod + 1}
+                                color="primary"
+                                page={currentPageAllCourses + 1}
+                                onChange={(event, value) => setCurrentPageAllCourses(value)}
+                                renderItem={(item) => (
+                                    <PaginationItem
+                                        slots={{
+                                            previous: ArrowBack,
+                                            next: ArrowForward,
+                                        }}
+                                        {...item}
+                                    />
+                                )}
                             />
-                        </div>
+                        </Stack>
                     </div>
                 )}
 

@@ -301,6 +301,7 @@ export default function SyllabusAd() {
     const [activePassCondition, setActivePassCondition] = useState(80);
     const [activeCourseSlot, setActiveCourseSlot] = useState(30);
     const [activeSlotTime, setActiveSlotTime] = useState(30);
+    const [slotPerWeek, setSlotPerWeek] = useState(1);
     const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
 
     const handleActiveCourseSlotChange = (event) => {
@@ -329,6 +330,20 @@ export default function SyllabusAd() {
         }
       }
       setActiveSlotTime(value);
+    }
+
+    const handleSlotPerWeekChange = (event) => {
+      let value = event.target.value;
+
+      //log
+      if (value !== null && value !== "" && (value < 0 || value > 7)) {
+        if (value < 0) {
+          value = 1;
+        } else {
+          value = 7;
+        }
+      }
+      setSlotPerWeek(value);
     }
 
     const notifyCreateFail = () =>
@@ -437,6 +452,7 @@ export default function SyllabusAd() {
           teacherId: selectedTeacherId,
           totalSlot: activeCourseSlot,
           slotTime: activeSlotTime,
+          slotPerWeek: slotPerWeek,
           minQuizScoreRatio: activePassCondition,
           sections: sections.map((sectionName) => ({ name: sectionName })),
           courseGameId:
@@ -723,7 +739,7 @@ export default function SyllabusAd() {
 
               <div className="point d-flex">
                 <div>
-                  <p className="blue mb-1 fw-bold">Pass condition</p>
+                  <p className="blue mb-1 fw-bold">Pass condition<span className="orange">*</span></p>
                   <Stack
                     direction="row"
                     justifyContent="flex-start"
@@ -754,7 +770,7 @@ export default function SyllabusAd() {
                   {!activePassCondition && (
                     <FormHelperText error>Please choose a condition</FormHelperText>
                   )}
-                  <p className="blue mb-1 fw-bold">Course slot</p>
+                  <p className="blue mb-1 fw-bold">Course slot<span className="orange">*</span></p>
                   <Stack
                     direction="row"
                     justifyContent="flex-start"
@@ -762,7 +778,7 @@ export default function SyllabusAd() {
                     spacing={4}
                     className="my-2"
                   >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Total number of slot*</p>
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Total number of slot</p>
                     <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
                       <input
                         type="number"
@@ -781,7 +797,7 @@ export default function SyllabusAd() {
                     </Stack>
                   </Stack>
 
-                  <p className="blue mb-1 fw-bold">Slot time*</p>
+                  <p className="blue mb-1 fw-bold">Slot time<span className="orange">*</span></p>
                   <Stack
                     direction="row"
                     justifyContent="flex-start"
@@ -789,7 +805,7 @@ export default function SyllabusAd() {
                     spacing={4}
                     className="my-2"
                   >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Minutes*</p>
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Minutes</p>
                     <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
                       <input
                         type="number"
@@ -803,6 +819,32 @@ export default function SyllabusAd() {
                       />
                       {!activeSlotTime && (
                         <FormHelperText error>Please enter slot time </FormHelperText>
+                      )}
+                    </Stack>
+                  </Stack>
+
+                  <p className="blue mb-1 fw-bold">Slot per week<span className="orange">*</span></p>
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={4}
+                    className="my-2"
+                  >
+                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Slots</p>
+                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                      <input
+                        type="number"
+                        step={1}
+                        value={slotPerWeek ?? 1}
+                        required
+                        class="syllabus-ad-create-syllabus-input w-100"
+                        min={1}
+                        max={7}
+                        onChange={handleSlotPerWeekChange}
+                      />
+                      {!slotPerWeek && (
+                        <FormHelperText error>Please enter a number </FormHelperText>
                       )}
                     </Stack>
                   </Stack>
