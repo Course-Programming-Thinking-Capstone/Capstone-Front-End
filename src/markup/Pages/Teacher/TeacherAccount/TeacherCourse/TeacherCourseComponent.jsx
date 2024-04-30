@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import simp from "./../../../../../images/gallery/simp.jpg";
+import defaultCoursePicture from "../../../../../images/course/default-cover-image.png";
 import {
   Chip,
   Grid,
@@ -85,14 +85,14 @@ const TeacherCourseComponent = () => {
       setCourses(data);
     } catch (error) {
       let message = "";
-        if (error.response) {
-          console.log(`Error response: ${error.response?.data?.message}`);
-          message = error.response?.data?.message || "Undefined.";
-        } else {
-          console.log(`Error message abc: ${error.message}`);
-          message = error.message || "Undefined.";
-        }
-        notifyApiFail(message);
+      if (error.response) {
+        console.log(`Error response: ${error.response?.data?.message}`);
+        message = error.response?.data?.message || "Undefined.";
+      } else {
+        console.log(`Error message abc: ${error.message}`);
+        message = error.message || "Undefined.";
+      }
+      notifyApiFail(message);
     } finally {
       setIsLoading(false);
     }
@@ -210,7 +210,7 @@ const TeacherCourseComponent = () => {
                 courses?.results.map((course, index) => (
                   <Grid key={index} item md={6} lg={4}>
                     <div className="teacher-course-content-item">
-                      <img src={course?.pictureUrl ?? simp} alt="" />
+                      <img src={course?.pictureUrl ?? defaultCoursePicture} alt="" />
                       <div className="teacher-course-content-item-name mt-2">
                         {course.name.length > 40
                           ? `${course.name.substring(0, 40)}...`

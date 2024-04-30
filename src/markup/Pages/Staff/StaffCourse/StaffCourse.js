@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import simp from "../../../../images/gallery/simp.jpg";
+import defaultCoursePicture from "../../../../images/course/default-cover-image.png";
 import {
   Chip,
   Grid,
@@ -144,7 +144,7 @@ export default function StaffCourse() {
   }, [page, courseStatus]);
 
   return (
-    <div className="teacher-course staff-course-container mx-5 mx-0">
+    <div className="teacher-course staff-course-container mx-5 my-0">
       <div className="header">
         <div className="d-flex justify-content-start mb-3">
           <div>
@@ -208,7 +208,7 @@ export default function StaffCourse() {
                 courses.results.map((course, index) => (
                   <Grid key={index} item md={6} lg={4}>
                     <div className="teacher-course-content-item">
-                      <img src={course?.pictureUrl ?? simp} alt="" />
+                      <img src={course?.pictureUrl ?? defaultCoursePicture} alt="" />
                       <div className="teacher-course-content-item-name mt-2">
                         {course.name.length > 40
                           ? `${course.name.substring(0, 40)}...`
