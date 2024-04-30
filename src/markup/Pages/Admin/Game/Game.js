@@ -672,7 +672,7 @@ export default function Game() {
   }
 
   return (
-    <div className="game-setting">
+    <div className="game-setting game-setting-container">
       <div className="game-setting-content my-0">
         {viewGameData ? (
           <div className="header">

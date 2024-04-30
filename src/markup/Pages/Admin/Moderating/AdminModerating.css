@@ -1,0 +1,7 @@
+.admin-moderating-container {
+    background-color: white;
+    border-radius: 15px;
+    height: 90vh;
+    margin: 5vh 3rem;
+    overflow: auto;
+}
