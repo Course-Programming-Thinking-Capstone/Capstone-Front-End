@@ -16,6 +16,7 @@ import defaultCoverImage from "../../../../images/course/default-cover-image.png
 import { Backdrop, Button, Chip, CircularProgress, Stack } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import { LoadingSpinner } from "../../../Layout/Components/LoadingSpinner";
+import arrowLeft from "../../../../images/icon/arrow-left.png";
 
 const SuccessOrder = ({ orderDetail }) => {
     return (<>
@@ -1435,21 +1436,21 @@ export default function AdminOrderDetail() {
     return (
         <div>
             <div
-                className="admin-order-detail py-3 px-5 mx-3"
+                className="admin-order-detail py-3 px-5"
             >
                 <div className="d-flex justify-content-between align-items-center">
                     <h2 className="orange mb-1">Order detail</h2>
                     <div>
-                        <Button
-                            variant="contained"
-                            color="warning"
-                            size="small"
-                            aria-label="Back"
-                            startIcon={<KeyboardBackspace />}
+
+                        <button
                             onClick={() => navigate(-1)}
+                            className="admin-back"
                         >
-                            Back
-                        </Button>
+                            <div className="d-flex jutify-content-between align-items-center">
+                                <img src={arrowLeft} alt="Arrow Left Icon" />
+                                <p className="mb-0 mx-2">Back</p>
+                            </div>
+                        </button>
                     </div>
                 </div>
 

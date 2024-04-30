@@ -38,8 +38,7 @@
 .admin-order-detail {
   background-color: white;
   height: 90vh;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
+  margin: 5vh 3rem;
   overflow: auto ;
-  border-radius: 10px;
+  border-radius: 15px;
 }

@@ -20,7 +20,7 @@ export default function User() {
     };
 
     return (
-        <div className='admin-user-container admin-user'>
+        <div className='admin-user-container admin-user'> 
             <div className="header">
                 <div className="d-flex justify-content-start">
                     <div>
