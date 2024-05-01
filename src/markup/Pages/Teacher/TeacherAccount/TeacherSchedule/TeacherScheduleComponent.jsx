@@ -3,17 +3,22 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import instance from '../../../../../helper/apis/baseApi/baseApi';
+import ScheduleDetail from './ScheduleDetail';
+import "./TeacherSchedule.css";
+import { LoadingSpinner } from '../../../../Layout/Components/LoadingSpinner';
 
 const TeacherScheduleComponent = () => {
-  const [schedule, setSchedule] = useState([]);
   const [events, setEvents] = useState([]);
+  const [showDetail, setShowDetail] = useState(false);
+  const [currentId, setCurrentclassId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
+        setIsLoading(true);
         const response = await instance.get(`api/v1/Classes/teacher-or-student`);
         const data = response.data;
-        console.log('API data:', data);
 
         const newEvents = data.map((item) => {
           const occurrences = getEventOccurrences(item);
@@ -21,12 +26,15 @@ const TeacherScheduleComponent = () => {
             title: item.classCode,
             start: `${date}T${item.startSlot}`,
             end: `${date}T${item.endSlot}`,
+            id: item.classId,
           }));
         }).flat();
 
         setEvents(newEvents);
       } catch (error) {
         console.error("Failed to fetch schedule", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -40,9 +48,6 @@ const TeacherScheduleComponent = () => {
 
     const start = new Date(startString);
     const end = new Date(endString);
-
-    console.log('start: ', start);
-    console.log('end: ', end);
 
     const daysOfWeekMap = {
       'Sunday': 0, // Based on getUTCDay(), Sunday is 0
@@ -70,26 +75,43 @@ const TeacherScheduleComponent = () => {
       // Add one day in UTC
       start.setUTCDate(start.getUTCDate() + 1);
     }
-
-    console.log('Occurrences:', dates); // Log to see the output
     return dates;
   }
 
-  return (
-    <FullCalendar
-      plugins={[dayGridPlugin, timeGridPlugin]}
-      initialView="timeGridWeek"
-      headerToolbar={{
-        left: "prev,next",
-        center: "title",
-        right: "timeGridWeek,timeGridDay",
-      }}
-      events={events}
-      slotMinTime="07:00:00"
-      slotMaxTime="23:00:00"
-    />
+  const handleEnventClick = (event) => {
+    setCurrentclassId(event.event.id);
+    setShowDetail(true);
+  }
 
-  );
+  if (showDetail) {
+    return (
+      <ScheduleDetail handleBack={() => setShowDetail(false)} classId={currentId} />
+    )
+  } else {
+
+    return (
+      <div className="teacher-classes" style={{ overflow: "hidden" }}>
+        <div className="schedule-container p-3">
+          {isLoading ? (<LoadingSpinner />) :
+            (<FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin]}
+              initialView="timeGridWeek"
+              headerToolbar={{
+                left: "prev,next",
+                center: "title",
+                right: "timeGridWeek,timeGridDay",
+              }}
+              events={events}
+              slotMinTime="07:00:00"
+              slotMaxTime="23:00:00"
+              eventClick={handleEnventClick}
+            />
+            )}
+        </div>
+      </div>
+
+    );
+  }
 };
 
 export default TeacherScheduleComponent;
