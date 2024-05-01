@@ -5,7 +5,6 @@ import Footer from "../Layout/Footer";
 import PageTitle from "../Layout/PageTitle";
 import { formatPrice } from "../../helper/utils/NumberUtil";
 import "./Classes.css";
-import instance from "../../helper/apis/baseApi/baseApi";
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { getCoursesApi } from "../../helper/apis/course/course";
@@ -26,9 +25,8 @@ export default function Classes() {
   const handleSearchSubmit = async () => {
     setIsLoading(true);
     try {
-
       setCurrentPage(1);
-      const data = await getCoursesApi({ status: "Active", page: 1, size: 6, name: query });
+      const data = await getCoursesApi({ status: "Active", isFree: false , page: 1, size: 6, name: query });
 
       setCourses(data.results);
       setPageCount(data.totalPages);
@@ -43,7 +41,7 @@ export default function Classes() {
     setIsLoading(true);
     try {
 
-      const data = await getCoursesApi({ status: "Active", page: currentPage, size: 6, name: query });
+      const data = await getCoursesApi({ status: "Active", isFree: false , page: currentPage, size: 6, name: query });
 
       setCourses(data.results);
       setPageCount(data.totalPages);
