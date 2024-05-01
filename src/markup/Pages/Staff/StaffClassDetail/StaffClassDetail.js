@@ -1350,7 +1350,7 @@ export default function StaffClassDetail() {
                           <span class="visually-hidden">Loading...</span>
                         </div>
                       ) : (
-                        "Create schedule"
+                        "Update schedule"
                       )}
                     </button>
                   </div>

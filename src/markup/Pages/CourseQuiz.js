@@ -107,13 +107,16 @@ export default function CourseQuiz() {
             </div>
         </div>
     );
+
     const [timeLeft, setTimeLeft] = useState(0);
+
     useEffect(() => {
         if (quizData && quizData.duration) {
             const durationInSeconds = quizData.duration * 60;
             setTimeLeft(durationInSeconds); 
         }
     }, [quizData]);
+
     useEffect(() => {
         if (timeLeft === 0) {
             return;
@@ -123,11 +126,13 @@ export default function CourseQuiz() {
         }, 1000);
         return () => clearInterval(countdown);
     }, [timeLeft]);
+
     const addLeadingZero = (number) => {
         return number < 10 ? `0${number}` : number;
     };
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
+    
     return (
         <div>
             {/* <Header /> */}

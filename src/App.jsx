@@ -72,6 +72,8 @@ import UserTeacher from "./markup/Pages/Admin/User/UserTeacher";
 import AdminOrder from "./markup/Pages/Admin/Order/AdminOrder";
 import AdminOrderDetail from "./markup/Pages/Admin/Order/AdminOrderDetail";
 import Dashboard from "./markup/Pages/Admin/Dashboard/Dashboard";
+import Teachers from './markup/Pages/Teachers';
+import TeachersDetail from "./markup/Pages/TeachersDetail";
 
 // function App() {
 // 	return (
@@ -94,6 +96,24 @@ const App = () => {
             <Route
               path="/home"
               element={<PrivateRoute page="home" component={<Index1 />} />}
+            />
+            <Route
+              path="/teachers"
+              element={
+                <PrivateRoute
+                  page="teachers"
+                  component={<Teachers />}
+                />
+              }
+            />
+            <Route
+              path="/teachers-details/:teacherId"
+              element={
+                <PrivateRoute
+                  page="teachers-details"
+                  component={<TeachersDetail />}
+                />
+              }
             />
 
             {/* Unauthenticated pages */}
@@ -127,6 +147,7 @@ const App = () => {
                 />
               }
             />
+
 
             {/* Authenticated page */}
             {/* Admin pages */}
@@ -202,24 +223,24 @@ const App = () => {
                   />
                 }
               />
-                <Route
-                    path="order"
-                    element={
-                        <PrivateRoute
-                            page="admin/order"
-                            component={<AdminOrder />}
-                        />
-                    }
-                />
-                <Route
-                    path="order-detail/:orderId"
-                    element={
-                        <PrivateRoute
-                            page="admin/order-detail"
-                            component={<AdminOrderDetail />}
-                        />
-                    }
-                />
+              <Route
+                path="order"
+                element={
+                  <PrivateRoute
+                    page="admin/order"
+                    component={<AdminOrder />}
+                  />
+                }
+              />
+              <Route
+                path="order-detail/:orderId"
+                element={
+                  <PrivateRoute
+                    page="admin/order-detail"
+                    component={<AdminOrderDetail />}
+                  />
+                }
+              />
             </Route>
 
             {/* Staff pages */}

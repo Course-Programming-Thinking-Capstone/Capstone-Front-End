@@ -15,7 +15,7 @@ const Teachers = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await instance.get(`api/v1/users?role=Teacher`);
+        const response = await instance.get(`api/v1/parents/teachers`);
         const data = response.data;
         setTeachers(data);
         
@@ -63,27 +63,15 @@ const Teachers = () => {
                     <div className="col-lg-3 col-md-6 col-sm-6" key={index}>
                       <div className="dlab-box box-frame1 team-box m-b40">
                         <div className="dlab-thum">
-                          <Link to={`/teachers-details/${teacher.id}`}>
+                          <Link to={`/teachers-details/${teacher.teacherId}`}>
                             <img src={teacherImage} alt="" />
                           </Link>
                           <div className="overlay-bx">
                             <h5 className="team-title">
-                              <Link to={`/teachers-details/${teacher.id}`}>
-                                {teacher.fullName}
+                              <Link to={`/teachers-details/${teacher.teacherId}`}>
+                                {teacher.teacherName}
                               </Link>
                             </h5>
-                            <ul className="list-inline">
-                              <li>
-                                <Link to={"#"}>
-                                  <i className="fa fa-facebook"></i>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to={"#"}>
-                                  <i className="fa-solid fa-envelope"></i>
-                                </Link>
-                              </li>
-                            </ul>
                           </div>
                         </div>
                       </div>

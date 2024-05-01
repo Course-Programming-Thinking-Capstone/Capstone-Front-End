@@ -101,12 +101,12 @@ export default function ClassesDetail() {
 												.filter(classDetail => classDetail.classStatus !== "Closed") // Filter out closed classes
 												.map((classDetail) => {
 													// Ensure slot times are available before slicing
-													const startTime = classDetail.slotStart ? classDetail.slotStart.slice(0, 5) : "N/A";
-													const endTime = classDetail.slotEnd ? classDetail.slotEnd.slice(0, 5) : "N/A";
+													const startTime = classDetail.startSlot ? classDetail.startSlot.slice(0, 5) : "N/A";
+													const endTime = classDetail.endSlot ? classDetail.endSlot.slice(0, 5) : "N/A";
 
 													// Refactor dates to DD/MM/YYYY
-													const startDate = classDetail.dayStart ? new Date(classDetail.dayStart).toLocaleDateString("en-GB") : "Date Not Available";
-													const endDate = classDetail.dayEnd ? new Date(classDetail.dayEnd).toLocaleDateString("en-GB") : "Date Not Available";
+													const startDate = classDetail.openClass ? new Date(classDetail.openClass).toLocaleDateString("en-GB") : "Date Not Available";
+													const endDate = classDetail.closeClass ? new Date(classDetail.closeClass).toLocaleDateString("en-GB") : "Date Not Available";
 
 													return (
 														<div key={classDetail.classId} className={`details-tbl widget mb-3 ${selectedClassId === classDetail.classId ? 'selected-class' : ''}`} onClick={() => handleClassClick(classDetail.classId)} style={{ cursor: 'pointer', border: selectedClassId === classDetail.classId ? '3px solid #FF8A00' : '3px solid  #7F7C7C', borderRadius: '8px' }}>
@@ -119,7 +119,7 @@ export default function ClassesDetail() {
 																	<p>Teacher: <span style={{
 																		fontWeight: 'bold',
 																		fontFamily: '"Noto Sans", "Arial", sans-serif',
-																	}}>{classDetail.teacher}</span></p>
+																	}}>{classDetail.teacherName}</span></p>
 																</div>
 															</div>
 														</div>
