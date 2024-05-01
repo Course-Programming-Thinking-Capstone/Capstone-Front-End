@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import instance from '../../../../../helper/apis/baseApi/baseApi';
-import "./TeacherSchedule.css";
-import { LoadingSpinner } from '../../../../Layout/Components/LoadingSpinner';
 import Header from '../../../Layout/Header';
 import StudentScheduleDetail from './ScheduleDetail';
+import instance from '../../../../helper/apis/baseApi/baseApi';
+// import { LoadingSpinner } from '../../../Layout/Components/LoadingSpinner';
+import { LoadingSpinner } from '../../../Layout/Components/LoadingSpinner';
 
 const StudentSchedule = () => {
     const [events, setEvents] = useState([]);

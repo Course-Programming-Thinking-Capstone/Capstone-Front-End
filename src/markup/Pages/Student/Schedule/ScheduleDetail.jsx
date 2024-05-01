@@ -1,14 +1,10 @@
-import defaultAvatar from "./../../../../../images/gallery/default-user.jpg";
 import { useEffect, useState } from "react";
-import { convertGenderEnumToString } from "../../../../../helper/utils/EnumUtil";
-import { calculateAgeV1 } from "../../../../../helper/utils/DateUtil";
 import { ToastContainer } from "react-bootstrap";
-// import { toast } from "react-toastify";
-import { LoadingSpinner } from "../../../../Layout/Components/LoadingSpinner";
+import { LoadingSpinner } from "../../../Layout/Components/LoadingSpinner";
 import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { KeyboardBackspace } from "@mui/icons-material";
-import { getCLassById } from "../../../../../helper/apis/class/class";
+import { getCLassById } from "../../../../helper/apis/class/class";
 
 const StudentScheduleDetail = ({ handleBack, classId }) => {
 
