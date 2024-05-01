@@ -36,8 +36,9 @@ import "./Game.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Delete, Save } from "@mui/icons-material";
 import { Backdrop, CircularProgress, Button } from "@mui/material";
-import {changeAdminActiveMenu} from "../../../../store/slices/menu/menuSlice";
+import { changeAdminActiveMenu } from "../../../../store/slices/menu/menuSlice";
 import { useDispatch } from "react-redux";
+import { ConfirmModal } from "../../../Layout/Components/Notification/ConfirmModal";
 
 export default function Game() {
   const [enhancedModes, setEnhancedModes] = useState([]);
@@ -52,6 +53,8 @@ export default function Game() {
   const [isLoading, setIsLoading] = useState(false);
   const [arr, setArr] = useState([]);
   const [modeId, setModeId] = useState();
+  //delete confirm
+  const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -71,7 +74,7 @@ export default function Game() {
     });
 
   //change active menu:
-  dispatch(changeAdminActiveMenu({adminActiveMenu: "Game"}));
+  dispatch(changeAdminActiveMenu({ adminActiveMenu: "Game" }));
 
   const notifyApiSucess = (message) =>
     toast.success(message, {
@@ -220,6 +223,8 @@ export default function Game() {
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
+    } finally {
+      setShow(false)
     }
   };
 
@@ -473,6 +478,18 @@ export default function Game() {
     setViewLevelDetail(false);
   }
 
+
+
+  const handleDeleteDeny = () => {
+    setShow(false);
+  }
+
+  const handleDeleteLevelClick = () => {
+    setShow(true);
+  }
+
+  const deleteLevelMessage = "Do you really want to delete this level?";
+
   //make these draggable
   if (viewLevelDetail) {
     return (
@@ -483,6 +500,15 @@ export default function Game() {
         >
           <CircularProgress color="inherit" />
         </Backdrop>
+
+        <ConfirmModal
+          message={deleteLevelMessage}
+          closeLabel={"Cancel"}
+          acceptLabel={"Delete"}
+          handleDeny={handleDeleteDeny}
+          handleAccept={() => handleRemoveLevel(currentLevelDetail.id)}
+          show={show}
+        />
 
         <div className="level-detail">
           <div className="d-flex justify-content-between">
@@ -563,7 +589,8 @@ export default function Game() {
 
                 <button
                   className="add"
-                  onClick={() => handleRemoveLevel(currentLevelDetail.id)}
+                  // onClick={() => handleRemoveLevel(currentLevelDetail.id)}
+                  onClick={handleDeleteLevelClick}
                 >
                   <div className="d-flex jutify-content-between align-items-center">
                     <Delete fontSize="small" />
@@ -571,7 +598,6 @@ export default function Game() {
                   </div>
                 </button>
               </div>
-
             </div>
           </div>
           <div className="mt-3 d-flex">
