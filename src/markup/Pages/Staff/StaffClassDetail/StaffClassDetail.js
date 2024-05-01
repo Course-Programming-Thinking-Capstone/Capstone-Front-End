@@ -664,7 +664,7 @@ export default function StaffClassDetail() {
     const [selectedSlotId, setSelectedSlotId] = useState(null);
 
     const renderRow = (days) => (
-      <div className="d-flex justify-content-around">
+      <div className="d-flex justify-content-start">
         {days.map(([day, isChecked]) => (
           <div
             key={day}
