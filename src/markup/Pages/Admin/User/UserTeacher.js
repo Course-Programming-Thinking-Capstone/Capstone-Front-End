@@ -14,8 +14,12 @@ import {
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
 import arrowLeft from "../../../../images/icon/arrow-left.png";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+import { Button, Modal } from 'react-bootstrap';
 
 export default function UserTeacher() {
     const [parents, setParents] = useState([]);
@@ -24,6 +28,70 @@ export default function UserTeacher() {
     const [pageCount, setPageCount] = useState(0);
     const pageSize = 6;
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [newTeacher, setNewTeacher] = useState({
+        email: "",
+        fullName: "",
+        dateOfBirth: new Date(),
+        gender: "Male",
+        phoneNumber: "",
+        role: "Teacher"  // Set the role specifically for teachers
+    });
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setNewTeacher(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+    console.log('newTeacher: ', newTeacher);
+
+    const formatDateForAPI = (date) => {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);  // getMonth() is zero-based
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+    
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+    
+        return [year, month, day].join('-');
+    };
+    
+
+    const handleDateChange = (date) => {
+        setNewTeacher(prevState => ({
+            ...prevState,
+            dateOfBirth: date
+        }));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        // Include validation here if necessary
+        setLoading(true);
+
+        const formattedDate = formatDateForAPI(newTeacher.dateOfBirth);
+        try {
+            const response = await instance.post('api/v1/users/admin/account', newTeacher);
+            if (response.status === 201) {
+                toast.success('New teacher created successfully!');
+                setShowModal(false);
+                fetchParents(); // Refresh the list of teachers
+            } else {
+                throw new Error('Failed to create teacher');
+            }
+        } catch (error) {
+            toast.error('Failed to create teacher!');
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleOpenModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
 
     const goBack = () => {
         navigate(-1); // This will take you back to the previous page. Alternatively, you can specify the path.
@@ -128,6 +196,46 @@ export default function UserTeacher() {
                     </div>
                 </div>
             </div>
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Teacher</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Email Address</label>
+                            <input type="email" className="form-control" name="email" required value={newTeacher.email} onChange={handleInputChange} />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Full Name</label>
+                            <input type="text" className="form-control" name="fullName" required value={newTeacher.fullName} onChange={handleInputChange} />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Date of Birth</label>
+                            <DatePicker selected={newTeacher.dateOfBirth}
+                                onChange={handleDateChange}
+                                className="form-control"
+                                dateFormat="yyyy-MM-dd"
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select" />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Gender</label>
+                            <select className="form-control" name="gender" value={newTeacher.gender} onChange={handleInputChange}>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Phone Number</label>
+                            <input type="text" className="form-control" name="phoneNumber" value={newTeacher.phoneNumber} onChange={handleInputChange} />
+                        </div>
+                        <Button type="submit" className="btn btn-primary">Create</Button>
+                    </form>
+                </Modal.Body>
+            </Modal>
+            <button onClick={handleOpenModal}>Add Teacher</button>
             <div className="table-responsive" style={{ height: '400px' }}>
                 <table className="table table-bordered">
                     <thead>

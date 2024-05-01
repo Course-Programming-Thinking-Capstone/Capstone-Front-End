@@ -17,6 +17,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import arrowLeft from "../../../../images/icon/arrow-left.png";
+import DatePicker from "react-datepicker";
+import Button from "react-bootstrap/Button";
 
 export default function UserStaff() {
     const [parents, setParents] = useState([]);
@@ -104,6 +106,75 @@ export default function UserStaff() {
         setCurrentPage(value);
     };
 
+    const [showModal, setShowModal] = useState(false);
+    const [newStaff, setNewStaff] = useState({
+        email: "",
+        fullName: "",
+        dateOfBirth: new Date(),
+        gender: "Male",
+        phoneNumber: "",
+        role: "Staff"
+    });
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setNewStaff(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleDateChange = (date) => {
+        setNewStaff(prevState => ({
+            ...prevState,
+            dateOfBirth: date
+        }));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        // Validate Date of Birth for age greater than 12
+        const currentDate = new Date();
+        const selectedDate = new Date(newStaff.dateOfBirth);
+        let age = currentDate.getFullYear() - selectedDate.getFullYear();
+        const m = currentDate.getMonth() - selectedDate.getMonth();
+        if (m < 0 || (m === 0 && currentDate.getDate() < selectedDate.getDate())) {
+            age--;
+        }
+        if (age < 12) {
+            toast.error("Staff must be older than 12 years.");
+            return;
+        }
+    
+        // Validate Phone Number length between 10 and 15 digits
+        const phoneNumberLength = newStaff.phoneNumber.replace(/\D/g, '').length; // Remove non-digits and check length
+        if (phoneNumberLength < 10 || phoneNumberLength > 15) {
+            toast.error("Phone number must be between 10 and 15 digits.");
+            return;
+        }
+    
+        setLoading(true);
+        try {
+            const response = await instance.post('api/v1/users/admin/account', newStaff);
+            if (response.status === 201 || response.status === 200) { // Check for '201 Created' or '200 OK' if your API configuration differs
+                toast.success('New staff member created successfully!');
+                setShowModal(false); // Close modal
+                fetchParents(); // Refresh the staff list
+            } else {
+                throw new Error('Failed to create staff member');
+            }
+        } catch (error) {
+            toast.error('Failed to create staff member!');
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const handleOpenModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
+
     return (
         <div className='admin-user-container admin-user'>
             <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
@@ -129,19 +200,47 @@ export default function UserStaff() {
                     </div>
                 </div>
             </div>
-            <Modal
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Staff Member</Modal.Title>
+                </Modal.Header>
                 <Modal.Body>
-                    <h4>Centered Modal</h4>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                        consectetur ac, vestibulum at eros.
-                    </p>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Email Address</label>
+                            <input type="email" className="form-control" name="email" required value={newStaff.email} onChange={handleInputChange} />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Full Name</label>
+                            <input type="text" className="form-control" name="fullName" required value={newStaff.fullName} onChange={handleInputChange} />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Date of Birth</label>
+                            <DatePicker selected={newStaff.dateOfBirth}
+                                onChange={handleDateChange}
+                                className="form-control"
+                                dateFormat="yyyy-MM-dd"
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select" />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Gender</label>
+                            <select className="form-control" name="gender" value={newStaff.gender} onChange={handleInputChange}>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Phone Number</label>
+                            <input type="text" className="form-control" name="phoneNumber" value={newStaff.phoneNumber} onChange={handleInputChange} />
+                        </div>
+                        <Button type="submit" className="btn btn-primary">Create</Button>
+                    </form>
                 </Modal.Body>
             </Modal>
+            <button onClick={handleOpenModal}>Create</button>
             <div className="table-responsive" style={{ height: '400px' }}>
                 <table className="table table-bordered">
                     <thead>
@@ -149,6 +248,7 @@ export default function UserStaff() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
+                            <th>EMAIL</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -161,6 +261,7 @@ export default function UserStaff() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
+                                <td>{parent.email}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (
