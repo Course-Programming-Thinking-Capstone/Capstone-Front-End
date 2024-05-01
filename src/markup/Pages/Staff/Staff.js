@@ -52,6 +52,7 @@ export default function Staff() {
     setActiveItem(activeMenu);
   }, [location]);
 
+
   const fetchUnreadCount = async () => {
     try {
       const response = await instance.get('api/v1/notifications/account/number-of-unread');

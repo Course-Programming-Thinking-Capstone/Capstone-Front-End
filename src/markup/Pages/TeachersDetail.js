@@ -15,28 +15,30 @@ import team1 from "./../../images/team/pic1.jpg";
 import instance from "../../helper/apis/baseApi/baseApi";
 
 export default function TeachersDetail() {
-  const { id } = useParams();
+  const { teacherId } = useParams();
   const [teacher, setTeacher] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        try {
-          setIsLoading(true);
-          const response = await instance.get(`api/v1/teachers/${id}`);
-          const data = response.data;
-          setTeacher(data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
+  const fetchData = async () => {
 
+    try {
+      setIsLoading(true);
+      const response = await instance.get(`api/v1/parents/teacher/${teacherId}`);
+
+      const data = response.data;
+      console.log('data: ', data);
+      setTeacher(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+
+  };
+
+  useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [teacherId]);
 
   return (
     <Fragment>
@@ -65,12 +67,15 @@ export default function TeachersDetail() {
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-sm-12 m-b15">
                     <div className="teacher-meida">
-                      <img src={team1} alt="" />
+                      <img src={teacher.pictureUrl} alt="" />
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-sm-12 teacher-content align-self-center">
-                    <h2 className="teacher-title">{}</h2>
-                    <span className="teacher-coures">English</span>
+                    <h2 className="text-secondry">Personal information</h2>
+                    <p className="m-b0">
+                      {teacher.personalInformation}
+                    </p>
+
                     <p className="m-b15">{teacher.description}</p>
                     <ul className="list-inline">
                       <li>
@@ -78,7 +83,7 @@ export default function TeachersDetail() {
                           <i className="fa fa-facebook"></i>
                         </Link>
                       </li>
-                      <li>
+                      {/* <li>
                         <Link to={"#"}>
                           <i className="fa fa-google-plus"></i>
                         </Link>
@@ -97,25 +102,31 @@ export default function TeachersDetail() {
                         <Link to={"#"}>
                           <i className="fa fa-twitter"></i>
                         </Link>
-                      </li>
+                      </li> */}
                     </ul>
+                    {teacher.certificates && teacher.certificates.length > 0 && (
+                      <div>
+                        <h3 className="text-secondry mt-3">Certificates</h3>
+                        {teacher.certificates.map((certificate, index) => (
+                          <a key={index} href={certificate.certificateUrl} target="_blank" rel="noopener noreferrer">
+                            <button className="btn btn-info m-1">{certificate.certificateName}</button>
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="section-full content-inner-2">
+          {/* <div className="section-full content-inner-2">
             <div className="container">
               <div className="row">
                 <div className="col-lg-6 section-head">
-                  <h2 className="text-secondry">My Skills</h2>
+                  <h2 className="text-secondry">Personal information</h2>
                   <p className="m-b0">
-                    Suspendisse facilisis commodo lobortis. Nullam mollis
-                    lobortis ex vel faucibus. Proin nec viverra turpis. Nulla
-                    eget justo scelerisque, pretium purus vel, congue libero.
-                    Suspendisse potenti. Sed risus nisi Suspendisse potenti. Sed
-                    risus nisi Suspendisse potenti. Sed risus nisi{" "}
+                    {teacher.personalInformation}
                   </p>
                 </div>
                 <div className="col-lg-6">
@@ -154,7 +165,7 @@ export default function TeachersDetail() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />

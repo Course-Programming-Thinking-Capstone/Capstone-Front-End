@@ -277,8 +277,24 @@ const PendingOrder = ({ orderDetail }) => {
     };
 
     const createStudentAccount = async () => {
-        if (!username || !password) {
-            toast.warn("Please fill in username and password", {
+        // Utility function to check password criteria
+        const validatePassword = (password) => {
+            const hasLetters = /[a-zA-Z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            return password.length >= 8 && hasLetters && hasNumbers;
+        };
+
+        if (!username || !validatePassword(password)) {
+            let warningText = "Please fill in username and password";
+            if (!username && password) {
+                warningText = "Please fill in username";
+            } else if (username && !password) {
+                warningText = "Please fill in password";
+            } else if (password && !validatePassword(password)) {
+                warningText = "Password must be at least 8 characters long and contain both letters and numbers";
+            }
+
+            toast.warn(warningText, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -312,7 +328,6 @@ const PendingOrder = ({ orderDetail }) => {
             setAccountCreationResponse(accountData);
 
             setShow(false);
-
             // Open the second modal
             setShowSecondModal(true);
 

@@ -188,6 +188,9 @@ export default function CoursePayment() {
     </div>
   ));
 
+  const dateFiveYearsAgo = new Date();
+  dateFiveYearsAgo.setFullYear(dateFiveYearsAgo.getFullYear() - 5);
+
   const [selectedPayment, setSelectedPayment] = useState("");
 
   const [show, setShow] = useState(false);
@@ -219,7 +222,7 @@ export default function CoursePayment() {
 
       window.location.href = responseData.payUrl;
     } catch (error) {
-      console.error("There was a problem with the process:", error.message);
+      console.error("There was a problem with the process:", error.data.message);
       setIsOrderProcessing(false);
     }
   };
@@ -300,8 +303,7 @@ export default function CoursePayment() {
                   <DatePicker
                     selected={newChildDOB}
                     onChange={(date) => setNewChildDOB(date)}
-                    enableTabLoop={false}
-                    maxDate={new Date()}
+                    maxDate={dateFiveYearsAgo} 
                     showMonthDropdown
                     showYearDropdown
                     dropdownMode="select"

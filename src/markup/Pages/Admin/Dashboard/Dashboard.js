@@ -10,34 +10,38 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } fro
 Chart.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ data, title }) => {
+    // Filter out entries with empty 'status'
+    const validData = data.filter(item => item.status.trim() !== "");
+
+    // Calculate the total for the title
+    const total = validData.reduce((acc, curr) => acc + curr.total, 0);
+    const chartTitle = `${title} (Total: ${total.toLocaleString()})`;
+
     const chartData = {
-        labels: data.map(item => item.status),
+        labels: validData.map(item => item.status),
         datasets: [
             {
-                data: data.map(item => item.total),
+                data: validData.map(item => item.total),
                 backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#E7E9ED', '#4BC0C0'],
-                borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+                borderColor: ['#FFFFFF'],
                 borderWidth: 1,
             }
         ]
     };
 
     const options = {
-        maintainAspectRatio: false, // Add this to maintain aspect ratio
+        maintainAspectRatio: false,
         plugins: {
-            legend: {
-                position: 'bottom', // Place the legend at the bottom
-            },
+            legend: { position: 'bottom' },
         },
-        // This callback function allows us to modify the tooltip label
         tooltips: {
             callbacks: {
                 label: function (tooltipItem, data) {
-                    var label = data.labels[tooltipItem.index] || '';
+                    let label = data.labels[tooltipItem.index] || '';
                     if (label) {
                         label += ': ';
                     }
-                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    label += (tooltipItem.yLabel).toLocaleString();
                     return label;
                 }
             }
@@ -46,9 +50,8 @@ const PieChart = ({ data, title }) => {
 
     return (
         <div>
-            <h5 className="text-center">{title}</h5>
-            <div className='d-flex justify-content-center' style={{ width: '100%', height: '300px' }}>
-                {/* Wrap the Pie component in a div and set its width to 70% */}
+            <h5 className="text-center">{chartTitle}</h5>
+            <div style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '90%' }}>
                     <Pie data={chartData} options={options} />
                 </div>
@@ -92,7 +95,7 @@ export default function Dashboard() {
 
     const renderAccountInfo = (accounts) => {
         // Filter out the 'AllAccount' status before rendering
-        const filteredAccounts = accounts.filter(account => account.status !== "AllAccount");
+        const filteredAccounts = accounts.filter(account => account.status !== "All Accounts");
 
         return filteredAccounts.map((account) => (
             <p key={account.status}>
@@ -112,15 +115,15 @@ export default function Dashboard() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '35px', // Set a fixed width
-                    height: '35px', // Set a fixed height to make it a circle
-                    borderRadius: '50%', // This makes the span a circle
+                    width: '35px',
+                    height: '35px',
+                    borderRadius: '50%',
                     backgroundColor: '#FFA63D',
                     color: 'white',
                     padding: '10px',
-                    fontSize: '1rem', // Adjust font size as needed
-                    lineHeight: '35px', // Align the line height with the height to center the text vertically
-                    textAlign: 'center' // Center the text horizontally
+                    fontSize: '1rem',
+                    lineHeight: '35px',
+                    textAlign: 'center'
                 }}>
                     {user.total}
                 </span>
@@ -134,24 +137,30 @@ export default function Dashboard() {
     };
 
     const renderMonthlyEarnings = (earnings) => {
-        // Ensure earnings is an array and has entries
         if (!Array.isArray(earnings) || earnings.length === 0) return null;
 
         const thisMonth = earnings.find(e => e.status === "ThisMonth");
         const lastMonth = earnings.find(e => e.status === "LastMonth");
-        const increase = earnings.find(e => e.status === "Increase");
+        const change = earnings.find(e => e.status === "Increase" || e.status === "Decrease");
+
+        const changeLabel = change ? (change.status === "Increase" ? "Increase" : "Decrease") : "Change";
+        const changeValue = change ? Math.abs(change.total).toLocaleString() : "0";
 
         return (
             <div>
-                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total}</span></p>
-                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total}</span></p>
-                <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total}%</span></p>
+                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth ? thisMonth.total.toLocaleString() : '0'} VND</span></p>
+                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth ? lastMonth.total.toLocaleString() : '0'} VND</span></p>
+                <p>{changeLabel} from previous period: <span style={{ fontWeight: 'bold', color: changeLabel === "Decrease" ? '#FF6347' : '#32CD32' }}>
+                    {changeValue}{changeLabel === "Increase" || changeLabel === "Decrease" ? '%' : ''}
+                </span></p>
             </div>
         );
     };
 
 
     const totalAccounts = getTotalAccounts(accountsData);
+
+    const XAxisLabelFormatter = (month) => month.substring(0, 3);
 
     return (
         <div>
@@ -223,7 +232,7 @@ export default function Dashboard() {
                     </div>
                     <div className='col-lg-9 col-md-12 col-sm-12'>
                         <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={incomeByMonth.map(item => ({ ...item, total: Number(item.total) }))} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                            <LineChart data={incomeByMonth.map(item => ({ ...item, total: Number(item.total), status: XAxisLabelFormatter(item.status) }))} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                                 <Line type="monotone" dataKey="total" stroke="#8884d8" />
                                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                                 <XAxis dataKey="status" />

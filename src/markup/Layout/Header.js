@@ -32,7 +32,7 @@ const Header = () => {
     Parent: [
       { maintitle: "Home", to: "/home" },
       { maintitle: "Courses", to: "/courses" },
-      { maintitle: "Teacher", to: "/teacher" },
+      { maintitle: "Teacher", to: "/teachers" },
       { maintitle: "Order", to: "/order" },
       { maintitle: "Account", to: "/account" },
       { maintitle: "Log out", to: "/logout" },

@@ -46,6 +46,485 @@ export default function StaffClassDetail() {
     );
   });
 
+  const ClassContent = ({
+    classId,
+    setView,
+    setClassIdForStudentForm,
+    setClassIdForTeacherForm,
+  }) => {
+    const [classDetails, setClassDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
+    const studentsPerPage = 3;
+
+    console.log('currentPage: ', currentPage);
+    const pageCount = Math.ceil(
+      classDetails?.students.length / studentsPerPage
+    );
+
+    const handlePageClick = (event, value) => {
+      setCurrentPage(value - 1); // Adjust page index since MUI uses 1-based indexing
+    };
+
+    const handleAddStudentClick = () => {
+      setClassIdForStudentForm(classId); // Set the classId for the StudentForm
+      setView("addStudent");
+    };
+
+    const handleAddTeacherClick = () => {
+      // Check if the schedule is set by verifying if 'classDetails' has schedule-related data
+      if (!classDetails || !classDetails.studyDay || classDetails.studyDay.length === 0 || !classDetails.slotNumber) {
+        // If schedule is not set, show an error toast
+        toast.error("You need to create a schedule for the class first", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        // If schedule exists, proceed with setting the classId and changing the view
+        setClassIdForTeacherForm(classId);
+        setView("addTeacher");
+      }
+    };
+
+    const handleEditScheduleClick = () => {
+      setView("editSchedule");
+      setClassIdForTeacherForm(classId);
+    };
+
+    // Calculate the students to be displayed on the current page
+    const currentStudents = classDetails?.students?.slice(
+      currentPage * studentsPerPage,
+      (currentPage + 1) * studentsPerPage
+    );
+
+    useEffect(() => {
+      const fetchClassDetails = async () => {
+        try {
+          const response = await instance.get(
+            `api/v1/Classes/detail/${classId}`
+          );
+          const data = response.data;
+
+          console.log("data: ", data);
+          setClassDetails(data);
+        } catch (error) {
+          console.error("Failed to fetch class details", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchClassDetails();
+    }, [classId]);
+
+    if (loading) {
+      return (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "100vh" }}
+        >
+          <div
+            className="spinner-border text-primary"
+            role="status"
+            style={{ width: "3rem", height: "3rem" }}
+          >
+            <span style={{ fontSize: "200px" }} className="visually-hidden">
+              Loading...
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    if (!classDetails) {
+      return <div>Class details not found.</div>;
+    }
+    const getDayStyle = (day) => {
+      const isScheduledDay = classDetails?.studyDay?.includes(day);
+      return {
+        borderRadius: "50%",
+        border: isScheduledDay ? "none" : "1px solid black",
+        height: "45px",
+        width: "45px",
+        backgroundColor: isScheduledDay ? "#FD8569" : "transparent",
+        color: isScheduledDay ? "white" : "black",
+      };
+    };
+
+    const handleOpenNewTab = (url) => {
+      window.open(url, "_blank");
+    };
+
+    const handleStatusChange = async (newStatus) => {
+      try {
+        const response = await instance.patch(
+          `api/v1/Classes/${classId}?status=${newStatus}`
+        );
+        if (response.data) {
+          toast.success(response.data.message);
+          console.log("success"); // Displaying the toast message on successful API response
+          setClassDetails((prevDetails) => ({
+            ...prevDetails,
+            classStatus: newStatus,
+          })); // Update local state to reflect the new status
+        }
+      } catch (error) {
+        console.error("Failed to update class status", error);
+        toast.error("Failed to update class status"); // Display error toast message
+      }
+    };
+
+    const handleSelectChange = (event) => {
+      const selectedStatus = event.target.value;
+      handleStatusChange(selectedStatus);
+    };
+
+    return (
+      <div
+        className="staff-class-content mx-5"
+        style={{
+          padding: "20px 50px",
+          backgroundColor: "white",
+          margin: "30px 80px",
+          overflowY: "scroll",
+          height: "90vh",
+        }}
+      >
+        <div className="header">
+          <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-start">
+              <div>
+                <h5 className="mb">Class detail</h5>
+                <hr />
+              </div>
+              <i class="fa-solid fa-bell"></i>
+            </div>
+            <ToastContainer />
+            <div className="d-flex justify-content-start">
+              <select
+                className="py-1 px-2"
+                style={{
+                  backgroundColor: "#1A9CB7",
+                  color: "white",
+                  border: "none",
+                  marginRight: "10px",
+                  borderRadius: "5px",
+                  outline: "none",
+                }}
+                value={classDetails.classStatus}
+                onChange={handleSelectChange}
+              >
+                <option value="Opening">Opening</option>
+                <option value="Closed">Closed</option>
+                <option value="OnGoing">On Going</option>
+              </select>
+              <button
+                style={{
+                  backgroundColor: "#7F7C7C",
+                  color: "white",
+                  border: "none",
+                  marginRight: "10px",
+                  borderRadius: "5px",
+                }}
+                onClick={() => navigateToView("detail")}
+              >
+                <div className="py-1 px-2">Back</div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="px-4 mt-2">
+            <p className="mb-2 blue">CLASS INFORMATION</p>
+            <div className="d-flex">
+              <div style={{ marginLeft: "200px" }}>
+                <p className="mb-1">Class</p>
+                <p className="mb-1">Course</p>
+                <p className="mb-1">Number of students</p>
+                <p className="mb-1">Teacher</p>
+                <p className="mb-1">Class time</p>
+                <p className="mb-1">Slot time</p>
+              </div>
+              <div style={{ marginLeft: "50px" }}>
+                <p
+                  className=" mb-1"
+                  style={{ color: "#FD8569", fontWeight: "bold" }}
+                >
+                  {classDetails.classCode}
+                </p>
+                <p className="mb-1">{classDetails.courseName}</p>
+                <p className="mb-1">{classDetails.students.length}</p>
+                <p className="mb-1">
+                  {classDetails.teacherName ? (
+                    <p className="mb-1">
+                      {classDetails.teacherName} /{" "}
+                      <button
+                        onClick={handleAddTeacherClick}
+                        style={{
+                          backgroundColor: "#1A9CB7",
+                          height: "25px",
+                          fontSize: "14px",
+                          border: "none",
+                          borderRadius: "8px",
+                          color: "white",
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </p>
+                  ) : (
+                    <button
+                      onClick={handleAddTeacherClick}
+                      style={{
+                        backgroundColor: "#1A9CB7",
+                        height: "25px",
+                        fontSize: "14px",
+                        border: "none",
+                        borderRadius: "8px",
+                        color: "white",
+                      }}
+                    >
+                      Add teacher
+                    </button>
+                  )}
+                </p>
+                <p className="mb-1">
+                  {formatDayV1(classDetails?.openClass)} -{" "}
+                  {formatDayV1(classDetails?.closeClass)}
+                </p>
+                <p className="mb-1">{classDetails.slotDuration} minutes/slot</p>
+              </div>
+            </div>
+          </div>
+          <div className="px-4">
+            <div className="d-flex justify-content-between">
+              <div>
+                <p className="mb-2 blue">CLASS SCHEDULE</p>
+              </div>
+              <div>
+                <button style={{
+                  backgroundColor: "#FFA63D",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  height: "30px",
+                }}
+                  onClick={handleEditScheduleClick}
+                >Edit schedule</button>
+              </div>
+            </div>
+            <div className="d-flex">
+              <div style={{ marginLeft: "200px" }}>
+                <p className="mb-1">Study day</p>
+                <p className="mb-1 mt-4">Slot</p>
+                <p className="mb-1">Total slot</p>
+                <p className="mb-1">Link discord</p>
+              </div>
+              <div style={{ marginLeft: "100px" }}>
+                <div className="d-flex">
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Monday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      M
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Tuesday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      T
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Wednesday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      W
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Thursday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      Th
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Friday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      F
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Saturday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      Sa
+                    </p>
+                  </div>
+                  <div
+                    className="mb-1 ms-3 text-center"
+                    style={getDayStyle("Sunday")}
+                  >
+                    <p
+                      className="text-center mt-2"
+                      style={{ fontSize: "18px" }}
+                    >
+                      S
+                    </p>
+                  </div>
+                </div>
+                <p className="mb-1">
+                  Slot {classDetails.slotNumber} (
+                  {formatTimeV1(classDetails?.startSlot)} -{" "}
+                  {formatTimeV1(classDetails?.endSlot)})
+                </p>
+                <p className="mb-1">{classDetails.totalSlot}</p>
+                <button
+                  onClick={() => handleOpenNewTab(classDetails.roomUrl)}
+                  style={{
+                    backgroundColor: "#5562ea",
+                    color: "white",
+                    borderRadius: "8px",
+                    border: "none",
+                  }}
+                >
+                  <div
+                    className="py-1 px-2"
+                    style={{ backgroundColor: "5562ea", borderRadius: "8px" }}
+                  >
+                    Discord
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="px-4">
+            <div className="d-flex justify-content-between">
+              <p className="blue">LIST STUDENT</p>
+              <button
+                onClick={handleAddStudentClick}
+                style={{
+                  backgroundColor: "#FFA63D",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  height: "35px",
+                }}
+              >
+                Add student
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th
+                      className="text-center"
+                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
+                    >
+                      #
+                    </th>
+                    <th
+                      className="text-center"
+                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
+                    >
+                      Full name
+                    </th>
+                    <th
+                      className="text-center"
+                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
+                    >
+                      Date of birth
+                    </th>
+                    <th
+                      className="text-center"
+                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
+                    >
+                      Gender
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentStudents?.map((student, index) => (
+                    <tr key={index}>
+                      <td className="text-center">
+                        {index + 1 + currentPage * studentsPerPage}
+                      </td>
+                      <td className="text-center">{student.studentName}</td>
+                      <td className="text-center">{student.dateOfBirth}</td>
+                      <td className="text-center">
+                        {student?.gender == 0 ? "Other" : student?.gender}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="d-flex justify-content-center">
+              <Stack
+                spacing={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                my={1}
+              >
+                <Pagination
+                  count={pageCount <= 0 ? 1 : pageCount}
+                  // count={10}
+                  color="primary"
+                  page={currentPage}
+                  onChange={(event, value) => setCurrentPage(value)}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBack,
+                        next: ArrowForward,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const CreateClass = ({ onBack, onNext }) => {
     const [classCode, setClassCode] = useState("");
     const [date, setDate] = useState(null);
@@ -289,6 +768,21 @@ export default function StaffClassDetail() {
     const handleCreateSchedule = async () => {
       const checkedDaysArray = getCheckedDays();
       const days = checkedDaysArray.length > 0 ? checkedDaysArray : ["NoDay"];
+      const requiredSlots = createdClassDetails ? createdClassDetails.slotPerWeek : 0;
+
+      if (checkedDaysArray.length !== requiredSlots) {
+        toast.error(`Please select exactly ${requiredSlots} days for the schedule as per the course requirements.`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        return; // Stop the function execution if the condition is not met
+      }
 
       const data = {
         days: days,
@@ -325,7 +819,7 @@ export default function StaffClassDetail() {
     };
 
     return (
-      <div className="staff-create-class mx-5">
+      <div className="staff-create-class mx-5 py-3 px-5" style={{ overflow: 'scroll' }}>
         <ToastContainer />
         <div className="header">
           <div className="d-flex justify-content-between">
@@ -373,7 +867,7 @@ export default function StaffClassDetail() {
               data-bs-parent="#accordionExample"
             >
               <div class="accordion-body">
-                <div className="p-5">
+                <div className="p-3">
                   <p className="blue mb-1">Class's code</p>
                   <input
                     className="ms-3"
@@ -487,7 +981,7 @@ export default function StaffClassDetail() {
               aria-labelledby="headingTwo"
               data-bs-parent="#accordionExample"
               ref={secondAccordionButtonRef}
-              
+
             >
               <div class="accordion-body">
                 <div className="px-5 pt-2">
@@ -496,6 +990,13 @@ export default function StaffClassDetail() {
                     <span className="ms-5">
                       {createdClassDetails && createdClassDetails.slotDuration}{" "}
                       minutes/slot
+                    </span>
+                  </div>
+                  <div className="d-flex">
+                    <p className="blue">Slot per week</p>
+                    <span className="ms-5">
+                      {createdClassDetails && createdClassDetails.slotPerWeek}{" "}
+                      slots/week
                     </span>
                   </div>
                   <p className="blue">Study day</p>
@@ -539,179 +1040,253 @@ export default function StaffClassDetail() {
     );
   };
 
-  const ClassContent = ({
-    classId,
-    setView,
-    setClassIdForStudentForm,
-    setClassIdForTeacherForm,
-  }) => {
-    const [classDetails, setClassDetails] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(0);
-    const studentsPerPage = 3;
+  const EditSchedule = ({ classId, onBack }) => {
+    const [createdClassDetails, setCreatedClassDetails] = useState(null);
+    const [checkedDays, setCheckedDays] = useState({
+      Monday: false,
+      Tuesday: false,
+      Wednesday: false,
+      Thursday: false,
+      Friday: false,
+      Saturday: false,
+      Sunday: false
+    });
+    const [isCreatingSchedule, setIsCreatingSchedule] = useState(false);
+    const [classSchedule, setClassSchedule] = useState({})
 
-    console.log('currentPage: ', currentPage);
-    const pageCount = Math.ceil(
-      classDetails?.students.length / studentsPerPage
+    useEffect(() => {
+      const fetchCourses = async () => {
+        try {
+          const response = await instance.get(
+            `api/v1/Classes/schedules/${classId}`
+          );
+          const data = response.data;
+          console.log('data: ', data);
+          setClassSchedule(data);
+
+
+        } catch (error) {
+
+        }
+      };
+
+      fetchCourses();
+    }, []);
+
+    console.log('classSchedule: ', classSchedule);
+
+    const toggleDay = (day) => {
+      setCheckedDays((prevState) => ({
+        ...prevState,
+        [day]: !prevState[day],
+      }));
+    };
+
+    const getCheckedDays = () => {
+      return Object.entries(checkedDays)
+        .filter(([day, isChecked]) => isChecked)
+        .map(([day]) => day);
+    };
+
+    const firstRowDays = Object.entries(checkedDays)?.slice(0, 3);
+    const secondRowDays = Object.entries(checkedDays)?.slice(3);
+
+    const [selectedSlotId, setSelectedSlotId] = useState(null);
+
+    const renderRow = (days) => (
+      <div className="d-flex justify-content-start">
+        {days.map(([day, isChecked]) => (
+          <div
+            key={day}
+            className="d-flex"
+            onClick={() => toggleDay(day)}
+            style={{ width: "180px" }}
+          >
+            <i
+              style={{ fontSize: "25px", color: "#1A9CB7", cursor: "pointer" }}
+              className={
+                isChecked ? "fa-solid fa-square-check" : "fa-regular fa-square"
+              }
+            ></i>
+            <p className="ms-2" style={{ fontSize: "18px" }}>
+              {day}
+            </p>
+          </div>
+        ))}
+      </div>
     );
 
-    const handlePageClick = (event, value) => {
-      setCurrentPage(value - 1); // Adjust page index since MUI uses 1-based indexing
+    const calculateEndTime = (startTime, slotTime) => {
+      let [hours, minutes] = startTime.split(":").map(Number);
+      minutes += slotTime; // Ensure slotDuration is an integer
+      hours += Math.floor(minutes / 60);
+      minutes %= 60;
+      // Pad the hours and minutes with leading zeros if necessary
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
     };
 
-    const handleAddStudentClick = () => {
-      setClassIdForStudentForm(classId); // Set the classId for the StudentForm
-      setView("addStudent");
+    const SlotTimeSelection = ({ classSchedule }) => {
+      // Ensure we handle the case where classSchedule might be null or undefined
+      if (!classSchedule) {
+        return <p>Loading or not available...</p>;
+      }
+
+      // Assuming classSchedule contains the necessary details like slotDuration
+      const slotDuration = Number(classSchedule.slotTime);
+
+      // Create slots based on the start times and calculate end times using slotDuration
+      const slots = [
+        { id: 1, start: "8:00" },
+        { id: 2, start: "10:00" },
+        { id: 3, start: "14:00" },
+        { id: 4, start: "16:00" },
+        { id: 5, start: "18:00" },
+        { id: 6, start: "20:00" },
+      ].map((slot) => ({
+        ...slot,
+        end: calculateEndTime(slot.start, slotDuration), // Utilizing a shared calculateEndTime function
+      }));
+
+      // Render slots in two rows
+      const firstRowSlots = slots.slice(0, 3);
+      const secondRowSlots = slots.slice(3);
+
+      const handleSlotSelection = (id) => {
+        setSelectedSlotId(id);
+      };
+
+      // Function to render each slot in the UI
+      const renderSlot = (slot) => (
+        <div
+          key={slot.id}
+          className="d-flex align-items-center"
+          onClick={() => handleSlotSelection(slot.id)}
+          style={{ cursor: "pointer", padding: "10px", width: "250px" }}
+        >
+          <i
+            style={{ fontSize: "25px", color: "#1A9CB7" }}
+            className={selectedSlotId === slot.id ? "fa-solid fa-circle" : "fa-regular fa-circle"}
+          ></i>
+          <p className="ms-2 my-2" style={{ fontSize: "16px" }}>
+            Slot {slot.id} ({slot.start} - {slot.end})
+          </p>
+        </div>
+      );
+
+      // Returning the structured rows of slots for selection
+      return (
+        <div>
+          <div className="d-flex justify-content-around">
+            {firstRowSlots.map(renderSlot)}
+          </div>
+          <div className="d-flex justify-content-around">
+            {secondRowSlots.map(renderSlot)}
+          </div>
+        </div>
+      );
     };
 
-    const handleAddTeacherClick = () => {
-      // Check if the schedule is set by verifying if 'classDetails' has schedule-related data
-      if (!classDetails || !classDetails.studyDay || classDetails.studyDay.length === 0 || !classDetails.slotNumber) {
-        // If schedule is not set, show an error toast
-        toast.error("You need to create a schedule for the class first", {
+
+    if (!classData) {
+      return (
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      );
+    }
+
+    const handleCreateSchedule = async () => {
+      const checkedDaysArray = getCheckedDays();
+      const days = checkedDaysArray.length > 0 ? checkedDaysArray : ["NoDay"];
+      const requiredSlots = classSchedule ? classSchedule.slotPerWeek : 0;
+
+      if (checkedDaysArray.length !== requiredSlots) {
+        toast.error(`Please select exactly ${requiredSlots} days for the schedule as per the course requirements.`, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeButton: true,
+          closeButton: false,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: "colored",
         });
-      } else {
-        // If schedule exists, proceed with setting the classId and changing the view
-        setClassIdForTeacherForm(classId);
-        setView("addTeacher");
+        return; // Stop the function execution if the condition is not met
       }
-    };
 
-    // Calculate the students to be displayed on the current page
-    const currentStudents = classDetails?.students?.slice(
-      currentPage * studentsPerPage,
-      (currentPage + 1) * studentsPerPage
-    );
+      if (!selectedSlotId) {
+        toast.error("Please select a slot time before updating the schedule.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        return; // Stop the function execution if no slot is selected
+      }
 
-    useEffect(() => {
-      const fetchClassDetails = async () => {
-        try {
-          const response = await instance.get(
-            `api/v1/Classes/detail/${classId}`
-          );
-          const data = response.data;
-
-          console.log("data: ", data);
-          setClassDetails(data);
-        } catch (error) {
-          console.error("Failed to fetch class details", error);
-        } finally {
-          setLoading(false);
-        }
+      const data = {
+        classId: classSchedule.classId,
+        studyDay: days,
+        slotNumber: selectedSlotId,
+        slotTime: classSchedule.slotTime,
       };
 
-      fetchClassDetails();
-    }, [classId]);
+      console.log('data before put:', JSON.stringify(data)); // Check how data looks after serialization
 
-    if (loading) {
-      return (
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "100vh" }}
-        >
-          <div
-            className="spinner-border text-primary"
-            role="status"
-            style={{ width: "3rem", height: "3rem" }}
-          >
-            <span style={{ fontSize: "200px" }} className="visually-hidden">
-              Loading...
-            </span>
-          </div>
-        </div>
-      );
-    }
-
-    if (!classDetails) {
-      return <div>Class details not found.</div>;
-    }
-    const getDayStyle = (day) => {
-      const isScheduledDay = classDetails?.studyDay?.includes(day);
-      return {
-        borderRadius: "50%",
-        border: isScheduledDay ? "none" : "1px solid black",
-        height: "45px",
-        width: "45px",
-        backgroundColor: isScheduledDay ? "#FD8569" : "transparent",
-        color: isScheduledDay ? "white" : "black",
-      };
-    };
-
-    const handleOpenNewTab = (url) => {
-      window.open(url, "_blank");
-    };
-
-    const handleStatusChange = async (newStatus) => {
       try {
-        const response = await instance.patch(
-          `api/v1/Classes/${classId}?status=${newStatus}`
-        );
-        if (response.data) {
-          toast.success(response.data.message);
-          console.log("success"); // Displaying the toast message on successful API response
-          setClassDetails((prevDetails) => ({
-            ...prevDetails,
-            classStatus: newStatus,
-          })); // Update local state to reflect the new status
-        }
+        setIsCreatingSchedule(true);
+
+        const response = await instance.put("api/v1/Classes/schedules", data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const responseData = response.data;
+        console.log("responseData: ", responseData);
+
+        console.log(`ClassId: ${responseData.classId}`);
+        setView("classContent");
       } catch (error) {
-        console.error("Failed to update class status", error);
-        toast.error("Failed to update class status"); // Display error toast message
+        console.error("Error during the API request:", error);
+        let errorMessage = "Unexpected error occurred."; // Default message
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } finally {
+        setIsCreatingSchedule(false);
       }
     };
 
-    const handleSelectChange = (event) => {
-      const selectedStatus = event.target.value;
-      handleStatusChange(selectedStatus);
-    };
 
     return (
-      <div
-        className="staff-class-content mx-5"
-        style={{
-          padding: "20px 50px",
-          backgroundColor: "white",
-          margin: "30px 80px",
-          overflowY: "scroll",
-          height: "90vh",
-        }}
-      >
+      <div className="staff-create-class mx-5 py-3 px-5" style={{ overflow: 'scroll' }}>
+        <ToastContainer />
         <div className="header">
           <div className="d-flex justify-content-between">
             <div className="d-flex justify-content-start">
               <div>
-                <h5 className="mb">Class detail</h5>
+                <h5 className="mb">Edit schedule</h5>
                 <hr />
               </div>
               <i class="fa-solid fa-bell"></i>
             </div>
-            <ToastContainer />
-            <div className="d-flex justify-content-start">
-              <select
-                className="py-1 px-2"
-                style={{
-                  backgroundColor: "#1A9CB7",
-                  color: "white",
-                  border: "none",
-                  marginRight: "10px",
-                  borderRadius: "5px",
-                  outline: "none",
-                }}
-                value={classDetails.classStatus}
-                onChange={handleSelectChange}
-              >
-                <option value="Opening">Opening</option>
-                <option value="Closed">Closed</option>
-                <option value="OnGoing">On Going</option>
-              </select>
+            <div>
               <button
                 style={{
                   backgroundColor: "#7F7C7C",
@@ -720,277 +1295,67 @@ export default function StaffClassDetail() {
                   marginRight: "10px",
                   borderRadius: "5px",
                 }}
-                onClick={() => navigateToView("detail")}
+                onClick={onBack}
               >
-                <div className="py-1 px-2">Back</div>
+                Back
               </button>
             </div>
           </div>
         </div>
         <div>
-          <div className="px-4 mt-2">
-            <p className="mb-2 blue">CLASS INFORMATION</p>
-            <div className="d-flex">
-              <div style={{ marginLeft: "200px" }}>
-                <p className="mb-1">Class</p>
-                <p className="mb-1">Course</p>
-                <p className="mb-1">Number of students</p>
-                <p className="mb-1">Teacher</p>
-                <p className="mb-1">Class time</p>
-                <p className="mb-1">Slot time</p>
-              </div>
-              <div style={{ marginLeft: "50px" }}>
-                <p
-                  className=" mb-1"
-                  style={{ color: "#FD8569", fontWeight: "bold" }}
-                >
-                  {classDetails.classCode}
-                </p>
-                <p className="mb-1">{classDetails.courseName}</p>
-                <p className="mb-1">{classDetails.students.length}</p>
-                <p className="mb-1">
-                  {classDetails.teacherName ? (
-                    <p className="mb-1">
-                      {classDetails.teacherName} /{" "}
-                      <button
-                        onClick={handleAddTeacherClick}
-                        style={{
-                          backgroundColor: "#1A9CB7",
-                          height: "25px",
-                          fontSize: "14px",
-                          border: "none",
-                          borderRadius: "8px",
-                          color: "white",
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </p>
-                  ) : (
+          <div style={{ overflow: 'scroll' }}>
+            <div
+            >
+              <div >
+                <div className="px-5 pt-2">
+                  <div className="d-flex">
+                    <p className="blue">Slot duration</p>
+                    <span className="ms-5">
+                      {classSchedule && classSchedule.slotTime}{" "}
+                      minutes/slot
+                    </span>
+                  </div>
+                  <div className="d-flex">
+                    <p className="blue">Slot per week</p>
+                    <span className="ms-5">
+                      {classSchedule && classSchedule.slotPerWeek}{" "}
+                      slots/week
+                    </span>
+                  </div>
+                  <p className="blue">Study day</p>
+                  <div className="study-day">
+                    {renderRow(firstRowDays)}
+                    {renderRow(secondRowDays)}
+                  </div>
+                  <p className="blue">Slot time</p>
+                  <div>
+                    {classSchedule && (
+                      <SlotTimeSelection classSchedule={classSchedule} />
+                    )}
+                  </div>
+                  <div className="d-flex justify-content-end">
                     <button
-                      onClick={handleAddTeacherClick}
                       style={{
-                        backgroundColor: "#1A9CB7",
-                        height: "25px",
-                        fontSize: "14px",
+                        backgroundColor: "#F25B58",
+                        color: "white",
                         border: "none",
                         borderRadius: "8px",
-                        color: "white",
+                        height: "35px",
+                        width: "150px",
                       }}
+                      onClick={handleCreateSchedule}
                     >
-                      Add teacher
+                      {isCreatingSchedule ? (
+                        <div class="spinner-border text-light" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      ) : (
+                        "Update schedule"
+                      )}
                     </button>
-                  )}
-                </p>
-                <p className="mb-1">
-                  {formatDayV1(classDetails?.openClass)} -{" "}
-                  {formatDayV1(classDetails?.closeClass)}
-                </p>
-                <p className="mb-1">{classDetails.slotDuration} minutes/slot</p>
-              </div>
-            </div>
-          </div>
-          <div className="px-4">
-            <p className="mb-2 blue">CLASS SCHEDULE</p>
-            <div className="d-flex">
-              <div style={{ marginLeft: "200px" }}>
-                <p className="mb-1">Study day</p>
-                <p className="mb-1 mt-4">Slot</p>
-                <p className="mb-1">Total slot</p>
-                <p className="mb-1">Link discord</p>
-              </div>
-              <div style={{ marginLeft: "100px" }}>
-                <div className="d-flex">
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Monday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      M
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Tuesday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      T
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Wednesday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      W
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Thursday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      Th
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Friday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      F
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Saturday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      Sa
-                    </p>
-                  </div>
-                  <div
-                    className="mb-1 ms-3 text-center"
-                    style={getDayStyle("Sunday")}
-                  >
-                    <p
-                      className="text-center mt-2"
-                      style={{ fontSize: "18px" }}
-                    >
-                      S
-                    </p>
                   </div>
                 </div>
-                <p className="mb-1">
-                  Slot {classDetails.slotNumber} (
-                  {formatTimeV1(classDetails?.startSlot)} -{" "}
-                  {formatTimeV1(classDetails?.endSlot)})
-                </p>
-                <p className="mb-1">{classDetails.totalSlot}</p>
-                <button
-                  onClick={() => handleOpenNewTab(classDetails.roomUrl)}
-                  style={{
-                    backgroundColor: "#5562ea",
-                    color: "white",
-                    borderRadius: "8px",
-                    border: "none",
-                  }}
-                >
-                  <div
-                    className="py-1 px-2"
-                    style={{ backgroundColor: "5562ea", borderRadius: "8px" }}
-                  >
-                    Discord
-                  </div>
-                </button>
               </div>
-            </div>
-          </div>
-          <div className="px-4">
-            <div className="d-flex justify-content-between">
-              <p className="blue">LIST STUDENT</p>
-              <button
-                onClick={handleAddStudentClick}
-                style={{
-                  backgroundColor: "#FFA63D",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  height: "35px",
-                }}
-              >
-                Add student
-              </button>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th
-                      className="text-center"
-                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
-                    >
-                      #
-                    </th>
-                    <th
-                      className="text-center"
-                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
-                    >
-                      Full name
-                    </th>
-                    <th
-                      className="text-center"
-                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
-                    >
-                      Date of birth
-                    </th>
-                    <th
-                      className="text-center"
-                      style={{ backgroundColor: "#1A9CB7", color: "white" }}
-                    >
-                      Gender
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentStudents?.map((student, index) => (
-                    <tr key={index}>
-                      <td className="text-center">
-                        {index + 1 + currentPage * studentsPerPage}
-                      </td>
-                      <td className="text-center">{student.studentName}</td>
-                      <td className="text-center">{student.dateOfBirth}</td>
-                      <td className="text-center">
-                        {student?.gender == 0 ? "Other" : student?.gender}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="d-flex justify-content-center">
-              <Stack
-                spacing={1}
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                my={1}
-              >
-                <Pagination
-                  count={pageCount <= 0 ? 1 : pageCount}
-                  // count={10}
-                  color="primary"
-                  page={currentPage}
-                  onChange={(event, value) => setCurrentPage(value)}
-                  renderItem={(item) => (
-                    <PaginationItem
-                      slots={{
-                        previous: ArrowBack,
-                        next: ArrowForward,
-                      }}
-                      {...item}
-                    />
-                  )}
-                />
-              </Stack>
             </div>
           </div>
         </div>
@@ -1827,6 +2192,13 @@ export default function StaffClassDetail() {
           <TeacherForm
             classId={classIdForTeacherForm}
             onBack={() => setView("classContent")}
+          />
+        );
+      case "editSchedule":
+        return (
+          <EditSchedule
+            onBack={() => setView("classContent")}
+            classId={classIdForTeacherForm}
           />
         );
       case "addStudent":
