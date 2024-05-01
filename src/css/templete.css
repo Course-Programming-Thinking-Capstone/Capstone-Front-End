@@ -1546,8 +1546,9 @@ textarea.form-control {
   padding: 10px 30px;
   margin-top: 20px;
   background-color: white;
-  border: 1px solid #ff8a00;
+  border: 1px solid white;
   border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .moderating-detail-content img {
