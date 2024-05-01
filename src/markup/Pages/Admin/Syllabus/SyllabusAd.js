@@ -58,6 +58,7 @@ import ButtonMui from "@mui/material/Button";
 import { getAvailableCourseGame } from "../../../../helper/apis/game/game";
 import { useDispatch } from "react-redux";
 import { changeAdminActiveMenu } from "../../../../store/slices/menu/menuSlice";
+import { ModalNotification } from "../../../Layout/Components/Notification/ModalNotification";
 
 function SearchableDropdown({ options, selectedValue, onChange }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -303,6 +304,7 @@ export default function SyllabusAd() {
     const [activeSlotTime, setActiveSlotTime] = useState(30);
     const [slotPerWeek, setSlotPerWeek] = useState(1);
     const [isSyllabusCreating, setIsSyllabusCreating] = useState(false);
+    const [successApiNotificationShow, setSuccessApiNotificationShow] = useState(false);
 
     const handleActiveCourseSlotChange = (event) => {
       let value = event.target.value;
@@ -321,7 +323,6 @@ export default function SyllabusAd() {
     const handleActiveSlotTimeChange = (event) => {
       let value = event.target.value;
 
-      //log
       if (value !== null && value !== "" && (value <= 5 || value > 50)) {
         if (value <= 5) {
           value = 5;
@@ -335,7 +336,6 @@ export default function SyllabusAd() {
     const handleSlotPerWeekChange = (event) => {
       let value = event.target.value;
 
-      //log
       if (value !== null && value !== "" && (value < 0 || value > 7)) {
         if (value < 0) {
           value = 1;
@@ -419,11 +419,6 @@ export default function SyllabusAd() {
           //fetch course game
           const courseGameData = await getAvailableCourseGame();
           setCourseGames(courseGameData);
-
-          //log
-          console.log(
-            `CourseGames: ${JSON.stringify(courseGameData, null, 2)}`
-          );
         } catch (error) {
           if (error.response) {
             const message =
@@ -442,8 +437,12 @@ export default function SyllabusAd() {
       fetchTeachers();
     }, []);
 
-    const handleSaveChanges = async () => {
+    const handleSaveChanges = async (event) => {
+
+      event.preventDefault();
       try {
+        //log
+        console.log("Call save change");
         setIsSyllabusCreating(true);
 
         const courseData = {
@@ -460,12 +459,14 @@ export default function SyllabusAd() {
         };
 
         const response = await createSyllabus(courseData);
+        setIsSyllabusCreating(false);
+        setSuccessApiNotificationShow(true);
 
-        notifyCreateSuccess("Create syllabus success.");
+        // notifyCreateSuccess("Create syllabus success.");
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2000);
       } catch (error) {
         if (error.response) {
           const message =
@@ -484,6 +485,7 @@ export default function SyllabusAd() {
       } finally {
         setIsSyllabusCreating(false);
       }
+
     };
 
     //dnd part
@@ -507,6 +509,11 @@ export default function SyllabusAd() {
 
     //dnd part
 
+    //handle modal notification
+    const handleModalNotificationClose = () => {
+      setSuccessApiNotificationShow(false);
+      window.location.reload();
+    }
     return (
       <>
         <Backdrop
@@ -527,17 +534,6 @@ export default function SyllabusAd() {
                   <i className="fa-solid fa-book"></i>
                 </div>
                 <div>
-                  {/* <ButtonMui
-                  size="small"
-                  variant="contained"
-                  color="warning"
-                  aria-label="Back"
-                  startIcon={<KeyboardBackspace />}
-                  onClick={() => setShowCreateSyllabus(false)}
-                  type="button"
-                >
-                  Back
-                </ButtonMui> */}
 
                   <button
                     onClick={() => setShowCreateSyllabus(false)}
@@ -554,330 +550,331 @@ export default function SyllabusAd() {
             <hr />
 
             <ToastContainer containerId={2} />
-            <FormGroup onSubmit={handleSaveChanges}>
-              <div>
-                <div className="d-flex justify-content-start fw-bold my-3">
-                  <p className="mb-0 blue ">Course title</p>
-                  <span className="orange">*</span>
-                </div>
-                <input
-                  className="syllabus-ad-create-syllabus-input w-100"
-                  type="text"
-                  placeholder="Title"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                  required
-                />
+            <ModalNotification message={"Create course success"} handleClose={handleModalNotificationClose} show={successApiNotificationShow} />
 
-                {/* Error message for course title */}
-                {!courseName && (
-                  <FormHelperText error>Please enter a course title</FormHelperText>
-                )}
-
-                <div className="d-flex justify-content-start fw-bold mt-3">
-                  <p className="mb-0 blue">Course target</p>
-                  <span className="orange">*</span>
-                </div>
-                <textarea
-                  className="mt-3 syllabus-ad-create-syllabus-input w-100"
-                  name=""
-                  id=""
-                  rows="4"
-                  value={courseTarget}
-                  onChange={(e) => setCourseTarget(e.target.value)}
-                  required
-                ></textarea>
-                {!courseTarget && (
-                  <FormHelperText error>Please enter a course target</FormHelperText>
-                )}
-              </div>
-
-              <div className="d-flex justify-content-start fw-bold mt-3 mb-3">
-                <p className="mb-0 blue">Sections</p>
+            <div>
+              <div className="d-flex justify-content-start fw-bold">
+                <p className="mb-0 blue ">Course title</p>
                 <span className="orange">*</span>
               </div>
+              <input
+                className="syllabus-ad-create-syllabus-input w-100"
+                type="text"
+                placeholder="Title"
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                required
+              />
 
-              <Modal
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                show={modalShow}
-                className="create-course-modal-content syllabus-ad-create-syllabus-modal"
-              >
-                {/* <Modal.Header>
+              {/* Error message for course title */}
+              {!courseName && (
+                <FormHelperText error>Please enter a course title</FormHelperText>
+              )}
+
+              <div className="d-flex justify-content-start fw-bold mt-3">
+                <p className="mb-0 blue">Course target</p>
+                <span className="orange">*</span>
+              </div>
+              <textarea
+                className="mt-3 syllabus-ad-create-syllabus-input w-100"
+                name=""
+                id=""
+                rows="4"
+                value={courseTarget}
+                onChange={(e) => setCourseTarget(e.target.value)}
+                required
+              ></textarea>
+              {!courseTarget && (
+                <FormHelperText error>Please enter a course target</FormHelperText>
+              )}
+            </div>
+
+            <div className="d-flex justify-content-start fw-bold mt-3 mb-3">
+              <p className="mb-0 blue">Sections</p>
+              <span className="orange">*</span>
+            </div>
+
+            <Modal
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              show={modalShow}
+              className="create-course-modal-content syllabus-ad-create-syllabus-modal"
+            >
+              {/* <Modal.Header>
                 <div className="text-center">
                   <h5 style={{ color: "#ff8a00" }}>Add new section</h5>
                 </div>
               </Modal.Header> */}
-                <Modal.Header
-                  closeButton
-                  className="create-course-modal-header"
-                >
-                  <Modal.Title>Add section</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="">
-                    <p className="mb-0 syllabus-ad-create-syllabus-form-lable mb-3">
-                      Section's name
-                    </p>
-                    <input
-                      value={newSectionName}
-                      onChange={(e) => setNewSectionName(e.target.value)}
-                      type="text"
-                      placeholder="Section's name"
-                      className="syllabus-ad-create-syllabus-input w-100 mb-3"
-                    />
-                  </div>
-                  <div className="d-flex justify-content-end mt-4">
-                    <button
-                      style={{
-                        backgroundColor: "#1a9cb7",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        height: "35px",
-                        width: "100px",
-                      }}
-                      className="mx-4"
-                      onClick={() => setModalShow(false)}
-                      type="button"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      style={{
-                        backgroundColor: "#E53E5C",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        height: "35px",
-                        width: "100px",
-                      }}
-                      onClick={handleAddSection}
-                      type="button"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </Modal.Body>
-              </Modal>
-              <div className="render-section mb-3">
-                {/* Dnd content */}
-                <DndContext
-                  collisionDetection={closestCenter}
-                  sensors={sensor}
-                  onDragEnd={(event) => handleDragEnd(event)}
-                >
-                  <SortableContext
-                    items={sections}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {sections.map((section, index) => (
-                      //   <div
-                      //     className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
-                      //     key={index}
-                      //     style={{ border: "1px solid #D4D4D4" }}
-                      //   >
-                      //     <p className="mb-0">{section}</p>
-                      //     <i
-                      //       onClick={() => handleRemoveSection(index)}
-                      //       style={{ cursor: "pointer" }}
-                      //       class="fa-solid fa-trash-can"
-                      //     ></i>
-                      //   </div>
-
-                      <SectionComponent
-                        index={index}
-                        handleRemoveSection={handleRemoveSection}
-                        section={section}
-                      />
-                    ))}
-                  </SortableContext>
-                </DndContext>
-
-                {/* Dnd content */}
-              </div>
-              <div className="d-flex justify-content-center align-items-center">
-                <div className="d-flex justify-content-between align-items-center">
+              <Modal.Header
+                closeButton
+                className="create-course-modal-header"
+              >
+                <Modal.Title>Add section</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="">
+                  <p className="mb-0 syllabus-ad-create-syllabus-form-lable mb-3">
+                    Section's name
+                  </p>
+                  <input
+                    value={newSectionName}
+                    onChange={(e) => setNewSectionName(e.target.value)}
+                    type="text"
+                    placeholder="Section's name"
+                    className="syllabus-ad-create-syllabus-input w-100 mb-3"
+                  />
+                </div>
+                <div className="d-flex justify-content-end mt-4">
                   <button
-                    className="syllabus-ad-create-syllabus-button"
-                    onClick={() => setModalShow(true)}
+                    style={{
+                      backgroundColor: "#1a9cb7",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      height: "35px",
+                      width: "100px",
+                    }}
+                    className="mx-4"
+                    onClick={() => setModalShow(false)}
                     type="button"
                   >
-                    <i className="fa-solid fa-circle-plus mx-1"></i>
-                    <span className="mx-1">Add section</span>
+                    Cancel
+                  </button>
+                  <button
+                    style={{
+                      backgroundColor: "#E53E5C",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      height: "35px",
+                      width: "100px",
+                    }}
+                    onClick={handleAddSection}
+                    type="button"
+                  >
+                    Save
                   </button>
                 </div>
-              </div>
-
-              {/* Game Section */}
-
-              <p className="blue mb-1 fw-bold">Game</p>
-              <div className="d-block w-100 mb-3">
-                <Select
-                  value={courseGameId}
-                  onChange={handleCourseGameIdChange}
-                  size="small"
-                  sx={{ width: "100%", backgroundColor: "white" }}
+              </Modal.Body>
+            </Modal>
+            <div className="render-section mb-3">
+              {/* Dnd content */}
+              <DndContext
+                collisionDetection={closestCenter}
+                sensors={sensor}
+                onDragEnd={(event) => handleDragEnd(event)}
+              >
+                <SortableContext
+                  items={sections}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <MenuItem value={-1}>
-                    None
-                  </MenuItem>
-                  {courseGames.map((courseGame, index) => {
-                    return (
-                      <MenuItem key={index} value={courseGame.id}>
-                        {courseGame.name}
-                      </MenuItem>
-                    );
-                  })}
-                  {/* <MenuItem value={10}>Ten</MenuItem>
+                  {sections.map((section, index) => (
+                    //   <div
+                    //     className="px-4 pt-2 mt-2 pb-2 d-flex justify-content-between"
+                    //     key={index}
+                    //     style={{ border: "1px solid #D4D4D4" }}
+                    //   >
+                    //     <p className="mb-0">{section}</p>
+                    //     <i
+                    //       onClick={() => handleRemoveSection(index)}
+                    //       style={{ cursor: "pointer" }}
+                    //       class="fa-solid fa-trash-can"
+                    //     ></i>
+                    //   </div>
+
+                    <SectionComponent
+                      key={index}
+                      index={index}
+                      handleRemoveSection={handleRemoveSection}
+                      section={section}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+
+              {/* Dnd content */}
+            </div>
+            <div className="d-flex justify-content-center align-items-center">
+              <div className="d-flex justify-content-between align-items-center">
+                <button
+                  className="syllabus-ad-create-syllabus-button"
+                  onClick={() => setModalShow(true)}
+                  type="button"
+                >
+                  <i className="fa-solid fa-circle-plus mx-1"></i>
+                  <span className="mx-1">Add section</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Game Section */}
+
+            <p className="blue mb-1 fw-bold">Game</p>
+            <div className="d-block w-100 mb-3">
+              <Select
+                value={courseGameId}
+                onChange={handleCourseGameIdChange}
+                size="small"
+                sx={{ width: "100%", backgroundColor: "white" }}
+              >
+                <MenuItem value={-1}>
+                  None
+                </MenuItem>
+                {courseGames.map((courseGame, index) => {
+                  return (
+                    <MenuItem key={index} value={courseGame.id}>
+                      {courseGame.name}
+                    </MenuItem>
+                  );
+                })}
+                {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
                 <MenuItem value={30}>Thirty</MenuItem> */}
-                </Select>
-              </div>
+              </Select>
+            </div>
 
-              {/* Game Section */}
+            {/* Game Section */}
 
-              <div className="point d-flex">
-                <div>
-                  <p className="blue mb-1 fw-bold">Pass condition<span className="orange">*</span></p>
-                  <Stack
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    spacing={4}
-                    className="my-2"
-                  >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Quiz score higher</p>
-                    <div className="d-flex w-75 ms-5">
-                      {[60, 70, 80, 90].map((value) => (
-                        <div
-                          key={value}
-                          className="item d-flex"
-                          onClick={() => handleSelect("passCondition", value)}
-                        >
-                          <i
-                            className={
-                              activePassCondition === value
-                                ? "fa-solid fa-circle"
-                                : "fa-regular fa-circle"
-                            }
-                          ></i>
-                          <div>{value}%</div>
-                        </div>
-                      ))}
-                    </div>
-                  </Stack>
-                  {!activePassCondition && (
-                    <FormHelperText error>Please choose a condition</FormHelperText>
-                  )}
-                  <p className="blue mb-1 fw-bold">Course slot<span className="orange">*</span></p>
-                  <Stack
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    spacing={4}
-                    className="my-2"
-                  >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Total number of slot</p>
-                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
-                      <input
-                        type="number"
-                        step={1}
-                        value={activeCourseSlot ?? 30}
-                        required
-                        class="syllabus-ad-create-syllabus-input w-100"
-                        min={1}
-                        max={50}
-                        onChange={handleActiveCourseSlotChange}
-                      // style={{ maxWidth: "300px" }}
-                      />
-                      {!activeCourseSlot && (
-                        <FormHelperText error>Please enter a course slot</FormHelperText>
-                      )}
-                    </Stack>
-                  </Stack>
-
-                  <p className="blue mb-1 fw-bold">Slot time<span className="orange">*</span></p>
-                  <Stack
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    spacing={4}
-                    className="my-2"
-                  >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Minutes</p>
-                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
-                      <input
-                        type="number"
-                        step={5}
-                        value={activeSlotTime ?? 30}
-                        required
-                        class="syllabus-ad-create-syllabus-input w-100"
-                        min={5}
-                        max={50}
-                        onChange={handleActiveSlotTimeChange}
-                      />
-                      {!activeSlotTime && (
-                        <FormHelperText error>Please enter slot time </FormHelperText>
-                      )}
-                    </Stack>
-                  </Stack>
-
-                  <p className="blue mb-1 fw-bold">Slot per week<span className="orange">*</span></p>
-                  <Stack
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    spacing={4}
-                    className="my-2"
-                  >
-                    <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Slots</p>
-                    <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
-                      <input
-                        type="number"
-                        step={1}
-                        value={slotPerWeek ?? 1}
-                        required
-                        class="syllabus-ad-create-syllabus-input w-100"
-                        min={1}
-                        max={7}
-                        onChange={handleSlotPerWeekChange}
-                      />
-                      {!slotPerWeek && (
-                        <FormHelperText error>Please enter a number </FormHelperText>
-                      )}
-                    </Stack>
-                  </Stack>
-                </div>
-              </div>
-
+            <div className="point d-flex">
               <div>
-                <div className="d-flex justify-content-start fw-bold mb-3">
-                  <p className="mb-0 blue">Teacher</p>
-                  <span className="orange">*</span>
-                </div>
-                <SearchableDropdown
-                  options={teachers}
-                  selectedValue={selectedTeacherId}
-                  onChange={(id) => setSelectedTeacherId(id)}
-                />
-              </div>
-
-              <div className="d-flex justify-content-end mt-4">
-
-                <ButtonMui
-                  // size="small"
-                  variant="contained"
-                  color="error"
-                  aria-label="Post course"
-                  startIcon={<CreateNewFolder />}
-                  // onClick={handleSaveChanges}
-                  type="submit"
+                <p className="blue mb-1 fw-bold">Pass condition<span className="orange">*</span></p>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={4}
+                  className="my-2"
                 >
-                  CREATE SYLLABUS
-                </ButtonMui>
+                  <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Quiz score higher</p>
+                  <div className="d-flex w-75 ms-5">
+                    {[60, 70, 80, 90].map((value) => (
+                      <div
+                        key={value}
+                        className="item d-flex"
+                        onClick={() => handleSelect("passCondition", value)}
+                      >
+                        <i
+                          className={
+                            activePassCondition === value
+                              ? "fa-solid fa-circle"
+                              : "fa-regular fa-circle"
+                          }
+                        ></i>
+                        <div>{value}%</div>
+                      </div>
+                    ))}
+                  </div>
+                </Stack>
+                {!activePassCondition && (
+                  <FormHelperText error>Please choose a condition</FormHelperText>
+                )}
+                <p className="blue mb-1 fw-bold">Course slot<span className="orange">*</span></p>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="flex-start"
+                  spacing={4}
+                  className="my-2"
+                >
+                  <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Total number of slot</p>
+                  <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                    <input
+                      type="number"
+                      step={1}
+                      value={activeCourseSlot ?? 30}
+                      required
+                      class="syllabus-ad-create-syllabus-input w-100"
+                      min={1}
+                      max={50}
+                      onChange={handleActiveCourseSlotChange}
+                    // style={{ maxWidth: "300px" }}
+                    />
+                    {!activeCourseSlot && (
+                      <FormHelperText error>Please enter a course slot</FormHelperText>
+                    )}
+                  </Stack>
+                </Stack>
+
+                <p className="blue mb-1 fw-bold">Slot time<span className="orange">*</span></p>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={4}
+                  className="my-2"
+                >
+                  <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Minutes</p>
+                  <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                    <input
+                      type="number"
+                      step={5}
+                      value={activeSlotTime ?? 30}
+                      required
+                      class="syllabus-ad-create-syllabus-input w-100"
+                      min={5}
+                      max={50}
+                      onChange={handleActiveSlotTimeChange}
+                    />
+                    {!activeSlotTime && (
+                      <FormHelperText error>Please enter slot time </FormHelperText>
+                    )}
+                  </Stack>
+                </Stack>
+
+                <p className="blue mb-1 fw-bold">Slot per week<span className="orange">*</span></p>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={4}
+                  className="my-2"
+                >
+                  <p className="ms-5 w-25" style={{ minWidth: "150px" }}>Slots</p>
+                  <Stack spacing={1} className="w-75" sx={{ maxWidth: "300px" }}>
+                    <input
+                      type="number"
+                      step={1}
+                      value={slotPerWeek ?? 1}
+                      required
+                      class="syllabus-ad-create-syllabus-input w-100"
+                      min={1}
+                      max={7}
+                      onChange={handleSlotPerWeekChange}
+                    />
+                    {!slotPerWeek && (
+                      <FormHelperText error>Please enter a number </FormHelperText>
+                    )}
+                  </Stack>
+                </Stack>
               </div>
-            </FormGroup>
+            </div>
+
+            <div>
+              <div className="d-flex justify-content-start fw-bold mb-3">
+                <p className="mb-0 blue">Teacher</p>
+                <span className="orange">*</span>
+              </div>
+              <SearchableDropdown
+                options={teachers}
+                selectedValue={selectedTeacherId}
+                onChange={(id) => setSelectedTeacherId(id)}
+              />
+            </div>
+
+            <div className="d-flex justify-content-end mt-4">
+
+              <ButtonMui
+                // size="small"
+                variant="contained"
+                color="error"
+                aria-label="Post course"
+                startIcon={<CreateNewFolder />}
+                onClick={handleSaveChanges}
+                type="submit"
+              >
+                CREATE SYLLABUS
+              </ButtonMui>
+            </div>
           </div>
         </div>
       </>
@@ -1041,12 +1038,6 @@ export default function SyllabusAd() {
                 ))
               )}
             </div>
-
-            {/* <CustomPagination
-              page={syllabusPage}
-              setPage={setSyllabusPage}
-              totalPage={totalSyllabusPage <= 0 ? 1 : totalSyllabusPage}
-            /> */}
 
             {/* Paging */}
 

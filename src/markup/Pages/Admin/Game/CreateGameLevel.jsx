@@ -22,6 +22,7 @@ import { addLevelApi } from "../../../../helper/apis/game/game";
 import { ToastContainer, toast } from "react-toastify";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
 import { Save } from "@mui/icons-material";
+import { ModalNotification } from "../../../Layout/Components/Notification/ModalNotification";
 
 export const CreateLevel = ({
   modeId,
@@ -37,6 +38,7 @@ export const CreateLevel = ({
   });
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isVStartExist, setIsVStartExist] = useState(false);
+  const [apiSuccessShow, setApiSuccessShow] = useState(false);
 
   //notification
   const notifyApiFail = (message) =>
@@ -122,65 +124,63 @@ export const CreateLevel = ({
   };
 
   const handleAddLevel = async () => {
-    const createLevel = async () => {
-      try {
-        setIsSaveLoading(true);
+    try {
+      setIsSaveLoading(true);
 
-        if (!isVStartExist) {
-          throw new Error("Missing start position.");
-        }
-
-        let levelDetails = [];
-        let vStartPosition = undefined;
-        arr.forEach((element) => {
-          if (element.typeId !== undefined) {
-            if (element.typeId === 0) {
-              vStartPosition = element.id;
-            } else {
-              levelDetails.push({
-                vPosition: element.id,
-                typeId: element.typeId,
-              });
-            }
-          }
-        });
-
-        const data = {
-          id: 0,
-          coinReward: input.coinReward,
-          gemReward: input.gemReward,
-          levelIndex: input.levelIndex,
-          vStartPosition: vStartPosition,
-          gameLevelTypeId: modeId,
-          levelDetail: levelDetails,
-        };
-
-        await addLevelApi({ data: data });
-
-        // alert("Add success");
-        notifyApiSucess("Add success");
-
-        setTimeout(() => {
-          //back
-          setAddLevel(false);
-          setViewLevelDetail(false);
-          handleReloadLevels(modeId);
-        }, 2000);
-      } catch (error) {
-        let errorMessage = null;
-        if (error.response) {
-          console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-          errorMessage = error.response?.data?.message || "Undefined.";
-        } else {
-          console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
-          errorMessage = error.message || "Undefined.";
-        }
-        notifyApiFail(errorMessage);
-      } finally {
-        setIsSaveLoading(false);
+      if (!isVStartExist) {
+        throw new Error("Missing start position.");
       }
-    };
-    createLevel();
+
+      let levelDetails = [];
+      let vStartPosition = undefined;
+      arr.forEach((element) => {
+        if (element.typeId !== undefined) {
+          if (element.typeId === 0) {
+            vStartPosition = element.id;
+          } else {
+            levelDetails.push({
+              vPosition: element.id,
+              typeId: element.typeId,
+            });
+          }
+        }
+      });
+
+      const data = {
+        id: 0,
+        coinReward: input.coinReward,
+        gemReward: input.gemReward,
+        levelIndex: input.levelIndex,
+        vStartPosition: vStartPosition,
+        gameLevelTypeId: modeId,
+        levelDetail: levelDetails,
+      };
+
+      await addLevelApi({ data: data });
+
+      // // alert("Add success");
+      // notifyApiSucess("Add success");
+
+      // setTimeout(() => {
+      //   //back
+      //   setAddLevel(false);
+      //   setViewLevelDetail(false);
+      //   handleReloadLevels(modeId);
+      // }, 2000);
+      setApiSuccessShow(true);
+    } catch (error) {
+      let errorMessage = null;
+      if (error.response) {
+        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.response?.data?.message || "Undefined.";
+      } else {
+        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+        errorMessage = error.message || "Undefined.";
+      }
+      notifyApiFail(errorMessage);
+    } finally {
+      setIsSaveLoading(false);
+    }
   };
 
   //Drag and Drop
@@ -232,6 +232,13 @@ export const CreateLevel = ({
     setArr(updatedArray);
   };
 
+  const handleSuccessNotificationClose = () => {
+    setApiSuccessShow(false);
+    setAddLevel(false);
+    setViewLevelDetail(false);
+    handleReloadLevels(modeId);
+  }
+
   return (
     <>
       <Backdrop
@@ -240,6 +247,7 @@ export const CreateLevel = ({
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <ModalNotification message={"Create level success"} handleClose={handleSuccessNotificationClose} show={apiSuccessShow} />
       <div className="level-detail">
         <div className="d-flex justify-content-between">
           <div>

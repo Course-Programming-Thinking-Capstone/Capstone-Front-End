@@ -75,6 +75,7 @@ import {
 } from "@mui/icons-material";
 
 import { Button } from "@mui/material";
+import { ModalNotification } from "../../../../../Layout/Components/Notification/ModalNotification";
 
 const CreateCourseComponent = () => {
   const dispatch = useDispatch();
@@ -98,6 +99,7 @@ const CreateCourseComponent = () => {
   const [description, setDescriptionInput] = useState(undefined);
   const [confirm, setConfirm] = useState(false);
   const [fileName, setFileName] = useState(null);
+  const [notificationShow, setNotificationShow] = useState(false);
 
   //notification
   const notifyApiFail = (message) =>
@@ -270,10 +272,11 @@ const CreateCourseComponent = () => {
         if (action === "Save") {
           notifyApiSucess("Update sucesss.");
         } else if (action === "Post") {
-          notifyApiSucess("Post course sucesss.");
-          setTimeout(() => {
-            navigate("/teacher/syllabuses");
-          }, 2000);
+          // notifyApiSucess("Post course sucesss.");
+          // setTimeout(() => {
+          //   navigate("/teacher/syllabuses");
+          // }, 2000);
+          setNotificationShow(true);
         }
       } catch (error) {
         let message;
@@ -337,6 +340,12 @@ const CreateCourseComponent = () => {
   };
   //dnd part
 
+  //notification 
+  const handleNotificationClose = () => {
+    setNotificationShow(false);
+    navigate("/teacher/syllabuses");
+  }
+
   return (
     <div className="create-course">
       <div className="header">
@@ -364,6 +373,7 @@ const CreateCourseComponent = () => {
       </div>
 
       <ToastContainer />
+      <ModalNotification message={"Post course success"} handleClose={handleNotificationClose} show={notificationShow} />
 
       <div className="create-course-content">
         <div style={{ padding: "10px 20px" }}>
