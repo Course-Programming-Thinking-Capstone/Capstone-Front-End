@@ -57,8 +57,8 @@ export default function ChildProcessDetail() {
                                     <h5>Child's information</h5>
                                     <div className="row">
                                         <div className='col-lg-3 col-md-12 col-sm-12'>
-                                            <div className="d-flex justify-content-center">
-                                                <img src="" alt="" />
+                                            <div className="d-flex justify-content-center align-items-center">
+                                                <i style={{fontSize:'80px'}} class="mt-5 fa-solid fa-user-graduate"></i>
                                             </div>
                                         </div>
                                         <div className='col-lg-9 col-md-12 col-sm-12'>
@@ -84,6 +84,10 @@ export default function ChildProcessDetail() {
                                                 <div>
                                                     <p className='fw-bold'>Account</p>
                                                     <p>{childDetails.userName}</p>
+                                                </div>
+                                                <div>
+                                                    <p className='fw-bold'>Age</p>
+                                                    <p>{childDetails.age}</p>
                                                 </div>
                                             </div>
                                         </div>

@@ -127,7 +127,7 @@ export default function ChildProcess() {
         {childrenList && childrenList.map((child, index) => (
           <div className="item d-flex justify-content-between" key={index}>
             <div className='d-flex' style={{ width: '40%' }}>
-              <img src={demo} alt="" />
+              <i style={{ fontSize: '30px' }} class="fa-solid fa-user-graduate ms-2"></i>
               <div className="d-flex align-items-center" >
                 <p className='ms-2' style={{ fontSize: '17px' }}>{child.fullName}</p>
               </div>

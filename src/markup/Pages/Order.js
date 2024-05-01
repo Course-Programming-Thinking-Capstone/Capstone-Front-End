@@ -42,6 +42,7 @@ export default function Order() {
     fetchOrders();
   }, [activeItem]);
 
+  console.log('orders: ', orders);
   const ViewOrderDetail = (orderId) => {
     if (orderId) {
       navigate(`/order-detail/${orderId}`);
@@ -94,7 +95,9 @@ export default function Order() {
       >
         <div className="header d-flex justify-content-between">
           <div className="d-flex justify-content-start">
-            <i style={{ color: "#FF8A00" }} className="fa-solid fa-user"></i>
+            <p>
+              <i style={{ color: "#FF8A00" }} className="fa-solid fa-user"></i>
+            </p>
             <p style={{ marginLeft: "10px" }}>Order code: </p>
             <p style={{ marginLeft: "10px" }}>{order.orderCode}</p>
           </div>
@@ -103,7 +106,7 @@ export default function Order() {
           </span>
         </div>
         <div className="content d-flex">
-          <img className="img-responsive" src={demo} alt="" />
+          <img className="img-responsive" src={order.pictureUrl} alt="" />
           <p>{order.courseName}</p>
           <p>Quantity: {order.quantity}</p>
           <p style={{ color: "#FF8A00" }}>{formatPrice(order.totalPrice)}</p>

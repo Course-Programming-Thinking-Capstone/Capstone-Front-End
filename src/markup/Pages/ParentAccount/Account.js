@@ -8,9 +8,13 @@ import momo from '../../../images/icon/momo.png';
 import zalopay from '../../../images/icon/zalopay.png';
 import { Outlet, Link } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import instance from '../../../helper/apis/baseApi/baseApi';
 
 export default function Account() {
     const [activeContent, setActiveContent] = useState('accountDetails');
+    const [userInfo, setUserInfo] = useState([]);
+    const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const user = localStorage.getItem('user');
@@ -20,6 +24,25 @@ export default function Account() {
     } else {
         console.log('user: ', JSON.parse(user));
     }
+
+    const fetchUserInfo = async () => {
+        setLoading(true);
+        try {
+            const response = await instance.get(`api/v1/users/account`);
+            const data = response.data;
+
+            setUserInfo(data);
+        } catch (error) {
+            console.error('Failed to fetch userInfo:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserInfo();
+        console.log(userInfo);
+    }, []);
 
 
     const handleButtonClick = (contentKey) => {
@@ -171,7 +194,7 @@ export default function Account() {
     return (
         <div>
             <Header />
-            <PageTitle />
+            <PageTitle motherMenu="Account" activeMenu="Account" />
             <div style={{
                 backgroundImage: `url(${background})`, minHeight: '800px', backgroundPosition: 'center center', // Center the background image
                 backgroundSize: 'cover',
@@ -180,15 +203,8 @@ export default function Account() {
                 <div className="container">
                     <div className="account row">
                         <div className="col-lg-5 col-md-12 col-sm-12">
-                            <div className="avatar d-flex">
-                                <div style={{ width: '40%' }}>
-
-                                    <img src={demo} alt="" />
-                                </div>
-                                <div style={{ width: '60%', paddingLeft: 20, fontSize: 24, fontWeight: 500 }}>
-                                    <p>Kim Jennie</p>
-                                    <p style={{ color: '#FF8A00' }}>Logout</p>
-                                </div>
+                            <div className="avatar">
+                                <p style={{ fontSize: 24, fontWeight: 500 }} className='text-center'>{userInfo && userInfo.fullName}</p>
                             </div>
                             <div className='account-menu'>
                                 <Link to="account-details"><button style={isActive('accountDetails')} onClick={() => handleButtonClick('accountDetails')}><i class="fa-solid fa-user"></i> Account Details</button></Link><hr />
