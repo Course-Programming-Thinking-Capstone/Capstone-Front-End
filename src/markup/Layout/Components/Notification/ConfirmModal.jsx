@@ -49,12 +49,14 @@ export const ConfirmModal = ({ title, message, closeLabel, acceptLabel, handleAc
                                 spacing={2}
                                 sx={{ fontSize: "1rem", margin: "2rem 4rem 0" }}
                             >
-                                <Button variant='outlined' color='error' onClick={handleDeny}>
+                                {/* <Button variant='outlined' color='error' onClick={handleDeny}>
                                     {closeLabel ?? "Close"}
                                 </Button>
                                 <Button variant='contained' color='primary' onClick={handleAccept}>
                                     {acceptLabel ?? "Ok"}
-                                </Button>
+                                </Button> */}
+                                <button className='mx-2 confirm-modal-button-deny' onClick={handleDeny}>{closeLabel ?? "Close"}</button>
+                                <button className='mx-2 confirm-modal-button-accept' onClick={handleAccept}>{acceptLabel ?? "Ok"}</button>
                             </Stack>
                         </Modal.Body>
                     </>

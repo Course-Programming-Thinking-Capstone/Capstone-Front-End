@@ -488,7 +488,7 @@ export default function Game() {
     setShow(true);
   }
 
-  const deleteLevelMessage = "Do you really want to delete this level";
+  const deleteLevelMessage = "Do you really want to delete this level?";
 
   //make these draggable
   if (viewLevelDetail) {

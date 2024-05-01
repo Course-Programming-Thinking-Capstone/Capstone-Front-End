@@ -2,3 +2,18 @@
     height: 60vh;
     min-height: 440px;
 }
+
+.moderating-detail-container {
+    height: 90vh;
+    overflow: auto;
+    background-color: white;
+    border-radius: 15px;
+    margin: 0 3rem;
+}
+
+.moderating-detail-container-content {
+    background-color: 'white';
+    height: "60vh";
+    min-height: '500px';
+    overflow: 'auto'
+}

@@ -16,6 +16,7 @@ import { LoadingSpinner } from '../../../Layout/Components/LoadingSpinner';
 import { Pagination, PaginationItem, Stack } from '@mui/material';
 import { ArrowBack, ArrowForward, HPlusMobiledata } from '@mui/icons-material';
 import "./StaffModerating.css";
+import { ConfirmModal } from '../../../Layout/Components/Notification/ConfirmModal';
 
 
 const ModeratingLesson = ({ onBack, section }) => {
@@ -418,31 +419,16 @@ const ModeratingDetail = ({ onBack, courseId }) => {
     };
 
     return (
-        <div className='moderating-detail' style={{
-            height: '700px',
-            overflowX: 'hidden',
-            overflowY: 'hidden',
-            width: '1143px',
-            backgroundColor: 'white',
-            borderRadius: 15,
-            marginLeft: 48,
-            marginTop: 0
-        }}>
-            <div style={{
-                backgroundColor: 'white',
-                height: '660px',
-                overflow: 'auto',
-                width: '1080px',
-                paddingRight: 70
-            }}>
-                <Modal
+        <div className='moderating-detail moderating-detail-container px-5 py-4' >
+            <div className='moderating-detail-container-content' >
+                {/* <Modal
                     show={modalApproveShow}
                     onHide={() => setApproveModalShow(false)}
                     aria-labelledby="contained-modal-title-vcenter"
                     centered
                 >
-                    <Modal.Body style={{ padding: '50px 20px',alignItems:'center' }}>
-                        <div className="text-center" style={{marginBottom:'5%',border:'1px solid lightblue',borderRadius:10,display:'flex',alignContent:"center",paddingTop:('3%'),boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}>
+                    <Modal.Body style={{ padding: '50px 20px', alignItems: 'center' }}>
+                        <div className="text-center" style={{ marginBottom: '5%', border: '1px solid lightblue', borderRadius: 10, display: 'flex', alignContent: "center", paddingTop: ('3%'), boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}>
 
                             <h4>The course meets the standards and is approved to be posted to the system</h4>
                         </div>
@@ -451,12 +437,21 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             <button style={{ height: '45px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '20px', border: 'none' }} onClick={handleApprove}>Approve</button>
                         </div>
                     </Modal.Body>
-                </Modal>
+                </Modal> */}
+
+                <ConfirmModal
+                    message={"The course meets the standards and is approved to be posted to the system"}
+                    acceptLabel={"Approve"}
+                    closeLabel={"Close"}
+                    handleAccept={handleApprove}
+                    handleDeny={() => setApproveModalShow(false)}
+                    show={modalApproveShow} />
+
                 <ToastContainer />
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={backdropOpen}
-                    onClick={() => setBackdropOpen(false)} // Optionally close on click, or remove this to disable manual close
+                    onClick={() => setBackdropOpen(false)}
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>
@@ -545,7 +540,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                         </div>
                         <div className="d-flex" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5%' }}>
                             <button className='mx-2' style={{ height: '40px', width: '120px', backgroundColor: '#F15C58', color: 'white', borderRadius: '20px', border: 'none' }} onClick={() => setRefuseShow(false)}>Cancel</button>
-                            <button style={{ height: '40px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '20px', border: 'none',marginLeft:'45px',marginRight:'7px' }} onClick={() => setRefuseShow(false)}>Send</button>
+                            <button style={{ height: '40px', width: '120px', backgroundColor: '#1A9CB7', color: 'white', borderRadius: '20px', border: 'none', marginLeft: '45px', marginRight: '7px' }} onClick={() => setRefuseShow(false)}>Send</button>
                         </div>
                     </Modal.Body>
                 </Modal>
@@ -560,9 +555,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                             <i style={{ color: '#ff8a00', marginLeft: '10px', fontSize: '20px' }} className="fa-solid fa-bell"></i>
                         </div>
                         <div className="d-flex justify-content-end">
-                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '7px',paddingRight:7 }} onClick={onBack} ><i className="fa-solid fa-chevron-left" style={{ marginRight: 5 }}></i>Back</button>
-                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '7px',paddingTop:5,paddingBottom:5,paddingRight:7 }}><i className="fa-solid fa-x" style={{ marginRight: 5 }}></i> Refuse</button>
-                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: '7px', borderColor: '#FF8A00', borderStyle: 'solid', borderWidth: 2,paddingRight:7 }}><i className="fa-solid fa-check" style={{ marginRight: 5 }}></i>Approve</button>
+                            <button style={{ backgroundColor: '#7F7C7C', color: 'white', border: 'none', marginRight: '10px', borderRadius: '7px', paddingRight: 7 }} onClick={onBack} ><i className="fa-solid fa-chevron-left" style={{ marginRight: 5 }}></i>Back</button>
+                            <button onClick={() => setRefuseShow(true)} style={{ backgroundColor: '#F25B58', color: 'white', border: 'none', marginRight: '10px', borderRadius: '7px', paddingTop: 5, paddingBottom: 5, paddingRight: 7 }}><i className="fa-solid fa-x" style={{ marginRight: 5 }}></i> Refuse</button>
+                            <button onClick={() => setApproveModalShow(true)} style={{ color: '#FF8A00', backgroundColor: 'white', borderRadius: '7px', borderColor: '#FF8A00', borderStyle: 'solid', borderWidth: 2, paddingRight: 7 }}><i className="fa-solid fa-check" style={{ marginRight: 5 }}></i>Approve</button>
                         </div>
                     </div>
                 </div>

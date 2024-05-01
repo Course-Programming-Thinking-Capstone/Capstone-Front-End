@@ -2,3 +2,21 @@
     border-radius: 15px;
     background-color: none !important;
 }
+
+.confirm-modal-button-deny {
+    height: 40px;
+    min-width: 120px;
+    background-color: #F15C58;
+    color: white;
+    border-radius: 20px;
+    border: none
+}
+
+.confirm-modal-button-accept {
+    height: 40px;
+    min-width: 120px;
+    background-color: #1A9CB7;
+    color: white;
+    border-radius: 20px;
+    border: none
+}
