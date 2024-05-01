@@ -219,7 +219,7 @@ export default function CoursePayment() {
 
       window.location.href = responseData.payUrl;
     } catch (error) {
-      console.error("There was a problem with the process:", error.message);
+      console.error("There was a problem with the process:", error.data.message);
       setIsOrderProcessing(false);
     }
   };
