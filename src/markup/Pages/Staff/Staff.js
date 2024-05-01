@@ -36,8 +36,7 @@ export default function Staff() {
     let activePath = pathSegments[2]?.toLowerCase(); // Convert path segment to lowercase
     let activeMenu;
 
-    // Adjust these conditions to generalize the 'Order' active state
-    if (activePath.includes("order")) {
+    if (activePath === "staff-order") {
       activeMenu = "Order";
     } else if (activePath === "staff-notification") {
       activeMenu = "Notification";
