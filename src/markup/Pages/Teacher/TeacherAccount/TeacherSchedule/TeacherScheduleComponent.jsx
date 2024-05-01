@@ -19,8 +19,8 @@ const TeacherScheduleComponent = () => {
           const occurrences = getEventOccurrences(item);
           return occurrences.map((date) => ({
             title: item.classCode,
-            start: `${date}T${item.slotStart}`,
-            end: `${date}T${item.slotEnd}`,
+            start: `${date}T${item.startSlot}`,
+            end: `${date}T${item.endSlot}`,
           }));
         }).flat();
 
@@ -35,8 +35,8 @@ const TeacherScheduleComponent = () => {
 
   function getEventOccurrences(item) {
     // Replace slashes with hyphens and parse the dates as UTC
-    const startString = item.dayStart.replace(/\//g, '-') + 'T00:00:00Z';
-    const endString = item.dayEnd.replace(/\//g, '-') + 'T23:59:59Z';
+    const startString = item.openClass.replace(/\//g, '-') + 'T00:00:00Z';
+    const endString = item.closeClass.replace(/\//g, '-') + 'T23:59:59Z';
 
     const start = new Date(startString);
     const end = new Date(endString);

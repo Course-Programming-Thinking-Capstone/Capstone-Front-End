@@ -356,6 +356,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             isAdminSetup,
             price: isFree ? 0 : price, // Use the state variable price
         };
+        console.log('payload: ', payload);
         try {
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
             if (response.status === 200) { // Check if the HTTP status code is 200 OK

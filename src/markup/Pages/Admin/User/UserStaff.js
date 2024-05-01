@@ -149,7 +149,6 @@ export default function UserStaff() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
-                            <th>GENDER</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -162,7 +161,6 @@ export default function UserStaff() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
-                                <td>{parent.gender}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (
