@@ -18,21 +18,21 @@ export default function ChildProcess() {
   const [isInputFocused, setInputFocused] = useState(false);
   const [isInputFocused1, setInputFocused1] = useState(false);
 
-  useEffect(() => {
-    const fetchChildList = async () => {
-      setLoading(true);
-      try {
-        const response = await instance.get(`api/v1/students`);
-        const data = response.data;
-        console.log('data: ', data);
+  const fetchChildList = async () => {
+    setLoading(true);
+    try {
+      const response = await instance.get(`api/v1/students`);
+      const data = response.data;
+      console.log('data: ', data);
 
-        setChildrenList(data);
-      } catch (error) {
-        console.error('Failed to fetch child details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setChildrenList(data);
+    } catch (error) {
+      console.error('Failed to fetch child details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
 
     fetchChildList();
   }, []);
