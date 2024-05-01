@@ -45,11 +45,16 @@ export const getCoursesApi = async (filter) => {
       : `sortModifiedDate=${filter.sortModifiedDate}&`;
   let actionParam =
     filter.action === undefined ? "" : `action=${filter.action}&`;
+  let isFreeParam =
+    filter.isFree === undefined ? "" : `isFree=${filter.isFree}&`;
   let pageParam = filter.page === undefined ? 1 : `page=${filter.page}&`;
   let sizeParam = filter.size === undefined ? 10 : `size=${filter.size}`;
 
+  //log
+  console.log(`Fetch url: ${`api/v1/courses?${nameParam}${statusParam}${sortNameParam}${sortCreatedDateParam}${sortModifiedDateParam}${actionParam}${isFreeParam}${pageParam}${sizeParam}`}`);
+
   const response = await instance.get(
-    `api/v1/courses?${nameParam}${statusParam}${sortNameParam}${sortCreatedDateParam}${sortModifiedDateParam}${actionParam}${pageParam}${sizeParam}`
+    `api/v1/courses?${nameParam}${statusParam}${sortNameParam}${sortCreatedDateParam}${sortModifiedDateParam}${actionParam}${isFreeParam}${pageParam}${sizeParam}`
   );
 
   return response.data;

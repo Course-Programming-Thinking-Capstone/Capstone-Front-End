@@ -1,0 +1,28 @@
+
+a.schedule-detail-room {
+    text-decoration: none;
+    color: white;
+}
+
+.schedule-detail-header {
+    text-transform: uppercase;
+    color: #1A9CB7;
+}
+
+.schedule-detail-title {
+    color: #FF8A00;
+    font-weight: bold;
+}
+
+.schedule-detail-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.schedule-container {
+    background-color: white;
+    border-radius: 20px;
+    height: 85vh;
+    min-height: 500px;
+    overflow: auto;
+}

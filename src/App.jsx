@@ -25,7 +25,6 @@ import Admin from "./markup/Pages/Admin/Admin";
 import Game from "./markup/Pages/Admin/Game/Game";
 import GameData from "./markup/Pages/Admin/Game/GameData";
 import TeacherAccount from "./markup/Pages/Teacher/TeacherAccount/TeacherAccount";
-import Schedule from "./markup/Pages/Schedule";
 import TeacherNotification from "./markup/Pages/Teacher/TeacherAccount/TeacherNotification/TeacherNotification";
 import TeacherCourse from "./markup/Pages/Teacher/TeacherAccount/TeacherCourse/TeacherCourse";
 import TeacherClasses from "./markup/Pages/Teacher/TeacherAccount/TeacherClass/TeacherClass";
@@ -74,6 +73,8 @@ import AdminOrderDetail from "./markup/Pages/Admin/Order/AdminOrderDetail";
 import Dashboard from "./markup/Pages/Admin/Dashboard/Dashboard";
 import Teachers from './markup/Pages/Teachers';
 import TeachersDetail from "./markup/Pages/TeachersDetail";
+import Schedule from "./markup/Pages/Schedule";
+import StudentSchedule from "./markup/Pages/Student/Schedule/Schedule";
 
 // function App() {
 // 	return (
@@ -520,7 +521,7 @@ const App = () => {
             <Route
               path="/schedule"
               element={
-                <PrivateRoute page="schedule" component={<Schedule />} />
+                <PrivateRoute page="schedule" component={<StudentSchedule />} />
               }
             />
             <Route
