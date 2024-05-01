@@ -100,12 +100,12 @@ const ModeratingLesson = ({ onBack, section }) => {
                         <iframe
                             title="Embedded Video"
                             width="800"
-                            height="340"
+                            height="500"
                             src={currentLessonVideoUrl}
                             // frameborder="0"
                             allowFullScreen
 
-                        // style={{ border: '2px solid white' }} 
+                        style={{ border: '2px solid white',marginTop:'1rem',borderRadius:10 }} 
                         ></iframe>
                     </div>
                 )}
@@ -174,7 +174,7 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
         <div className="moderating-quiz" style={{ backgroundColor: 'white', width: 1100, height: 650, marginLeft: 65, marginTop: 60, borderRadius: 30, overflowY: 'auto' }}>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 30, paddingRight: 5, alignItems: 'center', marginTop: 20 }}>
                 <p style={{ fontWeight: 'bolder', fontSize: 20, height: 0 }}>Quiz Name: <span style={{ fontWeight: '500', fontSize: 18, marginLeft: 5 }}>{quiz.title}</span></p>
-                <button onClick={onBack} style={{ height: 30, width: 60, borderRadius: 10, borderColor: "white", borderStyle: 'solid', backgroundColor: '#1A9CB7', color: 'white' }}>Back</button>
+                <button onClick={onBack} style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', padding: '5px 5px' }} ><i className="fa-solid fa-chevron-left" style={{ paddingRight: 5 }}></i>Back</button>
             </div>
             <hr />
             <div>
@@ -183,9 +183,8 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
                 {quiz && quiz.questions.map((question, index) => (
                     <div key={index} style={{ marginBottom: 20 }}>
                         <div style={{ borderRadius: '10px', backgroundColor: '#FBEDE1', width: 900, marginLeft: 100, height: 450 }}>
-                            <div style={{ backgroundColor: '#F6D3C8', paddingLeft: 35, fontWeight: 'bold', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 50, paddingTop: 15 }}>{question.order} .</div>
-                            <p style={{ color: '#EF7E54', fontWeight: '600', paddingLeft: 50, height: 0, marginTop: 5 }}>Question</p>
-                            <p style={{ textAlign: 'center', height: 0 }}>{question.title}</p>
+                            <div style={{ backgroundColor: '#F6D3C8', paddingLeft: 35, fontWeight: 'bold', borderTopLeftRadius: 10, borderTopRightRadius: 10, height: 50, paddingTop: 15 }}>Question {question.order} .</div>
+                            <p style={{ textAlign: 'center', height: 0 ,marginTop:'1.5rem'}}>{question.title}</p>
                             <div style={{ width: 800, marginLeft: 50 }}>
                                 <hr style={{ height: 3 }} />
                             </div>
@@ -610,7 +609,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                                         <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
                                             <div className="accordion-body">
                                                 <div className="d-flex justify-content-end" style={{ alignItems: 'center' }}>
-                                                    <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white' }}>View lesson</button>
+                                                    <button onClick={() => handleViewLesson(section)} className='me-3' style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white',height:30 }}>View lesson</button>
                                                 </div>
                                                 {section.lessons.map((lesson, lessonIndex) => (
                                                     <div className="lesson-item" key={lesson.id}>
@@ -623,11 +622,14 @@ const ModeratingDetail = ({ onBack, courseId }) => {
 
                                                 {section.quizzes.map((quiz, index) => (
                                                     <div className="lesson-item" key={index}>
-                                                        <div className='lesson-content d-flex justify-content-start ms-3'>
-                                                            <i className={getIconBasedOnType("Quiz")}></i>
-                                                            <p className='ms-2'>{quiz.title}</p>
-                                                            <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', height: 23, width: 93 }}>View Quiz</button>
+                                                        <div className='lesson-content d-flex justify-content-between align-items-center ms-3'>
+                                                            <div style={{display:"flex",alignItems:'center',justifyContent:'center'}}>
+                                                                <i className={getIconBasedOnType("Quiz")}></i>
+                                                                <p className='ms-2' style={{marginBottom:0}}>{quiz.title}</p>
+                                                            </div>
+                                                            <button onClick={() => handleViewQuiz(quiz)} style={{ backgroundColor: '#F15C58', border: 'none', borderRadius: '8px', color: 'white', height: 30, width: 93 ,marginRight:'1rem'}}>View Quiz</button>
                                                         </div>
+
                                                     </div>
                                                 ))}
                                             </div>

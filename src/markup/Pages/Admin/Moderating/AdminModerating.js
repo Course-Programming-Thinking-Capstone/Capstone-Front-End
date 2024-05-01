@@ -115,7 +115,7 @@ const ModeratingQuiz = ({ onBack, quiz }) => {
         <div className="moderating-quiz" style={{ backgroundColor: 'white', width: 1100, height: 650, marginLeft: 65, marginTop: 60, borderRadius: 30, overflowY: 'auto' }}>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 30, paddingRight: 5, alignItems: 'center', marginTop: 20 }}>
                 <p style={{ fontWeight: 'bolder', fontSize: 20, height: 0 }}>Quiz Name: <span style={{ fontWeight: '500', fontSize: 18, marginLeft: 5 }}>{quiz.title}</span></p>
-                <button onClick={onBack} style={{ height: 30, width: 60, borderRadius: 10, borderColor: "white", borderStyle: 'solid', backgroundColor: '#1A9CB7', color: 'white' }}>Back</button>
+                <button onClick={onBack} style={{ backgroundColor: '#1A9CB7', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', padding: '5px 5px' }} ><i className="fa-solid fa-chevron-left" style={{ paddingRight: 5 }}></i>Back</button>
             </div>
             <hr />
             <div>
