@@ -64,6 +64,7 @@ button.create-course-add-question:hover {
 input.create-course-input {
   border: solid 1px #d4d4d4;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   /* color: #7f7c7c; */
 }
 
@@ -177,8 +178,9 @@ button.create-course-save:hover {
 
 .create-course-section-content {
   border-radius: 5px;
-  border: 1px solid grey;
-  padding: 5px;
+  border: 1px solid lightblue;
+  padding: 5px 10px;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
 }
 
 .create-course-modal-drag {
