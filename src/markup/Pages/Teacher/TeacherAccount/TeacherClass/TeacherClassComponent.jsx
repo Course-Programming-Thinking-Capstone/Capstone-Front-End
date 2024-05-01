@@ -1,15 +1,18 @@
 import { useDispatch } from "react-redux";
 import defaultAvatar from "./../../../../../images/gallery/default-user.jpg";
 import { useEffect, useState } from "react";
-import { getAccountCLass, getCLassById } from "../../../../../helper/apis/class/class";
+import {
+  getAccountCLass,
+  getCLassById,
+} from "../../../../../helper/apis/class/class";
 import { convertGenderEnumToString } from "../../../../../helper/utils/EnumUtil";
 import { calculateAgeV1 } from "../../../../../helper/utils/DateUtil";
 import { ToastContainer } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../../../Layout/Components/LoadingSpinner";
+import "./TeacherClass.css";
 
 const TeacherClassComponent = () => {
-
   const dispatch = useDispatch();
 
   // const classes = useSelector(classesSelector);
@@ -41,7 +44,7 @@ const TeacherClassComponent = () => {
 
     if (classes != null) {
       try {
-        setIsClassDetailLoading(true)
+        setIsClassDetailLoading(true);
         const currentId = classes[changeIndex]?.classId;
         const data = await getCLassById(currentId);
         setCurrentClass(data);
@@ -56,15 +59,13 @@ const TeacherClassComponent = () => {
       } finally {
         setIsClassDetailLoading(false);
       }
-
     }
 
     setSelectedClassIndex(changeIndex);
-  }
+  };
 
   const fetchData = async () => {
     try {
-
       setIsClassesLoading(true);
       let data = await getAccountCLass();
 
@@ -89,12 +90,11 @@ const TeacherClassComponent = () => {
       setIsClassesLoading(false);
       setIsClassDetailLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
-  }, [dispatch])
-
+  }, [dispatch]);
 
   return (
     <div className="teacher-classes">
@@ -110,55 +110,69 @@ const TeacherClassComponent = () => {
 
       <ToastContainer />
       <div className="teacher-classes-content py-3">
-        <h5 >Student list</h5>
-        {isClassesLoading ? (<LoadingSpinner />) :
-          (<>
+        <h5 style={{textAlign:'center',fontSize:'25px',fontWeight:'600'}}>Student list</h5>
+        {isClassesLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
             {classes === null ? (
               <p>There is no classes</p>
             ) : (
               <>
                 <div className="row" style={{ marginTop: "25px" }}>
-                  <div className="col-lg-6 col-md-12 col-sm-12">
-                    <div
-                      className="d-flex justify-content-start"
-                      style={{ marginTop: "25px" }}
-                    >
-                      <p style={{ color: "#FF8A00" }} className="mb">
-                        Class
-                      </p>
-                      <select style={{ marginLeft: "15px" }} onChange={handleSelectedClassChange} value={selectedClassIndex}>
-                        {classes !== null && classes?.map((element, index) => (
-                          <option key={index} value={index}>{element?.classCode}</option>
-                        ))
-                        }
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-12 col-sm-12">
-                    <div className="right">
+                  <div>
+                    <div className="right" style={{borderRadius:20,boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",backgroundColor:'white'}}>
                       <div className="d-flex justify-content-start align-items-center">
-                        <p style={{ color: "#F15C58" }} className="mb">
-                          Course
+                        <p style={{ color: "#F15C58",width:'70px',fontWeight:'bold' }} className="mb">
+                          Course: 
                         </p>
                         <span
                           style={{
                             backgroundColor: "white",
-                            border: "1px solid #1A9CB7",
+                            border: "1px solid white",
                             borderRadius: "10px",
-                            padding: "0px 5px",
+                            padding: "0.5rem 1rem",
+                            boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                            fontWeight:'500'
                           }}
                         >
                           {currentClass != null && currentClass?.courseName}
                         </span>
                       </div>
+                      <div>
+                        <div
+                          className="d-flex justify-content-start align-items-center"
+                          style={{ marginTop: "25px" }}
+                        >
+                          <p style={{ color: "#F15C58",width:'70px',fontWeight:'bold'  }} className="mb">
+                            Class:
+                          </p>
+                          <select
+                            onChange={handleSelectedClassChange}
+                            value={selectedClassIndex}
+                            style={{padding: "0.5rem 1rem", backgroundColor:'white',
+                            boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          width:'17.7rem',color:'black'}}
+                          >
+                            {classes !== null &&
+                              classes?.map((element, index) => (
+                                <option key={index} value={index}>
+                                  {element?.classCode}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
                       <div
                         className="d-flex justify-content-start align-items-center"
                         style={{ paddingRight: "50px", marginTop: "15px" }}
                       >
-                        <p style={{ color: "#F15C58" }} className="mb">
-                          Number of students
+                        <p style={{ color: "#F15C58",width:'70px',fontWeight:'bold' }} className="mb">
+                          Student:
                         </p>
-                        <span>{currentClass !== null && currentClass.totalStudent}</span>
+                        <span style={{boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',border:'1px solid white',padding:'0.3rem 1rem',borderRadius:5,backgroundColor:'white'}}>
+                          {currentClass !== null && currentClass.totalStudent}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -166,8 +180,9 @@ const TeacherClassComponent = () => {
 
                 {!isClassesLoading && isClassDetailLoading ? (
                   <LoadingSpinner />
-                ) :
-                  currentClass && currentClass.students?.length > 0 && (
+                ) : (
+                  currentClass &&
+                  currentClass.students?.length > 0 && (
                     <div className="table-responsive">
                       <table className="table table-borderless">
                         <thead>
@@ -180,30 +195,42 @@ const TeacherClassComponent = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {currentClass.students.map((student, index) =>
-                            <tr key={index} className="item">
+                          {currentClass.students.map((student, index) => (
+                            <tr key={index} className="item teacher-class-item">
                               <td>{index + 1}</td>
                               <td>
                                 <img
                                   className="img-responsive"
-                                  style={{ height: "40px", width: "40px", borderRadius: "50%", border: "1px solid #f7f8fb"}}
+                                  style={{
+                                    height: "40px",
+                                    width: "40px",
+                                    borderRadius: "50%",
+                                    border: "1px solid #f7f8fb",
+                                  }}
                                   src={student?.image ?? defaultAvatar}
                                   alt="Student avatar"
                                 />
                               </td>
-                              <td>{student?.studentName}</td>
-                              <td>{calculateAgeV1(student?.dateOfBirth) ?? ""}</td>
-                              <td>{student?.gender != null ? convertGenderEnumToString(student.gender) : ""}</td>
+                              <td><div className="teacher-class td">{student?.studentName}</div></td>
+                              <td>
+                                {calculateAgeV1(student?.dateOfBirth) ?? ""}
+                              </td>
+                              <td>
+                                {student?.gender != null
+                                  ? convertGenderEnumToString(student.gender)
+                                  : ""}
+                              </td>
                             </tr>
-                          )}
+                          ))}
                         </tbody>
                       </table>
                     </div>
-                  )}</>
+                  )
+                )}
+              </>
             )}
-
           </>
-          )}
+        )}
       </div>
     </div>
   );

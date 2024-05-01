@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../../Layout/Header'
 import PageTitle from '../../../Layout/PageTitle'
 import background from '../../../../images/background/accountBackground.jpg';
@@ -9,6 +9,7 @@ export default function CourseProcess() {
   const { studentId, courseId } = useParams();
   const [progressData, setProgressData] = useState(null);
   const colors = ['#F69E4A', '#EF7E54', '#F25B58', '#E53E5C'];
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProgressData = async () => {
@@ -17,6 +18,7 @@ export default function CourseProcess() {
         setProgressData(response.data);
         console.log('response.data: ', response.data);
       } catch (error) {
+        navigate('/not-found')
         console.error('Error fetching course progress:', error);
       }
     };
@@ -38,7 +40,7 @@ export default function CourseProcess() {
   return (
     <div>
       <Header />
-      <PageTitle />
+      <PageTitle motherMenu="Course process" activeMenu="Course process" />
       <div style={{
         backgroundImage: `url(${background})`, minHeight: '800px', backgroundPosition: 'center center', // Center the background image
         backgroundSize: 'cover',

@@ -354,7 +354,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
         const payload = {
             isFree,
             isAdminSetup,
-            price: isFree ? 0 : price, // Use the state variable price
+            price: isFree ? undefined : price, // Use the state variable price
         };
         console.log('payload: ', payload);
         try {

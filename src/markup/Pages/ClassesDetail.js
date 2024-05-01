@@ -25,6 +25,7 @@ export default function ClassesDetail() {
 				console.log('courseDetail: ', data);
 				setCourseDetails(data);
 			} catch (error) {
+				navigate('/not-found')
 				console.error('There was a problem with the fetch operation:', error);
 			} finally {
 				setIsLoading(false);
@@ -65,7 +66,7 @@ export default function ClassesDetail() {
 			<Header />
 			<ToastContainer />
 			<div className="page-content">
-				<PageTitle motherMenu="Classes Detail" activeMenu="Classes Detail" />
+				<PageTitle motherMenu="Course detail" activeMenu="Course detail" />
 
 				{isLoading ? (
 					<div className="d-flex justify-content-center align-items-center" style={{ width: '100%', height: '200px' }}>

@@ -36,7 +36,7 @@ export default function UserTeacher() {
     const fetchParents = async () => {
         setLoading(true);
         try {
-            const response = await instance.get(`api/v1/users/admin/account?role=Student&page=${currentPage}&size=${pageSize}`);
+            const response = await instance.get(`api/v1/users/admin/account?role=Teacher&page=${currentPage}&size=${pageSize}`);
             setParents(response.data.results);
             console.log(parents);
             setPageCount(Math.ceil(response.data.totalRecords / pageSize));
@@ -110,7 +110,7 @@ export default function UserTeacher() {
                 <div className="d-flex justify-content-between">
                     <div className="d-flex justify-content-start">
                         <div>
-                            <h5>Students</h5>
+                            <h5>Teachers</h5>
                             <hr />
                         </div>
                         <i className="fa-solid fa-user-group"></i>
@@ -135,7 +135,6 @@ export default function UserTeacher() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
-                            <th>GENDER</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -148,7 +147,6 @@ export default function UserTeacher() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
-                                <td>{parent.gender}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (

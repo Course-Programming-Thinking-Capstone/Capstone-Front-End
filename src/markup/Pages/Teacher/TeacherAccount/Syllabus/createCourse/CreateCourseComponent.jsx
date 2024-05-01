@@ -86,7 +86,7 @@ const CreateCourseComponent = () => {
   const courseId = useSelector(createCourseIdSelector);
 
   if (!courseId || courseId === 0) {
-    navigate('/teacher/syllabuses');
+    navigate("/teacher/syllabuses");
   }
   // console.log(`CourseId: ${courseId}`);\
 
@@ -132,8 +132,11 @@ const CreateCourseComponent = () => {
     const maxLength = 20;
 
     if (fileName && fileName.length > maxLength) {
-      const extension = fileName.split('.').pop();
-      const truncatedName = fileName.substr(0, maxLength - (extension.length + 4));
+      const extension = fileName.split(".").pop();
+      const truncatedName = fileName.substr(
+        0,
+        maxLength - (extension.length + 4)
+      );
       return `${truncatedName}...${extension}`;
     }
 
@@ -218,9 +221,7 @@ const CreateCourseComponent = () => {
         );
 
         dispatch(changeData(initSectionNumber));
-
       } catch (error) {
-
         let message;
 
         if (error.response) {
@@ -340,11 +341,11 @@ const CreateCourseComponent = () => {
   };
   //dnd part
 
-  //notification 
+  //notification
   const handleNotificationClose = () => {
     setNotificationShow(false);
     navigate("/teacher/syllabuses");
-  }
+  };
 
   return (
     <div className="create-course">
@@ -373,7 +374,11 @@ const CreateCourseComponent = () => {
       </div>
 
       <ToastContainer />
-      <ModalNotification message={"Post course success"} handleClose={handleNotificationClose} show={notificationShow} />
+      <ModalNotification
+        message={"Post course success"}
+        handleClose={handleNotificationClose}
+        show={notificationShow}
+      />
 
       <div className="create-course-content">
         <div style={{ padding: "10px 20px" }}>
@@ -424,6 +429,13 @@ const CreateCourseComponent = () => {
                 disabled
                 readOnly
                 className="mb-3"
+                style={{
+                  borderRadius: 10,
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                  boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                  height:'50px'
+                }}
               />
               <Form.Group>
                 <Form.Label htmlFor="description" className="blue fw-bold">
@@ -437,6 +449,12 @@ const CreateCourseComponent = () => {
                   onChange={handleDescriptionChange}
                   className="mb-3 form-control"
                   maxLength={1000}
+                  style={{
+                    paddingBottom: "10rem",
+                    paddingTop: "1rem",
+                    borderRadius: 10,
+                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+                  }}
                 />
               </Form.Group>
               <div>
@@ -555,7 +573,12 @@ const CreateCourseComponent = () => {
                     <a
                       href={createCourse.pictureUrl}
                       title="Course picture"
-                      target="_blank" rel="noreferrer"
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{border:'1px solid #1976d2',padding:'2.5px 5px',borderRadius:5,
+                      boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                    backgroundColor:'#1976d2',
+                  color:'white'}}
                     >
                       View picture
                     </a>
@@ -579,7 +602,11 @@ const CreateCourseComponent = () => {
                         Upload Picture
                       </Button>
                     </label>
-                    <p className="mx-3 my-0">{fileName !== null ? formatFileName(fileName) : "Choose file"}</p>
+                    <p className="mx-3 my-0">
+                      {fileName !== null
+                        ? formatFileName(fileName)
+                        : "Choose file"}
+                    </p>
                   </div>
                 </div>
                 <VisuallyHiddenInput
@@ -609,7 +636,6 @@ const CreateCourseComponent = () => {
               </div>
               <div>
                 <div className="d-flex justify-content-end my-2">
-
                   <Button
                     // size="small"
                     variant="contained"
@@ -647,7 +673,13 @@ const CreateCourseComponent = () => {
 
 export default CreateCourseComponent;
 
-const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail }) => {
+const VideoContent = ({
+  sectionId,
+  lesson,
+  index,
+  sectionIndex,
+  notifyApiFail,
+}) => {
   const {
     attributes,
     listeners,
@@ -668,29 +700,31 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
 
   const getVideoUrl = async () => {
     if (lesson.resourceUrl !== undefined && lesson.resourceUrl !== null) {
-      const videoUrl = lesson.resourceUrl
+      const videoUrl = lesson.resourceUrl;
       window.open(videoUrl, "_blank");
       return;
     }
 
     const videoName = lesson.name;
     try {
-      const videoUrl = await getCloudVideoUrl({ videoName: videoName, sectionId: sectionId });
+      const videoUrl = await getCloudVideoUrl({
+        videoName: videoName,
+        sectionId: sectionId,
+      });
       window.open(videoUrl, "_blank");
       return;
     } catch (error) {
       let message;
       if (error.response) {
         console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
-        message =
-          error.response?.data?.message || "Error when update course.";
+        message = error.response?.data?.message || "Error when update course.";
       } else {
         console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
         message = error.message || "Error when update course.";
       }
       notifyApiFail(message);
     }
-  }
+  };
 
   return (
     <Accordion
@@ -734,7 +768,9 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
               {...listeners}
             >
               <i
-                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
+                className={`fa-regular ${
+                  isDragging ? "fa-hand-back-fist" : "fa-hand"
+                }`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>
@@ -743,18 +779,46 @@ const VideoContent = ({ sectionId, lesson, index, sectionIndex, notifyApiFail })
 
         <Accordion.Body>
           <Container>
-            <Row className="mb-3">
+            <Row className="mb-3" style={{ alignItems: "center" }}>
               <Col md="3">
                 <span className="blue fw-bold">Duration:</span>{" "}
               </Col>
-              <Col md="9">{lesson.duration} minute</Col>
+              <Col
+                md="9"
+                // style={{
+                //   border: "1px solid lightblue",
+                //   width: "20%",
+                //   textAlign: "center",
+                //   padding: "0.5rem 0rem",
+                //   borderRadius: 5,
+                //   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                // }}
+              >
+                {lesson.duration} minute
+              </Col>
             </Row>
             <Row className="mb-3">
               <Col md="3">
-                <span className="blue fw-bold">Video:</span>{" "}
+                <span className="blue fw-bold" style={{ width: "10%" }}>
+                  Video:
+                </span>
               </Col>
-              <Col md="9">
-                <a href="#" onClick={getVideoUrl}>
+              <Col md="9" style={{paddingLeft:'0px'}}>
+                <a
+                  // style={{
+                  //   border: "1px solid lightblue",
+                  //   width: "20%",
+                  //   textAlign: "center",
+                  //   padding: "0.5rem 1.2rem",
+                  //   borderRadius: 5,
+                  //   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                  //   backgroundColor: "blue",
+                  //   color: "white",
+                  //   fontWeight: "500",
+                  // }}
+                  href="#"
+                  onClick={getVideoUrl}
+                >
                   View Video
                 </a>
               </Col>
@@ -823,7 +887,9 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
               {...listeners}
             >
               <i
-                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
+                className={`fa-regular ${
+                  isDragging ? "fa-hand-back-fist" : "fa-hand"
+                }`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>
@@ -831,11 +897,23 @@ const DocumentContent = ({ sectionId, lesson, index, sectionIndex }) => {
         </div>
         <Accordion.Body>
           <Container>
-            <Row className="mb-3">
-              <Col md="3">
+            <Row className="mb-3" style={{ alignItems: "center" }}>
+              <Col md="3" style={{ width: "16%" }}>
                 <span className="blue fw-bold">Duration:</span>{" "}
               </Col>
-              <Col md="9">{lesson.duration} minute</Col>
+              <Col
+                md="9"
+                // style={{
+                //   border: "1px solid lightblue",
+                //   width: "20%",
+                //   textAlign: "center",
+                //   padding: "0.5rem 0rem",
+                //   borderRadius: 5,
+                //   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                // }}
+              >
+                {lesson.duration} minute
+              </Col>
             </Row>
             <Row className="mb-3">
               <Col md="12">
@@ -911,7 +989,9 @@ const QuizContent = ({ sectionId, quiz, index, sectionIndex }) => {
               {...listeners}
             >
               <i
-                className={`fa-regular ${isDragging ? 'fa-hand-back-fist' : 'fa-hand'}`}
+                className={`fa-regular ${
+                  isDragging ? "fa-hand-back-fist" : "fa-hand"
+                }`}
                 style={{ fontSize: "18px" }}
               ></i>
             </div>

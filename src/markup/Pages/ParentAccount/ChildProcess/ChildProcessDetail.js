@@ -22,6 +22,7 @@ export default function ChildProcessDetail() {
 
                 setChildDetails(data);
             } catch (error) {
+                navigate('/not-found')
                 console.error('Failed to fetch child details:', error);
             } finally {
                 setIsLoading(false);
@@ -52,13 +53,40 @@ export default function ChildProcessDetail() {
                     ) : (
                         childDetails ? (
                             <div>
-                                <div>
+                                <div className='mx-3 px-5 py-3' style={{ backgroundColor: 'white' }}>
                                     <h5>Child's information</h5>
-                                    <div>
-                                        <p>Name: {childDetails.fullName}</p>
-                                        <p>Age: {childDetails.dateOfBirth}</p>
-                                        <p>Gender: {childDetails.gender}</p>
-                                        <p>Status: {childDetails.status}</p>
+                                    <div className="row">
+                                        <div className='col-lg-3 col-md-12 col-sm-12'>
+                                            <div className="d-flex justify-content-center">
+                                                <img src="" alt="" />
+                                            </div>
+                                        </div>
+                                        <div className='col-lg-9 col-md-12 col-sm-12'>
+                                            <div className="d-flex justify-content-around">
+                                                <div>
+                                                    <p className='fw-bold'>Name</p>
+                                                    <p>{childDetails.fullName}</p>
+                                                </div>
+                                                <div>
+                                                    <p className='fw-bold'>Gender</p>
+                                                    <p>{childDetails.gender}</p>
+                                                </div>
+                                                <div>
+                                                    <p className='fw-bold'>Email</p>
+                                                    <p>{childDetails.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="d-flex justify-content-around">
+                                                <div>
+                                                    <p className='fw-bold'>Birthday</p>
+                                                    <p>{childDetails.dateOfBirth}</p>
+                                                </div>
+                                                <div>
+                                                    <p className='fw-bold'>Account</p>
+                                                    <p>{childDetails.userName}</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className='mx-3 px-5 py-3' style={{ backgroundColor: 'white' }}>
@@ -95,7 +123,7 @@ export default function ChildProcessDetail() {
                                 </div>
                             </div>
                         ) : (
-                            <p>Child details not available.</p> 
+                            <p>Child details not available.</p>
                         )
                     )}
                 </div>

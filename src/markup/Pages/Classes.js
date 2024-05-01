@@ -44,6 +44,7 @@ export default function Classes() {
       const data = await getCoursesApi({ status: "Active", isFree: false , page: currentPage, size: 6, name: query });
 
       setCourses(data.results);
+      console.log('data.results: ', data.results);
       setPageCount(data.totalPages);
     } catch (error) {
       console.error(error.message);
