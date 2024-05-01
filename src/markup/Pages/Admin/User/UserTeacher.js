@@ -204,38 +204,41 @@ export default function UserTeacher() {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label">Email Address</label>
-                            <input type="email" className="form-control" name="email" required value={newTeacher.email} onChange={handleInputChange} />
+                            <input style={{borderRadius:10}} type="email" className="form-control" name="email" required value={newTeacher.email} onChange={handleInputChange} />
+
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Full Name</label>
-                            <input type="text" className="form-control" name="fullName" required value={newTeacher.fullName} onChange={handleInputChange} />
+                            <input style={{borderRadius:10}} type="text" className="form-control" name="fullName" required value={newTeacher.fullName} onChange={handleInputChange} />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Date of Birth</label>
+                            <label className="form-label" style={{marginRight:'10px'}}>Date of Birth</label>
                             <DatePicker selected={newTeacher.dateOfBirth}
                                 onChange={handleDateChange}
                                 className="form-control"
                                 dateFormat="yyyy-MM-dd"
                                 showMonthDropdown
                                 showYearDropdown
-                                dropdownMode="select" />
+                                dropdownMode="select"
+                                style={{borderRadius:10}} />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Gender</label>
-                            <select className="form-control" name="gender" value={newTeacher.gender} onChange={handleInputChange}>
+                            <select style={{borderRadius:10}} className="form-control" name="gender" value={newTeacher.gender} onChange={handleInputChange}>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3" >
                             <label className="form-label">Phone Number</label>
-                            <input type="text" className="form-control" name="phoneNumber" value={newTeacher.phoneNumber} onChange={handleInputChange} />
+                            <input style={{borderRadius:10}} type="text" className="form-control" name="phoneNumber" value={newTeacher.phoneNumber} onChange={handleInputChange} />
                         </div>
-                        <Button type="submit" className="btn btn-primary">Create</Button>
+                        <Button style={{borderRadius:10}} type="submit" className="btn btn-primary">Create</Button>
                     </form>
                 </Modal.Body>
             </Modal>
-            <button onClick={handleOpenModal}>Add Teacher</button>
+            <button onClick={handleOpenModal} style={{borderRadius:10,marginTop:'15px',height:40,border:'1px solid blue',
+        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'}}><i class="fa-solid fa-circle-plus" style={{color:'orange',marginRight:5}}></i> Add Teacher</button>
             <div className="table-responsive" style={{ height: '400px' }}>
                 <table className="table table-bordered">
                     <thead>
@@ -243,6 +246,7 @@ export default function UserTeacher() {
                             <th>INDEX</th>
                             <th>IMAGE</th>
                             <th>FULL NAME</th>
+                            <th>EMAIL</th>
                             <th>REGISTRATION DAY</th>
                             <th>STATUS</th>
                         </tr>
@@ -255,6 +259,7 @@ export default function UserTeacher() {
                                 <td>{(currentPage - 1) * pageSize + index + 1}</td>
                                 <td>{/* Image here if available */}</td>
                                 <td>{parent.fullName}</td>
+                                <td>{parent.email}</td>
                                 <td>{formatDate(parent.createdDate)}</td>
                                 <td >
                                     {parent.status === "NotActivated" ? (
