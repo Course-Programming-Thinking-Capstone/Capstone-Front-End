@@ -575,7 +575,7 @@ const App = () => {
             <Route path="/test" element={<CourseStudy />} />
 
             {/* Error pages  */}
-            {/* <Route path="/not-found" element={<ErrorPage />} /> */}
+            <Route path="/not-found" element={<ErrorPage />} />
             {/* <Route path="/not-found" element={<NotFound />} /> */}
             {/* <Route path="*" element={<Navigate to="/not-found" />} /> */}
           </Routes>

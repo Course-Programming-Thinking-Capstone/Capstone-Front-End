@@ -517,9 +517,8 @@ export default function CoursePayment() {
                     <div>
                       <div className='d-flex'>
                         <img style={{ height: '40px', width: '40px' }} src={momo} alt="" />
-                        <p style={{ marginBottom: '12px' }}>09123123123</p>
+                        <p style={{ marginBottom: '12px' }}>Momo E-Wallet</p>
                       </div>
-                      <p className='mb-0'>Momo E-Wallet</p>
                     </div>
                   </div>
 

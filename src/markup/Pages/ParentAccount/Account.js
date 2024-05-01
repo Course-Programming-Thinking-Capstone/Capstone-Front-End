@@ -192,7 +192,6 @@ export default function Account() {
                             </div>
                             <div className='account-menu'>
                                 <Link to="account-details"><button style={isActive('accountDetails')} onClick={() => handleButtonClick('accountDetails')}><i class="fa-solid fa-user"></i> Account Details</button></Link><hr />
-                                <Link to="payment-methods"><button style={isActive('paymentMethods')} onClick={() => handleButtonClick('paymentMethods')}><i class="fa-regular fa-credit-card"></i> Payment Methods</button></Link><hr />
                                 <Link to="child-process"><button style={isActive('childProcess')} onClick={() => handleButtonClick('childProcess')}><i class="fa-solid fa-arrows-spin"></i> My child's process</button></Link><hr />
                             </div>
                         </div>

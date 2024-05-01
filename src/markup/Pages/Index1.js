@@ -208,7 +208,7 @@ const Index1 = () => {
 							<TestiMonialSlider />
 						</div>
 					</div> */}
-                    <div className="section-full bg-white content-inner">
+                    {/* <div className="section-full bg-white content-inner">
                         <div className="container">
                             <div className="section-head text-center">
                                 <h2 className="head-title text-secondry">From the Blog</h2>
@@ -216,7 +216,7 @@ const Index1 = () => {
                             </div>
                             <FromSlider />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <Footer />
