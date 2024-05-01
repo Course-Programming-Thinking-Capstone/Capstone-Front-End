@@ -67,7 +67,7 @@ export default function TeachersDetail() {
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-sm-12 m-b15">
                     <div className="teacher-meida">
-                      <img src={team1} alt="" />
+                      <img src={teacher.pictureUrl} alt="" />
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-sm-12 teacher-content align-self-center">
@@ -106,7 +106,7 @@ export default function TeachersDetail() {
                     </ul>
                     {teacher.certificates && teacher.certificates.length > 0 && (
                       <div>
-                        <h3>Certificates</h3>
+                        <h3 className="text-secondry mt-3">Certificates</h3>
                         {teacher.certificates.map((certificate, index) => (
                           <a key={index} href={certificate.certificateUrl} target="_blank" rel="noopener noreferrer">
                             <button className="btn btn-info m-1">{certificate.certificateName}</button>

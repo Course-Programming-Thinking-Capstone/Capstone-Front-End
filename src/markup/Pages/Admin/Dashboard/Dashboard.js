@@ -137,23 +137,25 @@ export default function Dashboard() {
     };
 
     const renderMonthlyEarnings = (earnings) => {
-        // Ensure earnings is an array and has entries
         if (!Array.isArray(earnings) || earnings.length === 0) return null;
-    
+
         const thisMonth = earnings.find(e => e.status === "ThisMonth");
         const lastMonth = earnings.find(e => e.status === "LastMonth");
-        const increase = earnings.find(e => e.status === "Increase");
-    
+        const change = earnings.find(e => e.status === "Increase" || e.status === "Decrease");
+
+        const changeLabel = change ? (change.status === "Increase" ? "Increase" : "Decrease") : "Change";
+        const changeValue = change ? Math.abs(change.total).toLocaleString() : "0";
+
         return (
             <div>
-                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth?.total.toLocaleString()} VND</span></p>
-                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth?.total.toLocaleString()} VND</span></p>
-                <p>Change from previous period: <span style={{ fontWeight: 'bold' }}>{increase?.total.toLocaleString()}%</span></p>
+                <p>This month: <span style={{ fontWeight: 'bold' }}>{thisMonth ? thisMonth.total.toLocaleString() : '0'} VND</span></p>
+                <p>Last month: <span style={{ fontWeight: 'bold' }}>{lastMonth ? lastMonth.total.toLocaleString() : '0'} VND</span></p>
+                <p>{changeLabel} from previous period: <span style={{ fontWeight: 'bold', color: changeLabel === "Decrease" ? '#FF6347' : '#32CD32' }}>
+                    {changeValue}{changeLabel === "Increase" || changeLabel === "Decrease" ? '%' : ''}
+                </span></p>
             </div>
         );
     };
-    
-
 
 
     const totalAccounts = getTotalAccounts(accountsData);

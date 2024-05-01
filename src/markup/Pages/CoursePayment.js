@@ -188,6 +188,9 @@ export default function CoursePayment() {
     </div>
   ));
 
+  const dateFiveYearsAgo = new Date();
+  dateFiveYearsAgo.setFullYear(dateFiveYearsAgo.getFullYear() - 5);
+
   const [selectedPayment, setSelectedPayment] = useState("");
 
   const [show, setShow] = useState(false);
@@ -300,8 +303,7 @@ export default function CoursePayment() {
                   <DatePicker
                     selected={newChildDOB}
                     onChange={(date) => setNewChildDOB(date)}
-                    enableTabLoop={false}
-                    maxDate={new Date()}
+                    maxDate={dateFiveYearsAgo} 
                     showMonthDropdown
                     showYearDropdown
                     dropdownMode="select"
