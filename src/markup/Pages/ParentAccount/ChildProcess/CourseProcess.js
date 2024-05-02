@@ -16,10 +16,10 @@ export default function CourseProcess() {
       try {
         const response = await instance.get(`api/v1/students/progress/course/lessons?studentId=${studentId}&courseId=${courseId}`);
         setProgressData(response.data);
-        console.log('response.data: ', response.data);
+
       } catch (error) {
         navigate('/not-found')
-        console.error('Error fetching course progress:', error);
+
       }
     };
 

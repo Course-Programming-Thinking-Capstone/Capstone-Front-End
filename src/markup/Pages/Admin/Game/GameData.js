@@ -6,7 +6,7 @@ import instance from "../../../../helper/apis/baseApi/baseApi";
 
 export default function GameData() {
   const location = useLocation();
-  console.log(location.state);
+
   const { modeId, levels } = location.state;
   const [gameLevels, setGameLevels] = useState([]);
 
@@ -19,7 +19,7 @@ export default function GameData() {
         const data = response.data;
         setGameLevels(data);
       } catch (error) {
-        console.error("Failed to fetch game levels:", error);
+
       }
     };
 

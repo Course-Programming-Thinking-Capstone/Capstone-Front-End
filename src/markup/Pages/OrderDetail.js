@@ -40,7 +40,7 @@ export default function OrderDetail() {
 
   const ProcessOrder = () => {
     const [isOrderProcessing, setIsOrderProcessing] = useState(false);
-    console.log(orderDetails);
+
 
     const BuyCourse = async () => {
       setIsOrderProcessing(true);
@@ -52,11 +52,11 @@ export default function OrderDetail() {
 
         let responseData = response.data;
 
-        console.log("Payment initiated successfully", responseData);
+
 
         window.location.href = responseData.payUrl; 
       } catch (error) {
-        console.error("There was a problem with the process:", error.message);
+
         setIsOrderProcessing(false);
       }
     };

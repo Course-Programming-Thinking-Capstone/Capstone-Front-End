@@ -17,7 +17,7 @@ export default function AccountDetails() {
 
       setUserInfo(data);
     } catch (error) {
-      console.error('Failed to fetch userInfo:', error);
+
     } finally {
       setLoading(false);
     }
@@ -25,7 +25,7 @@ export default function AccountDetails() {
 
   useEffect(() => {
     fetchUserInfo();
-    console.log(userInfo);
+
   }, []);
   return (
     <div className='account-details'>

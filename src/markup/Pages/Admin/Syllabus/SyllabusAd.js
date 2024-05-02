@@ -233,12 +233,12 @@ export default function SyllabusAd() {
           const message =
             error.response?.data?.message ||
             "Something wrong when fetching syllabuses.";
-          console.log(`Error response: ${error.response?.data?.message}`);
+
           notifyApiFail(message);
         } else {
           const message =
             error.message || "Something wrong when fetching syllabuses.";
-          console.log(`Error message: ${error.message}`);
+
           notifyApiFail(message);
         }
       } finally {
@@ -269,12 +269,12 @@ export default function SyllabusAd() {
           const message =
             error.response?.data?.message ||
             "Something wrong when fetching syllabuses.";
-          console.log(`Error response: ${error.response?.data?.message}`);
+
           notifyApiFail(message);
         } else {
           const message =
             error.message || "Something wrong when fetching syllabuses.";
-          console.log(`Error message: ${error.message}`);
+
           notifyApiFail(message);
         }
       } finally {
@@ -424,12 +424,12 @@ export default function SyllabusAd() {
             const message =
               error.response?.data?.message ||
               "Something wrong when fetch teacher list.";
-            console.log(`Error response: ${error.response?.data?.message}`);
+
             notifyApiFail(message);
           } else {
             const message =
               error.message || "Something wrong when fetch teacher list.";
-            console.log(`Error message: ${error.message}`);
+
             notifyApiFail(message);
           }
         }
@@ -442,7 +442,7 @@ export default function SyllabusAd() {
       event.preventDefault();
       try {
         //log
-        console.log("Call save change");
+
         setIsSyllabusCreating(true);
 
         const courseData = {
@@ -472,13 +472,13 @@ export default function SyllabusAd() {
           const message =
             error.response?.data?.message ||
             "Something wrong when create syllabuses.";
-          console.log(`Error response: ${error.response?.data?.message}`);
+
           notifyCreateFail(message);
           // notifyApiFail(message);
         } else {
           const message =
             error.message || "Something wrong when create syllabuses.";
-          console.log(`Error message: ${error.message}`);
+
           notifyCreateFail(message);
           // notifyApiFail(message);
         }

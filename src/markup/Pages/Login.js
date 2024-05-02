@@ -89,10 +89,10 @@ export default function Login() {
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Login fail.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Login fail.";
       }
       notifyLoginFail(errorMessage);

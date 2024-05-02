@@ -9,7 +9,7 @@ import instance from '../../helper/apis/baseApi/baseApi';
 import HttpsIcon from '@mui/icons-material/Https';
 export default function CoursesPlan() {
     const { courseId } = useParams();
-    console.log("Course ID:", courseId);
+
     const [courseDetails, setCourseDetails] = useState(null);
     const [linkGame, setLinkGame] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
@@ -24,11 +24,11 @@ export default function CoursesPlan() {
                 if (data.length > 0) {
                     setLinkGame(data[0].url);
                 } else {
-                    console.log("No games available");
+
                 }
-                console.log('Course detail data:', data);
+
             } catch (error) {
-                console.error('Error fetching game:', error.message);
+
             } finally {
                 setIsLoading(false);
             }
@@ -39,19 +39,19 @@ export default function CoursesPlan() {
         setIsLoading(true);
         const fetchCourseDetails = async () => {
             if (!courseId) {
-                console.error('Course ID is undefined!');
+
                 return;
             }
             try {
                 const response = await instance.get(`api/v1/courses/study/${courseId}`);
                 const data = response.data;
-                console.log('Course detail data:', data);
+
                 setCourseDetails(data);
                 const sectionIds = data.sections.map(section => section.id);
-                console.log('Section IDs:', sectionIds);
+
                 fetchCheckStudy(sectionIds);
             } catch (error) {
-                console.error('Error fetching course details:', error.message);
+
             } finally {
                 setIsLoading(false);
             }
@@ -64,17 +64,17 @@ export default function CoursesPlan() {
             const response = await instance.post(`api/v1/courses/check-study`, sectionIds);
             const check = response.data;
             if (check) {
-                console.log("test:", check);
+
                 setLock(check)
             } else {
-                console.log("No games available");
+
             }
-            console.log('Course detail data:', check);
+
         } catch (error) {
-            console.error('Error fetching game:', error.message);
+
         }
     };
-    console.log("test1:", lock);
+
     const LessonIcon = ({ type }) => {
         switch (type) {
             case 'Video':

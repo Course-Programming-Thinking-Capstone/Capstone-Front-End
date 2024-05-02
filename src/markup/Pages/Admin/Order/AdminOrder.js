@@ -101,10 +101,10 @@ export default function AdminOrder() {
       } catch (error) {
         let message;
         if (error.response) {
-          console.log(`Error response: ${error.response?.data?.message}`);
+
           message = error.response?.data?.message || "Something wrong.";
         } else {
-          console.log(`Error message abc: ${error.message}`);
+
           message = error.message || "Something wrong.";
         }
         notifyApiFail(message);

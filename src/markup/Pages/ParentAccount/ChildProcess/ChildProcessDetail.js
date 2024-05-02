@@ -18,12 +18,12 @@ export default function ChildProcessDetail() {
             try {
                 const response = await instance.get(`api/v1/students/detail/${childId}`);
                 const data = response.data;
-                console.log('data: ', data);
+
 
                 setChildDetails(data);
             } catch (error) {
                 navigate('/not-found')
-                console.error('Failed to fetch child details:', error);
+
             } finally {
                 setIsLoading(false);
             }

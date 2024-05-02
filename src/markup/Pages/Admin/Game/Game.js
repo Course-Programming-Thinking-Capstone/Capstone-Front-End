@@ -148,7 +148,6 @@ export default function Game() {
           });
           setEnhancedModes(tempModes);
         } catch (error) {
-          console.error("Error fetching game modes:", error);
         } finally {
           setIsLoading(false);
         }
@@ -179,10 +178,10 @@ export default function Game() {
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Undefined.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
@@ -216,10 +215,10 @@ export default function Game() {
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Undefined.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
@@ -334,10 +333,10 @@ export default function Game() {
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Undefined.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Undefined.";
       }
       setMessage(errorMessage);
@@ -382,10 +381,10 @@ export default function Game() {
       } catch (error) {
         let errorMessage = null;
         if (error.response) {
-          console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
           errorMessage = error.response?.data?.message || "Undefined.";
         } else {
-          console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
           errorMessage = error.message || "Undefined.";
         }
         setMessage(errorMessage);

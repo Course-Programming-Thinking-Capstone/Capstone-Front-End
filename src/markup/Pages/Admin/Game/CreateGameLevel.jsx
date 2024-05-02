@@ -171,10 +171,8 @@ export const CreateLevel = ({
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
         errorMessage = error.response?.data?.message || "Undefined.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
         errorMessage = error.message || "Undefined.";
       }
       notifyApiFail(errorMessage);

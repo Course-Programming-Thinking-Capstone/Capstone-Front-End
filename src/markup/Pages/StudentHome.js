@@ -17,11 +17,11 @@ export default function StudentHome() {
 
                 const response = await instance.get(`api/v1/Classes/teacher-or-student`);
                 const data = response.data;
-                console.log('data: ', data);
+
                 setCourses(data);
 
             } catch (error) {
-                console.error('Error fetching courses:', error);
+
             }
         };
 

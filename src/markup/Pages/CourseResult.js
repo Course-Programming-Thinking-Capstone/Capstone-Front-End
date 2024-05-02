@@ -64,7 +64,7 @@ export default function CourseResult() {
 
 
     useEffect(() => {
-        console.log(location.state);
+
     }, [location.state]);
 
     if (!quizSubmit || !quizSubmit.questionDtos) {

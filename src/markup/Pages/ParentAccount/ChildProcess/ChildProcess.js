@@ -23,11 +23,11 @@ export default function ChildProcess() {
     try {
       const response = await instance.get(`api/v1/students`);
       const data = response.data;
-      console.log('data: ', data);
+
 
       setChildrenList(data);
     } catch (error) {
-      console.error('Failed to fetch child details:', error);
+
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function ChildProcess() {
       setModalShow(false);  // Close the modal upon successful save
       fetchChildList();  // Refetch the children list
     } catch (error) {
-      console.error("There was a problem with adding a new child:", error.message);
+
       // Optionally, handle the error state/UI here if needed
     }
   };

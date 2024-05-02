@@ -24,16 +24,16 @@ export default function StaffNotification({ setUnreadCount }) {
             try {
                 const response = await instance.get(`api/v1/notifications/account?page=${currentPage}&size=5`);
                 const data = response.data;
-                console.log('data: ', data);
+
 
                 if (data.results) {
                     setNotifications(data.results);
                     setPageCount(data.totalPages); // Make sure totalPages is correctly accessed
                 } else {
-                    console.error("No data found");
+
                 }
             } catch (error) {
-                console.error("Error fetching notifications:", error);
+
             }
         };
 
@@ -67,7 +67,7 @@ export default function StaffNotification({ setUnreadCount }) {
             setNotifications(updatedNotifications);
             setUnreadCount(prevCount => Math.max(0, prevCount - 1)); // Decrement unread count safely
         } catch (error) {
-            console.error('Error updating notification read status:', error);
+
         }
     };
 
@@ -83,7 +83,7 @@ export default function StaffNotification({ setUnreadCount }) {
             setNotifications(updatedNotifications);
             setUnreadCount(prevCount => prevCount - unreadNotifications.length); // Decrement by number of unread messages
         } catch (error) {
-            console.error('Error marking all notifications as read:', error);
+
         }
     };
 

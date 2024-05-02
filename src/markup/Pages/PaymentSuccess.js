@@ -27,10 +27,10 @@ export default function PaymentSuccess() {
                 const response = await instance.get(`api/v1/orders/detail/${orderId}`);
                 const data = response.data;
 
-                console.log('data: ', data);
+
                 setOrderDetails(data);
             } catch (error) {
-                console.error('There was an error fetching the order details:', error);
+
             }
         };
 

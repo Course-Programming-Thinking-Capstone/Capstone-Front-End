@@ -45,7 +45,7 @@ export default function OrderCancel() {
         const data = response.data;
         setOrderDetails(data);
       } catch (error) {
-        console.error("Error fetching order details:", error);
+
       } finally {
         setLoading(false);
       }
@@ -66,11 +66,9 @@ export default function OrderCancel() {
 
       navigate(`/order-detail/${orderId}`);
     } catch (error) {
-      console.error("Error cancelling order:", error);
+
       if (error instanceof SyntaxError) {
-        console.log(
-          "Received a non-JSON response. Order might have been canceled successfully."
-        );
+
       }
       // Additional logic here to handle non-JSON responses if needed
     }

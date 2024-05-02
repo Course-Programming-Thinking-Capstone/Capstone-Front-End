@@ -27,7 +27,7 @@ export default function CourseStudy() {
                     fetchContentData('lesson', data.lessons[0].id);
                 }
             } catch (error) {
-                console.error('Failed to fetch section details:', error);
+
             }
         };
 
@@ -50,9 +50,9 @@ export default function CourseStudy() {
             const response = await instance.get(url);
             const data = response.data;
             setDetailedContent(data);
-            console.log("cong tets:", data);
+
         } catch (error) {
-            console.error('Error fetching content details:', error);
+
         }
     };
     const handleContentClick = async (type, id) => {
@@ -80,7 +80,7 @@ export default function CourseStudy() {
                 }
             }
         } catch (error) {
-            console.error('Error marking lesson as completed:', error);
+
         }
     };
     const renderSidebar = () => {

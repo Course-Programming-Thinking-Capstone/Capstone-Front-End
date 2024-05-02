@@ -170,10 +170,10 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 const data = response.data
 
                 //log
-                console.log(`Course details data: ${JSON.stringify(data, null, 2)}`)
+
                 setCourseDetails(data); // Assuming the API returns the details directly
             } catch (error) {
-                console.error("Failed to fetch course details", error);
+
             }
         };
 
@@ -279,12 +279,12 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             isAdminSetup,
             price: isFree ? 0 : price, // Use the state variable price
         };
-        console.log('payload: ', payload);
+
 
         try {
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
         } catch (error) {
-            console.error("Failed to approve course: ", JSON.stringify(error, null, 2));
+
             // Handle the error
         } finally {
             setBackdropOpen(false); // Close the backdrop regardless of the result
@@ -563,7 +563,7 @@ export default function AdminModerating() {
                 setAllCourses(data.results || []);
                 setTotalPagesAllCourses(data.totalPages || 0);
             } catch (error) {
-                console.error("Failed to fetch all courses", error);
+
             } finally {
                 setIsLoading(false);
             }
@@ -581,14 +581,14 @@ export default function AdminModerating() {
             try {
                 const response = await instance.get(`api/v1/courses?status=Waiting&action=manage&page=${currentPageCourseMod + 1}&size=${itemsPerPage}`);
                 const data = response.data || {};
-                console.log('courses data: ', data);
+
                 setCourses(data.results || []);
                 setTotalPagesCourseMod(data.totalPages || 0);
                 if (currentPageCourseMod >= data.totalPages) {
                     setCurrentPageCourseMod(0);
                 }
             } catch (error) {
-                console.error("Failed to fetch courses for moderation", error);
+
                 setTotalPagesCourseMod(0);
             } finally {
                 setIsLoading(false);
@@ -645,24 +645,21 @@ export default function AdminModerating() {
                 {activeTab === 'allCourses' && (
                     <div >
                         <div style={{ minHeight: '470px' }}>
-                            <div className='d-flex mt-3'>
+                            <div className='d-flex mt-3 justify-content-around'>
                                 <div className="d-flex">
                                     <input
                                         className='ps-2'
-                                        style={{ height: '35px', border: '1px solid #FFA63D', borderRadius: '8px 0px 0px 8px', outline: 'none', border: 'none', width: '300px' }}
+                                        style={{ height: '35px', margin: '10px 0', border: '1px solid #FFA63D', borderRadius: '8px 0px 0px 8px', outline: 'none', border: 'none', width: '300px' }}
                                         type="text"
                                         placeholder="Search courses"
                                         value={searchTerm}
                                         onChange={handleSearchChange}
                                     />
-                                    <div className='d-flex justify-content-center align-items-center' style={{ height: '35px', width: '50px', backgroundColor: '#FFA63D', borderRadius: '0px 8px 8px 0px', color: 'white', cursor: 'pointer' }}
+                                    <div className='d-flex justify-content-center align-items-center' style={{ height: '35px', margin: '10px 0', width: '50px', backgroundColor: '#FFA63D', borderRadius: '0px 8px 8px 0px', color: 'white', cursor: 'pointer' }}
                                         onClick={() => setCurrentPageAllCourses(0)}  // Reset page to 0 to refresh data from the first page based on new search term
                                     >
                                         <i class="fa-solid fa-magnifying-glass text-center"></i>
                                     </div>
-                                </div>
-                                <div>
-                                    Status course
                                 </div>
                                 <div>
                                     <select

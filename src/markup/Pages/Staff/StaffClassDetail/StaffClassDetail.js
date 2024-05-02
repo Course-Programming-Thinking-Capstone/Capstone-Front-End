@@ -57,7 +57,7 @@ export default function StaffClassDetail() {
     const [currentPage, setCurrentPage] = useState(0);
     const studentsPerPage = 3;
 
-    console.log('currentPage: ', currentPage);
+
     const pageCount = Math.ceil(
       classDetails?.students.length / studentsPerPage
     );
@@ -111,10 +111,10 @@ export default function StaffClassDetail() {
           );
           const data = response.data;
 
-          console.log("data: ", data);
+
           setClassDetails(data);
         } catch (error) {
-          console.error("Failed to fetch class details", error);
+
         } finally {
           setLoading(false);
         }
@@ -168,14 +168,14 @@ export default function StaffClassDetail() {
         );
         if (response.data) {
           toast.success(response.data.message);
-          console.log("success"); // Displaying the toast message on successful API response
+
           setClassDetails((prevDetails) => ({
             ...prevDetails,
             classStatus: newStatus,
           })); // Update local state to reflect the new status
         }
       } catch (error) {
-        console.error("Failed to update class status", error);
+
         toast.error("Failed to update class status"); // Display error toast message
       }
     };
@@ -563,10 +563,10 @@ export default function StaffClassDetail() {
           }
         } catch (error) {
           if (error.response) {
-            console.log(`Error response: ${error.response?.data?.message}`);
+
             // setMessage(error.response?.data?.message || "Undefined.");
           } else {
-            console.log(`Error message abc: ${error.message}`);
+
             // setMessage(error.message || "Undefined.");
           }
         }
@@ -614,7 +614,7 @@ export default function StaffClassDetail() {
         const response = await instance.post("api/v1/classes", data);
 
         const responseData = response.data;
-        console.log("createClass: ", responseData);
+
 
         setIsScheduleSectionEnabled(true);
         setCreatedClassDetails(responseData);
@@ -796,11 +796,11 @@ export default function StaffClassDetail() {
 
         const response = await instance.post("api/v1/Classes/schedules", data);
         const responseData = response.data;
-        console.log("responseData: ", responseData);
+
 
         setSelectedClassId(responseData.classId);
         //log
-        console.log(`ClassId: ${responseData.classId}`);
+
         setView("classContent");
       } catch (error) {
         toast.error(error.message, {
@@ -1061,7 +1061,7 @@ export default function StaffClassDetail() {
             `api/v1/Classes/schedules/${classId}`
           );
           const data = response.data;
-          console.log('data: ', data);
+
           setClassSchedule(data);
 
 
@@ -1073,7 +1073,7 @@ export default function StaffClassDetail() {
       fetchCourses();
     }, []);
 
-    console.log('classSchedule: ', classSchedule);
+
 
     const toggleDay = (day) => {
       setCheckedDays((prevState) => ({
@@ -1237,7 +1237,7 @@ export default function StaffClassDetail() {
         slotTime: classSchedule.slotTime,
       };
 
-      console.log('data before put:', JSON.stringify(data)); // Check how data looks after serialization
+
 
       try {
         setIsCreatingSchedule(true);
@@ -1248,12 +1248,12 @@ export default function StaffClassDetail() {
           }
         });
         const responseData = response.data;
-        console.log("responseData: ", responseData);
 
-        console.log(`ClassId: ${responseData.classId}`);
+
+
         setView("classContent");
       } catch (error) {
-        console.error("Error during the API request:", error);
+
         let errorMessage = "Unexpected error occurred."; // Default message
         if (error.response && error.response.data && error.response.data.message) {
           errorMessage = error.response.data.message;
@@ -1396,24 +1396,24 @@ export default function StaffClassDetail() {
       setPageNumber(selected);
     };
 
-    console.log(classId);
+
 
     useEffect(() => {
       const fetchClassDetails = async () => {
         try {
           //bug
-          console.log(`ClassId: ${classId}`);
+
           const response = await instance.get(
             `api/v1/Classes/detail/${classId}`
           );
           const classData = response.data;
 
-          console.log("classData: ", classData);
+
 
           setCurrentClass(classData);
           setEnrolledStudents(classData.students || []);
         } catch (error) {
-          console.error("Failed to fetch class details", error);
+
         }
       };
 
@@ -1438,10 +1438,10 @@ export default function StaffClassDetail() {
         );
         const searchData = response.data;
 
-        console.log("searchData: ", searchData);
+
         setSearchResults(searchData); // Update your state with the search result
       } catch (error) {
-        console.error("Search failed", error);
+
       } finally {
         setIsSearching(false);
       }
@@ -1485,7 +1485,7 @@ export default function StaffClassDetail() {
 
         const postListStudent = response.data;
 
-        console.log("postListStudent: ", postListStudent);
+
         toast.success("Update student list successfully", {
           // Use the message from the response for the toast
           position: "top-right",
@@ -1498,7 +1498,7 @@ export default function StaffClassDetail() {
           theme: "light",
         });
       } catch (error) {
-        console.error("An error occurred:", error);
+
         toast.error("Update student list failed", {
           position: "top-right",
           autoClose: 5000,
@@ -1515,7 +1515,7 @@ export default function StaffClassDetail() {
     };
 
     useEffect(() => {
-      console.log(enrolledStudents);
+
     }, [enrolledStudents]);
 
     const goBack = () => {
@@ -1807,10 +1807,10 @@ export default function StaffClassDetail() {
           );
           const classData = response.data;
 
-          console.log("classData: ", classData);
+
           setCurrentClass(classData);
         } catch (error) {
-          console.error("Failed to fetch class details", error);
+
         }
       };
 
@@ -1826,10 +1826,10 @@ export default function StaffClassDetail() {
           const response = await instance.get(`api/v1/Classes/teachers`);
           const data = response.data;
 
-          console.log("data: ", data);
+
           setTeachers(data);
         } catch (error) {
-          console.error("Failed to fetch teachers", error);
+
         } finally {
           setIsLoading(false);
         }
@@ -1891,7 +1891,7 @@ export default function StaffClassDetail() {
         );
 
         const addTeacher = await response.data;
-        console.log("Success:", addTeacher);
+
         toast.success("Teacher added to class successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -1904,7 +1904,7 @@ export default function StaffClassDetail() {
         });
         navigateToView("classContent", classId);
       } catch (error) {
-        console.error("Failed to add teacher to class:", error);
+
         toast.error("Failed to add teacher to class", {
           position: "top-right",
           autoClose: 5000,
@@ -2157,12 +2157,12 @@ export default function StaffClassDetail() {
       const response = await instance.get(`api/v1/Classes?page=${page}&size=4`);
       const data = response.data;
 
-      console.log("data: ", data);
+
       setClassData(data.classes);
-      console.log(classData);
+
       setTotalPages(data.totalPage);
     } catch (error) {
-      console.error("Failed to fetch class data", error);
+
     }
   };
 

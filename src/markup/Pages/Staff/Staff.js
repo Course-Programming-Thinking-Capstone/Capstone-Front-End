@@ -46,9 +46,6 @@ export default function Staff() {
         : "";
     }
 
-    console.log("Active Menu Item:", activeMenu);
-    console.log("Path:", activePath);
-
     setActiveItem(activeMenu);
   }, [location]);
 
@@ -57,9 +54,9 @@ export default function Staff() {
     try {
       const response = await instance.get('api/v1/notifications/account/number-of-unread');
       setUnreadCount(response.data);  // Ensure this is getting an integer
-      console.log('Initial unread count fetched:', response.data);
+
     } catch (error) {
-      console.error('Error fetching unread notifications count:', error);
+
     }
   };
 

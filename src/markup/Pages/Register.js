@@ -75,10 +75,10 @@ export default function Register() {
     } catch (error) {
       let errorMessage;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Register fail.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Register fail.";
       }
 
@@ -133,10 +133,10 @@ export default function Register() {
     } catch (error) {
       let errorMessage = null;
       if (error.response) {
-        console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.response?.data?.message || "Register fail.";
       } else {
-        console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
         errorMessage = error.message || "Register fail.";
       }
       notifyRegisterFail(errorMessage);

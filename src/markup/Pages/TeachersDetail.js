@@ -26,10 +26,10 @@ export default function TeachersDetail() {
       const response = await instance.get(`api/v1/parents/teacher/${teacherId}`);
 
       const data = response.data;
-      console.log('data: ', data);
+
       setTeacher(data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+
     } finally {
       setIsLoading(false);
     }

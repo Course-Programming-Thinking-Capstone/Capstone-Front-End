@@ -33,7 +33,7 @@ export default function Order() {
         const data = response.data;
         setOrders(data.order); // Assuming the API returns an array of orders
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+
       } finally {
         setLoading(false);
       }
@@ -42,12 +42,12 @@ export default function Order() {
     fetchOrders();
   }, [activeItem]);
 
-  console.log('orders: ', orders);
+
   const ViewOrderDetail = (orderId) => {
     if (orderId) {
       navigate(`/order-detail/${orderId}`);
     } else {
-      console.error("Order ID is undefined");
+
     }
   };
 

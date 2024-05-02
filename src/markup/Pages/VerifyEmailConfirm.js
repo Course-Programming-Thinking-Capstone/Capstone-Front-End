@@ -15,7 +15,7 @@ export default function VerifyEmailConfirm() {
 
   useEffect(() => {
     if (!email || !token) {
-      console.error("Email and token are required.");
+
       return;
     }
 
@@ -28,9 +28,9 @@ export default function VerifyEmailConfirm() {
         );
 
         const data = response.data;
-        console.log(data);
+
       } catch (error) {
-        console.error("There was an error!", error);
+
       }
     };
 

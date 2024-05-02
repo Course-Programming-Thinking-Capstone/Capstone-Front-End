@@ -87,10 +87,10 @@ export default function StaffCourse() {
     } catch (error) {
       let message = "";
       if (error.response) {
-        console.log(`Error response: ${error.response?.data?.message}`);
+
         message = error.response?.data?.message || "Undefined.";
       } else {
-        console.log(`Error message abc: ${error.message}`);
+
         message = error.message || "Undefined.";
       }
       notifyApiFail(message);
@@ -124,14 +124,14 @@ export default function StaffCourse() {
         const data = response.data;
 
         setCourses(data);
-        console.log(courses);
+
       } catch (error) {
         let message = "";
         if (error.response) {
-          console.log(`Error response: ${error.response?.data?.message}`);
+
           message = error.response?.data?.message || "Undefined.";
         } else {
-          console.log(`Error message abc: ${error.message}`);
+
           message = error.message || "Undefined.";
         }
 

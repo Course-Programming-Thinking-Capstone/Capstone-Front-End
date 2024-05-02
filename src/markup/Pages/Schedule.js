@@ -17,7 +17,7 @@ export default function Schedule() {
             try {
                 const response = await instance.get(`api/v1/Classes/teacher-or-student`);
                 const data = response.data;
-                console.log('API data:', data);
+
 
                 const newEvents = data.map((item) => {
                     const occurrences = getEventOccurrences(item);
@@ -30,7 +30,7 @@ export default function Schedule() {
 
                 setEvents(newEvents);
             } catch (error) {
-                console.error("Failed to fetch schedule", error);
+
             }
         };
 
@@ -44,9 +44,6 @@ export default function Schedule() {
 
         const start = new Date(startString);
         const end = new Date(endString);
-
-        console.log('start: ', start);
-        console.log('end: ', end);
 
         const daysOfWeekMap = {
             'Sunday': 0, // Based on getUTCDay(), Sunday is 0
@@ -75,7 +72,6 @@ export default function Schedule() {
             start.setUTCDate(start.getUTCDate() + 1);
         }
 
-        console.log('Occurrences:', dates); // Log to see the output
         return dates;
     }
 

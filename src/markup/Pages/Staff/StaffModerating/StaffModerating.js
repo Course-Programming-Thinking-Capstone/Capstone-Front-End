@@ -63,7 +63,7 @@ const ModeratingLesson = ({ onBack, section }) => {
 
     const getVideoUrl = async (lesson) => {
         //log
-        console.log(`Call get Video url`)
+
         if (lesson) {
             if (lesson?.resourceUrl !== undefined && lesson?.resourceUrl !== null) {
                 const videoUrl = lesson?.resourceUrl
@@ -78,11 +78,11 @@ const ModeratingLesson = ({ onBack, section }) => {
             } catch (error) {
                 let message;
                 if (error.response) {
-                    console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
                     message =
                         error.response?.data?.message || "Error when get lesson.";
                 } else {
-                    console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
                     message = error.message || "Error when get lesson.";
                 }
                 notifyApiFail(message);
@@ -234,11 +234,11 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             } catch (error) {
                 // let message;
                 if (error.response) {
-                    console.log(`Error response: ${JSON.stringify(error, null, 2)}`);
+
                     // message =
                     //     error.response?.data?.message || "Error when fetch course detail.";
                 } else {
-                    console.log(`Error message: ${JSON.stringify(error, null, 2)}`);
+
                     // message = error.message || "Error when fetch course detail.";
                 }
                 navigate("/not-found");
@@ -355,7 +355,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
             isAdminSetup,
             price: isFree ? undefined : price, // Use the state variable price
         };
-        console.log('payload: ', payload);
+
         try {
             const response = await instance.patch(`api/v1/courses/${courseId}/approve`, payload);
             if (response.status === 200) { // Check if the HTTP status code is 200 OK
@@ -371,7 +371,7 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 throw new Error('Failed to update status');
             }
         } catch (error) {
-            console.error("Failed to approve course: ", JSON.stringify(error, null, 2));
+
             toast.error("Failed to approve course", {
                 position: "top-right",
                 autoClose: 5000,
@@ -700,12 +700,12 @@ export default function StaffModerating() {
             const data = response.data
 
             //log
-            console.log(`Courses: ${JSON.stringify(data, null, 2)}`)
+
 
             setCourses(data);
             setTotalPages(Math.ceil(data.total / itemsPerPage));
         } catch (error) {
-            console.error("Failed to fetch courses", error);
+
         } finally {
             setIsLoading(false)
         }

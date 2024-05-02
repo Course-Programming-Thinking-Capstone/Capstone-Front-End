@@ -19,9 +19,9 @@ export default function CourseQuiz() {
             try {
                 const response = await instance.get(`api/v1/courses/study/section/quiz/${quizId}`); // Adjust the URL according to your API
                 setQuizData(response.data);
-                console.log('Cong test ', response.data);
+
             } catch (error) {
-                console.error('Failed to fetch quiz data:', error);
+
             }
         };
 
@@ -57,14 +57,14 @@ export default function CourseQuiz() {
             });
 
             const data = await response.data;
-            console.log('data: ', data);
+
 
             // Handle the response as needed
             if (response.status === 200) {
                 navigate('/courses-result', { state: { quizSubmit: data } });
             }
         } catch (error) {
-            console.error('Error submitting quiz:', error);
+
             toast.error('Failed to submit the quiz.');
         }
     };

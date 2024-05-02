@@ -57,7 +57,7 @@ export const DragAndDropComponent = () => {
     const { active, over } = event;
 
     //log
-    console.log(`Active: ${active}`);
+
 
     if (active && over) {
       const updatedArray = array.map((row) => {
@@ -74,7 +74,7 @@ export const DragAndDropComponent = () => {
       setArray(updatedArray);
     }
 
-    console.log(event);
+
   };
 
   return (

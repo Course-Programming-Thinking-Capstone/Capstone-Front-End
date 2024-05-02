@@ -77,7 +77,6 @@ export default function Dashboard() {
                     `api/v1/dashboard?month=${month}`
                 );
                 const data = response.data;
-                console.log('data: ', data);
 
                 setOrdersData(data.orders);
                 setCoursesData(data.courses);

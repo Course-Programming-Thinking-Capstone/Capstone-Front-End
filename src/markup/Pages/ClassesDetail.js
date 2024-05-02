@@ -22,11 +22,10 @@ export default function ClassesDetail() {
 				const response = await instance.get(`api/v1/courses/${id}`);
 				const data = response.data;
 
-				console.log('courseDetail: ', data);
 				setCourseDetails(data);
 			} catch (error) {
 				navigate('/not-found')
-				console.error('There was a problem with the fetch operation:', error);
+
 			} finally {
 				setIsLoading(false);
 			}

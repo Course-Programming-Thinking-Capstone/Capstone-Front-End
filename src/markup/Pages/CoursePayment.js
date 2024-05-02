@@ -38,7 +38,7 @@ export default function CoursePayment() {
     setLoading(true);
     try {
       if (!classId) {
-        console.error("classId is not available");
+
         return;
       }
 
@@ -54,7 +54,7 @@ export default function CoursePayment() {
         }))
       );
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function CoursePayment() {
   useEffect(() => {
     const fetchCurrentCourse = async () => {
       if (!courseId || !classId) {
-        console.error("Missing courseId or classId");
+
         return;
       }
 
@@ -77,10 +77,10 @@ export default function CoursePayment() {
           `api/v1/courses/payment?courseId=${courseId}&classId=${classId}`
         );
         const data = response.data;
-        console.log("curentCourse: ", data);
+
         setCourseDetails(data);
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+
       } finally {
         setLoading(false);
       }
@@ -96,10 +96,10 @@ export default function CoursePayment() {
         const response = await instance.get(`api/v1/parents/contact`);
 
         const data = response.data;
-        console.log("curentEmail: ", data.email);
+
         setParentEmail(data.email);
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+
       } finally {
         setLoading(false);
       }
@@ -125,7 +125,7 @@ export default function CoursePayment() {
       return gender === "Male" ? 1 : gender === "Female" ? 2 : 0;
     };
 
-    console.log(newChildDOB);
+
 
     const newChildData = {
       fullName: newChildName,
@@ -147,10 +147,7 @@ export default function CoursePayment() {
       handleClose();
       await fetchChildrenData();
     } catch (error) {
-      console.error(
-        "There was a problem with adding a new child:",
-        error.message
-      );
+
     }
   };
 
@@ -218,11 +215,9 @@ export default function CoursePayment() {
       response = await instance.post(`api/v1/payment/momo/${responseData.orderId}`, {});
       responseData = response.data;
 
-      console.log("Payment initiated successfully", responseData);
 
       window.location.href = responseData.payUrl;
     } catch (error) {
-      console.error("There was a problem with the process:", error.data.message);
       setIsOrderProcessing(false);
     }
   };
