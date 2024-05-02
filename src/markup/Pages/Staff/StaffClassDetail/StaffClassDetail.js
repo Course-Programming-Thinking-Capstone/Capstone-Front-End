@@ -185,6 +185,20 @@ export default function StaffClassDetail() {
       handleStatusChange(selectedStatus);
     };
 
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      let day = date.getDate();
+      let month = date.getMonth() + 1; // January is 0!
+      const year = date.getFullYear();
+    
+      // Add leading zeros
+      day = day < 10 ? '0' + day : day;
+      month = month < 10 ? '0' + month : month;
+    
+      return `${day}/${month}/${year}`;
+    };
+    
+
     return (
       <div
         className="staff-class-content mx-5"
@@ -484,7 +498,7 @@ export default function StaffClassDetail() {
                         {index + 1 + currentPage * studentsPerPage}
                       </td>
                       <td className="text-center">{student.studentName}</td>
-                      <td className="text-center">{student.dateOfBirth}</td>
+                      <td className="text-center">{formatDate(student.dateOfBirth)}</td>
                       <td className="text-center">
                         {student?.gender == 0 ? "Other" : student?.gender}
                       </td>

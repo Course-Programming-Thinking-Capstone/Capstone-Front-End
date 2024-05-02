@@ -235,11 +235,9 @@ const ModeratingDetail = ({ onBack, courseId }) => {
                 // let message;
                 if (error.response) {
 
-                    // message =
-                    //     error.response?.data?.message || "Error when fetch course detail.";
+
                 } else {
 
-                    // message = error.message || "Error when fetch course detail.";
                 }
                 navigate("/not-found");
             } finally {
