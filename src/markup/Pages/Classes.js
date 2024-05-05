@@ -79,9 +79,8 @@ export default function Classes() {
             </div>
             <div className="container">
               <div className="all-course-header">
-                <h5>Courses</h5>
-                <h4>Suitable for children from 5 years old</h4>
-                <p>Build a basic programming foundation</p>
+                <h4 style={{textAlign:'center',marginTop:'1.5rem'}}>Suitable for children from 5 years old</h4>
+                <p style={{textAlign:'center',marginTop:'1.5rem'}}>Build a basic programming foundation</p>
               </div>
 
               <div className="row sp40">
@@ -97,7 +96,7 @@ export default function Classes() {
                 ) : (
                   courses?.map((course, index) => (
                     <div
-                      className="col-lg-4 col-md-6 col-sm-6"
+                      className="col-lg-4 col-md-6 col-sm-6 course-card"
                       key={index}
                       onClick={() => navigateToCourseDetail(course.id)}
                       style={{ cursor: "pointer" }}
@@ -130,6 +129,7 @@ export default function Classes() {
                               backgroundColor: "#FFA63D",
                               color: "white",
                               borderRadius: "8px",
+                              boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
                             }}
                           >
                             {course.price === 0

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 // images
 import logo from "./../../images/logo.png";
+import logo1 from "./../../images/background/logo1.jpg";
+
 import LanguageSwitcher from "../Element/LanguageSwitcher";
 import { colors } from "@mui/material";
 
@@ -92,7 +94,10 @@ const Header = () => {
             <div className="container clearfix">
               <div className="logo-header mostion">
                 <Link to={"/"} className="dez-page">
-                <h1 style={{ marginBottom: "0px", color: "#ff8a00" }}>KidsPro</h1>
+                  <div style={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+                    <img src={logo1} alt="" style={{width:'5rem', height:'3rem',marginRight:'0.5rem'}}/>
+                    <h1 style={{ marginBottom: "0px", color: "#ff8a00" }}>KidsPro</h1>
+                  </div>
                 </Link>
               </div>
 

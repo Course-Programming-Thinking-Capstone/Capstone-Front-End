@@ -24,7 +24,7 @@ export default function CoursePayment() {
   const [courseDetails, setCourseDetails] = useState(null);
   const [parentEmail, setParentEmail] = useState(null);
   const location = useLocation();
-  const { courseId, classId } = location.state || {};
+  const { courseId, classId,ImageCourse } = location.state || {};
   const [isOrderProcessing, setIsOrderProcessing] = useState(false);
 
   const formatPrice = (price) => {
@@ -303,7 +303,7 @@ export default function CoursePayment() {
                   <DatePicker
                     selected={newChildDOB}
                     onChange={(date) => setNewChildDOB(date)}
-                    maxDate={dateFiveYearsAgo} 
+                    maxDate={dateFiveYearsAgo}
                     showMonthDropdown
                     showYearDropdown
                     dropdownMode="select"
@@ -364,8 +364,11 @@ export default function CoursePayment() {
               </Button>
             </Modal.Footer>
           </Modal>
-          <div className="row">
-            <div className="col-lg-6">
+          <div className="row" style={{
+            paddingTop: '50px',
+            // backgroundColor: 'rgba(200, 200, 200, 0.5)',
+          }}>
+            <div className="col-lg-6" >
               <div
                 className="d-flex justify-content-between"
                 style={{
@@ -389,6 +392,12 @@ export default function CoursePayment() {
                 </button>
               </div>
               <div className="payment">
+                <p className="mb">
+                  Number of children selected:{" "}
+                  <span style={{ color: "#FF8A00" }}>
+                    {selectedChildren.length}
+                  </span>
+                </p>
                 <div
                   style={{
                     display: "flex",
@@ -413,17 +422,17 @@ export default function CoursePayment() {
                         className="children radio-wrapper"
                         style={{
                           border: selectedChildren.includes(child.id)
-                            ? "2px solid #1A9CB7"
-                            : "2px solid transparent",
+                            ? "2px solid orange"
+                            : "2px solid rgb(201, 201, 201)",
                           cursor: "pointer",
                           padding: "5px 15px",
-                          marginTop: "15px",
+                          marginTop: "10px",
                           width: "30%",
                           marginRight: 7,
                         }}
                         onClick={() => toggleChildSelection(child.id)}
                       >
-                        <div className="d-flex justify-content-start">
+                        <div className="d-flex align-items-center justify-content-start">
                           <i
                             className={
                               selectedChildren.includes(child.id)
@@ -438,7 +447,7 @@ export default function CoursePayment() {
                             }}
                           ></i>
                           <p
-                            style={{ marginBottom: "5px", marginLeft: "15px" }}
+                            style={{ marginBottom: "0px", marginLeft: "15px" }}
                           >
                             {child.name}
                           </p>
@@ -447,24 +456,19 @@ export default function CoursePayment() {
                     ))
                   )}
                 </div>
-                <p className="mb" style={{ marginTop: "15px" }}>
-                  Number of children selected:{" "}
-                  <span style={{ color: "#FF8A00" }}>
-                    {selectedChildren.length}
-                  </span>
-                </p>
+
               </div>
 
               <div>
                 <div style={{ backgroundColor: '#e6e3e3', borderRadius: '10px 10px 0 0', padding: '10px 20px 10px 20px' }}>
                   <h5 className='mb-0'>Course information</h5>
                 </div>
-                <div className='payment'>
+                <div className='payment' style={{ height: '440px' }}>
                   <p style={{ paddingTop: 15 }}>Send the account via:</p>
                   <div className="d-flex justify-content-center">
-                    <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid #1A9CB7', cursor: 'pointer', padding: '5px 20px', width: '45%' }}>
+                    <div className='d-flex radio-wrapper justify-content-center' style={{ border: '2px solid rgb(201, 201, 201)', cursor: 'pointer', padding: '5px 20px', width: '50%' }}>
                       <div className='text-center'>
-                        <p className='mb'>Email</p>
+                        <p className='mb' style={{ fontWeight: 'bold' }}>Email</p>
                         <p className='mb-0' style={{ color: '#FF8A00' }}>{parentEmail}</p>
                       </div>
                     </div>
@@ -479,25 +483,25 @@ export default function CoursePayment() {
                     ) : (
                       courseDetails && (
                         <div style={{
-                          borderWidth: 2, borderColor: '#FF8A00', borderStyle: 'solid', paddingLeft: 20, paddingRight: 10, alignItems: 'center', borderRadius: 10, display: 'flex', flexDirection: 'row',
-
+                          borderWidth: 2, borderColor: 'rgb(201, 201, 201)', borderStyle: 'solid', padding: "15px 20px", alignItems: 'center', borderRadius: 10, display: 'flex', flexDirection: 'row',
+                          marginTop:'3rem'
                         }}>
-                          <div>
-                            {/* <div className="d-flex justify-content-center">
-                              <img className='img-responsive mt-2' style={{ width: '80px', height: '80px', borderRadius: 10 }} src={courseDetails.picture || demo} alt="" />
-                            </div> */}
-                            <div>
-                              <p className='mt-2'>Course's name: {courseDetails.courseName}</p>
-                              <div className='d-flex'>
-                                <p style={{ fontWeight: 'inherit' }}>Class: </p>
-                                <p style={{ color: '#E53E5C' }}> {courseDetails.classCode}</p>
-                              </div>
+                          <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div className="d-flex justify-content-center">
+                              <img className='img-responsive mt-2' style={{ width: '120px', height: '120px', borderRadius: 10 }} src={ImageCourse || demo} alt="" />
                             </div>
-                            <div >
-                              <div>
-                                <p className='mt-2' style={{ fontWeight: 'inherit' }}>Teacher: {courseDetails.teacherName}</p>
+                            <div>
+                              <p className='mt-2' style={{ marginBottom: '5px', color: 'black', fontWeight: '600' }}>Course's name:<span style={{ marginBottom: '5px', color: 'black', fontWeight: 'normal', marginLeft: '5px' }}>{courseDetails.courseName}</span></p>
+                              <div className='d-flex' style={{ marginBottom: '5px' }}>
+                                <p style={{ color: 'black', fontWeight: 'inherit', marginBottom: '5px', fontWeight: '600' }}>Class: </p>
+                                <p style={{ color: 'black', marginBottom: '5px', marginLeft: '5px' }}> {courseDetails.classCode}</p>
                               </div>
-                              <p style={{ color: '#FF8A00', fontWeight: 'bold' }}>Price: {formatPrice(courseDetails.price)}</p>
+                              <div style={{ marginTop: '5px' }} >
+                                <div >
+                                  <p style={{ color: 'black', fontWeight: 'inherit', marginBottom: '5px', fontWeight: '600' }}>Teacher:<span style={{ marginBottom: '5px', color: 'black', fontWeight: 'normal', marginLeft: '5px' }}>{courseDetails.teacherName}</span></p>
+                                </div>
+                                <p style={{ color: '#FF8A00', fontWeight: 'bold', marginBottom: '5px', fontWeight: '600' }}>Price:<span style={{ color: '#FF8A00', marginBottom: '5px', fontWeight: 'bold', marginLeft: '5px' }}>{formatPrice(courseDetails.price)}</span></p>
+                              </div>
                             </div>
                           </div>
 
@@ -509,11 +513,11 @@ export default function CoursePayment() {
               </div>
 
             </div>
-            <div className='col-lg-6'>
-
-              <div className="payment">
+            <div className='col-lg-6' >
+              <div className="payment" style={{borderRadius:10}}>
                 <div style={{ padding: '10px 35px' }}>
-                  <div className='d-flex radio-wrapper justify-content-between' onClick={() => setSelectedPayment('momo')} style={{ border: selectedPayment === 'momo' ? '2px solid #1A9CB7' : '2px solid #c9c9c9', padding: '10px 35px', cursor: 'pointer', borderRadius: '10px' }}>
+                  <h5 style={{marginBottom:'1rem'}}>Payment Method</h5>
+                  <div className='d-flex radio-wrapper justify-content-between' onClick={() => setSelectedPayment('momo')} style={{ border: selectedPayment === 'momo' ? '2px solid orange' : '2px solid #c9c9c9', padding: '10px 35px', cursor: 'pointer', borderRadius: '10px' }}>
                     <div>
                       <div className='d-flex'>
                         <img style={{ height: '40px', width: '40px' }} src={momo} alt="" />
@@ -523,37 +527,37 @@ export default function CoursePayment() {
                   </div>
 
                 </div>
-                <div>
-                  <h5>Voucher</h5>
-                  <div className="d-flex justify-content-between" style={{ padding: '10px 35px' }}>
+                <div style={{ padding: '10px 35px' }}>
+                    <h5 style={{marginBottom:'1rem'}}>Voucher</h5>
+                  <div className="d-flex justify-content-between" >
                     <input type="text" placeholder='Enter discount code' style={{ height: '48px', fontSize: '16px', width: '67%', paddingLeft: '15px', outline: 'none', borderRadius: 10, borderColor: 'rgb(201, 201, 201)', borderStyle: 'solid' }} />
                     <button style={{ height: '48px', color: 'white', backgroundColor: '#1A9CB7', border: 'none', borderRadius: '8px', width: '30%' }}>APPLY</button>
                   </div>
                 </div>
 
                 {courseDetails ? (
-                  <div>
-                    <h5>Order information</h5>
-                    <div style={{ padding: "10px 35px" }}>
+                  <div style={{ padding: "10px 35px" }}>
+                    <h5 style={{marginBottom:'1rem'}}>Order information</h5>
+                    <div >
                       <div className="d-flex justify-content-between">
-                        <p>Course</p>
+                        <p style={{fontWeight:'500'}}>Course</p>
                         <p>What is programming?</p>
                       </div>
                       <div className="d-flex justify-content-between">
-                        <p>Price</p>
+                        <p style={{fontWeight:'500'}}>Price</p>
                         <p>{formatPrice(courseDetails.price)}</p>
                       </div>
                       <div className="d-flex justify-content-between">
-                        <p>Quantity</p>
+                        <p style={{fontWeight:'500'}}>Quantity</p>
                         <p>x {selectedChildren.length}</p>
                       </div>
                       <div className="d-flex justify-content-between">
-                        <p>Discount</p>
+                        <p style={{fontWeight:'500'}}>Discount</p>
                         <p>0 đ</p>
                       </div>
                       <hr />
                       <div className="d-flex justify-content-between">
-                        <p>Total</p>
+                        <p style={{fontWeight:'500',color: "#FF8A00"}}>Total</p>
                         <p style={{ color: "#FF8A00" }}>
                           {(
                             courseDetails.price * selectedChildren.length

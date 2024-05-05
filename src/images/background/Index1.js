@@ -28,11 +28,7 @@ import team1 from './../../images/team/pic1.png';
 import team2 from './../../images/team/pic2.png';
 import team3 from './../../images/team/pic3.png';
 import team4 from './../../images/team/pic4.png';
-import teacher from './../../images/background/pin.jpg';
-import cong from './../../images/background/cong3.jpg';
-import vu from './../../images/background/vu4.jpg';
-import thien from './../../images/background/thien.jpg';
-
+import teacher from './../../images/team/teacher.png';
 
 
 // const iconBlog = [
@@ -47,10 +43,10 @@ const iconBlog2 = [
     { icon: <i className="flaticon-puzzle text-orange" />, title: 'Goodie', },
 ];
 const teacherBlog = [
-    { name: 'Thành Công', image1: backwhite, image2: cong },
-    { name: 'Tuân Vũ', image1: backpink, image2: vu },
+    { name: 'Thành Công', image1: backwhite, image2: teacher },
+    { name: 'Tuân Vũ', image1: backpink, image2: teacher },
     { name: 'Thành An', image1: backgreen, image2: teacher },
-    { name: 'Minh Thiên', image1: backred, image2: thien },
+    { name: 'Minh Thiên', image1: backred, image2: teacher },
 ];
 
 const Index1 = () => {
@@ -175,7 +171,7 @@ const Index1 = () => {
                                         <div className="col-lg-3 col-sm-6" key={index}>
                                             <div className="dez-team-box m-b30 hover dez-img-effect">
                                                 <div className="dez-media">
-                                                    <Link to={"#"}><img width="358" height="300" alt="" src={item.image2} /> </Link>
+                                                    <Link to={"#"}><img width="358" height="460" alt="" src={item.image2} /> </Link>
                                                     <div className="overlay-bx style-1">
                                                         <ul className="list-inline">
                                                             <li><Link to={"#"}><i className="fa fa-facebook"></i></Link></li>

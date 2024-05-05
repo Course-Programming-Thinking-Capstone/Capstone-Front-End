@@ -41,7 +41,6 @@ export default function ClassesDetail() {
 
 	const BuyCourse = () => {
 		if (!selectedClassId) {
-			// Display error toast because class isn't selected
 			toast.error("Please choose your class", {
 				position: "top-right",
 				autoClose: 5000,
@@ -55,8 +54,7 @@ export default function ClassesDetail() {
 			return;
 		}
 
-		// Navigate to /payment with courseId and classId in the state
-		navigate('/payment', { state: { courseId: courseDetails.id, classId: selectedClassId } });
+		navigate('/payment', { state: { courseId: courseDetails.id, classId: selectedClassId,ImageCourse:courseDetails.pictureUrl } });
 	};
 
 
@@ -82,7 +80,7 @@ export default function ClassesDetail() {
 									<div className="col-lg-8 col-md-12 col-sm-12 m-b15">
 										<div className="classes-details">
 											<div className="class-media">
-												<img src={courseDetails.pictureUrl} alt="" />
+												<img style={{ borderRadius: 10, height: '517px' }} src={courseDetails.pictureUrl} alt="" />
 											</div>
 											<div className="class-info">
 												<div className="dlab-post-title ">
@@ -95,8 +93,8 @@ export default function ClassesDetail() {
 											</button>
 										</div>
 									</div>
-									<div className="col-lg-4 col-md-12 col-sm-12" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-										<h5 className='orange'>Select class for course</h5>
+									<div className="col-lg-4 col-md-12 col-sm-12" style={{ maxHeight: '600px', overflowY: 'auto'}}>
+										<h5 style={{ textAlign: 'center' }} className='orange'>Select class for course</h5>
 										{courseDetails && courseDetails.classes && courseDetails.classes.length > 0 ? (
 											courseDetails.classes
 												.filter(classDetail => classDetail.classStatus !== "Closed") // Filter out closed classes
